@@ -102,7 +102,7 @@ func resourceNetworkPortV2() *schema.Resource {
 				Computed: true,
 			},
 			"managed_by_service": &schema.Schema{
-				Type: schema.TypeBool,
+				Type:     schema.TypeBool,
 				Computed: true,
 			},
 			"region": &schema.Schema{
