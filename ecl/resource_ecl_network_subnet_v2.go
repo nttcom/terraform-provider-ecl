@@ -206,8 +206,8 @@ func resourceNetworkSubnetV2Create(d *schema.ResourceData, meta interface{}) err
 		createOpts.GatewayIP = &gatewayIP
 	}
 
-	if v, ok := d.GetOk("ntp_servers"); ok {
-		createOpts.NTPServers = v.([]string)
+	if v, ok := resourceSubnetNTPServersV2(d); ok {
+		createOpts.NTPServers = v
 	}
 
 	if _, ok := d.GetOk("tags"); ok {
@@ -300,7 +300,7 @@ func resourceNetworkSubnetV2Read(d *schema.ResourceData, meta interface{}) error
 		log.Printf("[DEBUG] Unable to set ntp_servers: %s", err)
 	}
 
-	// Based on the subnet's Gateway IP, set `no_gateway` accordingly.	 	err = d.Set("ntp_servers", s.NTPServers)
+	// Based on the subnet's Gateway IP, set `no_gateway` accordingly.
 	if s.GatewayIP == "" {
 		d.Set("no_gateway", true)
 	} else {
@@ -357,7 +357,8 @@ func resourceNetworkSubnetV2Update(d *schema.ResourceData, meta interface{}) err
 	}
 
 	if d.HasChange("ntp_servers") {
-		updateOpts.NTPServers = d.Get("ntp_servers").([]string)
+		ntpServers, _ := resourceSubnetNTPServersV2(d)
+		updateOpts.NTPServers = &ntpServers
 	}
 
 	if d.HasChange("tags") {
@@ -459,6 +460,16 @@ func resourceSubnetDNSNameserversV2(d *schema.ResourceData) ([]string, bool) {
 		dnsn[i] = raw.(string)
 	}
 	return dnsn, ok
+}
+
+func resourceSubnetNTPServersV2(d *schema.ResourceData) ([]string, bool) {
+	resources, ok := d.GetOk("ntp_servers")
+	rawNTP := resources.([]interface{})
+	ntps := make([]string, len(rawNTP))
+	for i, raw := range rawNTP {
+		ntps[i] = raw.(string)
+	}
+	return ntps, ok
 }
 
 func resourceSubnetDNSNameserversV2CheckIsSet(d *schema.ResourceData) error {
