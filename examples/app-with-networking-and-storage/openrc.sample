@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+export OS_AUTH_URL=https://keystone-[YOUR_REGION]-ecl.api.ntt.com/v3/
+export OS_USERNAME=YOUR_API_KEY
+export OS_PASSWORD=YOUR_API_SECRET_KEY
+export OS_TENANT_ID=YOUR_TENANT_ID
+export OS_USER_DOMAIN_ID=default
+export OS_PROJECT_DOMAIN_ID=default
