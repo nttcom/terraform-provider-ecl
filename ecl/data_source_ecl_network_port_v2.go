@@ -55,7 +55,7 @@ func dataSourceNetworkPortV2() *schema.Resource {
 				Optional: true,
 			},
 			"fixed_ip": &schema.Schema{
-				Type:          schema.TypeList,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -76,7 +76,7 @@ func dataSourceNetworkPortV2() *schema.Resource {
 				Optional: true,
 			},
 			"managed_by_service": &schema.Schema{
-				Type: schema.TypeBool,
+				Type:     schema.TypeBool,
 				Computed: true,
 			},
 			"name": {
