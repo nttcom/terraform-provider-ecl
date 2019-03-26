@@ -293,6 +293,42 @@ func TestAccNetworkV2SubnetTimeout(t *testing.T) {
 	})
 }
 
+func TestAccNetworkV2SubnetNTP(t *testing.T) {
+	var subnet subnets.Subnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckNetworkV2SubnetDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccNetworkV2SubnetNTPBasic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &subnet),
+					resource.TestCheckResourceAttr("ecl_network_subnet_v2.subnet_1", "ntp_servers.0", "1.1.1.1"),
+					testAccCheckNetworkV2SubnetNTPServersLength(&subnet, 1),
+				),
+			},
+			resource.TestStep{
+				Config: testAccNetworkV2SubnetNTPUpdate1,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &subnet),
+					resource.TestCheckResourceAttr("ecl_network_subnet_v2.subnet_1", "ntp_servers.0", "1.1.1.1"),
+					resource.TestCheckResourceAttr("ecl_network_subnet_v2.subnet_1", "ntp_servers.1", "2.2.2.2"),
+					testAccCheckNetworkV2SubnetNTPServersLength(&subnet, 2),
+				),
+			},
+			resource.TestStep{
+				Config: testAccNetworkV2SubnetNTPUpdate2,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkV2SubnetNTPServersLength(&subnet, 0),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckNetworkV2SubnetHostRoutesLength(sn *subnets.Subnet, length int) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		if len(sn.HostRoutes) != length {
@@ -303,12 +339,24 @@ func testAccCheckNetworkV2SubnetHostRoutesLength(sn *subnets.Subnet, length int)
 		return nil
 	}
 }
+
 func testAccCheckNetworkV2SubnetDNSLength(sn *subnets.Subnet, length int) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		if len(sn.DNSNameservers) != length {
 			return fmt.Errorf(
 				"Tag dns_nameservers length does not match. Actual is %d . Expected is %d",
 				len(sn.DNSNameservers), length)
+		}
+		return nil
+	}
+}
+
+func testAccCheckNetworkV2SubnetNTPServersLength(sn *subnets.Subnet, length int) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		if len(sn.NTPServers) != length {
+			return fmt.Errorf(
+				"Tag ntp_servers length does not match. Actual is %d . Expected is %d",
+				len(sn.NTPServers), length)
 		}
 		return nil
 	}
@@ -720,3 +768,87 @@ resource "ecl_network_subnet_v2" "subnet_1" {
   network_id = "${ecl_network_network_v2.network_1.id}"
 }
 `
+
+const testAccNetworkV2SubnetNTPBasic = `
+resource "ecl_network_network_v2" "network_1" {
+  name = "network_1"
+  admin_state_up = "true"
+}
+
+resource "ecl_network_subnet_v2" "subnet_1" {
+	name = "subnet_1"
+	description = "subnet_1_description"
+  cidr = "192.168.199.0/24"
+  network_id = "${ecl_network_network_v2.network_1.id}"
+
+  dns_nameservers = [
+		"1.1.1.1", 
+		"2.2.2.2"
+	]
+
+  ntp_servers = [
+		"1.1.1.1", 
+	]
+
+	enable_dhcp = "true"
+
+	allocation_pools {
+    start = "192.168.199.100"
+    end = "192.168.199.200"
+	}
+}`
+
+const testAccNetworkV2SubnetNTPUpdate1 = `
+resource "ecl_network_network_v2" "network_1" {
+  name = "network_1"
+  admin_state_up = "true"
+}
+
+resource "ecl_network_subnet_v2" "subnet_1" {
+	name = "subnet_1"
+	description = "subnet_1_description"
+  cidr = "192.168.199.0/24"
+  network_id = "${ecl_network_network_v2.network_1.id}"
+
+  dns_nameservers = [
+		"1.1.1.1", 
+		"2.2.2.2"
+	]
+
+  ntp_servers = [
+		"1.1.1.1", 
+		"2.2.2.2",
+	]
+
+	enable_dhcp = "true"
+
+	allocation_pools {
+    start = "192.168.199.100"
+    end = "192.168.199.200"
+	}
+}`
+
+const testAccNetworkV2SubnetNTPUpdate2 = `
+resource "ecl_network_network_v2" "network_1" {
+  name = "network_1"
+  admin_state_up = "true"
+}
+
+resource "ecl_network_subnet_v2" "subnet_1" {
+	name = "subnet_1"
+	description = "subnet_1_description"
+  cidr = "192.168.199.0/24"
+  network_id = "${ecl_network_network_v2.network_1.id}"
+
+  dns_nameservers = [
+		"1.1.1.1", 
+		"2.2.2.2"
+	]
+
+	enable_dhcp = "true"
+
+	allocation_pools {
+    start = "192.168.199.100"
+    end = "192.168.199.200"
+	}
+}`
