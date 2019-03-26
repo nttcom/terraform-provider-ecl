@@ -1,11 +1,6 @@
 Terraform Enterprise Cloud Provider
 ===================================
 
-- Website: https://www.terraform.io
-- Contact to developers: [terraform@ntt.com](mailto:terraform@ntt.com)
-
-<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
-
 Maintainers
 -----------
 
@@ -18,8 +13,8 @@ This provider plugin is maintained by:
 Requirements
 ------------
 
--	[Terraform](https://www.terraform.io/downloads.html) 0.11x
--	[Go](https://golang.org/doc/install) 1.11 (to build the provider plugin)
+- [Terraform](https://www.terraform.io/downloads.html) 0.11x
+- [Go](https://golang.org/doc/install) 1.11 (to build the provider plugin)
 
 Building The Provider
 ---------------------
