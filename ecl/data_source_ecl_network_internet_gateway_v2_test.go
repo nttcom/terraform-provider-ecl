@@ -192,15 +192,19 @@ func testAccCheckNetworkV2InternetGatewayDataSourceID(n string) resource.TestChe
 	}
 }
 
+
 var testAccNetworkV2InternetGatewayDataSourceInternetGateway = fmt.Sprintf(`
+data "ecl_network_internet_service_v2" "internet_service_1" {
+	name = "Internet-Service-01"
+}
+
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
 	name = "Terraform_Test_Internet_Gateway_01"
 	description = "test_internet_gateway"
-	internet_service_id = "%s"
+	internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
 	qos_option_id = "%s"
 }
 `,
-	OS_INTERNET_SERVICE_ID,
 	OS_QOS_OPTION_ID_10M)
 
 var testAccNetworkV2InternetGatewayDataSourceBasic = fmt.Sprintf(`
@@ -215,11 +219,10 @@ var testAccNetworkV2InternetGatewayDataSourceInternetServiceID = fmt.Sprintf(`
 %s
 
 data "ecl_network_internet_gateway_v2" "internet_gateway_1" {
-	internet_service_id = "%s"
+	internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
 }
 `,
-	testAccNetworkV2InternetGatewayDataSourceInternetGateway,
-	OS_INTERNET_SERVICE_ID)
+	testAccNetworkV2InternetGatewayDataSourceInternetGateway)
 
 var testAccNetworkV2InternetGatewayDataSourceQoSOptionID = fmt.Sprintf(`
 %s

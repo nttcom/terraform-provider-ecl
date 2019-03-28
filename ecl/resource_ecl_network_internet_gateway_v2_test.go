@@ -143,38 +143,47 @@ func testAccCheckNetworkV2InternetGatewayExists(n string, internet_gateway *inte
 }
 
 var testAccNetworkV2InternetGatewayBasic = fmt.Sprintf(`
+data "ecl_network_internet_service_v2" "internet_service_1" {
+	name = "Internet-Service-01"
+}
+
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
     name = "Terraform_Test_Internet_Gateway_01"
     description = "test_internet_gateway"
-    internet_service_id = "%s"
+    internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
     qos_option_id = "%s"
 }
 `,
-	OS_INTERNET_SERVICE_ID,
 	OS_QOS_OPTION_ID_10M)
 
 var testAccNetworkV2InternetGatewayUpdate = fmt.Sprintf(`
+data "ecl_network_internet_service_v2" "internet_service_1" {
+	name = "Internet-Service-01"
+}
+
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
     name = "%s",
     description = "%s",
-    internet_service_id = "%s"
+    internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
     qos_option_id = "%s"
 }
 `,
 	stringMaxLength,
 	stringMaxLength,
-	OS_INTERNET_SERVICE_ID,
 	OS_QOS_OPTION_ID_100M)
 
 var testAccNetworkV2InternetGatewayUpdate2 = fmt.Sprintf(`
+data "ecl_network_internet_service_v2" "internet_service_1" {
+	name = "Internet-Service-01"
+}
+
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
     name = "",
     description = "",
-    internet_service_id = "%s"
+    internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
     qos_option_id = "%s"
 }
 `,
-	OS_INTERNET_SERVICE_ID,
 	OS_QOS_OPTION_ID_10M)
 
 var testMockNetworkV2InternetGatewayPost = `
