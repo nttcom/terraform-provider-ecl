@@ -52,7 +52,6 @@ func dataSourceNetworkNetworkV2() *schema.Resource {
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 			"subnets": &schema.Schema{
@@ -66,7 +65,6 @@ func dataSourceNetworkNetworkV2() *schema.Resource {
 			},
 			"tenant_id": &schema.Schema{
 				Type:        schema.TypeString,
-				Optional:    true,
 				Computed:    true,
 				Description: descriptions["tenant_id"],
 			},
