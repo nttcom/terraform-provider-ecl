@@ -36,6 +36,7 @@ func TestMockedAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
 
 	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayPost)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetBasic)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingCreate)
@@ -120,6 +121,7 @@ func TestMockedAccNetworkV2InternetGatewayDataSourceTestQueries(t *testing.T) {
 
 	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayPost)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetBasic)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingCreate)
@@ -191,7 +193,6 @@ func testAccCheckNetworkV2InternetGatewayDataSourceID(n string) resource.TestChe
 		return nil
 	}
 }
-
 
 var testAccNetworkV2InternetGatewayDataSourceInternetGateway = fmt.Sprintf(`
 data "ecl_network_internet_service_v2" "internet_service_1" {
@@ -280,7 +281,7 @@ response:
                 {
                     "description": "test_internet_gateway",
                     "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
-                    "internet_service_id": "5536154d-9a00-4b11-81fb-b185c9111d90",
+                    "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
                     "name": "Terraform_Test_Internet_Gateway_01",
                     "qos_option_id": "e497bbc3-1127-4490-a51d-93582c40ab40",
                     "status": "ACTIVE",
