@@ -37,6 +37,7 @@ func TestMockedAccNetworkV2InternetGatewayImportBasic(t *testing.T) {
 
 	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayPost)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetBasic)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingCreate)

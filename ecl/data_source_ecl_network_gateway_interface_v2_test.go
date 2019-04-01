@@ -128,8 +128,8 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
     name = "Terraform_Test_Internet_Gateway_01"
-	description = "test_internet_gateway"
-	internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
+    description = "test_internet_gateway"
+    internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
     qos_option_id = "%s"
 }
 

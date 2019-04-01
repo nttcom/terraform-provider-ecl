@@ -236,9 +236,6 @@ func testAccPreCheckGatewayInterface(t *testing.T) {
 func testAccPreCheckInternetGateway(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 
-	//if OS_INTERNET_SERVICE_ID == "" {
-	//	t.Fatal("OS_INTERNET_SERVICE_ID must be set for acceptance tests")
-	//}
 	if OS_QOS_OPTION_ID_10M == "" {
 		t.Fatal("OS_QOS_OPTION_ID_10M must be set for acceptance tests")
 	}
