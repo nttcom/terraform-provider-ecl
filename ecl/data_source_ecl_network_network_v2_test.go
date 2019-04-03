@@ -152,6 +152,10 @@ func testAccNetworkV2NetworkDataSourceName(networkName, networkDescription strin
 		}`, testAccNetworkV2NetworkDataSourceNetwork(networkName, networkDescription))
 }
 
+// 1. Firstly, this test case creates two network which has different plane, "data" and "storage".
+//    These two networks have same but random name which is given as argument of this function.
+// 2. Afterward, this case try to extract network by using above "random name" and specified plane,
+//    so that Terraform can extract only one network as data source.
 func testAccNetworkV2NetworkDataSourcePlane(networkName, networkDescription string) string {
 	return fmt.Sprintf(`
 		%s
