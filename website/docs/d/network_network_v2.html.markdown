@@ -35,11 +35,6 @@ data "ecl_network_network_v2" "network" {
   A Neutron client is needed to retrieve networks ids. If omitted, the
   `region` argument of the provider is used.
 
-* `status` - (Optional) The status of the network.
-
-* `tenant_id` - (Optional) The owner of the network.
-
-
 ## Attributes Reference
 
 `id` is set to the ID of the found network. In addition, the following attributes
