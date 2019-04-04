@@ -12,7 +12,7 @@ import (
 )
 
 func TestAccNetworkV2SubnetDataSourceBasic(t *testing.T) {
-	name, description, cidr, gatewayIP := generateQueryParams()
+	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -35,7 +35,7 @@ func TestAccNetworkV2SubnetDataSourceBasic(t *testing.T) {
 }
 
 func TestAccNetworkV2SubnetDataSourceTestQueries(t *testing.T) {
-	name, description, cidr, gatewayIP := generateQueryParams()
+	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -85,7 +85,7 @@ func TestAccNetworkV2SubnetDataSourceTestQueries(t *testing.T) {
 }
 
 func TestAccNetworkV2SubnetDataSourceNetworkIdAttribute(t *testing.T) {
-	name, description, cidr, gatewayIP := generateQueryParams()
+	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -251,7 +251,7 @@ func testAccNetworkV2SubnetDataSourceNetworkIDAttribute(name, description, cidr,
 		}`, testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP))
 }
 
-func generateQueryParams() (string, string, string, string) {
+func generateNetworkSubnetQueryParams() (string, string, string, string) {
 	name := fmt.Sprintf("ACPTTEST%s-network", acctest.RandString(5))
 	description := fmt.Sprintf("ACPTTEST%s-network-description", acctest.RandString(5))
 
