@@ -252,8 +252,8 @@ func testAccNetworkV2SubnetDataSourceNetworkIDAttribute(name, description, cidr,
 }
 
 func generateNetworkSubnetQueryParams() (string, string, string, string) {
-	name := fmt.Sprintf("ACPTTEST%s-network", acctest.RandString(5))
-	description := fmt.Sprintf("ACPTTEST%s-network-description", acctest.RandString(5))
+	name := fmt.Sprintf("ACPTTEST%s-subnet", acctest.RandString(5))
+	description := fmt.Sprintf("ACPTTEST%s-subnet-description", acctest.RandString(5))
 
 	rand.Seed(time.Now().UnixNano())
 	thirdOctet := rand.Intn(255)
