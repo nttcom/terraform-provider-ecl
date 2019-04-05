@@ -17,23 +17,23 @@ response:
                             {
                                 "id": "1234567890abcdef1234567890abcde0",
                                 "interface": "admin",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv2/01234567890123456789abcdefabcdef"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv2/01234567890123456789abcdefabcdef"
                             },
                             {
                                 "id": "1234567890abcdef1234567890abcde1",
                                 "interface": "internal",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv2/01234567890123456789abcdefabcdef"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv2/01234567890123456789abcdefabcdef"
                             },
                             {
                                 "id": "1234567890abcdef1234567890abcde2",
                                 "interface": "public",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv2/01234567890123456789abcdefabcdef"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv2/01234567890123456789abcdefabcdef"
                             }
                         ],
                         "id": "1234567890abcdef1234567890abcde3",
@@ -45,23 +45,23 @@ response:
                             {
                                 "id": "1234567890abcdef1234567890abcde4",
                                 "interface": "public",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]s"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]s"
                             },
                             {
                                 "id": "1234567890abcdef1234567890abcde5",
                                 "interface": "internal",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]s"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]s"
                             },
                             {
                                 "id": "1234567890abcdef1234567890abcde6",
                                 "interface": "admin",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]s"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]s"
                             }
                         ],
                         "id": "1234567890abcdef1234567890abcde7",
@@ -73,23 +73,23 @@ response:
                             {
                                 "id": "1234567890abcdef1234567890abcde8",
                                 "interface": "admin",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv3"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv3"
                             },
                             {
                                 "id": "1234567890abcdef1234567890abcde9",
                                 "interface": "internal",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv3"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv3"
                             },
                             {
                                 "id": "1234567890abcdef1234567890abcdea",
                                 "interface": "public",
-                                "region": "RegionOne",
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv3"
+                                "region": "%[1]s",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv3"
                             }
                         ],
                         "id": "1234567890abcdef1234567890abcdeb",
@@ -99,23 +99,23 @@ response:
                     {
                         "endpoints":[
                             {
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv2/01234567890123456789abcdefabcdef",
-                                "region": "RegionOne",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv2/01234567890123456789abcdefabcdef",
+                                "region": "%[1]s",
                                 "interface": "public",
                                 "id": "1234567890abcdef1234567890abcdec"
                             },
                             {
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv2/01234567890123456789abcdefabcdef",
-                                "region": "RegionOne",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv2/01234567890123456789abcdefabcdef",
+                                "region": "%[1]s",
                                 "interface": "admin",
                                 "id": "1234567890abcdef1234567890abcded"
                             },
                             {
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv2/01234567890123456789abcdefabcdef",
-                                "region": "RegionOne",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv2/01234567890123456789abcdefabcdef",
+                                "region": "%[1]s",
                                 "interface": "internal",
                                 "id": "1234567890abcdef1234567890abcdee"
                             }
@@ -127,23 +127,23 @@ response:
                     {
                         "endpoints":[
                             {
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv1/01234567890123456789abcdefabcdef",
-                                "region": "RegionOne",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv1/01234567890123456789abcdefabcdef",
+                                "region": "%[1]s",
                                 "interface": "public",
                                 "id": "1234567890abcdef1234567890abcdd0"
                             },
                             {
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv1/01234567890123456789abcdefabcdef",
-                                "region": "RegionOne",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv1/01234567890123456789abcdefabcdef",
+                                "region": "%[1]s",
                                 "interface": "internal",
                                 "id": "1234567890abcdef1234567890abcdd1"
                             },
                             {
-                                "region_id": "RegionOne",
-                                "url": "%[1]sv1/01234567890123456789abcdefabcdef",
-                                "region": "RegionOne",
+                                "region_id": "%[1]s",
+                                "url": "%[2]sv1/01234567890123456789abcdefabcdef",
+                                "region": "%[1]s",
                                 "interface": "admin",
                                 "id": "1234567890abcdef1234567890abcdd2"
                             }

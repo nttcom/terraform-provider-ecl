@@ -2,6 +2,7 @@ TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -not -iwholename './.git/*' -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=ecl
+TESTMOCKEDACCS=TestMockedAcc
 
 default: build
 
@@ -15,6 +16,9 @@ test: fmtcheck
 
 testacc: fmtcheck
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
+
+testmockedacc: fmtcheck
+	TF_MOCK=1 TF_ACC=1 go test $(TEST) -v $(TESTARGS) -run=$(TESTMOCKEDACCS) -timeout 120m
 
 vet:
 	@echo "go vet ."

@@ -453,4 +453,19 @@ func envVarFile(varName string) (string, error) {
 	return tmpFile.Name(), nil
 }
 
+func testPrecheckMockEnv(t *testing.T) {
+	if os.Getenv(MockTestEnvVar) == "" {
+		t.Skip(fmt.Sprintf(
+			"Mocked Acceptance tests skipped unless env '%s' set",
+			MockTestEnvVar))
+	}
+
+	if OS_REGION_NAME == "" {
+		t.Skip(fmt.Sprintf(
+			"Mocked Acceptance tests skipped unless env 'OS_REGION_NAME' set"))
+	}
+}
+
+const MockTestEnvVar = "TF_MOCK"
+
 var stringMaxLength = strings.Repeat("a", 255)

@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"os"
 	"reflect"
-	"testing"
 )
 
 const (
@@ -63,9 +62,6 @@ func NewMockController() *MockController {
 	mc.Mux = http.NewServeMux()
 	mc.Server = httptest.NewServer(mc.Mux)
 
-	// ECL(Enterprise Cloud) provider specific setting.
-	os.Setenv("OS_AUTH_URL", mc.Endpoint()+"v3/")
-
 	return mc
 }
 
@@ -77,13 +73,14 @@ func (mc MockController) Endpoint() string {
 	return mc.Server.URL + "/"
 }
 
-func (mc *MockController) Register(t *testing.T, trackKey string, path string, mockdata string) {
+func (mc *MockController) Register(trackKey string, path string, mockdata string) error {
 	m := Mock{}
 	m.Counter.MinSize = -1
 	m.Counter.MaxSize = MaxPollNum
 	err := yaml.Unmarshal([]byte(mockdata), &m)
 	if err != nil {
-		t.Errorf("Failed to unmarshal mockdata: %s\n", err)
+		log.Printf("[ERROR] Failed to unmarshal mockdata: %s\n", err)
+		return err
 	}
 
 	_, ok := mc.Mocks[path]
@@ -99,21 +96,24 @@ func (mc *MockController) Register(t *testing.T, trackKey string, path string, m
 	m.Tracker = mc.Trackers[trackKey]
 	mc.Mocks[path] = append(mc.Mocks[path], m)
 
+	return nil
+
 }
 
-func (mc MockController) StartServer(t *testing.T) {
+func (mc MockController) StartServer() {
 	for k, v := range mc.Mocks {
-		mc.setupHandler(t, k, v)
+		mc.setupHandler(k, v)
 	}
 }
 
-func (mc MockController) setupHandler(t *testing.T, path string, mocks []Mock) {
+func (mc MockController) setupHandler(path string, mocks []Mock) {
 	mc.Mux.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
 		var found bool
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			t.Errorf("Failed to read request body %v\n", r.Body)
+			log.Printf("[ERROR] Failed to unmarshal mockdata: %s\n", err)
+			return
 		}
 
 		for _, v := range mocks {
@@ -121,8 +121,12 @@ func (mc MockController) setupHandler(t *testing.T, path string, mocks []Mock) {
 				continue
 			}
 
-			if len(v.Request.Query) != 0 {
-				if !reflect.DeepEqual(v.Request.Query, r.URL.Query()) {
+			if len(r.URL.Query()) > 0 {
+				if len(v.Request.Query) != 0 {
+					if !reflect.DeepEqual(v.Request.Query, r.URL.Query()) {
+						continue
+					}
+				} else {
 					continue
 				}
 			}
@@ -174,12 +178,12 @@ func (mc MockController) setupHandler(t *testing.T, path string, mocks []Mock) {
 		}
 
 		if !found {
-			t.Errorf("No suitable mock found for Request API %v %v\n", r.Method, r.URL)
+			log.Printf("[ERROR] No suitable mock found for Request API %v %v\n", r.Method, r.URL)
 			w.Header().Add("X-Subject-Token", FakeTokenID)
 			w.WriteHeader(404)
 			fmt.Fprintf(w, "")
+			return
 		}
-
 	})
 }
 

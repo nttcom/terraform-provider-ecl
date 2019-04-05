@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -32,20 +33,20 @@ func TestAccNetworkV2InternetGatewayImportBasic(t *testing.T) {
 func TestMockedAccNetworkV2InternetGatewayImportBasic(t *testing.T) {
 	resourceName := "ecl_network_internet_gateway_v2.internet_gateway_1"
 
+	testPrecheckMockEnv(t)
+
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
-	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
-	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayPost)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetBasic)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingCreate)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingDelete)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetDeleted)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayDelete)
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, OS_REGION_NAME, mc.Endpoint())
+	err := mc.Register("keystone", "/v3/auth/tokens", postKeystone)
+	err = testSetupMockInternetGatewayBasic(mc)
+	if err != nil {
+		t.Errorf("Failed to setup mock: %s", err)
+	}
 
-	mc.StartServer(t)
+	mc.StartServer()
+	os.Setenv("OS_AUTH_URL", mc.Endpoint()+"v3/")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckInternetGateway(t) },

@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -50,26 +51,19 @@ func TestAccNetworkV2InternetGatewayBasic(t *testing.T) {
 func TestMockedAccNetworkV2InternetGatewayBasic(t *testing.T) {
 	var internet_gateway internet_gateways.InternetGateway
 
+	testPrecheckMockEnv(t)
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
-	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
-	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayPost)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetBasic)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingCreate)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingUpdate1)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingUpdate2)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingDelete)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetUpdated1)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetUpdated2)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetDeleted)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayPut1)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayPut2)
-	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayDelete)
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, OS_REGION_NAME, mc.Endpoint())
+	err := mc.Register("keystone", "/v3/auth/tokens", postKeystone)
+	err = testSetupMockInternetGatewayBasic(mc)
+	if err != nil {
+		t.Errorf("Failed to setup mock: %s", err)
+	}
 
-	mc.StartServer(t)
+	mc.StartServer()
+	os.Setenv("OS_AUTH_URL", mc.Endpoint()+"v3/")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckInternetGateway(t) },
@@ -155,6 +149,28 @@ func testAccCheckNetworkV2InternetGatewayExists(n string, internet_gateway *inte
 
 		return nil
 	}
+}
+
+func testSetupMockInternetGatewayBasic(mc *mock.MockController) error {
+	err := testSetupMockInternetServiceDatasourceBasic(mc)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayPost)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetBasic)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingCreate)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingUpdate1)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingUpdate2)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetPendingDelete)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetUpdated1)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetUpdated2)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetDeleted)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayPut1)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayPut2)
+	err = mc.Register("internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayDelete)
+
+	// latest error match
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 var testAccNetworkV2InternetGatewayBasic = fmt.Sprintf(`

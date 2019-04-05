@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -28,14 +29,20 @@ func TestAccNetworkV2InternetServiceDataSourceBasic(t *testing.T) {
 
 func TestMockedAccNetworkV2InternetServiceDataSourceBasic(t *testing.T) {
 
+	testPrecheckMockEnv(t)
+
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
-	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
-	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, OS_REGION_NAME, mc.Endpoint())
+	err := mc.Register("keystone", "/v3/auth/tokens", postKeystone)
+	err = testSetupMockInternetServiceDatasourceBasic(mc)
+	if err != nil {
+		t.Errorf("Failed to setup mock: %s", err)
+	}
 
-	mc.StartServer(t)
+	mc.StartServer()
+	os.Setenv("OS_AUTH_URL", mc.Endpoint()+"v3/")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckInternetService(t) },
@@ -94,18 +101,20 @@ func TestAccNetworkV2InternetServiceDataSourceTestQueries(t *testing.T) {
 
 func TestMockedAccNetworkV2InternetServiceDataSourceTestQueries(t *testing.T) {
 
+	testPrecheckMockEnv(t)
+
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
-	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
-	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
-	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListIDQuery)
-	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListDescriptionQuery)
-	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListMinimalSubmaskLengthQuery)
-	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListZoneQuery)
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, OS_REGION_NAME, mc.Endpoint())
+	err := mc.Register("keystone", "/v3/auth/tokens", postKeystone)
+	err = testSetupMockInternetServiceDatasourceTestQueries(mc)
+	if err != nil {
+		t.Errorf("Failed to setup mock: %s", err)
+	}
 
-	mc.StartServer(t)
+	mc.StartServer()
+	os.Setenv("OS_AUTH_URL", mc.Endpoint()+"v3/")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckInternetService(t) },
@@ -160,6 +169,31 @@ func testAccCheckNetworkV2InternetServiceDataSourceID(n string) resource.TestChe
 	}
 }
 
+func testSetupMockInternetServiceDatasourceBasic(mc *mock.MockController) error {
+	err := mc.Register("internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNamequery)
+
+	// latest error match
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func testSetupMockInternetServiceDatasourceTestQueries(mc *mock.MockController) error {
+	err := mc.Register("internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListBasic)
+	err = mc.Register("internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNamequery)
+	err = mc.Register("internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListIDquery)
+	err = mc.Register("internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListDescriptionquery)
+	err = mc.Register("internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListMinimalSubmaskLengthquery)
+	err = mc.Register("internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListZonequery)
+
+	// latest error match
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func testAccReturnMinimalSubmaskLength(region string) int {
 	minimal_submask_length := 26
 	if region == "lab4ec" {
@@ -207,10 +241,29 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 `,
 	OS_INTERNET_SERVICE_ZONE_NAME)
 
-var testMockNetworkV2InternetServiceListNameQuery = `
+var testMockNetworkV2InternetServiceListBasic = `
 request:
     method: GET
-    Query:
+response: 
+    code: 200
+    body: >
+        {
+            "internet_services": [
+                {
+                    "description": "Internet-Service-01",
+                    "id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
+                    "minimal_submask_length": 26,
+                    "name": "Internet-Service-01",
+                    "zone": "jp1-zone1"
+                }
+            ]
+        }
+`
+
+var testMockNetworkV2InternetServiceListNamequery = `
+request:
+    method: GET
+    query:
       name:
         - Internet-Service-01
 response: 
@@ -229,10 +282,10 @@ response:
         }
 `
 
-var testMockNetworkV2InternetServiceListIDQuery = `
+var testMockNetworkV2InternetServiceListIDquery = `
 request:
     method: GET
-    Query:
+    query:
       id:
         - a7791c79-19b0-4eb6-9a8f-ea739b44e8d5
 response: 
@@ -251,10 +304,10 @@ response:
         }
 `
 
-var testMockNetworkV2InternetServiceListDescriptionQuery = `
+var testMockNetworkV2InternetServiceListDescriptionquery = `
 request:
     method: GET
-    Query:
+    query:
       decsription:
         - Internet-Service-01
 response: 
@@ -273,10 +326,10 @@ response:
         }
 `
 
-var testMockNetworkV2InternetServiceListMinimalSubmaskLengthQuery = `
+var testMockNetworkV2InternetServiceListMinimalSubmaskLengthquery = `
 request:
     method: GET
-    Query:
+    query:
       minimal_submask_length:
         - 26
 response: 
@@ -295,10 +348,10 @@ response:
         }
 `
 
-var testMockNetworkV2InternetServiceListZoneQuery = `
+var testMockNetworkV2InternetServiceListZonequery = `
 request:
     method: GET
-    Query:
+    query:
       zone:
         - jp1-zone1
 response: 
