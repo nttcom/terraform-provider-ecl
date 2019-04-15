@@ -106,6 +106,14 @@ func resourceComputeVolumeV2() *schema.Resource {
 	}
 }
 
+func resourceContainerMetadataV2(d *schema.ResourceData) map[string]string {
+	m := make(map[string]string)
+	for key, val := range d.Get("metadata").(map[string]interface{}) {
+		m[key] = val.(string)
+	}
+	return m
+}
+
 func resourceComputeVolumeV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	computeVolumeClient, err := config.computeVolumeV2Client(GetRegion(d, config))
