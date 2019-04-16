@@ -221,6 +221,7 @@ func Provider() terraform.ResourceProvider {
 			"ecl_network_static_route_v2":            resourceNetworkStaticRouteV2(),
 			"ecl_network_subnet_v2":                  resourceNetworkSubnetV2(),
 			"ecl_sss_tenant_v1":                      resourceSSSTenantV1(),
+			"ecl_sss_user_v1":                        resourceSSSUserV1(),
 			"ecl_storage_virtualstorage_v1":          resourceStorageVirtualStorageV1(),
 			"ecl_storage_volume_v1":                  resourceStorageVolumeV1(),
 		},
