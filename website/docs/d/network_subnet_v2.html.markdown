@@ -43,6 +43,8 @@ The following arguments are supported:
     A Network client is needed to retrieve subnet ids. If omitted, the
     `region` argument of the provider is used.
 
+* `subnet_id` - (Optional) ID of subnet.
+
 ## Attributes Reference
 
 `id` is set to the ID of the found subnet. In addition, the following attributes
