@@ -110,10 +110,14 @@ resource "ecl_network_subnet_v2" "subnet_1" {
     network_id = "${ecl_network_network_v2.network_1.id}"
 }
 
+data "ecl_network_internet_service_v2" "internet_service_1" {
+	name = "Internet-Service-01"
+}
+
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
     name = "Terraform_Test_Internet_Gateway_01"
     description = "test_internet_gateway"
-    internet_service_id = "%s"
+    internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
     qos_option_id = "%s"
 }
 
@@ -149,7 +153,6 @@ resource "ecl_network_static_route_v2" "static_route_1" {
 				  "ecl_network_public_ip_v2.public_ip_1"]
 }
 `,
-	OS_INTERNET_SERVICE_ID,
 	OS_QOS_OPTION_ID_10M)
 
 var testAccNetworkV2StaticRouteDataSourceBasic = fmt.Sprintf(`

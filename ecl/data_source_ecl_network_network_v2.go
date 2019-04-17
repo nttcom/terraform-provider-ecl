@@ -52,7 +52,6 @@ func dataSourceNetworkNetworkV2() *schema.Resource {
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 			"subnets": &schema.Schema{
@@ -66,7 +65,6 @@ func dataSourceNetworkNetworkV2() *schema.Resource {
 			},
 			"tenant_id": &schema.Schema{
 				Type:        schema.TypeString,
-				Optional:    true,
 				Computed:    true,
 				Description: descriptions["tenant_id"],
 			},
@@ -80,18 +78,11 @@ func dataSourceNetworkNetworkV2Read(d *schema.ResourceData, meta interface{}) er
 
 	var listOpts networks.ListOptsBuilder
 
-	var status string
-	if v, ok := d.GetOk("status"); ok {
-		status = v.(string)
-	}
-
 	listOpts = networks.ListOpts{
 		Description: d.Get("description").(string),
 		ID:          d.Get("network_id").(string),
 		Name:        d.Get("name").(string),
 		Plane:       d.Get("plane").(string),
-		Status:      status,
-		TenantID:    d.Get("tenant_id").(string),
 	}
 
 	pages, err := networks.List(networkClient, listOpts).AllPages()

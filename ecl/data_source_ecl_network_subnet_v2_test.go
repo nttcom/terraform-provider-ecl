@@ -2,27 +2,32 @@ package ecl
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
+	"time"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccNetworkV2SubnetDataSourceBasic(t *testing.T) {
+	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceSubnet,
+				Config: testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceName,
+				Config: testAccNetworkV2SubnetDataSourceName(name, description, cidr, gatewayIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
 					testAccCheckNetworkV2SubnetDataSourceGoodNetwork("data.ecl_network_subnet_v2.subnet_1", "ecl_network_network_v2.network_1"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_subnet_v2.subnet_1", "name", "subnet_1"),
+						"data.ecl_network_subnet_v2.subnet_1", "name", name),
 				),
 			},
 		},
@@ -30,63 +35,47 @@ func TestAccNetworkV2SubnetDataSourceBasic(t *testing.T) {
 }
 
 func TestAccNetworkV2SubnetDataSourceTestQueries(t *testing.T) {
+	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceSubnet,
+				Config: testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceCIDR,
+				Config: testAccNetworkV2SubnetDataSourceCIDR(name, description, cidr, gatewayIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
 				),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceDescription,
+				Config: testAccNetworkV2SubnetDataSourceDescription(name, description, cidr, gatewayIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
 				),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceGatewayIP,
+				Config: testAccNetworkV2SubnetDataSourceGatewayIP(name, description, cidr, gatewayIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
 				),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceIPVersion,
+				Config: testAccNetworkV2SubnetDataSourceName(name, description, cidr, gatewayIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
 				),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceName,
+				Config: testAccNetworkV2SubnetDataSourceNetworkID(name, description, cidr, gatewayIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
 				),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceNetworkID,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceStatus,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceID,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceTenantID,
+				Config: testAccNetworkV2SubnetDataSourceID(name, description, cidr, gatewayIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
 				),
@@ -96,12 +85,14 @@ func TestAccNetworkV2SubnetDataSourceTestQueries(t *testing.T) {
 }
 
 func TestAccNetworkV2SubnetDataSourceNetworkIdAttribute(t *testing.T) {
+	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccNetworkV2SubnetDataSourceNetworkIDAttribute,
+				Config: testAccNetworkV2SubnetDataSourceNetworkIDAttribute(name, description, cidr, gatewayIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2SubnetDataSourceID("data.ecl_network_subnet_v2.subnet_1"),
 					testAccCheckNetworkV2SubnetDataSourceGoodNetwork("data.ecl_network_subnet_v2.subnet_1", "ecl_network_network_v2.network_1"),
@@ -170,105 +161,104 @@ func testAccCheckNetworkV2SubnetDataSourceGoodNetwork(n1, n2 string) resource.Te
 	}
 }
 
-const testAccNetworkV2SubnetDataSourceSubnet = `
-resource "ecl_network_network_v2" "network_1" {
-  name = "network_1"
-  admin_state_up = "true"
+func testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP string) string {
+	return fmt.Sprintf(`
+	resource "ecl_network_network_v2" "network_1" {
+	  name = "network_1"
+	  admin_state_up = "true"
+	}
+	
+	resource "ecl_network_subnet_v2" "subnet_1" {
+	  name = "%s"
+	  description = "%s"
+	  cidr = "%s"
+	  gateway_ip = "%s"
+	  network_id = "${ecl_network_network_v2.network_1.id}"
+	  tags = {
+		  key1 = "value1"
+	  }
+	}`, name, description, cidr, gatewayIP)
+
 }
 
-resource "ecl_network_subnet_v2" "subnet_1" {
-  name = "subnet_1"
-  cidr = "192.168.199.0/24"
-  network_id = "${ecl_network_network_v2.network_1.id}"
-  tags = {
-	  key1 = "value1"
-  }
-}
-`
+func testAccNetworkV2SubnetDataSourceCIDR(name, description, cidr, gatewayIP string) string {
+	return fmt.Sprintf(`
+		%s
 
-var testAccNetworkV2SubnetDataSourceCIDR = fmt.Sprintf(`
-%s
+		data "ecl_network_subnet_v2" "subnet_1" {
+			cidr = "${ecl_network_subnet_v2.subnet_1.cidr}"
+		}`, testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP))
 
-data "ecl_network_subnet_v2" "subnet_1" {
-	cidr = "${ecl_network_subnet_v2.subnet_1.cidr}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceDescription = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-	description = "${ecl_network_subnet_v2.subnet_1.description}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceGatewayIP = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-	gateway_ip = "${ecl_network_subnet_v2.subnet_1.gateway_ip}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceIPVersion = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-	ip_version = "${ecl_network_subnet_v2.subnet_1.ip_version}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceName = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-	name = "${ecl_network_subnet_v2.subnet_1.name}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceNetworkID = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-	network_id = "${ecl_network_subnet_v2.subnet_1.network_id}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceStatus = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-	status = "${ecl_network_subnet_v2.subnet_1.status}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceID = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-	subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceTenantID = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-	tenant_id = "${ecl_network_subnet_v2.subnet_1.tenant_id}"
-}
-`, testAccNetworkV2SubnetDataSourceSubnet)
-
-var testAccNetworkV2SubnetDataSourceNetworkIDAttribute = fmt.Sprintf(`
-%s
-
-data "ecl_network_subnet_v2" "subnet_1" {
-  subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
 }
 
-resource "ecl_network_port_v2" "port_1" {
-  name               = "test_port"
-  network_id         = "${data.ecl_network_subnet_v2.subnet_1.network_id}"
-  admin_state_up  = "true"
+func testAccNetworkV2SubnetDataSourceDescription(name, description, cidr, gatewayIP string) string {
+	return fmt.Sprintf(`
+		%s
+
+		data "ecl_network_subnet_v2" "subnet_1" {
+			description = "${ecl_network_subnet_v2.subnet_1.description}"
+		}`, testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP))
 }
 
-`, testAccNetworkV2SubnetDataSourceSubnet)
+func testAccNetworkV2SubnetDataSourceGatewayIP(name, description, cidr, gatewayIP string) string {
+	return fmt.Sprintf(`
+		%s
+
+		data "ecl_network_subnet_v2" "subnet_1" {
+			gateway_ip = "${ecl_network_subnet_v2.subnet_1.gateway_ip}"
+		}`, testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP))
+}
+
+func testAccNetworkV2SubnetDataSourceName(name, description, cidr, gatewayIP string) string {
+	return fmt.Sprintf(`
+		%s
+
+		data "ecl_network_subnet_v2" "subnet_1" {
+			name = "${ecl_network_subnet_v2.subnet_1.name}"
+		}`, testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP))
+}
+
+func testAccNetworkV2SubnetDataSourceNetworkID(name, description, cidr, gatewayIP string) string {
+	return fmt.Sprintf(`
+		%s
+
+		data "ecl_network_subnet_v2" "subnet_1" {
+			network_id = "${ecl_network_subnet_v2.subnet_1.network_id}"
+		}`, testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP))
+}
+
+func testAccNetworkV2SubnetDataSourceID(name, description, cidr, gatewayIP string) string {
+	return fmt.Sprintf(`
+		%s
+
+		data "ecl_network_subnet_v2" "subnet_1" {
+			subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
+		}`, testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP))
+}
+
+func testAccNetworkV2SubnetDataSourceNetworkIDAttribute(name, description, cidr, gatewayIP string) string {
+	return fmt.Sprintf(`
+			%s
+
+		data "ecl_network_subnet_v2" "subnet_1" {
+			subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
+		}
+
+		resource "ecl_network_port_v2" "port_1" {
+			name               = "test_port"
+			network_id         = "${data.ecl_network_subnet_v2.subnet_1.network_id}"
+			admin_state_up  = "true"
+		}`, testAccNetworkV2SubnetDataSourceSubnet(name, description, cidr, gatewayIP))
+}
+
+func generateNetworkSubnetQueryParams() (string, string, string, string) {
+	name := fmt.Sprintf("ACPTTEST%s-subnet", acctest.RandString(5))
+	description := fmt.Sprintf("ACPTTEST%s-subnet-description", acctest.RandString(5))
+
+	rand.Seed(time.Now().UnixNano())
+	thirdOctet := rand.Intn(255)
+	cidr := fmt.Sprintf("192.168.%d.0/24", thirdOctet)
+	gatewayIP := fmt.Sprintf("192.168.%d.1", thirdOctet)
+
+	return name, description, cidr, gatewayIP
+}
