@@ -105,13 +105,14 @@ func dataSourceNetworkPortV2() *schema.Resource {
 				Optional: true,
 			},
 			"segmentation_type": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Computed: true,
 				Optional: true,
 			},
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
+				Optional: true,
 			},
 			"tags": &schema.Schema{
 				Type:     schema.TypeMap,
@@ -120,6 +121,7 @@ func dataSourceNetworkPortV2() *schema.Resource {
 			"tenant_id": {
 				Type:     schema.TypeString,
 				Computed: true,
+				Optional: true,
 			},
 		},
 	}
@@ -168,6 +170,14 @@ func dataSourceNetworkPortV2Read(d *schema.ResourceData, meta interface{}) error
 
 	if v, ok := d.GetOk("segmentation_type"); ok {
 		listOpts.SegmentationType = v.(string)
+	}
+
+	if v, ok := d.GetOk("status"); ok {
+		listOpts.Status = v.(string)
+	}
+
+	if v, ok := d.GetOk("tenant_id"); ok {
+		listOpts.TenantID = v.(string)
 	}
 
 	allPages, err := ports.List(networkClient, listOpts).AllPages()
@@ -221,6 +231,7 @@ func dataSourceNetworkPortV2Read(d *schema.ResourceData, meta interface{}) error
 	d.Set("device_owner", port.DeviceOwner)
 	d.Set("all_fixed_ips", expandNetworkPortFixedIPToStringSlice(port.FixedIPs))
 	d.Set("fixed_ips", port.FixedIPs)
+	d.Set("port_id", port.ID)
 	d.Set("mac_address", port.MACAddress)
 	d.Set("managed_by_service", port.ManagedByService)
 	d.Set("name", port.Name)
