@@ -71,10 +71,8 @@ func dataSourceNetworkSubnetV2() *schema.Resource {
 				},
 			},
 			"ip_version": &schema.Schema{
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: IntInSlice([]int{4}),
+				Type:     schema.TypeInt,
+				Computed: true,
 			},
 			"ipv6_address_mode": &schema.Schema{
 				Type:     schema.TypeString,
@@ -108,7 +106,6 @@ func dataSourceNetworkSubnetV2() *schema.Resource {
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 			"subnet_id": &schema.Schema{
@@ -122,7 +119,6 @@ func dataSourceNetworkSubnetV2() *schema.Resource {
 			},
 			"tenant_id": &schema.Schema{
 				Type:        schema.TypeString,
-				Optional:    true,
 				Computed:    true,
 				Description: descriptions["tenant_id"],
 			},
@@ -152,32 +148,12 @@ func dataSourceNetworkSubnetV2Read(d *schema.ResourceData, meta interface{}) err
 		listOpts.ID = v.(string)
 	}
 
-	if v, ok := d.GetOk("ip_version"); ok {
-		listOpts.IPVersion = v.(int)
-	}
-
-	if v, ok := d.GetOk("ipv6_address_mode"); ok {
-		listOpts.IPv6AddressMode = v.(string)
-	}
-
-	if v, ok := d.GetOk("ipv6_ra_mode"); ok {
-		listOpts.IPv6RAMode = v.(string)
-	}
-
 	if v, ok := d.GetOk("name"); ok {
 		listOpts.Name = v.(string)
 	}
 
 	if v, ok := d.GetOk("network_id"); ok {
 		listOpts.NetworkID = v.(string)
-	}
-
-	if v, ok := d.GetOk("status"); ok {
-		listOpts.Status = v.(string)
-	}
-
-	if v, ok := d.GetOk("tenant_id"); ok {
-		listOpts.TenantID = v.(string)
 	}
 
 	pages, err := subnets.List(networkClient, listOpts).AllPages()
