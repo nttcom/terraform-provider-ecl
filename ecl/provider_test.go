@@ -31,6 +31,7 @@ var (
 	OS_IMAGE_ID                              = os.Getenv("OS_IMAGE_ID")
 	OS_IMAGE_NAME                            = os.Getenv("OS_IMAGE_NAME")
 	OS_INTERNET_SERVICE_ID                   = os.Getenv("OS_INTERNET_SERVICE_ID")
+	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
 	OS_LB_ENVIRONMENT                        = os.Getenv("OS_LB_ENVIRONMENT")
 	OS_MAGNUM_FLAVOR                         = os.Getenv("OS_MAGNUM_FLAVOR")
 	OS_NETWORK_ID                            = os.Getenv("OS_NETWORK_ID")
@@ -235,9 +236,6 @@ func testAccPreCheckGatewayInterface(t *testing.T) {
 func testAccPreCheckInternetGateway(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 
-	if OS_INTERNET_SERVICE_ID == "" {
-		t.Fatal("OS_INTERNET_SERVICE_ID must be set for acceptance tests")
-	}
 	if OS_QOS_OPTION_ID_10M == "" {
 		t.Fatal("OS_QOS_OPTION_ID_10M must be set for acceptance tests")
 	}
@@ -245,6 +243,20 @@ func testAccPreCheckInternetGateway(t *testing.T) {
 		t.Fatal("OS_QOS_OPTION_ID_100M must be set for acceptance tests")
 	}
 
+}
+
+func testAccPreCheckInternetService(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_REGION_NAME == "" {
+		t.Skip("Skipping test because OS_REGION_NAME is not set")
+	}
+	if OS_INTERNET_SERVICE_ID == "" {
+		t.Fatal("OS_INTERNET_SERVICE_ID must be set for acceptance tests")
+	}
+	if OS_INTERNET_SERVICE_ZONE_NAME == "" {
+		t.Fatal("OS_INTERNET_SERVICE_ZONE_NAME must be set for acceptance tests")
+	}
 }
 
 func testAccPreCheckPublicIP(t *testing.T) {
