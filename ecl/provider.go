@@ -191,6 +191,7 @@ func Provider() terraform.ResourceProvider {
 			"ecl_network_common_function_gateway_v2": dataSourceNetworkCommonFunctionGatewayV2(),
 			"ecl_network_gateway_interface_v2":       dataSourceNetworkGatewayInterfaceV2(),
 			"ecl_network_internet_gateway_v2":        dataSourceNetworkInternetGatewayV2(),
+			"ecl_network_internet_service_v2":        dataSourceNetworkInternetServiceV2(),
 			"ecl_network_network_v2":                 dataSourceNetworkNetworkV2(),
 			"ecl_network_port_v2":                    dataSourceNetworkPortV2(),
 			"ecl_network_public_ip_v2":               dataSourceNetworkPublicIPV2(),

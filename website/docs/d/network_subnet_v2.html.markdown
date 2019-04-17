@@ -43,7 +43,7 @@ The following arguments are supported:
     A Network client is needed to retrieve subnet ids. If omitted, the
     `region` argument of the provider is used.
 
-* `status` - (Optional) Hidden Subnet status.
+* `subnet_id` - (Optional) ID of subnet.
 
 ## Attributes Reference
 
