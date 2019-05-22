@@ -56,12 +56,6 @@ func TestAccNetworkV2PortDataSourceTestQueries(t *testing.T) {
 				),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2PortDataSourceDeviceID(name, description, segmentationID),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2PortDataSourceID("data.ecl_network_port_v2.port_1"),
-				),
-			},
-			resource.TestStep{
 				Config: testAccNetworkV2PortDataSourceDeviceOwnerAndNetworkID(name, description, segmentationID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2PortDataSourceID("data.ecl_network_port_v2.port_1"),
@@ -83,6 +77,25 @@ func TestAccNetworkV2PortDataSourceTestQueries(t *testing.T) {
 	})
 }
 
+func TestAccNetworkV2PortDataSourceTestQueriesDeviceID(t *testing.T) {
+	name, description, segmentationID := generateNetworkPortQueryParams()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccNetworkV2PortDataSourcePortForDeviceID(name, description, segmentationID),
+			},
+			resource.TestStep{
+				Config: testAccNetworkV2PortDataSourceDeviceID(name, description, segmentationID),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2PortDataSourceID("data.ecl_network_port_v2.port_1"),
+				),
+			},
+		},
+	})
+}
 func TestAccNetworkV2PortDataSourceNetworkIdAttribute(t *testing.T) {
 	name, description, segmentationID := generateNetworkPortQueryParams()
 
@@ -222,15 +235,6 @@ func testAccNetworkV2PortDataSourceDescription(name, description string, segment
 		}`, testAccNetworkV2PortDataSourcePort(name, description, segmentationID))
 }
 
-func testAccNetworkV2PortDataSourceDeviceID(name, description string, segmentationID int) string {
-	return fmt.Sprintf(`
-		%s
-
-		data "ecl_network_port_v2" "port_1" {
-			device_id = "${ecl_network_port_v2.port_1.device_id}"
-		}`, testAccNetworkV2PortDataSourcePort(name, description, segmentationID))
-}
-
 func testAccNetworkV2PortDataSourceDeviceOwnerAndNetworkID(name, description string, segmentationID int) string {
 	return fmt.Sprintf(`
 		%s
@@ -293,4 +297,52 @@ func generateNetworkPortQueryParams() (string, string, int) {
 	segmentationID := rand.Intn(250) + 1
 
 	return name, description, segmentationID
+}
+
+func testAccNetworkV2PortDataSourcePortForDeviceID(name, description string, segmentationID int) string {
+	return fmt.Sprintf(`
+	resource "ecl_network_network_v2" "network_1" {
+	  name = "network_1"
+	  admin_state_up = "true"
+	}
+
+	resource "ecl_network_subnet_v2" "subnet_1" {
+		name = "subnet_1"
+		network_id = "${ecl_network_network_v2.network_1.id}"
+		cidr = "192.168.1.0/24"
+		gateway_ip = "192.168.1.1"
+		allocation_pools = {
+			start = "192.168.1.100"
+			end = "192.168.1.200"
+		}
+	}
+
+	resource "ecl_network_port_v2" "port_1" {
+		name = "%s"
+		description = "%s"
+		segmentation_type = "vlan"
+		segmentation_id = %d
+		network_id = "${ecl_network_network_v2.network_1.id}"
+		fixed_ip = {
+			subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
+			ip_address = "192.168.1.50"
+		}
+	}
+	
+	resource "ecl_compute_instance_v2" "instance_1" {
+		depends_on = ["ecl_network_subnet_v2.subnet_1"]
+		name = "instance_1"
+		network {
+			port = "${ecl_network_port_v2.port_1.id}"
+		}
+	}`, name, description, segmentationID)
+}
+
+func testAccNetworkV2PortDataSourceDeviceID(name, description string, segmentationID int) string {
+	return fmt.Sprintf(`
+		%s
+
+		data "ecl_network_port_v2" "port_1" {
+			device_id = "${ecl_network_port_v2.port_1.device_id}"
+		}`, testAccNetworkV2PortDataSourcePortForDeviceID(name, description, segmentationID))
 }
