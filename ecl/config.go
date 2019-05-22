@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl"
-	"github.com/nttcom/eclcloud/ecl/objectstorage/v1/swauth"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
 
@@ -34,7 +33,6 @@ type Config struct {
 	ProjectDomainName string
 	ProjectDomainID   string
 	Region            string
-	Swauth            bool
 	TenantID          string
 	TenantName        string
 	Token             string
@@ -185,14 +183,10 @@ func (c *Config) LoadAndValidate() error {
 		},
 	}
 
-	// If using Swift Authentication, there's no need to validate authentication normally.
-	if !c.Swauth {
-		err = ecl.Authenticate(client, *ao)
-		if err != nil {
-			return err
-		}
+	err = ecl.Authenticate(client, *ao)
+	if err != nil {
+		return err
 	}
-
 	c.OsClient = client
 
 	return nil
@@ -216,13 +210,6 @@ func (c *Config) computeVolumeV2Client(region string) (*eclcloud.ServiceClient, 
 		Availability: c.getEndpointType(),
 	})
 }
-
-// func (c *Config) blockStorageV3Client(region string) (*eclcloud.ServiceClient, error) {
-// 	return ecl.NewBlockStorageV3(c.OsClient, eclcloud.EndpointOpts{
-// 		Region:       c.determineRegion(region),
-// 		Availability: c.getEndpointType(),
-// 	})
-// }
 
 func (c *Config) sssV1Client(region string) (*eclcloud.ServiceClient, error) {
 	if c.ForceSSSEndpoint != "" {
@@ -280,21 +267,6 @@ func (c *Config) networkV2Client(region string) (*eclcloud.ServiceClient, error)
 	})
 }
 
-func (c *Config) objectStorageV1Client(region string) (*eclcloud.ServiceClient, error) {
-	// If Swift Authentication is being used, return a swauth client.
-	if c.Swauth {
-		return swauth.NewObjectStorageV1(c.OsClient, swauth.AuthOpts{
-			User: c.Username,
-			Key:  c.Password,
-		})
-	}
-
-	return ecl.NewObjectStorageV1(c.OsClient, eclcloud.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
-	})
-}
-
 func (c *Config) databaseV1Client(region string) (*eclcloud.ServiceClient, error) {
 	return ecl.NewDBV1(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
@@ -303,12 +275,6 @@ func (c *Config) databaseV1Client(region string) (*eclcloud.ServiceClient, error
 }
 
 func (c *Config) getEndpointType() eclcloud.Availability {
-	// if c.EndpointType == "internal" || c.EndpointType == "internalURL" {
-	// 	return eclcloud.AvailabilityInternal
-	// }
-	// if c.EndpointType == "admin" || c.EndpointType == "adminURL" {
-	// 	return eclcloud.AvailabilityAdmin
-	// }
 	return eclcloud.AvailabilityPublic
 }
 
