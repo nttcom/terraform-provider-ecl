@@ -162,19 +162,13 @@ func Provider() terraform.ResourceProvider {
 				Description: descriptions["key"],
 			},
 
-			"swauth": &schema.Schema{
-				Type:        schema.TypeBool,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_SWAUTH", false),
-				Description: descriptions["swauth"],
-			},
-
 			"cloud": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_CLOUD", ""),
 				Description: descriptions["cloud"],
 			},
+
 			"force_sss_endpoint": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -277,9 +271,6 @@ func init() {
 
 		"key": "A client private key to authenticate with.",
 
-		"swauth": "Use Swift's authentication system instead of Keystone. Only used for\n" +
-			"interaction with Swift.",
-
 		"cloud": "An entry in a `clouds.yaml` file to use.",
 
 		"force_sss_endpoint": "The SSS Endpoint URL to send API.",
@@ -302,7 +293,6 @@ func configureProvider(d *schema.ResourceData) (interface{}, error) {
 		ProjectDomainID:   d.Get("project_domain_id").(string),
 		ProjectDomainName: d.Get("project_domain_name").(string),
 		Region:            d.Get("region").(string),
-		Swauth:            d.Get("swauth").(bool),
 		Token:             d.Get("token").(string),
 		TenantID:          d.Get("tenant_id").(string),
 		TenantName:        d.Get("tenant_name").(string),

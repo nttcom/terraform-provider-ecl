@@ -93,7 +93,6 @@ func volumeSchemaSet(d *schema.ResourceData, v *volumes.Volume) error {
 }
 
 func dataSourceStorageVolumeV1Read(d *schema.ResourceData, meta interface{}) error {
-	log.Printf("[MYDEBUG] datasource read start !!!")
 	var listOpts volumes.ListOptsBuilder
 
 	config := meta.(*Config)
