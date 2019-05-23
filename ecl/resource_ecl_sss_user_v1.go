@@ -88,6 +88,11 @@ func resourceSSSUserV1() *schema.Resource {
 				Computed: true,
 			},
 
+			"brand_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+
 			"start_time": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
