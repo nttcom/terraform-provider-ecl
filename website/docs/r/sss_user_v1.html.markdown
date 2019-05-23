@@ -68,5 +68,5 @@ The following attributes are exported:
 Tenant can be imported using the `id`, e.g.
 
 ```
-$ terraform import ecl_sss_user_v1.usr_1 <user-id>
+$ terraform import ecl_sss_user_v1.user_1 <user-id>
 ```
