@@ -41,6 +41,7 @@ var (
 	OS_REGION_NAME                           = os.Getenv("OS_REGION_NAME")
 	OS_FORCE_SSS_ENDPOINT                    = os.Getenv("OS_FORCE_SSS_ENDPOINT")
 	OS_SSS_TENANT_ENVIRONMENT                = os.Getenv("OS_SSS_TENANT_ENVIRONMENT")
+	OS_SSS_USER_ENVIRONMENT                  = os.Getenv("OS_SSS_USER_ENVIRONMENT")
 	OS_STORAGE_VOLUME_TYPE_ID                = os.Getenv("OS_STORAGE_VOLUME_TYPE_ID")
 	OS_SUBNET_ID                             = os.Getenv("OS_SUBNET_ID")
 	OS_SWIFT_ENVIRONMENT                     = os.Getenv("OS_SWIFT_ENVIRONMENT")
@@ -88,6 +89,13 @@ func testAccPreCheckSSSTenant(t *testing.T) {
 	waitSeconds := 45
 	log.Printf("[DEBUG] Waiting %d seconds before starting TestCase...", waitSeconds)
 	time.Sleep(time.Duration(waitSeconds) * time.Second)
+}
+
+func testAccPreCheckSSSUser(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_SSS_USER_ENVIRONMENT == "" {
+		t.Skip("This environment does not support sss user tests. Set OS_SSS_USER_ENVIRONMENT if you want to run SSS User tests")
+	}
 }
 
 // Prior to storage test, you need to find volume_type_id
