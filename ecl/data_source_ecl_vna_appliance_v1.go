@@ -58,7 +58,7 @@ func dataSourceVNAApplianceV1() *schema.Resource {
 			"interfaces": &schema.Schema{
 				Type:     schema.TypeSet,
 				Optional: true,
-				Set:      slotNumberHash,
+				Set:      interfaceHash,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 

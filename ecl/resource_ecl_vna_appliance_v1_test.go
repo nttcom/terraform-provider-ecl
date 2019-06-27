@@ -19,7 +19,8 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccVNAV1ApplianceBasic,
+				Config:             testAccVNAV1ApplianceBasic,
+				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
@@ -118,6 +119,12 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		fixed_ips {
 			ip_address = "192.168.1.50"
 		}
+	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
