@@ -95,21 +95,24 @@ func getInterfaceFixedIPsAsState(fixedIPs []appliances.FixedIPInResponse) []inte
 	return result
 }
 
-func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) map[string]interface{} {
-	result := make(map[string]interface{}, 1)
+func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) []map[string]interface{} {
+	result := make([]map[string]interface{}, 1)
+	meta := make(map[string]interface{}, 1)
 
-	result["name"] = singleInterface.Name
-	result["description"] = singleInterface.Description
-	result["network_id"] = singleInterface.NetworkID
-	result["updatable"] = singleInterface.Updatable
+	meta["name"] = singleInterface.Name
+	meta["description"] = singleInterface.Description
+	meta["network_id"] = singleInterface.NetworkID
+	meta["updatable"] = singleInterface.Updatable
 
 	resultTags := map[string]string{}
 	for k, v := range singleInterface.Tags {
 		resultTags[k] = v
 	}
-	result["tags"] = resultTags
+	meta["tags"] = resultTags
 
 	log.Printf("[MYDEBUG] Result Meta: %#v", result)
+
+	result[0] = meta
 	return result
 }
 
