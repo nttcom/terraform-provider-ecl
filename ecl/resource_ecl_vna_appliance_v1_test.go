@@ -19,8 +19,8 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config:             testAccVNAV1ApplianceBasic,
-				ExpectNonEmptyPlan: true,
+				Config: testAccVNAV1ApplianceBasic,
+				// ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
@@ -102,7 +102,6 @@ resource "ecl_network_subnet_v2" "subnet_1" {
 `
 
 var testAccVNAV1ApplianceBasic = fmt.Sprintf(`
-%s
 
 resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
@@ -110,15 +109,14 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	default_gateway = "192.168.1.1"
 	availability_zone = "zone1-groupb"
 	virtual_network_appliance_plan_id = "%s"
-	depends_on = ["ecl_network_subnet_v2.subnet_1"]
 
-	interfaces {
-		slot_number = 1
+	interface_1_meta  {
 		name = "interface_1"
-		network_id = "${ecl_network_network_v2.network_1.id}"
-		fixed_ips {
-			ip_address = "192.168.1.50"
-		}
+		network_id = "f8c012d1-dd72-4e18-a075-f8fbc61ccc19"
+	}
+
+	interface_1_fixed_ips {
+		ip_address = "192.168.1.50"
 	}
 
 	lifecycle {
@@ -127,6 +125,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
-	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	// testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )

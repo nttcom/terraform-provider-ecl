@@ -11,6 +11,8 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
+const maxNumberOfInterfaces = 8
+
 func fixedIPHash(v interface{}) int {
 	var buf bytes.Buffer
 	m := v.(map[string]interface{})
@@ -64,225 +66,97 @@ func getApplianceTags(d *schema.ResourceData) map[string]string {
 	return tags
 }
 
-func convertApplianceInterfaceEachFromStructToMap(slotNumber int, structInterface appliances.InterfaceInResponse) map[string]interface{} {
-	result := make(map[string]interface{}, 1)
-
-	result["slot_number"] = slotNumber
-	result["name"] = structInterface.Name
-	result["description"] = structInterface.Description
-	result["network_id"] = structInterface.NetworkID
-	result["updatable"] = structInterface.Updatable
-
-	resultTags := map[string]string{}
-	for k, v := range structInterface.Tags {
-		resultTags[k] = v
-	}
-	result["tags"] = resultTags
-	log.Printf("[MYDEBUG] Tag complete")
-	log.Printf("%#v", resultTags)
-
-	resultFixedIPs := make([]interface{}, len(structInterface.FixedIPs))
-	for i, fixedIP := range structInterface.FixedIPs {
-		thisFixedIP := make(map[string]interface{}, 1)
-		thisFixedIP["ip_address"] = fixedIP.IPAddress
-		thisFixedIP["subnet_id"] = fixedIP.SubnetID
-
-		resultFixedIPs[i] = thisFixedIP
-	}
-	result["fixed_ips"] = resultFixedIPs
-	log.Printf("[MYDEBUG] FixedIPs complete")
-	log.Printf("%#v", resultFixedIPs)
-
-	resultAAPs := make([]interface{}, len(structInterface.AllowedAddressPairs))
-	for i, aap := range structInterface.AllowedAddressPairs {
+func getInterfaceAllowedAddressPairsAsState(allowedAddressPairs []appliances.AllowedAddressPairInResponse) []interface{} {
+	result := make([]interface{}, len(allowedAddressPairs))
+	for i, aap := range allowedAddressPairs {
 		thisAAP := make(map[string]interface{}, 1)
 		thisAAP["ip_address"] = aap.IPAddress
 		thisAAP["mac_address"] = aap.MACAddress
 		thisAAP["type"] = aap.Type
 		thisAAP["vrid"] = aap.VRID
 
-		resultAAPs[i] = thisAAP
+		result[i] = thisAAP
 	}
-	result["allowed_address_pairs"] = resultAAPs
-	log.Printf("[MYDEBUG] AllowedAddressPairs complete")
-	log.Printf("%#v", resultAAPs)
-
+	log.Printf("[MYDEBUG] Result Allowed Address Pairs: %#v", result)
 	return result
 }
 
-func convertApplianceInterfacesFromStructToMap(structInterfaces appliances.InterfacesInResponse) []map[string]interface{} {
+func getInterfaceFixedIPsAsState(fixedIPs []appliances.FixedIPInResponse) []interface{} {
+	result := make([]interface{}, len(fixedIPs))
 
-	iface1 := convertApplianceInterfaceEachFromStructToMap(1, structInterfaces.Interface1)
-	iface2 := convertApplianceInterfaceEachFromStructToMap(2, structInterfaces.Interface2)
-	iface3 := convertApplianceInterfaceEachFromStructToMap(3, structInterfaces.Interface3)
-	iface4 := convertApplianceInterfaceEachFromStructToMap(4, structInterfaces.Interface4)
-	iface5 := convertApplianceInterfaceEachFromStructToMap(5, structInterfaces.Interface5)
-	iface6 := convertApplianceInterfaceEachFromStructToMap(6, structInterfaces.Interface6)
-	iface7 := convertApplianceInterfaceEachFromStructToMap(7, structInterfaces.Interface7)
-	iface8 := convertApplianceInterfaceEachFromStructToMap(8, structInterfaces.Interface8)
+	for i, fixedIP := range fixedIPs {
+		thisFixedIP := make(map[string]interface{}, 1)
+		thisFixedIP["ip_address"] = fixedIP.IPAddress
+		thisFixedIP["subnet_id"] = fixedIP.SubnetID
 
-	result := make([]map[string]interface{}, 8)
-
-	result[0] = iface1
-	result[1] = iface2
-	result[2] = iface3
-	result[3] = iface4
-	result[4] = iface5
-	result[5] = iface6
-	result[6] = iface7
-	result[7] = iface8
-
+		result[i] = thisFixedIP
+	}
+	log.Printf("[MYDEBUG] Result FixedIPs: %#v", result)
 	return result
 }
 
-// func getCreateOptsForApplianceUpdate(d *schema.ResourceData) appliances.InterfacesInRequest {
-// 	var resultInterfaces appliances.InterfacesInRequest
+func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) map[string]interface{} {
+	result := make(map[string]interface{}, 1)
 
-// 	return appliances.InterfacesInRequest{}
-// }
+	result["name"] = singleInterface.Name
+	result["description"] = singleInterface.Description
+	result["network_id"] = singleInterface.NetworkID
+	result["updatable"] = singleInterface.Updatable
 
-func getFixedIpsForApplianceRequest(thisInterface map[string]interface{}) []appliances.FixedIPInRequest {
-	var resultFixedIPs []appliances.FixedIPInRequest
-	// thisRawFixedIPs := thisInterface["fixed_ips"].([]interface{})
-	thisRawFixedIPs := thisInterface["fixed_ips"].(*schema.Set).List()
-
-	for _, rawFip := range thisRawFixedIPs {
-		var fixedIP appliances.FixedIPInRequest
-
-		fip := rawFip.(map[string]interface{})
-		ipAddress := fip["ip_address"].(string)
-		fixedIP.IPAddress = ipAddress
-		resultFixedIPs = append(resultFixedIPs, fixedIP)
+	resultTags := map[string]string{}
+	for k, v := range singleInterface.Tags {
+		resultTags[k] = v
 	}
+	result["tags"] = resultTags
 
-	return resultFixedIPs
+	log.Printf("[MYDEBUG] Result Meta: %#v", result)
+	return result
 }
 
-func getAllowedAddressPairsForApplianceRequest(thisInterface map[string]interface{}) []appliances.AllowedAddressPairInRequest {
-	var resultAllowedAddressPairs []appliances.AllowedAddressPairInRequest
-	// thisRawAllowedAddressPairs := thisInterface["allowed_address_pairs"].([]interface{})
-	thisRawAllowedAddressPairs := thisInterface["allowed_address_pairs"].(*schema.Set).List()
-
-	for _, rawAAP := range thisRawAllowedAddressPairs {
-		var allowedAddressPair appliances.AllowedAddressPairInRequest
-		aap := rawAAP.(map[string]interface{})
-		ipAddress := aap["ip_address"].(string)
-		tp := aap["type"].(string)
-		macAddress := aap["mac_address"].(string)
-		vrid := aap["vrid"].(string)
-
-		allowedAddressPair.Type = tp
-		allowedAddressPair.IPAddress = ipAddress
-		allowedAddressPair.MACAddress = macAddress
-		allowedAddressPair.VRID = vrid
-		resultAllowedAddressPairs = append(resultAllowedAddressPairs, allowedAddressPair)
-	}
-
-	return resultAllowedAddressPairs
-}
-
-func getTagsForApplianceRequest(thisInterface map[string]interface{}) map[string]string {
+func getTagsAsOpts(rawTags map[string]interface{}) map[string]string {
 	var tags map[string]string
-	rawTags := thisInterface["tags"].(map[string]interface{})
+	// rawTags := thisInterface["tags"].(map[string]interface{})
 	for k, v := range rawTags {
 		tags[k] = v.(string)
 	}
 	return tags
 }
+func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfaces {
+	var interface1 appliances.CreateOptsInterface
+	var interfaces appliances.CreateOptsInterfaces
 
-func getCreateOptsForApplianceCreate(d *schema.ResourceData) appliances.InterfacesInCreate {
-	rawInterfaces := d.Get("interfaces").(*schema.Set).List()
+	// Meta part
+	rawMeta := d.Get("interface_1_meta").(*schema.Set).List()
+	rawFips := d.Get("interface_1_fixed_ips").(*schema.Set).List()
 
-	var resultInterfaces appliances.InterfacesInCreate
+	log.Printf("[MYDEBUG] rawMeta: %#v", rawMeta)
+	log.Printf("[MYDEBUG] rawFips: %#v", rawFips)
 
-	for _, tmpIface := range rawInterfaces {
+	thisRawMeta := rawMeta[0].(map[string]interface{})
+	interface1.Name = thisRawMeta["name"].(string)
+	interface1.Description = thisRawMeta["description"].(string)
+	interface1.NetworkID = thisRawMeta["network_id"].(string)
 
-		thisInterface := tmpIface.(map[string]interface{})
-		slotNumber := thisInterface["slot_number"].(int)
+	tags := getTagsAsOpts(thisRawMeta["tags"].(map[string]interface{}))
+	interface1.Tags = tags
 
-		if slotNumber != 1 {
-			continue
-		}
+	// FixedIPs part
+	var resultFixedIPs [1]appliances.CreateOptsFixedIP
+	var fixedIP appliances.CreateOptsFixedIP
 
-		var iface appliances.InterfaceInCreate
+	rawFip := rawFips[0]
+	log.Printf("[MYDEBUG] rawFip: %#v", rawFip)
 
-		// top level data
-		iface.Name = thisInterface["name"].(string)
-		iface.Description = thisInterface["description"].(string)
-		iface.NetworkID = thisInterface["network_id"].(string)
+	fip := rawFip.(map[string]interface{})
+	log.Printf("[MYDEBUG] fip: %#v", fip)
 
-		// tags
-		tags := getTagsForApplianceRequest(thisInterface)
-		iface.Tags = tags
+	ipAddress := fip["ip_address"].(string)
+	fixedIP.IPAddress = ipAddress
+	resultFixedIPs[0] = fixedIP
 
-		resultFixedIPs := getFixedIpsForApplianceRequest(thisInterface)
-		iface.FixedIPs = resultFixedIPs
+	interface1.FixedIPs = resultFixedIPs
 
-		// resultAllowedAddressPairs := getAllowedAddressPairsForApplianceRequest(thisInterface)
-		// iface.AllowedAddressPairs = &resultAllowedAddressPairs
+	interfaces.Interface1 = interface1
 
-		resultInterfaces.Interface1 = iface
-	}
-
-	return resultInterfaces
-}
-
-func getCreateOptsForApplianceUpdate(d *schema.ResourceData) appliances.InterfacesInRequest {
-	// func convertApplianceInterfacesFromSchemaToStruct(d *schema.ResourceData) appliances.InterfacesInRequest {
-	rawInterfaces := d.Get("interfaces").(*schema.Set).List()
-
-	var resultInterfaces appliances.InterfacesInRequest
-
-	for _, tmpIface := range rawInterfaces {
-
-		thisInterface := tmpIface.(map[string]interface{})
-		slotNumber := thisInterface["slot_number"].(int)
-
-		var iface appliances.InterfaceInRequest
-
-		// top level data
-		iface.Name = thisInterface["name"].(string)
-		iface.Description = thisInterface["description"].(string)
-		iface.NetworkID = thisInterface["network_id"].(string)
-
-		// tags
-		tags := getTagsForApplianceRequest(thisInterface)
-		iface.Tags = tags
-
-		resultFixedIPs := getFixedIpsForApplianceRequest(thisInterface)
-		iface.FixedIPs = resultFixedIPs
-
-		resultAllowedAddressPairs := getAllowedAddressPairsForApplianceRequest(thisInterface)
-		iface.AllowedAddressPairs = resultAllowedAddressPairs
-
-		switch slotNumber {
-		case 1:
-			resultInterfaces.Interface1 = iface
-			break
-		case 2:
-			resultInterfaces.Interface2 = iface
-			break
-		case 3:
-			resultInterfaces.Interface3 = iface
-			break
-		case 4:
-			resultInterfaces.Interface4 = iface
-			break
-		case 5:
-			resultInterfaces.Interface5 = iface
-			break
-		case 6:
-			resultInterfaces.Interface6 = iface
-			break
-		case 7:
-			resultInterfaces.Interface7 = iface
-			break
-		case 8:
-			resultInterfaces.Interface8 = iface
-			break
-		default:
-		}
-	}
-
-	return resultInterfaces
+	return interfaces
 }
