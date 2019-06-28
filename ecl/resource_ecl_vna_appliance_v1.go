@@ -18,6 +18,7 @@ func allowedAddessPairsSchema() *schema.Schema {
 		Optional: true,
 		Computed: true,
 		Set:      allowedAddressPairHash,
+		// Default:  &schema.Set{},
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"ip_address": &schema.Schema{
@@ -49,6 +50,7 @@ func fixedIPsScheam() *schema.Schema {
 		Type:     schema.TypeSet,
 		Optional: true,
 		Set:      fixedIPHash,
+		// Default:  &schema.Set{},
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"ip_address": &schema.Schema{
@@ -77,15 +79,17 @@ func interfaceMetaSchema() *schema.Schema {
 				"name": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
+					// Default:  "",
 				},
 				"description": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
+					// Default:  "",
 				},
 				"network_id": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
-					Computed: true,
+					// Default:  "",
 				},
 				"updatable": &schema.Schema{
 					Type:     schema.TypeBool,
@@ -94,6 +98,7 @@ func interfaceMetaSchema() *schema.Schema {
 				"tags": &schema.Schema{
 					Type:     schema.TypeMap,
 					Optional: true,
+					// Default:  map[string]string{},
 				},
 			},
 		},
@@ -264,9 +269,54 @@ func resourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("tags", vna.Tags)
 
 	for i := 1; i <= maxNumberOfInterfaces; i++ {
-		targetMeta := vna.Interfaces.Interface1
-		targetFIPs := vna.Interfaces.Interface1.FixedIPs
-		targetAAPs := vna.Interfaces.Interface1.AllowedAddressPairs
+		var targetMeta appliances.InterfaceInResponse
+		var targetFIPs []appliances.FixedIPInResponse
+		var targetAAPs []appliances.AllowedAddressPairInResponse
+
+		switch i {
+		case 1:
+			targetMeta = vna.Interfaces.Interface1
+			targetFIPs = vna.Interfaces.Interface1.FixedIPs
+			targetAAPs = vna.Interfaces.Interface1.AllowedAddressPairs
+			break
+		case 2:
+			targetMeta = vna.Interfaces.Interface2
+			targetFIPs = vna.Interfaces.Interface2.FixedIPs
+			targetAAPs = vna.Interfaces.Interface2.AllowedAddressPairs
+			break
+		case 3:
+			targetMeta = vna.Interfaces.Interface3
+			targetFIPs = vna.Interfaces.Interface3.FixedIPs
+			targetAAPs = vna.Interfaces.Interface3.AllowedAddressPairs
+			break
+		case 4:
+			targetMeta = vna.Interfaces.Interface4
+			targetFIPs = vna.Interfaces.Interface4.FixedIPs
+			targetAAPs = vna.Interfaces.Interface4.AllowedAddressPairs
+			break
+		case 5:
+			targetMeta = vna.Interfaces.Interface5
+			targetFIPs = vna.Interfaces.Interface5.FixedIPs
+			targetAAPs = vna.Interfaces.Interface5.AllowedAddressPairs
+			break
+		case 6:
+			targetMeta = vna.Interfaces.Interface6
+			targetFIPs = vna.Interfaces.Interface6.FixedIPs
+			targetAAPs = vna.Interfaces.Interface6.AllowedAddressPairs
+			break
+		case 7:
+			targetMeta = vna.Interfaces.Interface7
+			targetFIPs = vna.Interfaces.Interface7.FixedIPs
+			targetAAPs = vna.Interfaces.Interface7.AllowedAddressPairs
+			break
+		case 8:
+			targetMeta = vna.Interfaces.Interface8
+			targetFIPs = vna.Interfaces.Interface8.FixedIPs
+			targetAAPs = vna.Interfaces.Interface8.AllowedAddressPairs
+			break
+		default:
+			break
+		}
 
 		d.Set(
 			fmt.Sprintf("interface_%d_meta", i),
