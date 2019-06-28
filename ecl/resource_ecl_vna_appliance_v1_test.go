@@ -7,11 +7,15 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
+	"github.com/nttcom/eclcloud/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
 func TestAccVNAV1ApplianceBasic(t *testing.T) {
 	var vna appliances.Appliance
+	var n networks.Network
+	var sn subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckVNA(t) },
@@ -22,9 +26,20 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 				Config: testAccVNAV1ApplianceBasic,
 				// ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
+					// Create resource reference
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					// Check about meta
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.network_id", &n.ID),
+					// Check about interface
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_adress", "192.168.1.50"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
 				),
 			},
 		},
@@ -102,6 +117,7 @@ resource "ecl_network_subnet_v2" "subnet_1" {
 `
 
 var testAccVNAV1ApplianceBasic = fmt.Sprintf(`
+%s
 
 resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
@@ -112,12 +128,15 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_1_meta  {
 		name = "interface_1"
-		network_id = "f8c012d1-dd72-4e18-a075-f8fbc61ccc19"
+		description = "interface_1_description"
+		network_id = "${ecl_network_network_v2.network_1.id}"
 	}
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
 	}
+
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
 
 	lifecycle {
 		ignore_changes = [
@@ -125,6 +144,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
-	// testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
