@@ -12,6 +12,98 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
+func allowedAddessPairsSchema() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeSet,
+		Optional: true,
+		Computed: true,
+		Set:      allowedAddressPairHash,
+		// Default:  &schema.Set{},
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"ip_address": &schema.Schema{
+					Type:     schema.TypeString,
+					Required: true,
+				},
+
+				"mac_address": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+
+				"type": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+
+				"vrid": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+			},
+		},
+	}
+}
+
+func fixedIPsScheam() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeSet,
+		Optional: true,
+		Set:      fixedIPHash,
+		// Default:  &schema.Set{},
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"ip_address": &schema.Schema{
+					Type:     schema.TypeString,
+					Required: true,
+				},
+				"subnet_id": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+			},
+		},
+	}
+}
+
+func interfaceMetaSchema() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeSet,
+		Optional: true,
+		Computed: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Set:      interfaceHash,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"name": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+					// Default:  "",
+				},
+				"description": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+					// Default:  "",
+				},
+				"network_id": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+					// Default:  "",
+				},
+				"updatable": &schema.Schema{
+					Type:     schema.TypeBool,
+					Computed: true,
+				},
+				"tags": &schema.Schema{
+					Type:     schema.TypeMap,
+					Optional: true,
+					// Default:  map[string]string{},
+				},
+			},
+		},
+	}
+}
 func resourceVNAApplianceV1() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceVNAApplianceV1Create,
@@ -70,100 +162,37 @@ func resourceVNAApplianceV1() *schema.Resource {
 				Optional: true,
 			},
 
-			"interfaces": &schema.Schema{
-				Type:     schema.TypeSet,
-				Optional: true,
-				Computed: true,
-				MinItems: 1,
-				MaxItems: 8,
-				Set:      interfaceHash,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
+			"interface_1_meta":                  interfaceMetaSchema(),
+			"interface_1_fixed_ips":             fixedIPsScheam(),
+			"interface_1_allowed_address_pairs": allowedAddessPairsSchema(),
 
-						"slot_number": &schema.Schema{
-							Type:     schema.TypeInt,
-							Required: true,
-						},
+			"interface_2_meta":                  interfaceMetaSchema(),
+			"interface_2_fixed_ips":             fixedIPsScheam(),
+			"interface_2_allowed_address_pairs": allowedAddessPairsSchema(),
 
-						"name": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
-						},
+			"interface_3_meta":                  interfaceMetaSchema(),
+			"interface_3_fixed_ips":             fixedIPsScheam(),
+			"interface_3_allowed_address_pairs": allowedAddessPairsSchema(),
 
-						"description": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
-						},
+			"interface_4_meta":                  interfaceMetaSchema(),
+			"interface_4_fixed_ips":             fixedIPsScheam(),
+			"interface_4_allowed_address_pairs": allowedAddessPairsSchema(),
 
-						"network_id": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
+			"interface_5_meta":                  interfaceMetaSchema(),
+			"interface_5_fixed_ips":             fixedIPsScheam(),
+			"interface_5_allowed_address_pairs": allowedAddessPairsSchema(),
 
-						"updatable": &schema.Schema{
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
+			"interface_6_meta":                  interfaceMetaSchema(),
+			"interface_6_fixed_ips":             fixedIPsScheam(),
+			"interface_6_allowed_address_pairs": allowedAddessPairsSchema(),
 
-						"tags": &schema.Schema{
-							Type:     schema.TypeMap,
-							Optional: true,
-						},
+			"interface_7_meta":                  interfaceMetaSchema(),
+			"interface_7_fixed_ips":             fixedIPsScheam(),
+			"interface_7_allowed_address_pairs": allowedAddessPairsSchema(),
 
-						"fixed_ips": &schema.Schema{
-							Type:     schema.TypeSet,
-							Optional: true,
-							Computed: true,
-							Set:      fixedIPHash,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"ip_address": &schema.Schema{
-										Type:     schema.TypeString,
-										Required: true,
-										// Computed: true,
-									},
-
-									"subnet_id": &schema.Schema{
-										Type:     schema.TypeString,
-										Computed: true,
-									},
-								},
-							},
-						},
-
-						"allowed_address_pairs": &schema.Schema{
-							Type:     schema.TypeSet,
-							Optional: true,
-							Computed: true,
-							Set:      allowedAddressPairHash,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"ip_address": &schema.Schema{
-										Type:     schema.TypeString,
-										Required: true,
-									},
-
-									"mac_address": &schema.Schema{
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-
-									"type": &schema.Schema{
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-
-									"vrid": &schema.Schema{
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-								},
-							},
-						},
-					},
-				},
-			},
+			"interface_8_meta":                  interfaceMetaSchema(),
+			"interface_8_fixed_ips":             fixedIPsScheam(),
+			"interface_8_allowed_address_pairs": allowedAddessPairsSchema(),
 		},
 	}
 }
@@ -184,7 +213,7 @@ func resourceVNAApplianceV1Create(d *schema.ResourceData, meta interface{}) erro
 			VirtualNetworkAppliancePlanID: d.Get("virtual_network_appliance_plan_id").(string),
 			TenantID:                      d.Get("tenant_id").(string),
 			Tags:                          resourceTags(d),
-			Interfaces:                    getCreateOptsForApplianceCreate(d),
+			Interfaces:                    getInterfaceCreateOpts(d),
 		},
 	}
 
@@ -238,7 +267,69 @@ func resourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("virtual_network_appliance_plan_id", vna.AppliancePlanID)
 	d.Set("tenant_id", vna.TenantID)
 	d.Set("tags", vna.Tags)
-	d.Set("interfaces", convertApplianceInterfacesFromStructToMap(vna.Interfaces))
+
+	for i := 1; i <= maxNumberOfInterfaces; i++ {
+		var targetMeta appliances.InterfaceInResponse
+		var targetFIPs []appliances.FixedIPInResponse
+		var targetAAPs []appliances.AllowedAddressPairInResponse
+
+		switch i {
+		case 1:
+			targetMeta = vna.Interfaces.Interface1
+			targetFIPs = vna.Interfaces.Interface1.FixedIPs
+			targetAAPs = vna.Interfaces.Interface1.AllowedAddressPairs
+			break
+		case 2:
+			targetMeta = vna.Interfaces.Interface2
+			targetFIPs = vna.Interfaces.Interface2.FixedIPs
+			targetAAPs = vna.Interfaces.Interface2.AllowedAddressPairs
+			break
+		case 3:
+			targetMeta = vna.Interfaces.Interface3
+			targetFIPs = vna.Interfaces.Interface3.FixedIPs
+			targetAAPs = vna.Interfaces.Interface3.AllowedAddressPairs
+			break
+		case 4:
+			targetMeta = vna.Interfaces.Interface4
+			targetFIPs = vna.Interfaces.Interface4.FixedIPs
+			targetAAPs = vna.Interfaces.Interface4.AllowedAddressPairs
+			break
+		case 5:
+			targetMeta = vna.Interfaces.Interface5
+			targetFIPs = vna.Interfaces.Interface5.FixedIPs
+			targetAAPs = vna.Interfaces.Interface5.AllowedAddressPairs
+			break
+		case 6:
+			targetMeta = vna.Interfaces.Interface6
+			targetFIPs = vna.Interfaces.Interface6.FixedIPs
+			targetAAPs = vna.Interfaces.Interface6.AllowedAddressPairs
+			break
+		case 7:
+			targetMeta = vna.Interfaces.Interface7
+			targetFIPs = vna.Interfaces.Interface7.FixedIPs
+			targetAAPs = vna.Interfaces.Interface7.AllowedAddressPairs
+			break
+		case 8:
+			targetMeta = vna.Interfaces.Interface8
+			targetFIPs = vna.Interfaces.Interface8.FixedIPs
+			targetAAPs = vna.Interfaces.Interface8.AllowedAddressPairs
+			break
+		default:
+			break
+		}
+
+		d.Set(
+			fmt.Sprintf("interface_%d_meta", i),
+			getInterfaceMetaAsState(targetMeta))
+
+		d.Set(
+			fmt.Sprintf("interface_%d_fixed_ips", i),
+			getInterfaceFixedIPsAsState(targetFIPs))
+
+		d.Set(
+			fmt.Sprintf("interface_%d_allowed_address_pairs", i),
+			getInterfaceAllowedAddressPairsAsState(targetAAPs))
+	}
 
 	return nil
 }

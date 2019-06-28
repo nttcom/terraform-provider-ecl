@@ -219,7 +219,7 @@ func dataSourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) erro
 	d.Set("virtual_network_appliance_plan_id", vna.AppliancePlanID)
 	d.Set("tenant_id", vna.TenantID)
 	d.Set("tags", vna.Tags)
-	d.Set("interfaces", convertApplianceInterfacesFromStructToMap(vna.Interfaces))
+	// d.Set("interfaces", convertApplianceInterfacesFromStructToMap(vna.Interfaces))
 
 	return nil
 }
