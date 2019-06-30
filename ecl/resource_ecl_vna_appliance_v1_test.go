@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -38,12 +39,59 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description"),
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.network_id", &n.ID),
 					// Check about interface
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
-					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
+					testAccCheckVNAV1FixedIPIPAddress(&vna, 1,
+						[]map[string]interface{}{
+							map[string]interface{}{
+								"ip_address": "192.168.1.50",
+								"subnet_id":  &sn,
+							},
+						},
+					),
 				),
 			},
 		},
 	})
+}
+
+func testAccCheckVNAV1FixedIPIPAddress(
+	vna *appliances.Appliance,
+	slotNumber int,
+	fixedIPs []map[string]interface{}) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		actualFixedIP := getFixedIPsBySlotNumber(vna, slotNumber)
+
+		for index, fixedIPMap := range fixedIPs {
+
+			for key, v := range fixedIPMap {
+
+				if key == "ip_address" {
+					actual := actualFixedIP[index].IPAddress
+					expected := v.(string)
+					if actual != expected {
+						return fmt.Errorf(
+							"IPAddress is different. expected %#v, actual %#v",
+							expected,
+							actual,
+						)
+					}
+				}
+
+				if key == "subnet_id" {
+					actual := actualFixedIP[index].SubnetID
+					sn := v.(*subnets.Subnet)
+					expected := (*sn).ID
+					if actual != expected {
+						return fmt.Errorf(
+							"SubnetID is different. expected %#v, actual %#v",
+							expected,
+							actual,
+						)
+					}
+				}
+			}
+		}
+		return nil
+	}
 }
 
 func testAccCheckVNAV1ApplianceDestroy(s *terraform.State) error {
@@ -94,6 +142,7 @@ func testAccCheckVNAV1ApplianceExists(n string, vna *appliances.Appliance) resou
 		}
 
 		*vna = *found
+		log.Printf("[MYDEBUG] VNA in existence check: %#v", vna)
 
 		return nil
 	}

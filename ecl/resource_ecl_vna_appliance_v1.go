@@ -45,10 +45,11 @@ func allowedAddessPairsSchema() *schema.Schema {
 	}
 }
 
-func fixedIPsScheam() *schema.Schema {
+func fixedIPsSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeSet,
 		Optional: true,
+		Computed: true,
 		Set:      fixedIPHash,
 		// Default:  &schema.Set{},
 		Elem: &schema.Resource{
@@ -163,35 +164,35 @@ func resourceVNAApplianceV1() *schema.Resource {
 			},
 
 			"interface_1_meta":                  interfaceMetaSchema(),
-			"interface_1_fixed_ips":             fixedIPsScheam(),
+			"interface_1_fixed_ips":             fixedIPsSchema(),
 			"interface_1_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_2_meta":                  interfaceMetaSchema(),
-			"interface_2_fixed_ips":             fixedIPsScheam(),
+			"interface_2_fixed_ips":             fixedIPsSchema(),
 			"interface_2_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_3_meta":                  interfaceMetaSchema(),
-			"interface_3_fixed_ips":             fixedIPsScheam(),
+			"interface_3_fixed_ips":             fixedIPsSchema(),
 			"interface_3_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_4_meta":                  interfaceMetaSchema(),
-			"interface_4_fixed_ips":             fixedIPsScheam(),
+			"interface_4_fixed_ips":             fixedIPsSchema(),
 			"interface_4_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_5_meta":                  interfaceMetaSchema(),
-			"interface_5_fixed_ips":             fixedIPsScheam(),
+			"interface_5_fixed_ips":             fixedIPsSchema(),
 			"interface_5_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_6_meta":                  interfaceMetaSchema(),
-			"interface_6_fixed_ips":             fixedIPsScheam(),
+			"interface_6_fixed_ips":             fixedIPsSchema(),
 			"interface_6_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_7_meta":                  interfaceMetaSchema(),
-			"interface_7_fixed_ips":             fixedIPsScheam(),
+			"interface_7_fixed_ips":             fixedIPsSchema(),
 			"interface_7_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_8_meta":                  interfaceMetaSchema(),
-			"interface_8_fixed_ips":             fixedIPsScheam(),
+			"interface_8_fixed_ips":             fixedIPsSchema(),
 			"interface_8_allowed_address_pairs": allowedAddessPairsSchema(),
 		},
 	}
@@ -269,54 +270,12 @@ func resourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("tags", vna.Tags)
 
 	for i := 1; i <= maxNumberOfInterfaces; i++ {
-		var targetMeta appliances.InterfaceInResponse
-		var targetFIPs []appliances.FixedIPInResponse
-		var targetAAPs []appliances.AllowedAddressPairInResponse
-
-		switch i {
-		case 1:
-			targetMeta = vna.Interfaces.Interface1
-			targetFIPs = vna.Interfaces.Interface1.FixedIPs
-			targetAAPs = vna.Interfaces.Interface1.AllowedAddressPairs
-			break
-		case 2:
-			targetMeta = vna.Interfaces.Interface2
-			targetFIPs = vna.Interfaces.Interface2.FixedIPs
-			targetAAPs = vna.Interfaces.Interface2.AllowedAddressPairs
-			break
-		case 3:
-			targetMeta = vna.Interfaces.Interface3
-			targetFIPs = vna.Interfaces.Interface3.FixedIPs
-			targetAAPs = vna.Interfaces.Interface3.AllowedAddressPairs
-			break
-		case 4:
-			targetMeta = vna.Interfaces.Interface4
-			targetFIPs = vna.Interfaces.Interface4.FixedIPs
-			targetAAPs = vna.Interfaces.Interface4.AllowedAddressPairs
-			break
-		case 5:
-			targetMeta = vna.Interfaces.Interface5
-			targetFIPs = vna.Interfaces.Interface5.FixedIPs
-			targetAAPs = vna.Interfaces.Interface5.AllowedAddressPairs
-			break
-		case 6:
-			targetMeta = vna.Interfaces.Interface6
-			targetFIPs = vna.Interfaces.Interface6.FixedIPs
-			targetAAPs = vna.Interfaces.Interface6.AllowedAddressPairs
-			break
-		case 7:
-			targetMeta = vna.Interfaces.Interface7
-			targetFIPs = vna.Interfaces.Interface7.FixedIPs
-			targetAAPs = vna.Interfaces.Interface7.AllowedAddressPairs
-			break
-		case 8:
-			targetMeta = vna.Interfaces.Interface8
-			targetFIPs = vna.Interfaces.Interface8.FixedIPs
-			targetAAPs = vna.Interfaces.Interface8.AllowedAddressPairs
-			break
-		default:
-			break
-		}
+		// var targetMeta appliances.InterfaceInResponse
+		targetMeta := getInterfaceBySlotNumber(&vna, i)
+		// var targetFIPs []appliances.FixedIPInResponse
+		targetFIPs := getFixedIPsBySlotNumber(&vna, i)
+		// var targetAAPs []appliances.AllowedAddressPairInResponse
+		targetAAPs := getAllowedAddressPairsBySlotNumber(&vna, i)
 
 		d.Set(
 			fmt.Sprintf("interface_%d_meta", i),

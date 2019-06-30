@@ -69,7 +69,7 @@ func getApplianceTags(d *schema.ResourceData) map[string]string {
 func getInterfaceAllowedAddressPairsAsState(allowedAddressPairs []appliances.AllowedAddressPairInResponse) []interface{} {
 	result := make([]interface{}, len(allowedAddressPairs))
 	for i, aap := range allowedAddressPairs {
-		thisAAP := make(map[string]interface{}, 1)
+		thisAAP := make(map[string]string, 1)
 		thisAAP["ip_address"] = aap.IPAddress
 		thisAAP["mac_address"] = aap.MACAddress
 		thisAAP["type"] = aap.Type
@@ -85,7 +85,7 @@ func getInterfaceFixedIPsAsState(fixedIPs []appliances.FixedIPInResponse) []inte
 	result := make([]interface{}, len(fixedIPs))
 
 	for i, fixedIP := range fixedIPs {
-		thisFixedIP := make(map[string]interface{}, 1)
+		thisFixedIP := make(map[string]string, 1)
 		thisFixedIP["ip_address"] = fixedIP.IPAddress
 		thisFixedIP["subnet_id"] = fixedIP.SubnetID
 
@@ -132,8 +132,8 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 	rawMeta := d.Get("interface_1_meta").(*schema.Set).List()
 	rawFips := d.Get("interface_1_fixed_ips").(*schema.Set).List()
 
-	log.Printf("[MYDEBUG] rawMeta: %#v", rawMeta)
-	log.Printf("[MYDEBUG] rawFips: %#v", rawFips)
+	// log.Printf("[MYDEBUG] rawMeta: %#v", rawMeta)
+	// log.Printf("[MYDEBUG] rawFips: %#v", rawFips)
 
 	thisRawMeta := rawMeta[0].(map[string]interface{})
 	interface1.Name = thisRawMeta["name"].(string)
@@ -148,10 +148,10 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 	var fixedIP appliances.CreateOptsFixedIP
 
 	rawFip := rawFips[0]
-	log.Printf("[MYDEBUG] rawFip: %#v", rawFip)
+	// log.Printf("[MYDEBUG] rawFip: %#v", rawFip)
 
 	fip := rawFip.(map[string]interface{})
-	log.Printf("[MYDEBUG] fip: %#v", fip)
+	// log.Printf("[MYDEBUG] fip: %#v", fip)
 
 	ipAddress := fip["ip_address"].(string)
 	fixedIP.IPAddress = ipAddress
@@ -162,4 +162,102 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 	interfaces.Interface1 = interface1
 
 	return interfaces
+}
+
+func getInterfaceBySlotNumber(vna *appliances.Appliance, slotNumber int) appliances.InterfaceInResponse {
+	var result appliances.InterfaceInResponse
+	switch slotNumber {
+	case 1:
+		result = vna.Interfaces.Interface1
+		break
+	case 2:
+		result = vna.Interfaces.Interface2
+		break
+	case 3:
+		result = vna.Interfaces.Interface3
+		break
+	case 4:
+		result = vna.Interfaces.Interface4
+		break
+	case 5:
+		result = vna.Interfaces.Interface5
+		break
+	case 6:
+		result = vna.Interfaces.Interface6
+		break
+	case 7:
+		result = vna.Interfaces.Interface7
+		break
+	case 8:
+		result = vna.Interfaces.Interface8
+		break
+	default:
+		break
+	}
+	return result
+}
+func getFixedIPsBySlotNumber(vna *appliances.Appliance, slotNumber int) []appliances.FixedIPInResponse {
+	var result []appliances.FixedIPInResponse
+	switch slotNumber {
+	case 1:
+		result = vna.Interfaces.Interface1.FixedIPs
+		break
+	case 2:
+		result = vna.Interfaces.Interface2.FixedIPs
+		break
+	case 3:
+		result = vna.Interfaces.Interface3.FixedIPs
+		break
+	case 4:
+		result = vna.Interfaces.Interface4.FixedIPs
+		break
+	case 5:
+		result = vna.Interfaces.Interface5.FixedIPs
+		break
+	case 6:
+		result = vna.Interfaces.Interface6.FixedIPs
+		break
+	case 7:
+		result = vna.Interfaces.Interface7.FixedIPs
+		break
+	case 8:
+		result = vna.Interfaces.Interface8.FixedIPs
+		break
+	default:
+		break
+	}
+	return result
+}
+
+func getAllowedAddressPairsBySlotNumber(vna *appliances.Appliance, slotNumber int) []appliances.AllowedAddressPairInResponse {
+	var result []appliances.AllowedAddressPairInResponse
+	switch slotNumber {
+	case 1:
+		result = vna.Interfaces.Interface1.AllowedAddressPairs
+		break
+	case 2:
+		result = vna.Interfaces.Interface2.AllowedAddressPairs
+		break
+	case 3:
+		result = vna.Interfaces.Interface3.AllowedAddressPairs
+		break
+	case 4:
+		result = vna.Interfaces.Interface4.AllowedAddressPairs
+		break
+	case 5:
+		result = vna.Interfaces.Interface5.AllowedAddressPairs
+		break
+	case 6:
+		result = vna.Interfaces.Interface6.AllowedAddressPairs
+		break
+	case 7:
+		result = vna.Interfaces.Interface7.AllowedAddressPairs
+		break
+	case 8:
+		result = vna.Interfaces.Interface8.AllowedAddressPairs
+		break
+	default:
+		break
+	}
+	return result
 }
