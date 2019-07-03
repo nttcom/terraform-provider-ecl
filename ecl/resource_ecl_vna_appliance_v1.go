@@ -12,9 +12,9 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-const createPollInterval = 5 * time.Second
-const updatePollInterval = 5 * time.Second
-const deletePollInterval = 5 * time.Second
+const createPollInterval = 2 * time.Second
+const updatePollInterval = 2 * time.Second
+const deletePollInterval = 2 * time.Second
 
 func allowedAddessPairsSchema() *schema.Schema {
 	return &schema.Schema{
@@ -306,7 +306,6 @@ Update Metadata:
 	Request
 
 		PATCH /v1.0/virtual_network_appliances/[vna.ID]
-
 		{
 			"virtual_network_appliance": {
 				"description": "appliance_1_description-update",
@@ -318,6 +317,30 @@ Update Metadata:
 			}
 		}
 
+Update Interface:
+	Request
+
+	interface2: Changing from no-connection to connect with auto assigned IP addresses
+	interface3: Changing from no-connection to 2 fixed IPs as 192.168.3.50 and .60
+
+		PATCH /v1.0/virtual_network_appliances/[vna.ID]
+		{
+			"virtual_network_appliance": {
+				"interfaces": {
+					"interface_3": {
+						"network_id": "989c8daf-9769-4c3a-8aec-5d1744ce5787",
+						"fixed_ips": [{
+							"ip_address": "192.168.3.50"
+						}, {
+							"ip_address": "192.168.3.60"
+						}]
+					},
+					"interface_2": {
+						"network_id": "e9e3c929-331b-4e4c-b182-53dd26472411"
+					}
+				}
+			}
+		}
 */
 func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
@@ -333,20 +356,26 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 		updateMeta = true
 
 		name := d.Get("name").(string)
+		a, b := d.GetChange("name")
+		log.Printf("[MYDEBUG:name] %#v %#v", a, b)
 		updateOptsMeta.Name = &name
 	}
 
 	if d.HasChange("description") {
 		updateMeta = true
 
-		name := d.Get("description").(string)
-		updateOptsMeta.Description = &name
+		description := d.Get("description").(string)
+		a, b := d.GetChange("description")
+		log.Printf("[MYDEBUG:description] %#v %#v", a, b)
+		updateOptsMeta.Description = &description
 	}
 
 	if d.HasChange("tags") {
 		updateMeta = true
 
 		tags := resourceTags(d)
+		a, b := d.GetChange("tags")
+		log.Printf("[MYDEBUG:tags] %#v %#v", a, b)
 		updateOptsMeta.Tags = &tags
 	}
 
@@ -370,6 +399,28 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 				"Error waiting for virtual network appliance (%s) to become COMPLETE: %s",
 				d.Id(), err)
 		}
+	}
+	// [MYDEBUG:tags] map[string]interface {}{"k1":"v1"} map[string]interface {}{"k1":"v1", "k2":"v2"}
+
+	// updateOptsInterface := appliances.UpdateOptsMeta{}
+	var slotNumbers = []int{1, 2, 3, 4, 5, 6, 7, 8}
+
+	for _, slotNumber := range slotNumbers {
+		log.Printf("[MYDEBUG] slotNumber: %d", slotNumber)
+		ifMetaKey := fmt.Sprintf("interface_%d_meta", slotNumber)
+		// ifFixedIPsKey := fmt.Sprintf("interface_%d_fixed_ips", slotNumber)
+
+		log.Printf("[MYDEBUG] d.HasChange(ifMetaKey): %#v", d.HasChange(ifMetaKey))
+		if d.HasChange(ifMetaKey) {
+			updateInterface = true
+
+			b, a := d.GetChange(ifMetaKey)
+			before := b.(*schema.Set).List()
+			after := a.(*schema.Set).List()
+			log.Printf("[MYDEBUG] before: %#v", before)
+			log.Printf("[MYDEBUG] after: %#v", after)
+		}
+
 	}
 
 	if updateInterface {
