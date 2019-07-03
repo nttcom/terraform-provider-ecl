@@ -151,6 +151,34 @@ response:
                         "type": "volume",
                         "id": "1234567890abcdef1234567890abcdd3",
                         "name": "cinder"
+                    },
+                    {
+                        "endpoints": [
+                            {
+                                "id": "c4c383a719cb489d8210328e17659621",
+                                "interface": "public",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "c4c383a719cb489d8210328e17659622",
+                                "interface": "internal",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "c4c383a719cb489d8210328e17659623",
+                                "interface": "admin",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            }
+                        ],
+                        "id": "c4c383a719cb489d8210328e17659620",
+                        "name": "virtual-network-appliance",
+                        "type": "virtual-network-appliance"
                     }
                 ],
                 "expires_at": "2018-11-28T02:48:52.111201Z",

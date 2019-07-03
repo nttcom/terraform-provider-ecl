@@ -119,7 +119,6 @@ func testAccCheckVNAV1FixedIPIPAddress(
 		return nil
 	}
 }
-
 func testAccCheckVNAV1ApplianceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	vnaClient, err := config.vnaV1Client(OS_REGION_NAME)

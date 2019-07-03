@@ -12,6 +12,10 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
+const createPollInterval = 5 * time.Second
+const updatePollInterval = 5 * time.Second
+const deletePollInterval = 5 * time.Second
+
 func allowedAddessPairsSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeSet,
@@ -236,7 +240,7 @@ func resourceVNAApplianceV1Create(d *schema.ResourceData, meta interface{}) erro
 		Refresh:      waitForVirtualNetworkApplianceComplete(vnaClient, vna.ID),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: 30 * time.Second,
+		PollInterval: createPollInterval,
 		MinTimeout:   10 * time.Second,
 	}
 
@@ -340,7 +344,7 @@ func resourceVNAApplianceV1Delete(d *schema.ResourceData, meta interface{}) erro
 		Target:     []string{"DELETED"},
 		Refresh:    waitForVirtualNetworkApplianceDelete(vnaClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
-		Delay:      5 * time.Second,
+		Delay:      deletePollInterval,
 		MinTimeout: 3 * time.Second,
 	}
 
