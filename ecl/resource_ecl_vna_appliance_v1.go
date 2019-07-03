@@ -270,11 +270,8 @@ func resourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("tags", vna.Tags)
 
 	for i := 1; i <= maxNumberOfInterfaces; i++ {
-		// var targetMeta appliances.InterfaceInResponse
 		targetMeta := getInterfaceBySlotNumber(&vna, i)
-		// var targetFIPs []appliances.FixedIPInResponse
 		targetFIPs := getFixedIPsBySlotNumber(&vna, i)
-		// var targetAAPs []appliances.AllowedAddressPairInResponse
 		targetAAPs := getAllowedAddressPairsBySlotNumber(&vna, i)
 
 		d.Set(

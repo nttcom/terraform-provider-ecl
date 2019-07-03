@@ -47,25 +47,51 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 							},
 						},
 					),
+					testAccCheckVNAV1FixedILength(&vna, 1, 1),
+					testAccCheckVNAV1FixedILength(&vna, 2, 0),
+					testAccCheckVNAV1FixedILength(&vna, 3, 0),
+					testAccCheckVNAV1FixedILength(&vna, 4, 0),
+					testAccCheckVNAV1FixedILength(&vna, 5, 0),
+					testAccCheckVNAV1FixedILength(&vna, 6, 0),
+					testAccCheckVNAV1FixedILength(&vna, 7, 0),
+					testAccCheckVNAV1FixedILength(&vna, 8, 0),
 				),
 			},
 		},
 	})
 }
 
+func testAccCheckVNAV1FixedILength(
+	vna *appliances.Appliance,
+	slotNumber int,
+	expectedLength int) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		actualFixedIPs := getFixedIPsBySlotNumber(vna, slotNumber)
+
+		actualLength := len(actualFixedIPs)
+		if len(actualFixedIPs) != expectedLength {
+			return fmt.Errorf(
+				"Length of FixedIPs list is different. expected %d, actual %d",
+				expectedLength,
+				actualLength,
+			)
+		}
+		return nil
+	}
+}
 func testAccCheckVNAV1FixedIPIPAddress(
 	vna *appliances.Appliance,
 	slotNumber int,
 	fixedIPs []map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		actualFixedIP := getFixedIPsBySlotNumber(vna, slotNumber)
+		actualFixedIPs := getFixedIPsBySlotNumber(vna, slotNumber)
 
 		for index, fixedIPMap := range fixedIPs {
 
 			for key, v := range fixedIPMap {
 
 				if key == "ip_address" {
-					actual := actualFixedIP[index].IPAddress
+					actual := actualFixedIPs[index].IPAddress
 					expected := v.(string)
 					if actual != expected {
 						return fmt.Errorf(
@@ -77,7 +103,7 @@ func testAccCheckVNAV1FixedIPIPAddress(
 				}
 
 				if key == "subnet_id" {
-					actual := actualFixedIP[index].SubnetID
+					actual := actualFixedIPs[index].SubnetID
 					sn := v.(*subnets.Subnet)
 					expected := (*sn).ID
 					if actual != expected {
