@@ -231,8 +231,7 @@ func resourceVNAApplianceV1Create(d *schema.ResourceData, meta interface{}) erro
 
 	d.SetId(vna.ID)
 	log.Printf("[INFO] Virtual Network Appliance ID: %s", vna.ID)
-
-	log.Printf("[DEBUG] Waiting for Virtual Network Appliance (%s) to become available", vna.ID)
+	log.Printf("[DEBUG] Waiting for Virtual Network Appliance (%s) to become COMPLETE", vna.ID)
 
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
@@ -245,6 +244,11 @@ func resourceVNAApplianceV1Create(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for virtual network appliance (%s) to become COMPLETE: %s",
+			vna.ID, err)
+	}
 
 	return resourceVNAApplianceV1Read(d, meta)
 }
@@ -294,38 +298,84 @@ func resourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error 
 	return nil
 }
 
+// TODO remove following comments later.
+/*
+Update samples
+
+Update Metadata:
+	Request
+
+		PATCH /v1.0/virtual_network_appliances/[vna.ID]
+
+		{
+			"virtual_network_appliance": {
+				"description": "appliance_1_description-update",
+				"name": "appliance_1-update",
+				"tags": {
+					"k2": "v2", <-- it is okay to send all tags even difference is only this key-value pair.
+					"k1": "v1"
+				}
+			}
+		}
+
+*/
 func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) error {
-	// config := meta.(*Config)
-	// vnaClient, err := config.vnaV1Client(GetRegion(d, config))
-	// if err != nil {
-	// 	return fmt.Errorf("Error creating ECL virtual network appliance client: %s", err)
-	// }
+	config := meta.(*Config)
+	vnaClient, err := config.vnaV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating ECL virtual network appliance client: %s", err)
+	}
 
-	// var updateOpts appliances.UpdateOpts
-	// if d.HasChange("name") {
-	// 	name := d.Get("name").(string)
-	// 	updateOpts.Name = &name
-	// }
-	// if v, ok := d.GetOkExists("admin_state_up"); ok {
-	// 	asu := v.(bool)
-	// 	updateOpts.AdminStateUp = &asu
-	// }
-	// if d.HasChange("description") {
-	// 	description := d.Get("description").(string)
-	// 	updateOpts.Description = &description
-	// }
+	var updateMeta, updateInterface, updateAAP bool
 
-	// if d.HasChange("tags") {
-	// 	tags := resourceTags(d)
-	// 	updateOpts.Tags = &tags
-	// }
+	var updateOptsMeta appliances.UpdateOptsMeta
+	if d.HasChange("name") {
+		updateMeta = true
 
-	// log.Printf("[DEBUG] Updating Network %s with options: %+v", d.Id(), updateOpts)
-	// _, err = appliances.Update(vnaClient, d.Id(), updateOpts).Extract()
+		name := d.Get("name").(string)
+		updateOptsMeta.Name = &name
+	}
 
-	// if err != nil {
-	// 	return fmt.Errorf("Error updating ECL Neutron Network: %s", err)
-	// }
+	if d.HasChange("description") {
+		updateMeta = true
+
+		name := d.Get("description").(string)
+		updateOptsMeta.Description = &name
+	}
+
+	if d.HasChange("tags") {
+		updateMeta = true
+
+		tags := resourceTags(d)
+		updateOptsMeta.Tags = &tags
+	}
+
+	if updateMeta {
+		log.Printf("[DEBUG] Updating VNA Metadata %s with options: %+v", d.Id(), updateOptsMeta)
+		_, err = appliances.Update(vnaClient, d.Id(), updateOptsMeta).Extract()
+
+		stateConf := &resource.StateChangeConf{
+			Pending:      []string{"PROCESSING"},
+			Target:       []string{"COMPLETE"},
+			Refresh:      waitForVirtualNetworkApplianceComplete(vnaClient, d.Id()),
+			Timeout:      d.Timeout(schema.TimeoutDelete),
+			Delay:        5 * time.Second,
+			PollInterval: updatePollInterval,
+			MinTimeout:   3 * time.Second,
+		}
+
+		_, err = stateConf.WaitForState()
+		if err != nil {
+			return fmt.Errorf(
+				"Error waiting for virtual network appliance (%s) to become COMPLETE: %s",
+				d.Id(), err)
+		}
+	}
+
+	if updateInterface {
+	}
+	if updateAAP {
+	}
 
 	return resourceVNAApplianceV1Read(d, meta)
 }

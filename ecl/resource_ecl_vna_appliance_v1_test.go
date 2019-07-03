@@ -61,6 +61,29 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 	})
 }
 
+func testAccCheckVNAV1ApplianceTag(
+	vna *appliances.Appliance, k string, v string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		if vna.Tags == nil {
+			return fmt.Errorf("No tag")
+		}
+
+		for key, value := range vna.Tags {
+			if k != key {
+				continue
+			}
+
+			if v == value {
+				return nil
+			}
+
+			return fmt.Errorf("Bad value for %s: %s", k, value)
+		}
+
+		return fmt.Errorf("Tag not found: %s", k)
+	}
+}
+
 func testAccCheckVNAV1FixedILength(
 	vna *appliances.Appliance,
 	slotNumber int,
