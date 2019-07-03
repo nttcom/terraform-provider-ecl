@@ -1,11 +1,8 @@
 package ecl
 
 import (
-	"bytes"
-	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
 
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
@@ -13,47 +10,47 @@ import (
 
 const maxNumberOfInterfaces = 8
 
-func fixedIPHash(v interface{}) int {
-	var buf bytes.Buffer
-	m := v.(map[string]interface{})
-	if m["ip_address"] != nil && m["subnet_id"] != nil {
-		buf.WriteString(
-			fmt.Sprintf(
-				"%s-%s-",
-				m["ip_address"].(string),
-				m["subnet_id"].(string),
-			))
-	}
-	return hashcode.String(buf.String())
-}
+// func fixedIPHash(v interface{}) int {
+// 	var buf bytes.Buffer
+// 	m := v.(map[string]interface{})
+// 	if m["ip_address"] != nil && m["subnet_id"] != nil {
+// 		buf.WriteString(
+// 			fmt.Sprintf(
+// 				"%s-%s-",
+// 				m["ip_address"].(string),
+// 				m["subnet_id"].(string),
+// 			))
+// 	}
+// 	return hashcode.String(buf.String())
+// }
 
-func allowedAddressPairHash(v interface{}) int {
-	var buf bytes.Buffer
-	m := v.(map[string]interface{})
-	if m["ip_address"] != nil &&
-		m["mac_address"] != nil &&
-		m["type"] != nil &&
-		m["vrid"] != nil {
-		buf.WriteString(
-			fmt.Sprintf(
-				"%s-%s-%s-%s-",
-				m["ip_address"].(string),
-				m["subnet_id"].(string),
-				m["type"].(string),
-				m["vrid"].(string),
-			))
-	}
-	return hashcode.String(buf.String())
-}
+// func allowedAddressPairHash(v interface{}) int {
+// 	var buf bytes.Buffer
+// 	m := v.(map[string]interface{})
+// 	if m["ip_address"] != nil &&
+// 		m["mac_address"] != nil &&
+// 		m["type"] != nil &&
+// 		m["vrid"] != nil {
+// 		buf.WriteString(
+// 			fmt.Sprintf(
+// 				"%s-%s-%s-%s-",
+// 				m["ip_address"].(string),
+// 				m["subnet_id"].(string),
+// 				m["type"].(string),
+// 				m["vrid"].(string),
+// 			))
+// 	}
+// 	return hashcode.String(buf.String())
+// }
 
-func interfaceHash(v interface{}) int {
-	var buf bytes.Buffer
-	m := v.(map[string]interface{})
-	if m["slot_number"] != nil {
-		buf.WriteString(fmt.Sprintf("%d-", m["slot_number"].(int)))
-	}
-	return hashcode.String(buf.String())
-}
+// func interfaceHash(v interface{}) int {
+// 	var buf bytes.Buffer
+// 	m := v.(map[string]interface{})
+// 	if m["slot_number"] != nil {
+// 		buf.WriteString(fmt.Sprintf("%d-", m["slot_number"].(int)))
+// 	}
+// 	return hashcode.String(buf.String())
+// }
 
 func getApplianceTags(d *schema.ResourceData) map[string]string {
 	rawTags := d.Get("tags").(map[string]interface{})
@@ -129,8 +126,8 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 	var interfaces appliances.CreateOptsInterfaces
 
 	// Meta part
-	rawMeta := d.Get("interface_1_meta").(*schema.Set).List()
-	rawFips := d.Get("interface_1_fixed_ips").(*schema.Set).List()
+	rawMeta := d.Get("interface_1_meta").([]interface{})
+	rawFips := d.Get("interface_1_fixed_ips").([]interface{})
 
 	// log.Printf("[MYDEBUG] rawMeta: %#v", rawMeta)
 	// log.Printf("[MYDEBUG] rawFips: %#v", rawFips)

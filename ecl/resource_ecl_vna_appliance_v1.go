@@ -18,10 +18,10 @@ const deletePollInterval = 2 * time.Second
 
 func allowedAddessPairsSchema() *schema.Schema {
 	return &schema.Schema{
-		Type:     schema.TypeSet,
+		Type:     schema.TypeList,
 		Optional: true,
 		Computed: true,
-		Set:      allowedAddressPairHash,
+		// Set:      allowedAddressPairHash,
 		// Default:  &schema.Set{},
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -51,10 +51,10 @@ func allowedAddessPairsSchema() *schema.Schema {
 
 func fixedIPsSchema() *schema.Schema {
 	return &schema.Schema{
-		Type:     schema.TypeSet,
+		Type:     schema.TypeList,
 		Optional: true,
 		Computed: true,
-		Set:      fixedIPHash,
+		// Set:      fixedIPHash,
 		// Default:  &schema.Set{},
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -73,12 +73,12 @@ func fixedIPsSchema() *schema.Schema {
 
 func interfaceMetaSchema() *schema.Schema {
 	return &schema.Schema{
-		Type:     schema.TypeSet,
+		Type:     schema.TypeList,
 		Optional: true,
 		Computed: true,
 		MinItems: 1,
 		MaxItems: 1,
-		Set:      interfaceHash,
+		// Set:      interfaceHash,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"name": &schema.Schema{

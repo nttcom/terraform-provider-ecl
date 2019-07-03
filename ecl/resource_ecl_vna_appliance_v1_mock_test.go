@@ -232,7 +232,7 @@ response:
         				"description": "interface_1_description",
         				"tags": {},
         				"updatable": true,
-        				"network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+        				"network_id": "dummyNetworkID",
         				"allowed_address_pairs": [],
         				"fixed_ips": [{
         					"ip_address": "192.168.1.50",
@@ -296,7 +296,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -405,7 +405,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -517,7 +517,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -640,7 +640,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -752,7 +752,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -864,7 +864,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
