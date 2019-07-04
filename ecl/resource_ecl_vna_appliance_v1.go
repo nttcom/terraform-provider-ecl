@@ -12,17 +12,15 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-const createPollInterval = 2 * time.Second
-const updatePollInterval = 2 * time.Second
-const deletePollInterval = 2 * time.Second
+const createPollInterval = 30 * time.Second
+const updatePollInterval = 30 * time.Second
+const deletePollInterval = 30 * time.Second
 
 func allowedAddessPairsSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeList,
 		Optional: true,
 		Computed: true,
-		// Set:      allowedAddressPairHash,
-		// Default:  &schema.Set{},
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"ip_address": &schema.Schema{
@@ -33,6 +31,7 @@ func allowedAddessPairsSchema() *schema.Schema {
 				"mac_address": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
+					Computed: true,
 				},
 
 				"type": &schema.Schema{
@@ -54,8 +53,6 @@ func fixedIPsSchema() *schema.Schema {
 		Type:     schema.TypeList,
 		Optional: true,
 		Computed: true,
-		// Set:      fixedIPHash,
-		// Default:  &schema.Set{},
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"ip_address": &schema.Schema{
@@ -78,23 +75,19 @@ func interfaceMetaSchema() *schema.Schema {
 		Computed: true,
 		MinItems: 1,
 		MaxItems: 1,
-		// Set:      interfaceHash,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"name": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
-					// Default:  "",
 				},
 				"description": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
-					// Default:  "",
 				},
 				"network_id": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
-					// Default:  "",
 				},
 				"updatable": &schema.Schema{
 					Type:     schema.TypeBool,
@@ -103,7 +96,7 @@ func interfaceMetaSchema() *schema.Schema {
 				"tags": &schema.Schema{
 					Type:     schema.TypeMap,
 					Optional: true,
-					// Default:  map[string]string{},
+					Computed: true,
 				},
 			},
 		},
@@ -165,6 +158,7 @@ func resourceVNAApplianceV1() *schema.Resource {
 			"tags": &schema.Schema{
 				Type:     schema.TypeMap,
 				Optional: true,
+				Computed: true,
 			},
 
 			"interface_1_meta":                  interfaceMetaSchema(),
