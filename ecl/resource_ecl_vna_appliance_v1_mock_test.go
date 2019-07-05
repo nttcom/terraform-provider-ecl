@@ -54,6 +54,10 @@ func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description-update"),
 					testAccCheckVNAV1ApplianceTag(&vna, "k1", "v1"),
 					testAccCheckVNAV1ApplianceTag(&vna, "k2", "v2"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1-update"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description-update"),
+					testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK1", "interfaceV1"),
+					testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK2", "interfaceV2"),
 				),
 			},
 		},
@@ -114,7 +118,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
     interface_1_meta  {
 		name = "interface_1"
 		description = "interface_1_description"
-		network_id = "dummyNetworkID"
+        network_id = "dummyNetworkID"
 	}
 
 	interface_1_fixed_ips {
@@ -144,9 +148,13 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
     }
 
     interface_1_meta  {
-		name = "interface_1"
-		description = "interface_1_description"
-		network_id = "dummyNetworkID"
+		name = "interface_1-update"
+		description = "interface_1_description-update"
+        network_id = "dummyNetworkID"
+        tags = {
+            interfaceK1 = "interfaceV1"
+            interfaceK2 = "interfaceV2"
+        }
 	}
 
 	interface_1_fixed_ips {
@@ -750,16 +758,19 @@ response:
                 "interfaces": {
                     "interface_1": {
                         "allowed_address_pairs": [],
-                        "description": "interface_1_description",
+                        "description": "interface_1_description-update",
                         "fixed_ips": [
                             {
                                 "ip_address": "192.168.1.50",
                                 "subnet_id": ""
                             }
                         ],
-                        "name": "interface_1",
+                        "name": "interface_1-update",
                         "network_id": "dummyNetworkID",
-                        "tags": {},
+                        "tags": {
+                            "interfaceK1": "interfaceV1",
+                            "interfaceK2": "interfaceV2"
+                        },
                         "updatable": true
                     },
                     "interface_2": {
@@ -862,16 +873,19 @@ response:
                 "interfaces": {
                     "interface_1": {
                         "allowed_address_pairs": [],
-                        "description": "interface_1_description",
+                        "description": "interface_1_description-update",
                         "fixed_ips": [
                             {
                                 "ip_address": "192.168.1.50",
                                 "subnet_id": ""
                             }
                         ],
-                        "name": "interface_1",
+                        "name": "interface_1-update",
                         "network_id": "dummyNetworkID",
-                        "tags": {},
+                        "tags": {
+                            "interfaceK1": "interfaceV1",
+                            "interfaceK2": "interfaceV2"
+                        },
                         "updatable": true
                     },
                     "interface_2": {

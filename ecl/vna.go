@@ -117,12 +117,14 @@ func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) []i
 
 func getTagsAsOpts(rawTags map[string]interface{}) map[string]string {
 	var tags map[string]string
+	tags = map[string]string{}
 	// rawTags := thisInterface["tags"].(map[string]interface{})
 	for k, v := range rawTags {
 		tags[k] = v.(string)
 	}
 	return tags
 }
+
 func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfaces {
 	var interface1 appliances.CreateOptsInterface
 	var interfaces appliances.CreateOptsInterfaces

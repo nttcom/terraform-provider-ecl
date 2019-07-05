@@ -12,9 +12,13 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-const createPollInterval = 30 * time.Second
-const updatePollInterval = 30 * time.Second
-const deletePollInterval = 30 * time.Second
+const createPollInterval = 3 * time.Second
+const updatePollInterval = 3 * time.Second
+const deletePollInterval = 3 * time.Second
+
+// const createPollInterval = 30 * time.Second
+// const updatePollInterval = 30 * time.Second
+// const deletePollInterval = 30 * time.Second
 
 func allowedAddessPairsSchema() *schema.Schema {
 	return &schema.Schema{
@@ -345,37 +349,85 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 
 	var updateMeta, updateInterface, updateAAP bool
 
-	var updateOptsMeta appliances.UpdateOptsMeta
+	var updateMetadataOpts appliances.UpdateMetadataOpts
 	if d.HasChange("name") {
 		updateMeta = true
-
 		name := d.Get("name").(string)
-		a, b := d.GetChange("name")
-		log.Printf("[MYDEBUG:name] %#v %#v", a, b)
-		updateOptsMeta.Name = &name
+		updateMetadataOpts.Name = &name
 	}
 
 	if d.HasChange("description") {
 		updateMeta = true
-
 		description := d.Get("description").(string)
-		a, b := d.GetChange("description")
-		log.Printf("[MYDEBUG:description] %#v %#v", a, b)
-		updateOptsMeta.Description = &description
+		updateMetadataOpts.Description = &description
 	}
 
 	if d.HasChange("tags") {
 		updateMeta = true
-
 		tags := resourceTags(d)
-		a, b := d.GetChange("tags")
-		log.Printf("[MYDEBUG:tags] %#v %#v", a, b)
-		updateOptsMeta.Tags = &tags
+		updateMetadataOpts.Tags = &tags
+	}
+
+	UpdateMetadataInterfaces := appliances.UpdateMetadataInterfaces{}
+	for _, slotNumber := range []int{1, 2, 3, 4, 5, 6, 7, 8} {
+		updateMetadataInterface := appliances.UpdateMetadataInterface{}
+
+		nameKey := fmt.Sprintf("interface_%d_meta.0.name", slotNumber)
+		if d.HasChange(nameKey) {
+			updateMeta = true
+			name := d.Get(nameKey).(string)
+			updateMetadataInterface.Name = &name
+		}
+
+		descriptionKey := fmt.Sprintf("interface_%d_meta.0.description", slotNumber)
+		if d.HasChange(descriptionKey) {
+			updateMeta = true
+			description := d.Get(descriptionKey).(string)
+			updateMetadataInterface.Description = &description
+		}
+
+		tagsKey := fmt.Sprintf("interface_%d_meta.0.tags", slotNumber)
+		if d.HasChange(tagsKey) {
+			updateMeta = true
+
+			schemaTags := d.Get(tagsKey)
+			newTags := map[string]string{}
+			for k, v := range schemaTags.(map[string]interface{}) {
+				newTags[k] = v.(string)
+			}
+			updateMetadataInterface.Tags = &newTags
+		}
+		switch slotNumber {
+		case 1:
+			UpdateMetadataInterfaces.Interface1 = &updateMetadataInterface
+			break
+		case 2:
+			UpdateMetadataInterfaces.Interface2 = &updateMetadataInterface
+			break
+		case 3:
+			UpdateMetadataInterfaces.Interface3 = &updateMetadataInterface
+			break
+		case 4:
+			UpdateMetadataInterfaces.Interface4 = &updateMetadataInterface
+			break
+		case 5:
+			UpdateMetadataInterfaces.Interface5 = &updateMetadataInterface
+			break
+		case 6:
+			UpdateMetadataInterfaces.Interface6 = &updateMetadataInterface
+			break
+		case 7:
+			UpdateMetadataInterfaces.Interface7 = &updateMetadataInterface
+			break
+		case 8:
+			UpdateMetadataInterfaces.Interface8 = &updateMetadataInterface
+			break
+		}
 	}
 
 	if updateMeta {
-		log.Printf("[DEBUG] Updating VNA Metadata %s with options: %+v", d.Id(), updateOptsMeta)
-		_, err = appliances.Update(vnaClient, d.Id(), updateOptsMeta).Extract()
+		log.Printf("[DEBUG] Updating VNA Metadata %s with options: %+v", d.Id(), updateMetadataOpts)
+		_, err = appliances.Update(vnaClient, d.Id(), updateMetadataOpts).Extract()
 
 		stateConf := &resource.StateChangeConf{
 			Pending:      []string{"PROCESSING"},
@@ -390,32 +442,11 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 		_, err = stateConf.WaitForState()
 		if err != nil {
 			return fmt.Errorf(
-				"Error waiting for virtual network appliance (%s) to become COMPLETE: %s",
+				"Error waiting for virtual network appliance (%s) to become COMPLETE(after metadata update): %s",
 				d.Id(), err)
 		}
 	}
 	// [MYDEBUG:tags] map[string]interface {}{"k1":"v1"} map[string]interface {}{"k1":"v1", "k2":"v2"}
-
-	// updateOptsInterface := appliances.UpdateOptsMeta{}
-	var slotNumbers = []int{1, 2, 3, 4, 5, 6, 7, 8}
-
-	for _, slotNumber := range slotNumbers {
-		log.Printf("[MYDEBUG] slotNumber: %d", slotNumber)
-		ifMetaKey := fmt.Sprintf("interface_%d_meta", slotNumber)
-		// ifFixedIPsKey := fmt.Sprintf("interface_%d_fixed_ips", slotNumber)
-
-		log.Printf("[MYDEBUG] d.HasChange(ifMetaKey): %#v", d.HasChange(ifMetaKey))
-		if d.HasChange(ifMetaKey) {
-			updateInterface = true
-
-			b, a := d.GetChange(ifMetaKey)
-			before := b.(*schema.Set).List()
-			after := a.(*schema.Set).List()
-			log.Printf("[MYDEBUG] before: %#v", before)
-			log.Printf("[MYDEBUG] after: %#v", after)
-		}
-
-	}
 
 	if updateInterface {
 	}
