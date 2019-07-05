@@ -66,7 +66,7 @@ func getApplianceTags(d *schema.ResourceData) map[string]string {
 func getInterfaceAllowedAddressPairsAsState(allowedAddressPairs []appliances.AllowedAddressPairInResponse) []interface{} {
 	result := make([]interface{}, len(allowedAddressPairs))
 	for i, aap := range allowedAddressPairs {
-		thisAAP := make(map[string]string, 1)
+		thisAAP := map[string]string{}
 		thisAAP["ip_address"] = aap.IPAddress
 		thisAAP["mac_address"] = aap.MACAddress
 		thisAAP["type"] = aap.Type
@@ -82,7 +82,7 @@ func getInterfaceFixedIPsAsState(fixedIPs []appliances.FixedIPInResponse) []inte
 	result := make([]interface{}, len(fixedIPs))
 
 	for i, fixedIP := range fixedIPs {
-		thisFixedIP := make(map[string]string, 1)
+		thisFixedIP := map[string]string{}
 		thisFixedIP["ip_address"] = fixedIP.IPAddress
 		thisFixedIP["subnet_id"] = fixedIP.SubnetID
 
@@ -92,9 +92,12 @@ func getInterfaceFixedIPsAsState(fixedIPs []appliances.FixedIPInResponse) []inte
 	return result
 }
 
-func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) []map[string]interface{} {
-	result := make([]map[string]interface{}, 1)
-	meta := make(map[string]interface{}, 1)
+func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) []interface{} {
+	var result []interface{}
+	result = []interface{}{}
+
+	var meta map[string]interface{}
+	meta = map[string]interface{}{}
 
 	meta["name"] = singleInterface.Name
 	meta["description"] = singleInterface.Description
@@ -107,9 +110,8 @@ func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) []m
 	}
 	meta["tags"] = resultTags
 
+	result = append(result, meta)
 	log.Printf("[MYDEBUG] Result Meta: %#v", result)
-
-	result[0] = meta
 	return result
 }
 
