@@ -87,6 +87,12 @@ func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
 				Config: testMockedAccVNAV1ApplianceBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.network_id", "dummyNetworkID"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
 				),
 			},
 		},
@@ -232,7 +238,7 @@ response:
         				"description": "interface_1_description",
         				"tags": {},
         				"updatable": true,
-        				"network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+        				"network_id": "dummyNetworkID",
         				"allowed_address_pairs": [],
         				"fixed_ips": [{
         					"ip_address": "192.168.1.50",
@@ -296,7 +302,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -405,7 +411,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -517,7 +523,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -640,7 +646,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -752,7 +758,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },
@@ -864,7 +870,7 @@ response:
                             }
                         ],
                         "name": "interface_1",
-                        "network_id": "1ad60fdc-a31f-4dc3-b0af-353c630c7708",
+                        "network_id": "dummyNetworkID",
                         "tags": {},
                         "updatable": true
                     },

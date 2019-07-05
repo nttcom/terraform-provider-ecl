@@ -25,7 +25,6 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			resource.TestStep{
 				Config: testAccVNAV1ApplianceBasic,
-				// ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					// Create resource reference
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
@@ -38,15 +37,17 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description"),
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.network_id", &n.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
 					// Check about interface
-					testAccCheckVNAV1FixedIPIPAddress(&vna, 1,
-						[]map[string]interface{}{
-							map[string]interface{}{
-								"ip_address": "192.168.1.50",
-								"subnet_id":  &sn,
-							},
-						},
-					),
+					// testAccCheckVNAV1FixedIPIPAddress(&vna, 1,
+					// 	[]map[string]interface{}{
+					// 		map[string]interface{}{
+					// 			"ip_address": "192.168.1.50",
+					// 			"subnet_id":  &sn,
+					// 		},
+					// 	},
+					// ),
 					testAccCheckVNAV1FixedILength(&vna, 1, 1),
 					testAccCheckVNAV1FixedILength(&vna, 2, 0),
 					testAccCheckVNAV1FixedILength(&vna, 3, 0),
@@ -102,46 +103,47 @@ func testAccCheckVNAV1FixedILength(
 		return nil
 	}
 }
-func testAccCheckVNAV1FixedIPIPAddress(
-	vna *appliances.Appliance,
-	slotNumber int,
-	fixedIPs []map[string]interface{}) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		actualFixedIPs := getFixedIPsBySlotNumber(vna, slotNumber)
 
-		for index, fixedIPMap := range fixedIPs {
+// func testAccCheckVNAV1FixedIPIPAddress(
+// 	vna *appliances.Appliance,
+// 	slotNumber int,
+// 	fixedIPs []map[string]interface{}) resource.TestCheckFunc {
+// 	return func(s *terraform.State) error {
+// 		actualFixedIPs := getFixedIPsBySlotNumber(vna, slotNumber)
 
-			for key, v := range fixedIPMap {
+// 		for index, fixedIPMap := range fixedIPs {
 
-				if key == "ip_address" {
-					actual := actualFixedIPs[index].IPAddress
-					expected := v.(string)
-					if actual != expected {
-						return fmt.Errorf(
-							"IPAddress is different. expected %#v, actual %#v",
-							expected,
-							actual,
-						)
-					}
-				}
+// 			for key, v := range fixedIPMap {
 
-				if key == "subnet_id" {
-					actual := actualFixedIPs[index].SubnetID
-					sn := v.(*subnets.Subnet)
-					expected := (*sn).ID
-					if actual != expected {
-						return fmt.Errorf(
-							"SubnetID is different. expected %#v, actual %#v",
-							expected,
-							actual,
-						)
-					}
-				}
-			}
-		}
-		return nil
-	}
-}
+// 				if key == "ip_address" {
+// 					actual := actualFixedIPs[index].IPAddress
+// 					expected := v.(string)
+// 					if actual != expected {
+// 						return fmt.Errorf(
+// 							"IPAddress is different. expected %#v, actual %#v",
+// 							expected,
+// 							actual,
+// 						)
+// 					}
+// 				}
+
+// 				if key == "subnet_id" {
+// 					actual := actualFixedIPs[index].SubnetID
+// 					sn := v.(*subnets.Subnet)
+// 					expected := (*sn).ID
+// 					if actual != expected {
+// 						return fmt.Errorf(
+// 							"SubnetID is different. expected %#v, actual %#v",
+// 							expected,
+// 							actual,
+// 						)
+// 					}
+// 				}
+// 			}
+// 		}
+// 		return nil
+// 	}
+// }
 func testAccCheckVNAV1ApplianceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	vnaClient, err := config.vnaV1Client(OS_REGION_NAME)
@@ -223,6 +225,11 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "zone1-groupb"
 	virtual_network_appliance_plan_id = "%s"
 
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+    tags = {
+        k1 = "v1"
+    }
+
 	interface_1_meta  {
 		name = "interface_1"
 		description = "interface_1_description"
@@ -232,8 +239,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
 	}
-
-	depends_on = ["ecl_network_subnet_v2.subnet_1"]
 
 	lifecycle {
 		ignore_changes = [
