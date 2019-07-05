@@ -134,29 +134,36 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 	// log.Printf("[MYDEBUG] rawMeta: %#v", rawMeta)
 	// log.Printf("[MYDEBUG] rawFips: %#v", rawFips)
 
-	thisRawMeta := rawMeta[0].(map[string]interface{})
-	interface1.Name = thisRawMeta["name"].(string)
-	interface1.Description = thisRawMeta["description"].(string)
-	interface1.NetworkID = thisRawMeta["network_id"].(string)
-
-	tags := getTagsAsOpts(thisRawMeta["tags"].(map[string]interface{}))
-	interface1.Tags = tags
+	for index, rm := range rawMeta {
+		thisRawMeta := rm.(map[string]interface{})
+		if index == 0 {
+			interface1.Name = thisRawMeta["name"].(string)
+			interface1.Description = thisRawMeta["description"].(string)
+			interface1.NetworkID = thisRawMeta["network_id"].(string)
+			tags := getTagsAsOpts(thisRawMeta["tags"].(map[string]interface{}))
+			interface1.Tags = tags
+		}
+	}
+	// thisRawMeta := rawMeta[0].(map[string]interface{})
 
 	// FixedIPs part
 	var resultFixedIPs [1]appliances.CreateOptsFixedIP
 	var fixedIP appliances.CreateOptsFixedIP
 
-	rawFip := rawFips[0]
+	for index, rawFip := range rawFips {
+		if index == 0 {
+			fip := rawFip.(map[string]interface{})
+			// log.Printf("[MYDEBUG] fip: %#v", fip)
+
+			ipAddress := fip["ip_address"].(string)
+			fixedIP.IPAddress = ipAddress
+			resultFixedIPs[0] = fixedIP
+
+			interface1.FixedIPs = resultFixedIPs
+		}
+	}
+	// rawFip := rawFips[0]
 	// log.Printf("[MYDEBUG] rawFip: %#v", rawFip)
-
-	fip := rawFip.(map[string]interface{})
-	// log.Printf("[MYDEBUG] fip: %#v", fip)
-
-	ipAddress := fip["ip_address"].(string)
-	fixedIP.IPAddress = ipAddress
-	resultFixedIPs[0] = fixedIP
-
-	interface1.FixedIPs = resultFixedIPs
 
 	interfaces.Interface1 = interface1
 
