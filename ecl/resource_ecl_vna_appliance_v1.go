@@ -347,7 +347,7 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error creating ECL virtual network appliance client: %s", err)
 	}
 
-	var updateMeta, updateInterface, updateAAP bool
+	var updateMeta, updateMetaInInterface, updateInterface, updateAAP bool
 
 	var updateMetadataOpts appliances.UpdateMetadataOpts
 	if d.HasChange("name") {
@@ -374,21 +374,27 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 
 		nameKey := fmt.Sprintf("interface_%d_meta.0.name", slotNumber)
 		if d.HasChange(nameKey) {
+			log.Printf("[MYDEBUG] Differences are found in %s !!", nameKey)
 			updateMeta = true
+			updateMetaInInterface = true
 			name := d.Get(nameKey).(string)
 			updateMetadataInterface.Name = &name
 		}
 
 		descriptionKey := fmt.Sprintf("interface_%d_meta.0.description", slotNumber)
 		if d.HasChange(descriptionKey) {
+			log.Printf("[MYDEBUG] Differences are found in %s !!", descriptionKey)
 			updateMeta = true
+			updateMetaInInterface = true
 			description := d.Get(descriptionKey).(string)
 			updateMetadataInterface.Description = &description
 		}
 
 		tagsKey := fmt.Sprintf("interface_%d_meta.0.tags", slotNumber)
 		if d.HasChange(tagsKey) {
+			log.Printf("[MYDEBUG] Differences are found in %s !!", tagsKey)
 			updateMeta = true
+			updateMetaInInterface = true
 
 			schemaTags := d.Get(tagsKey)
 			newTags := map[string]string{}
@@ -423,6 +429,10 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 			UpdateMetadataInterfaces.Interface8 = &updateMetadataInterface
 			break
 		}
+	}
+
+	if updateMetaInInterface {
+		updateMetadataOpts.Interfaces = UpdateMetadataInterfaces
 	}
 
 	if updateMeta {
