@@ -340,6 +340,7 @@ Update Interface:
 			}
 		}
 */
+
 func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	vnaClient, err := config.vnaV1Client(GetRegion(d, config))
@@ -347,7 +348,16 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error creating ECL virtual network appliance client: %s", err)
 	}
 
-	var updateMeta, updateMetaInInterface, updateInterface, updateAAP bool
+	err = updateMetadata(d, meta, vnaClient)
+	if err != nil {
+		return fmt.Errorf("Error in updating virtual network appliance metadata: %s", err)
+	}
+
+	return resourceVNAApplianceV1Read(d, meta)
+}
+
+func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.ServiceClient) error {
+	var updateMeta, updateMetaInInterface bool
 
 	var updateMetadataOpts appliances.UpdateMetadataOpts
 	if d.HasChange("name") {
@@ -437,12 +447,12 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 
 	if updateMeta {
 		log.Printf("[DEBUG] Updating VNA Metadata %s with options: %+v", d.Id(), updateMetadataOpts)
-		_, err = appliances.Update(vnaClient, d.Id(), updateMetadataOpts).Extract()
+		_, err := appliances.Update(client, d.Id(), updateMetadataOpts).Extract()
 
 		stateConf := &resource.StateChangeConf{
 			Pending:      []string{"PROCESSING"},
 			Target:       []string{"COMPLETE"},
-			Refresh:      waitForVirtualNetworkApplianceComplete(vnaClient, d.Id()),
+			Refresh:      waitForVirtualNetworkApplianceComplete(client, d.Id()),
 			Timeout:      d.Timeout(schema.TimeoutDelete),
 			Delay:        5 * time.Second,
 			PollInterval: updatePollInterval,
@@ -456,14 +466,8 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 				d.Id(), err)
 		}
 	}
-	// [MYDEBUG:tags] map[string]interface {}{"k1":"v1"} map[string]interface {}{"k1":"v1", "k2":"v2"}
 
-	if updateInterface {
-	}
-	if updateAAP {
-	}
-
-	return resourceVNAApplianceV1Read(d, meta)
+	return nil
 }
 
 func resourceVNAApplianceV1Delete(d *schema.ResourceData, meta interface{}) error {
