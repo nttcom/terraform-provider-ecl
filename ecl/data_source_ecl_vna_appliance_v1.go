@@ -55,35 +55,35 @@ func dataSourceVNAApplianceV1() *schema.Resource {
 				Optional: true,
 			},
 
-			"interface_1_meta":                  interfaceMetaSchema(),
+			"interface_1_meta":                  interfaceInfoSchema(),
 			"interface_1_fixed_ips":             fixedIPsSchema(),
 			"interface_1_allowed_address_pairs": allowedAddessPairsSchema(),
 
-			"interface_2_meta":                  interfaceMetaSchema(),
+			"interface_2_meta":                  interfaceInfoSchema(),
 			"interface_2_fixed_ips":             fixedIPsSchema(),
 			"interface_2_allowed_address_pairs": allowedAddessPairsSchema(),
 
-			"interface_3_meta":                  interfaceMetaSchema(),
+			"interface_3_meta":                  interfaceInfoSchema(),
 			"interface_3_fixed_ips":             fixedIPsSchema(),
 			"interface_3_allowed_address_pairs": allowedAddessPairsSchema(),
 
-			"interface_4_meta":                  interfaceMetaSchema(),
+			"interface_4_meta":                  interfaceInfoSchema(),
 			"interface_4_fixed_ips":             fixedIPsSchema(),
 			"interface_4_allowed_address_pairs": allowedAddessPairsSchema(),
 
-			"interface_5_meta":                  interfaceMetaSchema(),
+			"interface_5_meta":                  interfaceInfoSchema(),
 			"interface_5_fixed_ips":             fixedIPsSchema(),
 			"interface_5_allowed_address_pairs": allowedAddessPairsSchema(),
 
-			"interface_6_meta":                  interfaceMetaSchema(),
+			"interface_6_meta":                  interfaceInfoSchema(),
 			"interface_6_fixed_ips":             fixedIPsSchema(),
 			"interface_6_allowed_address_pairs": allowedAddessPairsSchema(),
 
-			"interface_7_meta":                  interfaceMetaSchema(),
+			"interface_7_meta":                  interfaceInfoSchema(),
 			"interface_7_fixed_ips":             fixedIPsSchema(),
 			"interface_7_allowed_address_pairs": allowedAddessPairsSchema(),
 
-			"interface_8_meta":                  interfaceMetaSchema(),
+			"interface_8_meta":                  interfaceInfoSchema(),
 			"interface_8_fixed_ips":             fixedIPsSchema(),
 			"interface_8_allowed_address_pairs": allowedAddessPairsSchema(),
 		},

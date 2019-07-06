@@ -54,8 +54,8 @@ func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description-update"),
 					testAccCheckVNAV1ApplianceTag(&vna, "k1", "v1"),
 					testAccCheckVNAV1ApplianceTag(&vna, "k2", "v2"),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1-update"),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description-update"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1-update"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description-update"),
 					testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK1", "interfaceV1"),
 					testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK2", "interfaceV2"),
 				),
@@ -93,9 +93,9 @@ func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1"),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description"),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.network_id", "dummyNetworkID"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
 				),
 			},
@@ -115,7 +115,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
         k1 = "v1"
     }
 
-    interface_1_meta  {
+    interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
         network_id = "dummyNetworkID"
@@ -147,7 +147,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
         k2 = "v2"
     }
 
-    interface_1_meta  {
+    interface_1_info  {
 		name = "interface_1-update"
 		description = "interface_1_description-update"
         network_id = "dummyNetworkID"

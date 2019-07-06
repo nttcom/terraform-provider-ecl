@@ -130,7 +130,7 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 	var interfaces appliances.CreateOptsInterfaces
 
 	// Meta part
-	rawMeta := d.Get("interface_1_meta").([]interface{})
+	rawMeta := d.Get("interface_1_info").([]interface{})
 	rawFips := d.Get("interface_1_fixed_ips").([]interface{})
 
 	// log.Printf("[MYDEBUG] rawMeta: %#v", rawMeta)

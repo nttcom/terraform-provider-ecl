@@ -34,9 +34,9 @@ func TestAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1"),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description"),
-					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.network_id", &n.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
 				),
@@ -54,9 +54,9 @@ func TestAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 					testAccCheckVNAV1ApplianceTag(&vna, "k1", "v1"),
 					testAccCheckVNAV1ApplianceTag(&vna, "k2", "v2"),
 					// Check interface meta
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1-update"),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description-update"),
-					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.network_id", &n.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1-update"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description-update"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
 					testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK1", "interfaceV1"),
@@ -88,9 +88,9 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.name", "interface_1"),
-					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.description", "interface_1_description"),
-					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_meta.0.network_id", &n.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
 					testAccCheckVNAV1FixedILength(&vna, 1, 1),
@@ -298,7 +298,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
         k1 = "v1"
     }
 
-	interface_1_meta  {
+	interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
 		network_id = "${ecl_network_network_v2.network_1.id}"
@@ -334,7 +334,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
         k2 = "v2"
     }
 
-	interface_1_meta  {
+	interface_1_info  {
 		name = "interface_1-update"
 		description = "interface_1_description-update"
 		network_id = "${ecl_network_network_v2.network_1.id}"
