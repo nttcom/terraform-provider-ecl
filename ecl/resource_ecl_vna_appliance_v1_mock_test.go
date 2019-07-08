@@ -11,6 +11,58 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
+func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
+	var vna appliances.Appliance
+
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
+
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances", testMockVNAV1AppliancePost)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceFixedIPPatch)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterFixedIPUpdate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterFixedIPUpdate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetDeleteComplete)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testMockedAccVNAV1ApplianceBasic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+				),
+			},
+			resource.TestStep{
+				Config: testMockedAccVNAV1ApplianceUpdateFixedIPBasic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1"),
+					// // Check network id in interface metadata part
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_2_info.0.network_id", "dummyNetworkID2"),
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.network_id", "dummyNetworkID3"),
+					// // Check fixed_ips part
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_2_fixed_ips.0.ip_address", "192.168.2.101"),
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_fixed_ips.0.ip_address", "192.168.3.50"),
+					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_fixed_ips.1.ip_address", "192.168.3.60"),
+				),
+			},
+		},
+	})
+}
 func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 	var vna appliances.Appliance
 
@@ -23,9 +75,9 @@ func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances", testMockVNAV1AppliancePost)
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterCreate)
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterCreate)
-	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1AppliancePatch)
-	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterUpdate)
-	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterUpdate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceMetaPatch)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterMetaUpdate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterMetaUpdate)
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceDelete)
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterDelete)
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetDeleteComplete)
@@ -119,6 +171,10 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		name = "interface_1"
 		description = "interface_1_description"
         network_id = "dummyNetworkID"
+        tags = {
+            interfaceK1 = "interfaceV1"
+            interfaceK2 = "interfaceV2"
+        }
 	}
 
 	interface_1_fixed_ips {
@@ -170,6 +226,57 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
+var testMockedAccVNAV1ApplianceUpdateFixedIPBasic = fmt.Sprintf(`
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "%s"
+
+    tags = {
+        k1 = "v1"
+    }
+
+    interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+        network_id = "dummyNetworkID"
+        tags = {
+            interfaceK1 = "interfaceV1"
+            interfaceK2 = "interfaceV2"
+        }
+	}
+
+	interface_1_fixed_ips {
+		ip_address = "192.168.1.50"
+	}
+
+    interface_2_info  {
+        network_id = "dummyNetworkID2"
+	}
+
+    interface_3_info  {
+        network_id = "dummyNetworkID3"
+	}
+
+    interface_3_fixed_ips {
+		ip_address = "192.168.3.50"
+	}
+
+    interface_3_fixed_ips {
+		ip_address = "192.168.3.60"
+	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
 var testMockVNAV1ApplianceDelete = `
 request:
     method: DELETE
@@ -181,7 +288,7 @@ expectedStatus:
 newStatus: Deleted
 `
 
-var testMockVNAV1AppliancePatch = `
+var testMockVNAV1ApplianceMetaPatch = `
 request:
     method: PATCH
 response:
@@ -279,6 +386,32 @@ response:
         				"network_id": "",
         				"allowed_address_pairs": [],
         				"fixed_ips": []
+        			}
+        		}
+        	}
+        }
+newStatus: Updated
+`
+
+var testMockVNAV1ApplianceFixedIPPatch = `
+request:
+    method: PATCH
+response:
+    code: 200
+    body: >
+        {
+        	"virtual_network_appliance": {
+        		"interfaces": {
+        			"interface_2": {
+        				"network_id": "dummyNetworkID2"
+        			},
+        			"interface_3": {
+        				"network_id": "dummyNetworkID3",
+        				"fixed_ips": [{
+        					"ip_address": "192.168.3.50"
+        				}, {
+        					"ip_address": "192.168.3.60"
+        				}]
         			}
         		}
         	}
@@ -420,7 +553,10 @@ response:
                         ],
                         "name": "interface_1",
                         "network_id": "dummyNetworkID",
-                        "tags": {},
+                        "tags": {
+                            "interfaceK1": "interfaceV1",
+                            "interfaceK2": "interfaceV2"
+                        },
                         "updatable": true
                     },
                     "interface_2": {
@@ -532,7 +668,10 @@ response:
                         ],
                         "name": "interface_1",
                         "network_id": "dummyNetworkID",
-                        "tags": {},
+                        "tags": {
+                            "interfaceK1": "interfaceV1",
+                            "interfaceK2": "interfaceV2"
+                        },
                         "updatable": true
                     },
                     "interface_2": {
@@ -742,7 +881,7 @@ counter:
     max: 3
 `
 
-var testMockVNAV1ApplianceProcessingAfterUpdate = `
+var testMockVNAV1ApplianceProcessingAfterMetaUpdate = `
 request:
     method: GET
 response:
@@ -857,7 +996,7 @@ counter:
     max: 3
 `
 
-var testMockVNAV1ApplianceGetActiveAfterUpdate = `
+var testMockVNAV1ApplianceGetActiveAfterMetaUpdate = `
 request:
     method: GET
 response:
@@ -965,6 +1104,241 @@ response:
                 "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
                 "vm_status": "ACTIVE"
             }
+        }
+expectedStatus:
+    - Updated
+counter:
+    min: 4
+`
+
+var testMockVNAV1ApplianceProcessingAfterFixedIPUpdate = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+        	"virtual_network_appliance": {
+        		"id": "45db3e66-31af-45a6-8ad2-d01521726145",
+        		"name": "appliance_1",
+        		"description": "appliance_1_description",
+        		"tags": {
+        			"k1": "v1"
+        		},
+        		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+        		"availability_zone": "zone1-groupb",
+        		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+        		"virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+        		"os_monitoring_status": "ACTIVE",
+        		"os_login_status": "ACTIVE",
+        		"vm_status": "ACTIVE",
+        		"operation_status": "PROCESSING",
+        		"interfaces": {
+        			"interface_7": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_8": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_3": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "dummyNetworkID3",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": [{
+        					"ip_address": "192.168.3.50",
+        					"subnet_id": ""
+        				}, {
+        					"ip_address": "192.168.3.60",
+        					"subnet_id": ""
+        				}]
+        			},
+        			"interface_6": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_1": {
+        				"name": "interface_1",
+        				"description": "interface_1_description",
+        				"tags": {
+                            "interfaceK1": "interfaceV1",
+                            "interfaceK2": "interfaceV2"
+                        },
+        				"updatable": true,
+        				"network_id": "dummyNetworkID",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": [{
+        					"ip_address": "192.168.1.50",
+        					"subnet_id": "b9e8b310-774b-4a39-a9ef-fada5dee252c"
+        				}]
+        			},
+        			"interface_4": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_2": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "dummyNetworkID2",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_5": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			}
+        		}
+        	}
+        }
+expectedStatus:
+    - Updated
+counter:
+    max: 3
+`
+
+var testMockVNAV1ApplianceGetActiveAfterFixedIPUpdate = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+        	"virtual_network_appliance": {
+        		"id": "45db3e66-31af-45a6-8ad2-d01521726145",
+        		"name": "appliance_1",
+        		"description": "appliance_1_description",
+        		"tags": {
+        			"k1": "v1"
+        		},
+        		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+        		"availability_zone": "zone1-groupb",
+        		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+        		"virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+        		"os_monitoring_status": "ACTIVE",
+        		"os_login_status": "ACTIVE",
+        		"vm_status": "ACTIVE",
+        		"operation_status": "COMPLETE",
+        		"interfaces": {
+        			"interface_7": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_8": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_3": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "dummyNetworkID3",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": [{
+        					"ip_address": "192.168.3.50",
+        					"subnet_id": "670c1b56-4b9c-4bde-b7ac-1f2e09391d81"
+        				}, {
+        					"ip_address": "192.168.3.60",
+        					"subnet_id": "670c1b56-4b9c-4bde-b7ac-1f2e09391d81"
+        				}]
+        			},
+        			"interface_6": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_1": {
+        				"name": "interface_1",
+        				"description": "interface_1_description",
+        				"tags": {
+                            "interfaceK1": "interfaceV1",
+                            "interfaceK2": "interfaceV2"
+                        },
+        				"updatable": true,
+        				"network_id": "dummyNetworkID",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": [{
+        					"ip_address": "192.168.1.50",
+        					"subnet_id": "b9e8b310-774b-4a39-a9ef-fada5dee252c"
+        				}]
+        			},
+        			"interface_4": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			},
+        			"interface_2": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "dummyNetworkID2",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": [{
+        					"ip_address": "192.168.2.101",
+        					"subnet_id": "4be82753-9dc5-4065-a4c0-46abe02bb93a"
+        				}]
+        			},
+        			"interface_5": {
+        				"name": "",
+        				"description": "",
+        				"tags": {},
+        				"updatable": true,
+        				"network_id": "",
+        				"allowed_address_pairs": [],
+        				"fixed_ips": []
+        			}
+        		}
+        	}
         }
 expectedStatus:
     - Updated

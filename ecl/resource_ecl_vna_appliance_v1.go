@@ -12,13 +12,13 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-const createPollInterval = 30 * time.Second
-const updatePollInterval = 30 * time.Second
-const deletePollInterval = 30 * time.Second
-
 // const createPollInterval = 30 * time.Second
 // const updatePollInterval = 30 * time.Second
 // const deletePollInterval = 30 * time.Second
+
+const createPollInterval = 2 * time.Second
+const updatePollInterval = 2 * time.Second
+const deletePollInterval = 2 * time.Second
 
 func allowedAddessPairsSchema() *schema.Schema {
 	return &schema.Schema{
@@ -358,9 +358,18 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error in updating virtual network appliance interface: %s", err)
 	}
 
+	// err = updateAllowedAddressPair(d, meta, vnaClient)
+	// if err != nil {
+	// 	return fmt.Errorf("Error in updating virtual network appliance allowed address pair: %s", err)
+	// }
+
 	return resourceVNAApplianceV1Read(d, meta)
 }
 
+// updateFixedIP handles following updates
+// - interface_N.network_id
+// - interface_N.fixedips list
+//  Above updates are correspond to "interface update" in VNA API
 func updateFixedIP(d *schema.ResourceData, meta interface{}, client *eclcloud.ServiceClient) error {
 	var updated bool
 	var updateFixedIPOpts appliances.UpdateFixedIPOpts
@@ -374,23 +383,27 @@ func updateFixedIP(d *schema.ResourceData, meta interface{}, client *eclcloud.Se
 		if d.HasChange(networkIDKey) {
 			updated = true
 			networkID := d.Get(networkIDKey).(string)
+			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %s", slotNumber, networkIDKey, networkID)
 			updateFixedIPInterface.NetworkID = &networkID
 		}
+		log.Printf("[MYDEBUG] updateFixedIPInterface in slot %d: %#v", slotNumber, updateFixedIPInterface)
 
-		fixedIPs := []appliances.UpdateFixedIPAddressInfo{}
+		addressInfo := []appliances.UpdateFixedIPAddressInfo{}
 
 		fixedIPsKey := fmt.Sprintf("interface_%d_fixed_ips", slotNumber)
 		if d.HasChange(fixedIPsKey) {
 			updated = true
-			rawFixedIPs := d.Get(fixedIPsKey).([]map[string]interface{})
+			rawFixedIPs := d.Get(fixedIPsKey).([]interface{})
 			for _, rawFixedIP := range rawFixedIPs {
+				tmpFixedIP := rawFixedIP.(map[string]interface{})
 				fixedIP := appliances.UpdateFixedIPAddressInfo{}
-				fixedIP.IPAddress = rawFixedIP["ip_address"].(string)
-				fixedIPs = append(fixedIPs, fixedIP)
+				fixedIP.IPAddress = tmpFixedIP["ip_address"].(string)
+				addressInfo = append(addressInfo, fixedIP)
 			}
+			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %#v", slotNumber, fixedIPsKey, addressInfo)
 		}
-		updateFixedIPInterface.FixedIPs = &fixedIPs
-		// updateFixedIPInterface.FixedIPs = &updateFixedIPInterface
+		updateFixedIPInterface.FixedIPs = &addressInfo
+		log.Printf("[MYDEBUG] updateFixedIPInterface in slot %d: %#v", slotNumber, updateFixedIPInterface)
 
 		switch slotNumber {
 		case 1:
@@ -423,6 +436,11 @@ func updateFixedIP(d *schema.ResourceData, meta interface{}, client *eclcloud.Se
 	if updated {
 		log.Printf("[DEBUG] Updating VNA Interface %s with options: %+v", d.Id(), updateFixedIPOpts)
 		_, err := appliances.Update(client, d.Id(), updateFixedIPOpts).Extract()
+		if err != nil {
+			return fmt.Errorf(
+				"Error updating for virtual network appliance (%s) with option %#v: %s,",
+				d.Id(), updateFixedIPOpts, err)
+		}
 
 		stateConf := &resource.StateChangeConf{
 			Pending:      []string{"PROCESSING"},
@@ -533,6 +551,11 @@ func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 	if updateMeta {
 		log.Printf("[DEBUG] Updating VNA Metadata %s with options: %+v", d.Id(), updateMetadataOpts)
 		_, err := appliances.Update(client, d.Id(), updateMetadataOpts).Extract()
+		if err != nil {
+			return fmt.Errorf(
+				"Error updating for virtual network appliance (%s) with option %#v: %s,",
+				d.Id(), updateMetadataOpts, err)
+		}
 
 		stateConf := &resource.StateChangeConf{
 			Pending:      []string{"PROCESSING"},
