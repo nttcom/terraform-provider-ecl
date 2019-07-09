@@ -56,35 +56,43 @@ func dataSourceVNAApplianceV1() *schema.Resource {
 			},
 
 			"interface_1_meta":                  interfaceInfoSchema(),
-			"interface_1_fixed_ips":             fixedIPsSchema(),
+			"interface_1_fixed_ips":             fixedIPsSchema(1),
+			"interface_1_no_fixed_ips":          noFixedIPsSchema(1),
 			"interface_1_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_2_meta":                  interfaceInfoSchema(),
-			"interface_2_fixed_ips":             fixedIPsSchema(),
+			"interface_2_fixed_ips":             fixedIPsSchema(2),
+			"interface_2_no_fixed_ips":          noFixedIPsSchema(2),
 			"interface_2_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_3_meta":                  interfaceInfoSchema(),
-			"interface_3_fixed_ips":             fixedIPsSchema(),
+			"interface_3_fixed_ips":             fixedIPsSchema(3),
+			"interface_3_no_fixed_ips":          noFixedIPsSchema(3),
 			"interface_3_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_4_meta":                  interfaceInfoSchema(),
-			"interface_4_fixed_ips":             fixedIPsSchema(),
+			"interface_4_fixed_ips":             fixedIPsSchema(4),
+			"interface_4_no_fixed_ips":          noFixedIPsSchema(4),
 			"interface_4_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_5_meta":                  interfaceInfoSchema(),
-			"interface_5_fixed_ips":             fixedIPsSchema(),
+			"interface_5_fixed_ips":             fixedIPsSchema(5),
+			"interface_5_no_fixed_ips":          noFixedIPsSchema(5),
 			"interface_5_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_6_meta":                  interfaceInfoSchema(),
-			"interface_6_fixed_ips":             fixedIPsSchema(),
+			"interface_6_fixed_ips":             fixedIPsSchema(6),
+			"interface_6_no_fixed_ips":          noFixedIPsSchema(6),
 			"interface_6_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_7_meta":                  interfaceInfoSchema(),
-			"interface_7_fixed_ips":             fixedIPsSchema(),
+			"interface_7_fixed_ips":             fixedIPsSchema(7),
+			"interface_7_no_fixed_ips":          noFixedIPsSchema(7),
 			"interface_7_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_8_meta":                  interfaceInfoSchema(),
-			"interface_8_fixed_ips":             fixedIPsSchema(),
+			"interface_8_fixed_ips":             fixedIPsSchema(8),
+			"interface_8_no_fixed_ips":          noFixedIPsSchema(8),
 			"interface_8_allowed_address_pairs": allowedAddessPairsSchema(),
 		},
 	}

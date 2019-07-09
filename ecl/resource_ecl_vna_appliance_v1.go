@@ -12,13 +12,11 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-// const createPollInterval = 30 * time.Second
-// const updatePollInterval = 30 * time.Second
-// const deletePollInterval = 30 * time.Second
+const pollingSec = 30
 
-const createPollInterval = 2 * time.Second
-const updatePollInterval = 2 * time.Second
-const deletePollInterval = 2 * time.Second
+const createPollInterval = pollingSec * time.Second
+const updatePollInterval = pollingSec * time.Second
+const deletePollInterval = pollingSec * time.Second
 
 func allowedAddessPairsSchema() *schema.Schema {
 	return &schema.Schema{
@@ -52,11 +50,22 @@ func allowedAddessPairsSchema() *schema.Schema {
 	}
 }
 
-func fixedIPsSchema() *schema.Schema {
+func noFixedIPsSchema(slotNumber int) *schema.Schema {
+	conflictsWith := fmt.Sprintf("interface_%d_fixed_ips", slotNumber)
 	return &schema.Schema{
-		Type:     schema.TypeList,
-		Optional: true,
-		Computed: true,
+		Type:          schema.TypeBool,
+		Optional:      true,
+		ConflictsWith: []string{conflictsWith},
+	}
+}
+
+func fixedIPsSchema(slotNumber int) *schema.Schema {
+	conflictsWith := fmt.Sprintf("interface_%d_no_fixed_ips", slotNumber)
+	return &schema.Schema{
+		Type:          schema.TypeList,
+		Optional:      true,
+		Computed:      true,
+		ConflictsWith: []string{conflictsWith},
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"ip_address": &schema.Schema{
@@ -166,35 +175,43 @@ func resourceVNAApplianceV1() *schema.Resource {
 			},
 
 			"interface_1_info":                  interfaceInfoSchema(),
-			"interface_1_fixed_ips":             fixedIPsSchema(),
+			"interface_1_fixed_ips":             fixedIPsSchema(1),
+			"interface_1_no_fixed_ips":          noFixedIPsSchema(1),
 			"interface_1_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_2_info":                  interfaceInfoSchema(),
-			"interface_2_fixed_ips":             fixedIPsSchema(),
+			"interface_2_fixed_ips":             fixedIPsSchema(2),
+			"interface_2_no_fixed_ips":          noFixedIPsSchema(2),
 			"interface_2_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_3_info":                  interfaceInfoSchema(),
-			"interface_3_fixed_ips":             fixedIPsSchema(),
+			"interface_3_fixed_ips":             fixedIPsSchema(3),
+			"interface_3_no_fixed_ips":          noFixedIPsSchema(3),
 			"interface_3_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_4_info":                  interfaceInfoSchema(),
-			"interface_4_fixed_ips":             fixedIPsSchema(),
+			"interface_4_fixed_ips":             fixedIPsSchema(4),
+			"interface_4_no_fixed_ips":          noFixedIPsSchema(4),
 			"interface_4_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_5_info":                  interfaceInfoSchema(),
-			"interface_5_fixed_ips":             fixedIPsSchema(),
+			"interface_5_fixed_ips":             fixedIPsSchema(5),
+			"interface_5_no_fixed_ips":          noFixedIPsSchema(5),
 			"interface_5_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_6_info":                  interfaceInfoSchema(),
-			"interface_6_fixed_ips":             fixedIPsSchema(),
+			"interface_6_fixed_ips":             fixedIPsSchema(6),
+			"interface_6_no_fixed_ips":          noFixedIPsSchema(6),
 			"interface_6_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_7_info":                  interfaceInfoSchema(),
-			"interface_7_fixed_ips":             fixedIPsSchema(),
+			"interface_7_fixed_ips":             fixedIPsSchema(7),
+			"interface_7_no_fixed_ips":          noFixedIPsSchema(7),
 			"interface_7_allowed_address_pairs": allowedAddessPairsSchema(),
 
 			"interface_8_info":                  interfaceInfoSchema(),
-			"interface_8_fixed_ips":             fixedIPsSchema(),
+			"interface_8_fixed_ips":             fixedIPsSchema(8),
+			"interface_8_no_fixed_ips":          noFixedIPsSchema(8),
 			"interface_8_allowed_address_pairs": allowedAddessPairsSchema(),
 		},
 	}
@@ -388,21 +405,34 @@ func updateFixedIP(d *schema.ResourceData, meta interface{}, client *eclcloud.Se
 		}
 		log.Printf("[MYDEBUG] updateFixedIPInterface in slot %d: %#v", slotNumber, updateFixedIPInterface)
 
-		addressInfo := []appliances.UpdateFixedIPAddressInfo{}
-
 		fixedIPsKey := fmt.Sprintf("interface_%d_fixed_ips", slotNumber)
+		noFixedIPsKey := fmt.Sprintf("interface_%d_no_fixed_ips", slotNumber)
+
 		if d.HasChange(fixedIPsKey) {
 			updated = true
-			rawFixedIPs := d.Get(fixedIPsKey).([]interface{})
-			for _, rawFixedIP := range rawFixedIPs {
-				tmpFixedIP := rawFixedIP.(map[string]interface{})
-				fixedIP := appliances.UpdateFixedIPAddressInfo{}
-				fixedIP.IPAddress = tmpFixedIP["ip_address"].(string)
-				addressInfo = append(addressInfo, fixedIP)
+
+			var addressInfo []appliances.UpdateFixedIPAddressInfo
+			if d.HasChange(networkIDKey) && d.Get(networkIDKey) == "" {
+				addressInfo = []appliances.UpdateFixedIPAddressInfo{}
+			} else {
+				addressInfo = []appliances.UpdateFixedIPAddressInfo{}
+				rawFixedIPs := d.Get(fixedIPsKey).([]interface{})
+				for _, rawFixedIP := range rawFixedIPs {
+					tmpFixedIP := rawFixedIP.(map[string]interface{})
+					fixedIP := appliances.UpdateFixedIPAddressInfo{}
+					fixedIP.IPAddress = tmpFixedIP["ip_address"].(string)
+					addressInfo = append(addressInfo, fixedIP)
+				}
 			}
 			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %#v", slotNumber, fixedIPsKey, addressInfo)
+			updateFixedIPInterface.FixedIPs = &addressInfo
 		}
-		updateFixedIPInterface.FixedIPs = &addressInfo
+
+		if _, ok := d.GetOk(noFixedIPsKey); ok {
+			addressInfo := []appliances.UpdateFixedIPAddressInfo{}
+			updateFixedIPInterface.FixedIPs = &addressInfo
+		}
+
 		log.Printf("[MYDEBUG] updateFixedIPInterface in slot %d: %#v", slotNumber, updateFixedIPInterface)
 
 		switch slotNumber {

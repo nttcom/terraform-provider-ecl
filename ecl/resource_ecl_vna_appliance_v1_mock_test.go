@@ -47,17 +47,17 @@ func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 				Config: testMockedAccVNAV1ApplianceUpdateFixedIPBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1"),
-					// // Check network id in interface metadata part
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_2_info.0.network_id", "dummyNetworkID2"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.network_id", "dummyNetworkID3"),
-					// // Check fixed_ips part
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_2_fixed_ips.0.ip_address", "192.168.2.101"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_fixed_ips.0.ip_address", "192.168.3.50"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_fixed_ips.1.ip_address", "192.168.3.60"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					// Check network id in interface metadata part
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_2_info.0.network_id", "dummyNetworkID2"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.network_id", "dummyNetworkID3"),
+					// Check fixed_ips part
+					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 1, "192.168.1.50"),
+					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 2, "192.168.2.101"),
+					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 3, "192.168.3.50"),
+					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 3, "192.168.3.60"),
 				),
 			},
 		},
@@ -268,7 +268,13 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		ip_address = "192.168.3.60"
 	}
 
-	lifecycle {
+    interface_4_info  {
+        network_id = "dummyNetworkID4"
+	}
+
+    interface_4_no_fixed_ips = "true"
+
+    lifecycle {
 		ignore_changes = [
 			"default_gateway",
 		]
