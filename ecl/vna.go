@@ -1,7 +1,10 @@
 package ecl
 
 import (
+	"fmt"
 	"log"
+	"reflect"
+	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
 
@@ -70,7 +73,26 @@ func getInterfaceAllowedAddressPairsAsState(allowedAddressPairs []appliances.All
 		thisAAP["ip_address"] = aap.IPAddress
 		thisAAP["mac_address"] = aap.MACAddress
 		thisAAP["type"] = aap.Type
-		thisAAP["vrid"] = aap.VRID
+
+		log.Printf("[MYDEBUG] Start VRID converting: %#v", aap.VRID)
+		var vrid string
+
+		fmt.Printf("Type of aap.VRID: %s", reflect.TypeOf(aap.VRID))
+		if aap.VRID == interface{}(nil) {
+			log.Printf("[MYDEBUG] VRID is converted into null")
+			vrid = "null"
+		} else {
+			v, ok := aap.VRID.(float64)
+			if !ok {
+				log.Printf("[MYDEBUG] float assertion failed v : ok =  %#v : %#v", v, ok)
+			}
+			iv := int(v)
+			log.Printf("[MYDEBUG] int(v) result %d", iv)
+			sv := strconv.Itoa(iv)
+			log.Printf("[MYDEBUG] string(iv) result %s", sv)
+			vrid = sv
+		}
+		thisAAP["vrid"] = vrid
 
 		result[i] = thisAAP
 	}

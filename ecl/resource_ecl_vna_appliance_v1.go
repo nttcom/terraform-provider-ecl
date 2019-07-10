@@ -3,6 +3,7 @@ package ecl
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -12,17 +13,28 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-const pollingSec = 30
+const pollingSec = 1
 
 const createPollInterval = pollingSec * time.Second
 const updatePollInterval = pollingSec * time.Second
 const deletePollInterval = pollingSec * time.Second
 
-func allowedAddessPairsSchema() *schema.Schema {
+func noAllowedAddressPairsSchema(slotNumber int) *schema.Schema {
+	conflictsWith := fmt.Sprintf("interface_%d_allowed_address_pairs", slotNumber)
 	return &schema.Schema{
-		Type:     schema.TypeList,
-		Optional: true,
-		Computed: true,
+		Type:          schema.TypeBool,
+		Optional:      true,
+		ConflictsWith: []string{conflictsWith},
+	}
+}
+
+func allowedAddessPairsSchema(slotNumber int) *schema.Schema {
+	conflictsWith := fmt.Sprintf("interface_%d_no_allowed_address_pairs", slotNumber)
+	return &schema.Schema{
+		Type:          schema.TypeList,
+		Optional:      true,
+		Computed:      true,
+		ConflictsWith: []string{conflictsWith},
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"ip_address": &schema.Schema{
@@ -32,18 +44,18 @@ func allowedAddessPairsSchema() *schema.Schema {
 
 				"mac_address": &schema.Schema{
 					Type:     schema.TypeString,
-					Optional: true,
-					Computed: true,
+					Required: true,
 				},
 
 				"type": &schema.Schema{
 					Type:     schema.TypeString,
-					Optional: true,
+					Required: true,
 				},
 
 				"vrid": &schema.Schema{
-					Type:     schema.TypeString,
-					Optional: true,
+					Type:         schema.TypeString,
+					Required:     true,
+					ValidateFunc: ValidateVRID(),
 				},
 			},
 		},
@@ -174,45 +186,53 @@ func resourceVNAApplianceV1() *schema.Resource {
 				Computed: true,
 			},
 
-			"interface_1_info":                  interfaceInfoSchema(),
-			"interface_1_fixed_ips":             fixedIPsSchema(1),
-			"interface_1_no_fixed_ips":          noFixedIPsSchema(1),
-			"interface_1_allowed_address_pairs": allowedAddessPairsSchema(),
+			"interface_1_info":                     interfaceInfoSchema(),
+			"interface_1_fixed_ips":                fixedIPsSchema(1),
+			"interface_1_no_fixed_ips":             noFixedIPsSchema(1),
+			"interface_1_allowed_address_pairs":    allowedAddessPairsSchema(1),
+			"interface_1_no_allowed_address_pairs": noAllowedAddressPairsSchema(1),
 
-			"interface_2_info":                  interfaceInfoSchema(),
-			"interface_2_fixed_ips":             fixedIPsSchema(2),
-			"interface_2_no_fixed_ips":          noFixedIPsSchema(2),
-			"interface_2_allowed_address_pairs": allowedAddessPairsSchema(),
+			"interface_2_info":                     interfaceInfoSchema(),
+			"interface_2_fixed_ips":                fixedIPsSchema(2),
+			"interface_2_no_fixed_ips":             noFixedIPsSchema(2),
+			"interface_2_allowed_address_pairs":    allowedAddessPairsSchema(2),
+			"interface_2_no_allowed_address_pairs": noAllowedAddressPairsSchema(2),
 
-			"interface_3_info":                  interfaceInfoSchema(),
-			"interface_3_fixed_ips":             fixedIPsSchema(3),
-			"interface_3_no_fixed_ips":          noFixedIPsSchema(3),
-			"interface_3_allowed_address_pairs": allowedAddessPairsSchema(),
+			"interface_3_info":                     interfaceInfoSchema(),
+			"interface_3_fixed_ips":                fixedIPsSchema(3),
+			"interface_3_no_fixed_ips":             noFixedIPsSchema(3),
+			"interface_3_allowed_address_pairs":    allowedAddessPairsSchema(3),
+			"interface_3_no_allowed_address_pairs": noAllowedAddressPairsSchema(3),
 
-			"interface_4_info":                  interfaceInfoSchema(),
-			"interface_4_fixed_ips":             fixedIPsSchema(4),
-			"interface_4_no_fixed_ips":          noFixedIPsSchema(4),
-			"interface_4_allowed_address_pairs": allowedAddessPairsSchema(),
+			"interface_4_info":                     interfaceInfoSchema(),
+			"interface_4_fixed_ips":                fixedIPsSchema(4),
+			"interface_4_no_fixed_ips":             noFixedIPsSchema(4),
+			"interface_4_allowed_address_pairs":    allowedAddessPairsSchema(4),
+			"interface_4_no_allowed_address_pairs": noAllowedAddressPairsSchema(4),
 
-			"interface_5_info":                  interfaceInfoSchema(),
-			"interface_5_fixed_ips":             fixedIPsSchema(5),
-			"interface_5_no_fixed_ips":          noFixedIPsSchema(5),
-			"interface_5_allowed_address_pairs": allowedAddessPairsSchema(),
+			"interface_5_info":                     interfaceInfoSchema(),
+			"interface_5_fixed_ips":                fixedIPsSchema(5),
+			"interface_5_no_fixed_ips":             noFixedIPsSchema(5),
+			"interface_5_allowed_address_pairs":    allowedAddessPairsSchema(5),
+			"interface_5_no_allowed_address_pairs": noAllowedAddressPairsSchema(5),
 
-			"interface_6_info":                  interfaceInfoSchema(),
-			"interface_6_fixed_ips":             fixedIPsSchema(6),
-			"interface_6_no_fixed_ips":          noFixedIPsSchema(6),
-			"interface_6_allowed_address_pairs": allowedAddessPairsSchema(),
+			"interface_6_info":                     interfaceInfoSchema(),
+			"interface_6_fixed_ips":                fixedIPsSchema(6),
+			"interface_6_no_fixed_ips":             noFixedIPsSchema(6),
+			"interface_6_allowed_address_pairs":    allowedAddessPairsSchema(6),
+			"interface_6_no_allowed_address_pairs": noAllowedAddressPairsSchema(6),
 
-			"interface_7_info":                  interfaceInfoSchema(),
-			"interface_7_fixed_ips":             fixedIPsSchema(7),
-			"interface_7_no_fixed_ips":          noFixedIPsSchema(7),
-			"interface_7_allowed_address_pairs": allowedAddessPairsSchema(),
+			"interface_7_info":                     interfaceInfoSchema(),
+			"interface_7_fixed_ips":                fixedIPsSchema(7),
+			"interface_7_no_fixed_ips":             noFixedIPsSchema(7),
+			"interface_7_allowed_address_pairs":    allowedAddessPairsSchema(7),
+			"interface_7_no_allowed_address_pairs": noAllowedAddressPairsSchema(7),
 
-			"interface_8_info":                  interfaceInfoSchema(),
-			"interface_8_fixed_ips":             fixedIPsSchema(8),
-			"interface_8_no_fixed_ips":          noFixedIPsSchema(8),
-			"interface_8_allowed_address_pairs": allowedAddessPairsSchema(),
+			"interface_8_info":                     interfaceInfoSchema(),
+			"interface_8_fixed_ips":                fixedIPsSchema(8),
+			"interface_8_no_fixed_ips":             noFixedIPsSchema(8),
+			"interface_8_allowed_address_pairs":    allowedAddessPairsSchema(8),
+			"interface_8_no_allowed_address_pairs": noAllowedAddressPairsSchema(8),
 		},
 	}
 }
@@ -365,40 +385,200 @@ func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error creating ECL virtual network appliance client: %s", err)
 	}
 
+	log.Printf("[DEBUG] Start updating metadata of virtual network appliance ...")
 	err = updateMetadata(d, meta, vnaClient)
 	if err != nil {
 		return fmt.Errorf("Error in updating virtual network appliance metadata: %s", err)
 	}
 
-	err = updateFixedIP(d, meta, vnaClient)
+	log.Printf("[DEBUG] Start updating attached network and fixed_ips of virtual network appliance ...")
+	err = updateFixedIPs(d, meta, vnaClient)
 	if err != nil {
-		return fmt.Errorf("Error in updating virtual network appliance interface: %s", err)
+		return fmt.Errorf("Error in updating virtual network appliance interface/fixed_ips or interface/network_id: %s", err)
 	}
 
-	// err = updateAllowedAddressPair(d, meta, vnaClient)
-	// if err != nil {
-	// 	return fmt.Errorf("Error in updating virtual network appliance allowed address pair: %s", err)
-	// }
+	log.Printf("[DEBUG] Start updating allowed address pairs of virtual network appliance ...")
+	err = updateAllowedAddressPairs(d, meta, vnaClient)
+	if err != nil {
+		return fmt.Errorf("Error in updating virtual network appliance interface/allowed_address_pairs: %s", err)
+	}
 
 	return resourceVNAApplianceV1Read(d, meta)
+}
+
+func updateAllowedAddressPairs(d *schema.ResourceData, meta interface{}, client *eclcloud.ServiceClient) error {
+	var isAtLeastOneInterfaceUpdated bool
+
+	var updateAllowedAddressPairOpts appliances.UpdateAllowedAddressPairOpts
+
+	allInterfaces := appliances.UpdateAllowedAddressPairInterfaces{}
+
+	for _, slotNumber := range []int{1, 2, 3, 4, 5, 6, 7, 8} {
+		isInterfaceUpdated := false
+		updateAllowedAddressPairInterface := appliances.UpdateAllowedAddressPairInterface{}
+
+		allowedAddressPairsKey := fmt.Sprintf("interface_%d_allowed_address_pairs", slotNumber)
+		noAllowedAddressPairsKey := fmt.Sprintf("interface_%d_no_allowed_address_pairs", slotNumber)
+
+		if d.HasChange(allowedAddressPairsKey) {
+			isInterfaceUpdated = true
+
+			var addressInfo []appliances.UpdateAllowedAddressPairAddressInfo
+
+			addressInfo = []appliances.UpdateAllowedAddressPairAddressInfo{}
+			rawAllowedAddressPairs := d.Get(allowedAddressPairsKey).([]interface{})
+			for _, rawAllowedAddressPair := range rawAllowedAddressPairs {
+				tmpAllowedAddressPair := rawAllowedAddressPair.(map[string]interface{})
+				allowedAddressPair := appliances.UpdateAllowedAddressPairAddressInfo{}
+
+				allowedAddressPair.IPAddress = tmpAllowedAddressPair["ip_address"].(string)
+				allowedAddressPair.MACAddress = tmpAllowedAddressPair["mac_address"].(string)
+
+				aapType := tmpAllowedAddressPair["type"].(string)
+				allowedAddressPair.Type = &aapType
+
+				vridString := tmpAllowedAddressPair["vrid"].(string)
+				switch vridString {
+				case "null":
+					var v interface{}
+					v = interface{}(nil)
+					allowedAddressPair.VRID = &v
+					break
+				default:
+					var v interface{}
+					v, _ = strconv.Atoi(vridString)
+					allowedAddressPair.VRID = &v
+				}
+
+				addressInfo = append(addressInfo, allowedAddressPair)
+			}
+			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %#v", slotNumber, allowedAddressPairsKey, addressInfo)
+			updateAllowedAddressPairInterface.AllowedAddressPairs = &addressInfo
+
+			if _, ok := d.GetOk(noAllowedAddressPairsKey); ok {
+				isInterfaceUpdated = true
+				addressInfo := []appliances.UpdateAllowedAddressPairAddressInfo{}
+				updateAllowedAddressPairInterface.AllowedAddressPairs = &addressInfo
+			}
+		}
+
+		log.Printf("[MYDEBUG] updateAllowedAddressPairInterface in slot %d: %#v", slotNumber, updateAllowedAddressPairInterface)
+
+		if isInterfaceUpdated {
+			isAtLeastOneInterfaceUpdated = true
+			// thisInterface := interface {}
+			switch slotNumber {
+			case 1:
+				allInterfaces.Interface1 = updateAllowedAddressPairInterface
+				break
+			case 2:
+				allInterfaces.Interface2 = updateAllowedAddressPairInterface
+				break
+			case 3:
+				allInterfaces.Interface3 = updateAllowedAddressPairInterface
+				break
+			case 4:
+				allInterfaces.Interface4 = updateAllowedAddressPairInterface
+				break
+			case 5:
+				allInterfaces.Interface5 = updateAllowedAddressPairInterface
+				break
+			case 6:
+				allInterfaces.Interface6 = updateAllowedAddressPairInterface
+				break
+			case 7:
+				allInterfaces.Interface7 = updateAllowedAddressPairInterface
+				break
+			case 8:
+				allInterfaces.Interface8 = updateAllowedAddressPairInterface
+				break
+			}
+		} else {
+			switch slotNumber {
+			case 1:
+				allInterfaces.Interface1 = interface{}(nil)
+				break
+			case 2:
+				allInterfaces.Interface2 = interface{}(nil)
+				break
+			case 3:
+				allInterfaces.Interface3 = interface{}(nil)
+				break
+			case 4:
+				allInterfaces.Interface4 = interface{}(nil)
+				break
+			case 5:
+				allInterfaces.Interface5 = interface{}(nil)
+				break
+			case 6:
+				allInterfaces.Interface6 = interface{}(nil)
+				break
+			case 7:
+				allInterfaces.Interface7 = interface{}(nil)
+				break
+			case 8:
+				allInterfaces.Interface8 = interface{}(nil)
+				break
+			}
+		}
+	}
+
+	if isAtLeastOneInterfaceUpdated {
+		updateAllowedAddressPairOpts.Interfaces = allInterfaces
+	} else {
+		updateAllowedAddressPairOpts.Interfaces = interface{}(nil)
+	}
+
+	if isAtLeastOneInterfaceUpdated {
+		log.Printf("[DEBUG] Updating VNA Allowed Address Pair %s with options: %+v", d.Id(), updateAllowedAddressPairOpts)
+		_, err := appliances.Update(client, d.Id(), updateAllowedAddressPairOpts).Extract()
+		if err != nil {
+			return fmt.Errorf(
+				"Error updating for virtual network appliance (%s) with option %#v: %s,",
+				d.Id(), updateAllowedAddressPairOpts, err)
+		}
+
+		stateConf := &resource.StateChangeConf{
+			Pending:      []string{"PROCESSING"},
+			Target:       []string{"COMPLETE"},
+			Refresh:      waitForVirtualNetworkApplianceComplete(client, d.Id()),
+			Timeout:      d.Timeout(schema.TimeoutDelete),
+			Delay:        5 * time.Second,
+			PollInterval: updatePollInterval,
+			MinTimeout:   3 * time.Second,
+		}
+
+		_, err = stateConf.WaitForState()
+		if err != nil {
+			return fmt.Errorf(
+				"Error waiting for virtual network appliance (%s) to become COMPLETE(after allowed address pairs update): %s",
+				d.Id(), err)
+		}
+	}
+
+	return nil
 }
 
 // updateFixedIP handles following updates
 // - interface_N.network_id
 // - interface_N.fixedips list
 //  Above updates are correspond to "interface update" in VNA API
-func updateFixedIP(d *schema.ResourceData, meta interface{}, client *eclcloud.ServiceClient) error {
-	var updated bool
+func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.ServiceClient) error {
+	var isAtLeastOneInterfaceUpdated bool
+
 	var updateFixedIPOpts appliances.UpdateFixedIPOpts
 	// var updateFixedIPOpts = appliances.UpdateFixedIPOpts{}
 
+	allInterfaces := appliances.UpdateFixedIPInterfaces{}
+
 	for _, slotNumber := range []int{1, 2, 3, 4, 5, 6, 7, 8} {
+		isInterfaceUpdated := false
 		updateFixedIPInterface := appliances.UpdateFixedIPInterface{}
 
 		// var networkID string
 		networkIDKey := fmt.Sprintf("interface_%d_info.0.network_id", slotNumber)
 		if d.HasChange(networkIDKey) {
-			updated = true
+			isInterfaceUpdated = true
 			networkID := d.Get(networkIDKey).(string)
 			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %s", slotNumber, networkIDKey, networkID)
 			updateFixedIPInterface.NetworkID = &networkID
@@ -409,61 +589,97 @@ func updateFixedIP(d *schema.ResourceData, meta interface{}, client *eclcloud.Se
 		noFixedIPsKey := fmt.Sprintf("interface_%d_no_fixed_ips", slotNumber)
 
 		if d.HasChange(fixedIPsKey) {
-			updated = true
+			isInterfaceUpdated = true
 
 			var addressInfo []appliances.UpdateFixedIPAddressInfo
-			if d.HasChange(networkIDKey) && d.Get(networkIDKey) == "" {
-				addressInfo = []appliances.UpdateFixedIPAddressInfo{}
-			} else {
-				addressInfo = []appliances.UpdateFixedIPAddressInfo{}
-				rawFixedIPs := d.Get(fixedIPsKey).([]interface{})
-				for _, rawFixedIP := range rawFixedIPs {
-					tmpFixedIP := rawFixedIP.(map[string]interface{})
-					fixedIP := appliances.UpdateFixedIPAddressInfo{}
-					fixedIP.IPAddress = tmpFixedIP["ip_address"].(string)
-					addressInfo = append(addressInfo, fixedIP)
-				}
+			addressInfo = []appliances.UpdateFixedIPAddressInfo{}
+			rawFixedIPs := d.Get(fixedIPsKey).([]interface{})
+
+			for _, rawFixedIP := range rawFixedIPs {
+				tmpFixedIP := rawFixedIP.(map[string]interface{})
+				fixedIP := appliances.UpdateFixedIPAddressInfo{}
+				fixedIP.IPAddress = tmpFixedIP["ip_address"].(string)
+				addressInfo = append(addressInfo, fixedIP)
 			}
+
 			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %#v", slotNumber, fixedIPsKey, addressInfo)
 			updateFixedIPInterface.FixedIPs = &addressInfo
 		}
 
 		if _, ok := d.GetOk(noFixedIPsKey); ok {
+			isInterfaceUpdated = true
 			addressInfo := []appliances.UpdateFixedIPAddressInfo{}
 			updateFixedIPInterface.FixedIPs = &addressInfo
 		}
 
 		log.Printf("[MYDEBUG] updateFixedIPInterface in slot %d: %#v", slotNumber, updateFixedIPInterface)
 
-		switch slotNumber {
-		case 1:
-			updateFixedIPOpts.Interfaces.Interface1 = &updateFixedIPInterface
-			break
-		case 2:
-			updateFixedIPOpts.Interfaces.Interface2 = &updateFixedIPInterface
-			break
-		case 3:
-			updateFixedIPOpts.Interfaces.Interface3 = &updateFixedIPInterface
-			break
-		case 4:
-			updateFixedIPOpts.Interfaces.Interface4 = &updateFixedIPInterface
-			break
-		case 5:
-			updateFixedIPOpts.Interfaces.Interface5 = &updateFixedIPInterface
-			break
-		case 6:
-			updateFixedIPOpts.Interfaces.Interface6 = &updateFixedIPInterface
-			break
-		case 7:
-			updateFixedIPOpts.Interfaces.Interface7 = &updateFixedIPInterface
-			break
-		case 8:
-			updateFixedIPOpts.Interfaces.Interface8 = &updateFixedIPInterface
-			break
+		if isInterfaceUpdated {
+			isAtLeastOneInterfaceUpdated = true
+			// thisInterface := interface {}
+			switch slotNumber {
+			case 1:
+				allInterfaces.Interface1 = updateFixedIPInterface
+				break
+			case 2:
+				allInterfaces.Interface2 = updateFixedIPInterface
+				break
+			case 3:
+				allInterfaces.Interface3 = updateFixedIPInterface
+				break
+			case 4:
+				allInterfaces.Interface4 = updateFixedIPInterface
+				break
+			case 5:
+				allInterfaces.Interface5 = updateFixedIPInterface
+				break
+			case 6:
+				allInterfaces.Interface6 = updateFixedIPInterface
+				break
+			case 7:
+				allInterfaces.Interface7 = updateFixedIPInterface
+				break
+			case 8:
+				allInterfaces.Interface8 = updateFixedIPInterface
+				break
+			}
+		} else {
+			switch slotNumber {
+			case 1:
+				allInterfaces.Interface1 = interface{}(nil)
+				break
+			case 2:
+				allInterfaces.Interface2 = interface{}(nil)
+				break
+			case 3:
+				allInterfaces.Interface3 = interface{}(nil)
+				break
+			case 4:
+				allInterfaces.Interface4 = interface{}(nil)
+				break
+			case 5:
+				allInterfaces.Interface5 = interface{}(nil)
+				break
+			case 6:
+				allInterfaces.Interface6 = interface{}(nil)
+				break
+			case 7:
+				allInterfaces.Interface7 = interface{}(nil)
+				break
+			case 8:
+				allInterfaces.Interface8 = interface{}(nil)
+				break
+			}
 		}
 	}
 
-	if updated {
+	if isAtLeastOneInterfaceUpdated {
+		updateFixedIPOpts.Interfaces = allInterfaces
+	} else {
+		updateFixedIPOpts.Interfaces = interface{}(nil)
+	}
+
+	if isAtLeastOneInterfaceUpdated {
 		log.Printf("[DEBUG] Updating VNA Interface %s with options: %+v", d.Id(), updateFixedIPOpts)
 		_, err := appliances.Update(client, d.Id(), updateFixedIPOpts).Extract()
 		if err != nil {
@@ -492,6 +708,7 @@ func updateFixedIP(d *schema.ResourceData, meta interface{}, client *eclcloud.Se
 
 	return nil
 }
+
 func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.ServiceClient) error {
 	var updateMeta, updateMetaInInterface bool
 

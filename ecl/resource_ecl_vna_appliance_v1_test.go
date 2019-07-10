@@ -13,6 +13,60 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
+func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
+	var vna appliances.Appliance
+	var n networks.Network
+	var sn subnets.Subnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceBasic,
+				Check: resource.ComposeTestCheckFunc(
+					// Create resource reference
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					// Check about meta
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
+				),
+			},
+			// resource.TestStep{
+			// 	Config: testAccVNAV1ApplianceUpdateMetaBasic,
+			// 	Check: resource.ComposeTestCheckFunc(
+			// 		// Create resource reference
+			// 		testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+			// 		testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
+			// 		testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+			// 		// Check about meta
+			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1-update"),
+			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description-update"),
+			// 		testAccCheckVNAV1ApplianceTag(&vna, "k1", "v1"),
+			// 		testAccCheckVNAV1ApplianceTag(&vna, "k2", "v2"),
+			// 		// Check interface meta
+			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1-update"),
+			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description-update"),
+			// 		resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
+			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+			// 		resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
+			// 		testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK1", "interfaceV1"),
+			// 		testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK2", "interfaceV2"),
+			// 	),
+			// },
+		},
+	})
+}
+
 func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 	var vna appliances.Appliance
 	var n, n2, n3 networks.Network
@@ -46,8 +100,8 @@ func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 				// This causes STATE DIFF error because list order in configuration(.tf contents)
 				// and Response(becomes source of state) is different in each other.
 				// So in update fixed_ips test, it is better to set ExpectNonEmptyPlan as true.
-				ExpectNonEmptyPlan: true,
-				Config:             testAccVNAV1ApplianceUpdateFixedIPBasic,
+				// ExpectNonEmptyPlan: true,
+				Config: testAccVNAV1ApplianceUpdateFixedIPBasic,
 				Check: resource.ComposeTestCheckFunc(
 					// Create resource reference
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
@@ -459,7 +513,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		network_id = "${ecl_network_network_v2.network_4.id}"
 	}
 
-    interface_4_no_fixed_ips = "true"
+	interface_4_no_fixed_ips = "true"
 
 	lifecycle {
 		ignore_changes = [
@@ -511,5 +565,62 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testAccVNAV1ApplianceUpdateAllowedAddressPairBasic = fmt.Sprintf(`
+%s
+%s
+
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1-update"
+	description = "appliance_1_description-update"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "%s"
+
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+    tags = {
+        k1 = "v1"
+        k2 = "v2"
+    }
+
+	interface_1_info  {
+		name = "interface_1-update"
+		description = "interface_1_description-update"
+		network_id = "${ecl_network_network_v2.network_1.id}"
+		tags = {
+			interfaceK1 = "interfaceV1"
+			interfaceK2 = "interfaceV2"
+		}
+	}
+
+	interface_1_fixed_ips {
+		ip_address = "192.168.1.50"
+		mac_address = "aa:bb:cc:dd:ee:ff"
+	}
+
+	interface_1_allowed_address_pairs {
+		ip_address = "192.168.1.200"
+		mac_address = "aa:bb:cc:dd:ee:f1"
+		type = "vrrp"
+		vrid = "123"	
+	}
+
+	interface_1_allowed_address_pairs {
+		ip_address = "192.168.1.201"
+		mac_address = "aa:bb:cc:dd:ee:f2"
+		type = ""
+		vrid = "null"
+	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
