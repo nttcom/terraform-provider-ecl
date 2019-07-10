@@ -9,99 +9,188 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
+func allowedAddessPairsSchemaForDatasource() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeList,
+		Computed: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"ip_address": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+
+				"mac_address": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+
+				"type": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+
+				"vrid": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+			},
+		},
+	}
+}
+
+func fixedIPsSchemaForDatasource() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeList,
+		Computed: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"ip_address": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+				"subnet_id": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+			},
+		},
+	}
+}
+
+func interfaceInfoSchemaForDatasource() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeList,
+		Optional: true,
+		Computed: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"name": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+				"description": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+				"network_id": &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+				"updatable": &schema.Schema{
+					Type:     schema.TypeBool,
+					Computed: true,
+				},
+				"tags": &schema.Schema{
+					Type:     schema.TypeMap,
+					Computed: true,
+				},
+			},
+		},
+	}
+}
 func dataSourceVNAApplianceV1() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceVNAApplianceV1Read,
 
 		Schema: map[string]*schema.Schema{
 
-			"virtual_network_appliance_id": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
+			},
+
+			"virtual_network_appliance_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+
+			"appliance_type": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
 			},
 
 			"description": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
-			},
-
-			"default_gateway": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 
 			"availability_zone": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
+			},
+
+			"os_monitoring_status": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+
+			"os_login_status": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+
+			"operation_status": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
 			},
 
 			"virtual_network_appliance_plan_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 
 			"tenant_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 
 			"tags": &schema.Schema{
 				Type:     schema.TypeMap,
-				Optional: true,
+				Computed: true,
 			},
 
-			"interface_1_meta":                     interfaceInfoSchema(),
-			"interface_1_fixed_ips":                fixedIPsSchema(1),
-			"interface_1_no_fixed_ips":             noFixedIPsSchema(1),
-			"interface_1_allowed_address_pairs":    allowedAddessPairsSchema(1),
-			"interface_1_no_allowed_address_pairs": noAllowedAddressPairsSchema(1),
+			"interface_1_info":                  interfaceInfoSchemaForDatasource(),
+			"interface_1_fixed_ips":             fixedIPsSchemaForDatasource(),
+			"interface_1_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 
-			"interface_2_meta":                     interfaceInfoSchema(),
-			"interface_2_fixed_ips":                fixedIPsSchema(2),
-			"interface_2_no_fixed_ips":             noFixedIPsSchema(2),
-			"interface_2_allowed_address_pairs":    allowedAddessPairsSchema(2),
-			"interface_2_no_allowed_address_pairs": noAllowedAddressPairsSchema(2),
+			"interface_2_info":                  interfaceInfoSchemaForDatasource(),
+			"interface_2_fixed_ips":             fixedIPsSchemaForDatasource(),
+			"interface_2_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 
-			"interface_3_meta":                     interfaceInfoSchema(),
-			"interface_3_fixed_ips":                fixedIPsSchema(3),
-			"interface_3_no_fixed_ips":             noFixedIPsSchema(3),
-			"interface_3_allowed_address_pairs":    allowedAddessPairsSchema(3),
-			"interface_3_no_allowed_address_pairs": noAllowedAddressPairsSchema(3),
+			"interface_3_info":                  interfaceInfoSchemaForDatasource(),
+			"interface_3_fixed_ips":             fixedIPsSchemaForDatasource(),
+			"interface_3_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 
-			"interface_4_meta":                     interfaceInfoSchema(),
-			"interface_4_fixed_ips":                fixedIPsSchema(4),
-			"interface_4_no_fixed_ips":             noFixedIPsSchema(4),
-			"interface_4_allowed_address_pairs":    allowedAddessPairsSchema(4),
-			"interface_4_no_allowed_address_pairs": noAllowedAddressPairsSchema(4),
+			"interface_4_info":                  interfaceInfoSchemaForDatasource(),
+			"interface_4_fixed_ips":             fixedIPsSchemaForDatasource(),
+			"interface_4_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 
-			"interface_5_meta":                     interfaceInfoSchema(),
-			"interface_5_fixed_ips":                fixedIPsSchema(5),
-			"interface_5_no_fixed_ips":             noFixedIPsSchema(5),
-			"interface_5_allowed_address_pairs":    allowedAddessPairsSchema(5),
-			"interface_5_no_allowed_address_pairs": noAllowedAddressPairsSchema(5),
+			"interface_5_info":                  interfaceInfoSchemaForDatasource(),
+			"interface_5_fixed_ips":             fixedIPsSchemaForDatasource(),
+			"interface_5_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 
-			"interface_6_meta":                     interfaceInfoSchema(),
-			"interface_6_fixed_ips":                fixedIPsSchema(6),
-			"interface_6_no_fixed_ips":             noFixedIPsSchema(6),
-			"interface_6_allowed_address_pairs":    allowedAddessPairsSchema(6),
-			"interface_6_no_allowed_address_pairs": noAllowedAddressPairsSchema(6),
+			"interface_6_info":                  interfaceInfoSchemaForDatasource(),
+			"interface_6_fixed_ips":             fixedIPsSchemaForDatasource(),
+			"interface_6_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 
-			"interface_7_meta":                     interfaceInfoSchema(),
-			"interface_7_fixed_ips":                fixedIPsSchema(7),
-			"interface_7_no_fixed_ips":             noFixedIPsSchema(7),
-			"interface_7_allowed_address_pairs":    allowedAddessPairsSchema(7),
-			"interface_7_no_allowed_address_pairs": noAllowedAddressPairsSchema(7),
+			"interface_7_info":                  interfaceInfoSchemaForDatasource(),
+			"interface_7_fixed_ips":             fixedIPsSchemaForDatasource(),
+			"interface_7_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 
-			"interface_8_meta":                     interfaceInfoSchema(),
-			"interface_8_fixed_ips":                fixedIPsSchema(8),
-			"interface_8_no_fixed_ips":             noFixedIPsSchema(8),
-			"interface_8_allowed_address_pairs":    allowedAddessPairsSchema(8),
-			"interface_8_no_allowed_address_pairs": noAllowedAddressPairsSchema(8),
+			"interface_8_info":                  interfaceInfoSchemaForDatasource(),
+			"interface_8_fixed_ips":             fixedIPsSchemaForDatasource(),
+			"interface_8_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 		},
 	}
 }
@@ -111,42 +200,44 @@ func dataSourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) erro
 
 	listOpts := appliances.ListOpts{}
 
-	if v, ok := d.GetOk("virtual_network_appliance_id"); ok {
-		listOpts.ID = v.(string)
-	}
-
 	if v, ok := d.GetOk("name"); ok {
 		listOpts.Name = v.(string)
 	}
 
-	// TODO maintenance followings later
-	// if v, ok := d.GetOk("appliance_type"); ok {
-	// 	listOpts.Name = v.(string)
-	// }
+	if v, ok := d.GetOk("virtual_network_appliance_id"); ok {
+		listOpts.ID = v.(string)
+	}
 
-	// if v, ok := d.GetOk("description"); ok {
-	// 	listOpts.Description = v.(string)
-	// }
+	if v, ok := d.GetOk("appliance_type"); ok {
+		listOpts.ApplianceType = v.(string)
+	}
 
-	// if v, ok := d.GetOk("id"); ok {
-	// 	listOpts.ID = v.(string)
-	// }
+	if v, ok := d.GetOk("description"); ok {
+		listOpts.Description = v.(string)
+	}
 
-	// if v, ok := d.GetOk("network_id"); ok {
-	// 	listOpts.NetworkID = v.(string)
-	// }
+	if v, ok := d.GetOk("availability_zone"); ok {
+		listOpts.AvailabilityZone = v.(string)
+	}
 
-	// if v, ok := d.GetOk("status"); ok {
-	// 	listOpts.Status = v.(string)
-	// }
+	if v, ok := d.GetOk("os_monitoring_status"); ok {
+		listOpts.OSMonitoringStatus = v.(string)
+	}
 
-	// if v, ok := d.GetOk("subnet_id"); ok {
-	// 	listOpts.SubnetID = v.(string)
-	// }
+	if v, ok := d.GetOk("os_login_status"); ok {
+		listOpts.OSLoginStatus = v.(string)
+	}
 
-	// if v, ok := d.GetOk("tenant_id"); ok {
-	// 	listOpts.TenantID = v.(string)
-	// }
+	if v, ok := d.GetOk("operation_status"); ok {
+		listOpts.OperationStatus = v.(string)
+	}
+
+	if v, ok := d.GetOk("virtual_network_appliance_plan_id"); ok {
+		listOpts.VirtualNetworkAppliancePlanID = v.(string)
+	}
+	if v, ok := d.GetOk("tenant_id"); ok {
+		listOpts.TenantID = v.(string)
+	}
 
 	vnaClient, err := config.vnaV1Client(GetRegion(d, config))
 	if err != nil {
@@ -189,57 +280,12 @@ func dataSourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) erro
 	d.Set("tags", vna.Tags)
 
 	for i := 1; i <= maxNumberOfInterfaces; i++ {
-		var targetMeta appliances.InterfaceInResponse
-		var targetFIPs []appliances.FixedIPInResponse
-		var targetAAPs []appliances.AllowedAddressPairInResponse
-
-		switch i {
-		case 1:
-			targetMeta = vna.Interfaces.Interface1
-			targetFIPs = vna.Interfaces.Interface1.FixedIPs
-			targetAAPs = vna.Interfaces.Interface1.AllowedAddressPairs
-			break
-		case 2:
-			targetMeta = vna.Interfaces.Interface2
-			targetFIPs = vna.Interfaces.Interface2.FixedIPs
-			targetAAPs = vna.Interfaces.Interface2.AllowedAddressPairs
-			break
-		case 3:
-			targetMeta = vna.Interfaces.Interface3
-			targetFIPs = vna.Interfaces.Interface3.FixedIPs
-			targetAAPs = vna.Interfaces.Interface3.AllowedAddressPairs
-			break
-		case 4:
-			targetMeta = vna.Interfaces.Interface4
-			targetFIPs = vna.Interfaces.Interface4.FixedIPs
-			targetAAPs = vna.Interfaces.Interface4.AllowedAddressPairs
-			break
-		case 5:
-			targetMeta = vna.Interfaces.Interface5
-			targetFIPs = vna.Interfaces.Interface5.FixedIPs
-			targetAAPs = vna.Interfaces.Interface5.AllowedAddressPairs
-			break
-		case 6:
-			targetMeta = vna.Interfaces.Interface6
-			targetFIPs = vna.Interfaces.Interface6.FixedIPs
-			targetAAPs = vna.Interfaces.Interface6.AllowedAddressPairs
-			break
-		case 7:
-			targetMeta = vna.Interfaces.Interface7
-			targetFIPs = vna.Interfaces.Interface7.FixedIPs
-			targetAAPs = vna.Interfaces.Interface7.AllowedAddressPairs
-			break
-		case 8:
-			targetMeta = vna.Interfaces.Interface8
-			targetFIPs = vna.Interfaces.Interface8.FixedIPs
-			targetAAPs = vna.Interfaces.Interface8.AllowedAddressPairs
-			break
-		default:
-			break
-		}
+		targetMeta := getInterfaceBySlotNumber(&vna, i)
+		targetFIPs := getFixedIPsBySlotNumber(&vna, i)
+		targetAAPs := getAllowedAddressPairsBySlotNumber(&vna, i)
 
 		d.Set(
-			fmt.Sprintf("interface_%d_meta", i),
+			fmt.Sprintf("interface_%d_info", i),
 			getInterfaceMetaAsState(targetMeta))
 
 		d.Set(
