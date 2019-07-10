@@ -3,6 +3,7 @@ package ecl
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -12,6 +13,52 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
+
+func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
+	var vna appliances.Appliance
+	var n networks.Network
+	var sn subnets.Subnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceBasic,
+				Check: resource.ComposeTestCheckFunc(
+					// Create resource reference
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					// Check about meta
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
+				),
+			},
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceUpdateAllowedAddressPairBasic,
+				Check: resource.ComposeTestCheckFunc(
+					// Create resource reference
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					// Check allowed address pair
+					testAccCheckVNAV1AllowedAddressPairs(
+						&vna, 1,
+						"192.168.1.200", "aa:bb:cc:dd:ee:f1", "vrrp", "123",
+					),
+				),
+			},
+		},
+	})
+}
 
 func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 	var vna appliances.Appliance
@@ -46,8 +93,8 @@ func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 				// This causes STATE DIFF error because list order in configuration(.tf contents)
 				// and Response(becomes source of state) is different in each other.
 				// So in update fixed_ips test, it is better to set ExpectNonEmptyPlan as true.
-				ExpectNonEmptyPlan: true,
-				Config:             testAccVNAV1ApplianceUpdateFixedIPBasic,
+				// ExpectNonEmptyPlan: true,
+				Config: testAccVNAV1ApplianceUpdateFixedIPBasic,
 				Check: resource.ComposeTestCheckFunc(
 					// Create resource reference
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
@@ -227,6 +274,52 @@ func testAccCheckVNAV1InterfaceHasIPAddress(
 			}
 		}
 		return fmt.Errorf("Virtual Network Appliance does not have expected IP adresss: %s", expectedAddress)
+	}
+}
+
+func testAccCheckVNAV1AllowedAddressPairs(
+	vna *appliances.Appliance,
+	slotNumber int,
+	expectedIPAddress string,
+	// expectedMACAddress string,
+	expectedType string,
+	expectedVRID string,
+) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+
+		var thisIP, thisVRID, thisType string
+		actualAllowedAddressPairs := getAllowedAddressPairsBySlotNumber(vna, slotNumber)
+
+		for _, aap := range actualAllowedAddressPairs {
+			thisIP = aap.IPAddress
+			// thisMAC = aap.MACAddress
+
+			log.Printf("[MYDEBUG] aap.VRID is : %#v", aap.VRID)
+			if aap.VRID == interface{}(nil) {
+				thisVRID = "null"
+				log.Printf("[MYDEBUG] thisVRID(if) %#v", thisVRID)
+			} else {
+				thisVRID = strconv.Itoa(int(aap.VRID.(float64)))
+				log.Printf("[MYDEBUG] thisVRID(else) %#v", thisVRID)
+			}
+			thisType = aap.Type
+
+			fmt.Sprintf(
+				"[MYDEBUG] aap actual - IP, MAC, VRID, Type: %s %s %s",
+				thisIP, thisVRID, thisType,
+			)
+
+			if thisIP == expectedIPAddress &&
+				// thisMAC == expectedMACAddress &&
+				thisVRID == expectedVRID &&
+				thisType == expectedType {
+				return nil
+			}
+		}
+		return fmt.Errorf(
+			"Virtual Network Appliance does not have expected allowed address pairs: %s %s %s %s",
+			thisIP, thisVRID, thisType,
+		)
 	}
 }
 
@@ -459,7 +552,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		network_id = "${ecl_network_network_v2.network_4.id}"
 	}
 
-    interface_4_no_fixed_ips = "true"
+	interface_4_no_fixed_ips = "true"
 
 	lifecycle {
 		ignore_changes = [
@@ -502,6 +595,48 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
+	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testAccVNAV1ApplianceUpdateAllowedAddressPairBasic = fmt.Sprintf(`
+%s
+
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "%s"
+
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+    tags = {
+        k1 = "v1"
+    }
+
+	interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+		network_id = "${ecl_network_network_v2.network_1.id}"
+	}
+
+	interface_1_fixed_ips {
+		ip_address = "192.168.1.50"
+	}
+
+	interface_1_allowed_address_pairs {
+		ip_address = "192.168.1.200"
+		mac_address = ""
+		type = "vrrp"
+		vrid = "123"	
 	}
 
 	lifecycle {
