@@ -45,7 +45,8 @@ func allowedAddessPairsSchema(slotNumber int) *schema.Schema {
 
 				"mac_address": &schema.Schema{
 					Type:     schema.TypeString,
-					Required: true,
+					Optional: true,
+					Computed: true,
 				},
 
 				"type": &schema.Schema{
@@ -336,51 +337,6 @@ func resourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error 
 
 	return nil
 }
-
-// TODO remove following comments later.
-/*
-Update samples
-
-Update Metadata:
-	Request
-
-		PATCH /v1.0/virtual_network_appliances/[vna.ID]
-		{
-			"virtual_network_appliance": {
-				"description": "appliance_1_description-update",
-				"name": "appliance_1-update",
-				"tags": {
-					"k2": "v2", <-- it is okay to send all tags even difference is only this key-value pair.
-					"k1": "v1"
-				}
-			}
-		}
-
-Update Interface:
-	Request
-
-	interface2: Changing from no-connection to connect with auto assigned IP addresses
-	interface3: Changing from no-connection to 2 fixed IPs as 192.168.3.50 and .60
-
-		PATCH /v1.0/virtual_network_appliances/[vna.ID]
-		{
-			"virtual_network_appliance": {
-				"interfaces": {
-					"interface_3": {
-						"network_id": "989c8daf-9769-4c3a-8aec-5d1744ce5787",
-						"fixed_ips": [{
-							"ip_address": "192.168.3.50"
-						}, {
-							"ip_address": "192.168.3.60"
-						}]
-					},
-					"interface_2": {
-						"network_id": "e9e3c929-331b-4e4c-b182-53dd26472411"
-					}
-				}
-			}
-		}
-*/
 
 func resourceVNAApplianceV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)

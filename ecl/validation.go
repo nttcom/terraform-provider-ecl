@@ -2,7 +2,6 @@ package ecl
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -29,9 +28,10 @@ func IntInSlice(valid []int) schema.SchemaValidateFunc {
 	}
 }
 
+// ValidateVRID returns a SchemaValidateFunc which tests if the provided value
+// is "null" or integer corresponding value in the range from 0 to 255
 func ValidateVRID() schema.SchemaValidateFunc {
 	return func(i interface{}, k string) (s []string, es []error) {
-		log.Printf("[MYDEBUG] VALI checking is null: %#v", i)
 
 		v, ok := i.(string)
 		if !ok {
@@ -40,7 +40,6 @@ func ValidateVRID() schema.SchemaValidateFunc {
 		}
 
 		if v == "null" {
-			log.Printf("[MYDEBUG] VALI v is set as null: %s", v)
 			return
 		}
 
@@ -49,7 +48,6 @@ func ValidateVRID() schema.SchemaValidateFunc {
 			es = append(es, fmt.Errorf("Failed in converting value into int %s", err))
 		}
 
-		log.Printf("[MYDEBUG] VALI checking the range: %d", iv)
 		if iv < 0 || iv > 255 {
 			es = append(es, fmt.Errorf("expected %s to be in the range from 1 to 255, got %d", k, iv))
 			return

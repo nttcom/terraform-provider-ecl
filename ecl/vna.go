@@ -13,48 +13,6 @@ import (
 
 const maxNumberOfInterfaces = 8
 
-// func fixedIPHash(v interface{}) int {
-// 	var buf bytes.Buffer
-// 	m := v.(map[string]interface{})
-// 	if m["ip_address"] != nil && m["subnet_id"] != nil {
-// 		buf.WriteString(
-// 			fmt.Sprintf(
-// 				"%s-%s-",
-// 				m["ip_address"].(string),
-// 				m["subnet_id"].(string),
-// 			))
-// 	}
-// 	return hashcode.String(buf.String())
-// }
-
-// func allowedAddressPairHash(v interface{}) int {
-// 	var buf bytes.Buffer
-// 	m := v.(map[string]interface{})
-// 	if m["ip_address"] != nil &&
-// 		m["mac_address"] != nil &&
-// 		m["type"] != nil &&
-// 		m["vrid"] != nil {
-// 		buf.WriteString(
-// 			fmt.Sprintf(
-// 				"%s-%s-%s-%s-",
-// 				m["ip_address"].(string),
-// 				m["subnet_id"].(string),
-// 				m["type"].(string),
-// 				m["vrid"].(string),
-// 			))
-// 	}
-// 	return hashcode.String(buf.String())
-// }
-
-// func interfaceHash(v interface{}) int {
-// 	var buf bytes.Buffer
-// 	m := v.(map[string]interface{})
-// 	if m["slot_number"] != nil {
-// 		buf.WriteString(fmt.Sprintf("%d-", m["slot_number"].(int)))
-// 	}
-// 	return hashcode.String(buf.String())
-// }
-
 func getApplianceTags(d *schema.ResourceData) map[string]string {
 	rawTags := d.Get("tags").(map[string]interface{})
 	tags := map[string]string{}
@@ -74,29 +32,26 @@ func getInterfaceAllowedAddressPairsAsState(allowedAddressPairs []appliances.All
 		thisAAP["mac_address"] = aap.MACAddress
 		thisAAP["type"] = aap.Type
 
-		log.Printf("[MYDEBUG] Start VRID converting: %#v", aap.VRID)
 		var vrid string
 
 		fmt.Printf("Type of aap.VRID: %s", reflect.TypeOf(aap.VRID))
 		if aap.VRID == interface{}(nil) {
-			log.Printf("[MYDEBUG] VRID is converted into null")
+			log.Printf("[DEBUG] VRID has converted into null")
 			vrid = "null"
 		} else {
 			v, ok := aap.VRID.(float64)
 			if !ok {
-				log.Printf("[MYDEBUG] float assertion failed v : ok =  %#v : %#v", v, ok)
+				log.Printf("[DEBUG] VRID float assertion failed v : ok =  %#v : %#v", v, ok)
 			}
 			iv := int(v)
-			log.Printf("[MYDEBUG] int(v) result %d", iv)
 			sv := strconv.Itoa(iv)
-			log.Printf("[MYDEBUG] string(iv) result %s", sv)
 			vrid = sv
 		}
 		thisAAP["vrid"] = vrid
 
 		result[i] = thisAAP
 	}
-	log.Printf("[MYDEBUG] Result Allowed Address Pairs: %#v", result)
+	log.Printf("[DEBUG] Result Allowed Address Pairs: %#v", result)
 	return result
 }
 
@@ -110,7 +65,7 @@ func getInterfaceFixedIPsAsState(fixedIPs []appliances.FixedIPInResponse) []inte
 
 		result[i] = thisFixedIP
 	}
-	log.Printf("[MYDEBUG] Result FixedIPs: %#v", result)
+	log.Printf("[DEBUG] Result FixedIPs: %#v", result)
 	return result
 }
 
@@ -133,14 +88,13 @@ func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) []i
 	meta["tags"] = resultTags
 
 	result = append(result, meta)
-	log.Printf("[MYDEBUG] Result Meta: %#v", result)
+	log.Printf("[DEBUG] Result Interface data: %#v", result)
 	return result
 }
 
 func getTagsAsOpts(rawTags map[string]interface{}) map[string]string {
 	var tags map[string]string
 	tags = map[string]string{}
-	// rawTags := thisInterface["tags"].(map[string]interface{})
 	for k, v := range rawTags {
 		tags[k] = v.(string)
 	}
@@ -151,13 +105,10 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 	var interface1 appliances.CreateOptsInterface
 	var interfaces appliances.CreateOptsInterfaces
 
-	// Meta part
 	rawMeta := d.Get("interface_1_info").([]interface{})
 	rawFips := d.Get("interface_1_fixed_ips").([]interface{})
 
-	// log.Printf("[MYDEBUG] rawMeta: %#v", rawMeta)
-	// log.Printf("[MYDEBUG] rawFips: %#v", rawFips)
-
+	// Meta part
 	for index, rm := range rawMeta {
 		thisRawMeta := rm.(map[string]interface{})
 		if index == 0 {
@@ -168,7 +119,6 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 			interface1.Tags = tags
 		}
 	}
-	// thisRawMeta := rawMeta[0].(map[string]interface{})
 
 	// FixedIPs part
 	var resultFixedIPs [1]appliances.CreateOptsFixedIP
@@ -177,7 +127,6 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 	for index, rawFip := range rawFips {
 		if index == 0 {
 			fip := rawFip.(map[string]interface{})
-			// log.Printf("[MYDEBUG] fip: %#v", fip)
 
 			ipAddress := fip["ip_address"].(string)
 			fixedIP.IPAddress = ipAddress
@@ -186,8 +135,6 @@ func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfa
 			interface1.FixedIPs = resultFixedIPs
 		}
 	}
-	// rawFip := rawFips[0]
-	// log.Printf("[MYDEBUG] rawFip: %#v", rawFip)
 
 	interfaces.Interface1 = interface1
 
