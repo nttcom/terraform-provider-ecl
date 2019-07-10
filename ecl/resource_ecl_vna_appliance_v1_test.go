@@ -3,6 +3,7 @@ package ecl
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -281,6 +282,52 @@ func testAccCheckVNAV1InterfaceHasIPAddress(
 			}
 		}
 		return fmt.Errorf("Virtual Network Appliance does not have expected IP adresss: %s", expectedAddress)
+	}
+}
+
+func testAccCheckVNAV1AllowedAddressPairs(
+	vna *appliances.Appliance,
+	slotNumber int,
+	expectedIPAddress string,
+	expectedMACAddress string,
+	expectedType string,
+	expectedVRID string,
+) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+
+		var thisIP, thisMAC, thisVRID, thisType string
+		actualAllowedAddressPairs := getAllowedAddressPairsBySlotNumber(vna, slotNumber)
+
+		for _, aap := range actualAllowedAddressPairs {
+			thisIP = aap.IPAddress
+			thisMAC = aap.MACAddress
+
+			log.Printf("[MYDEBUG] aap.VRID is : %#v", aap.VRID)
+			if aap.VRID == interface{}(nil) {
+				thisVRID = "null"
+				log.Printf("[MYDEBUG] thisVRID(if) %#v", thisVRID)
+			} else {
+				thisVRID = strconv.Itoa(int(aap.VRID.(float64)))
+				log.Printf("[MYDEBUG] thisVRID(else) %#v", thisVRID)
+			}
+			thisType = aap.Type
+
+			fmt.Sprintf(
+				"[MYDEBUG] aap actual - IP, MAC, VRID, Type: %s %s %s %s",
+				thisIP, thisMAC, thisVRID, thisType,
+			)
+
+			if thisIP == expectedIPAddress &&
+				thisMAC == expectedMACAddress &&
+				thisVRID == expectedVRID &&
+				thisType == expectedType {
+				return nil
+			}
+		}
+		return fmt.Errorf(
+			"Virtual Network Appliance does not have expected allowed address pairs: %s %s %s %s",
+			thisIP, thisMAC, thisVRID, thisType,
+		)
 	}
 }
 
