@@ -42,28 +42,20 @@ func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
 				),
 			},
-			// resource.TestStep{
-			// 	Config: testAccVNAV1ApplianceUpdateMetaBasic,
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		// Create resource reference
-			// 		testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
-			// 		testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
-			// 		testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
-			// 		// Check about meta
-			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1-update"),
-			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description-update"),
-			// 		testAccCheckVNAV1ApplianceTag(&vna, "k1", "v1"),
-			// 		testAccCheckVNAV1ApplianceTag(&vna, "k2", "v2"),
-			// 		// Check interface meta
-			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1-update"),
-			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description-update"),
-			// 		resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
-			// 		resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
-			// 		resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
-			// 		testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK1", "interfaceV1"),
-			// 		testAccCheckVNAV1ApplianceInterfaceTag(&vna.Interfaces.Interface1, "interfaceK2", "interfaceV2"),
-			// 	),
-			// },
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceUpdateAllowedAddressPairBasic,
+				Check: resource.ComposeTestCheckFunc(
+					// Create resource reference
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					// Check allowed address pair
+					testAccCheckVNAV1AllowedAddressPairs(
+						&vna, 1,
+						"192.168.1.200", "aa:bb:cc:dd:ee:f1", "vrrp", "123",
+					),
+				),
+			},
 		},
 	})
 }
@@ -289,18 +281,18 @@ func testAccCheckVNAV1AllowedAddressPairs(
 	vna *appliances.Appliance,
 	slotNumber int,
 	expectedIPAddress string,
-	expectedMACAddress string,
+	// expectedMACAddress string,
 	expectedType string,
 	expectedVRID string,
 ) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
-		var thisIP, thisMAC, thisVRID, thisType string
+		var thisIP, thisVRID, thisType string
 		actualAllowedAddressPairs := getAllowedAddressPairsBySlotNumber(vna, slotNumber)
 
 		for _, aap := range actualAllowedAddressPairs {
 			thisIP = aap.IPAddress
-			thisMAC = aap.MACAddress
+			// thisMAC = aap.MACAddress
 
 			log.Printf("[MYDEBUG] aap.VRID is : %#v", aap.VRID)
 			if aap.VRID == interface{}(nil) {
@@ -313,12 +305,12 @@ func testAccCheckVNAV1AllowedAddressPairs(
 			thisType = aap.Type
 
 			fmt.Sprintf(
-				"[MYDEBUG] aap actual - IP, MAC, VRID, Type: %s %s %s %s",
-				thisIP, thisMAC, thisVRID, thisType,
+				"[MYDEBUG] aap actual - IP, MAC, VRID, Type: %s %s %s",
+				thisIP, thisVRID, thisType,
 			)
 
 			if thisIP == expectedIPAddress &&
-				thisMAC == expectedMACAddress &&
+				// thisMAC == expectedMACAddress &&
 				thisVRID == expectedVRID &&
 				thisType == expectedType {
 				return nil
@@ -326,7 +318,7 @@ func testAccCheckVNAV1AllowedAddressPairs(
 		}
 		return fmt.Errorf(
 			"Virtual Network Appliance does not have expected allowed address pairs: %s %s %s %s",
-			thisIP, thisMAC, thisVRID, thisType,
+			thisIP, thisVRID, thisType,
 		)
 	}
 }
@@ -617,11 +609,10 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 var testAccVNAV1ApplianceUpdateAllowedAddressPairBasic = fmt.Sprintf(`
 %s
-%s
 
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1-update"
-	description = "appliance_1_description-update"
+	name = "appliance_1"
+	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
 	availability_zone = "zone1-groupb"
 	virtual_network_appliance_plan_id = "%s"
@@ -629,36 +620,23 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
     tags = {
         k1 = "v1"
-        k2 = "v2"
     }
 
 	interface_1_info  {
-		name = "interface_1-update"
-		description = "interface_1_description-update"
+		name = "interface_1"
+		description = "interface_1_description"
 		network_id = "${ecl_network_network_v2.network_1.id}"
-		tags = {
-			interfaceK1 = "interfaceV1"
-			interfaceK2 = "interfaceV2"
-		}
 	}
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
-		mac_address = "aa:bb:cc:dd:ee:ff"
 	}
 
 	interface_1_allowed_address_pairs {
 		ip_address = "192.168.1.200"
-		mac_address = "aa:bb:cc:dd:ee:f1"
+		mac_address = ""
 		type = "vrrp"
 		vrid = "123"	
-	}
-
-	interface_1_allowed_address_pairs {
-		ip_address = "192.168.1.201"
-		mac_address = "aa:bb:cc:dd:ee:f2"
-		type = ""
-		vrid = "null"
 	}
 
 	lifecycle {
@@ -668,6 +646,5 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
-	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )

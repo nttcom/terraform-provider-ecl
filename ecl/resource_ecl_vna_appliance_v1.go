@@ -8,12 +8,13 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 
 	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-const pollingSec = 1
+const pollingSec = 30
 
 const createPollInterval = pollingSec * time.Second
 const updatePollInterval = pollingSec * time.Second
@@ -50,6 +51,9 @@ func allowedAddessPairsSchema(slotNumber int) *schema.Schema {
 				"type": &schema.Schema{
 					Type:     schema.TypeString,
 					Required: true,
+					ValidateFunc: validation.StringInSlice(
+						[]string{"", "vrrp"}, false,
+					),
 				},
 
 				"vrid": &schema.Schema{
@@ -432,7 +436,9 @@ func updateAllowedAddressPairs(d *schema.ResourceData, meta interface{}, client 
 				allowedAddressPair := appliances.UpdateAllowedAddressPairAddressInfo{}
 
 				allowedAddressPair.IPAddress = tmpAllowedAddressPair["ip_address"].(string)
-				allowedAddressPair.MACAddress = tmpAllowedAddressPair["mac_address"].(string)
+
+				macAddress := tmpAllowedAddressPair["mac_address"].(string)
+				allowedAddressPair.MACAddress = &macAddress
 
 				aapType := tmpAllowedAddressPair["type"].(string)
 				allowedAddressPair.Type = &aapType

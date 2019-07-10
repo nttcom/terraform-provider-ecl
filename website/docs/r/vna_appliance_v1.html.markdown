@@ -12,7 +12,10 @@ Manages a V1 Virtual Network Appliance resource within Enterprise Cloud.
 
 ## Example Usage
 
-### Basic Instance
+### Basic Appliance Creation
+
+You can only connect interface1 in creation phase.
+Also you must specify one fixed_ips in creation phase.
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
@@ -22,16 +25,100 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "zone1-groupb"
 	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interfaces {
-		slot_number = 1
+	interfaces_1_info {
 		name = "interface_1"
 		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
-		fixed_ips {
-			ip_address = "192.168.1.50"
-		}
+	}
+
+	interfaces_1_fixed_ips {
+		ip_address = "192.168.1.10"
 	}
 }
 ```
+
+### Connect interface-2 with auto assigned IP address
+
+```hcl
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+
+	interfaces_1_info {
+		name = "interface_1"
+		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
+	}
+
+	interfaces_1_fixed_ips {
+		ip_address = "192.168.1.10"
+	}
+
+	interfaces_2_info {
+		name = "interface_2"
+		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd782"
+	}
+}
+```
+
+### Connect interface-2 with specific IP address
+
+```hcl
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+
+	interfaces_1_info {
+		name = "interface_1"
+		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
+	}
+
+	interfaces_1_fixed_ips {
+		ip_address = "192.168.1.10"
+	}
+
+	interfaces_2_info {
+		name = "interface_2"
+		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd782"
+	}
+
+	interfaces_2_fixed_ips {
+		ip_address = "192.168.2.50"
+	}
+}
+```
+
+### Disconnect interface-2
+
+```hcl
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+
+	interfaces_1_info {
+		name = "interface_1"
+		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
+	}
+
+	interfaces_1_fixed_ips {
+		ip_address = "192.168.1.10"
+	}
+
+	interfaces_2_info {
+		name = "interface_2"
+		network_id = ""
+	}
+}
+```
+
+
 
 ## Argument Reference
 
@@ -54,11 +141,17 @@ The following arguments are supported:
 
 * `tags` - (Optional) Tags of the Virtual_Network_Appliance.
 
-* `interfaces` - (Required) The interfaces object structure is documented below.
+* `interface_[slot number]_info` (Optional) The interface metadata and networkID of each interface.
 
-The `interfaces` block supports:
+* `interface_[slot number]_fixed_ips` (Optional) The interface fixedIP information of each interface.
 
-* `slot_number` - (Required) Index number of each interface.
+* `interface_[slot number]_no_fixed_ips` (Optional) Set this true when you want to set blank list as fixedIPs.
+
+* `interface_[slot number]_allowed_address_pairs` (Optional) The interface allowed address pairs information of each interface.
+
+* `interface_[slot number]_no_allowed_address_pairs` (Optional) Set this true when you want to set blank list as fixedIPs.
+
+The `interface_[slot number]` block supports:
 
 * `name` - (Optional) Name of the Interface.
 
@@ -71,24 +164,23 @@ The `interfaces` block supports:
 * `fixed_ips` - (Optional) 	List of fixes IP addresses assign to Interface.
   Each element of fixed_ips is documented below.
 
-* `allowed_address_pairs` - (Optional) List of IP addresses pairs assign to Interface.
-  Each element of allowed_address_pairs is documented below.
-
-
-The each element of `fixed_ips` list supports:
+The `interface_[slot number]_fixed_ips` block supports:
 
 * `ip_address` - (Required) The IP address assign to Interface within subnet.	
 
-The each element of `allowed_address_pairs` list supports:
+The `interface_[slot number]_allowed_address_pairs` block supports:
 
-* `ip_address` - (Required) 
+* `ip_address` - (Required) The IP address of allowed address pairs.
 
-* `mac_address` - (Required) 
+* `mac_address` - (Required) The MAC address of allowed address pairs.
+  In case allowed address pair type is "vrrp", you must specify blank string as mac_address.
 
-* `type` - (Required) 
+* `type` - (Required) Type of allowed address pairs.
+  You can use ""(blak string) or "vrrp" as this argument.
 
-* `vrid` - (Required) 
-
+* `vrid` - (Required) VRID of allowed address pairs.
+  Even though type of this parameter is integer in actual API specification, 
+  You need to specify this argument by string type like, "null", "0", "255".
 
 ## Attributes Reference
 
@@ -96,5 +188,5 @@ The following attributes are exported:
 
 * `availability_zone` - See Argument Reference above.
 * `tenant_id` - See Argument Reference above.
-* `interfaces/[index]/updatable` - See Argument Reference above.
-* `interfaces/[index]/fixed_ips/[index]/subnet_id` - See Argument Reference above.
+* `interface_[slot number]_info/updatable` - See Argument Reference above.
+* `interfaces/[slot number]_fixed_ips/[index]/subnet_id` - See Argument Reference above.
