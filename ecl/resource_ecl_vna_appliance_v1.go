@@ -132,6 +132,7 @@ func interfaceInfoSchema() *schema.Schema {
 		},
 	}
 }
+
 func resourceVNAApplianceV1() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceVNAApplianceV1Create,

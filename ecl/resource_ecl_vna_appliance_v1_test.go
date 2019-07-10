@@ -53,7 +53,8 @@ func TestAccVNAV1ApplianceConnectAndDisconnectInterface(t *testing.T) {
 // Test process
 // 1. create vna
 // 2. set allowed address pairs which has type of "VRRP" and VRID=123
-// 3. set(change and over write) llowed address pairs which has type of "" and VRID is "null"
+// 3. set(change and over write) allowed address pairs which has type of "" and VRID is "null"
+// 4. unset allowed address pairs and check if length is correctly set as 0
 func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 	var vna appliances.Appliance
 	var n networks.Network
@@ -67,27 +68,13 @@ func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccVNAV1ApplianceBasic,
 				Check: resource.ComposeTestCheckFunc(
-					// Create resource reference
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
-					// testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
-					// Check about meta
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
-					// resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
-					// resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
-					// resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
 				),
 			},
 			resource.TestStep{
 				Config: testAccVNAV1ApplianceUpdateAllowedAddressPairVRRP,
 				Check: resource.ComposeTestCheckFunc(
-					// Create resource reference
-					// testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
-					// Check allowed address pair
 					testAccCheckVNAV1AllowedAddressPairs(
 						&vna, 1,
 						"192.168.1.200", "vrrp", "123",
@@ -97,13 +84,16 @@ func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccVNAV1ApplianceUpdateAllowedAddressPairNoType,
 				Check: resource.ComposeTestCheckFunc(
-					// Create resource reference
-					// testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
-					// Check allowed address pair
 					testAccCheckVNAV1AllowedAddressPairs(
 						&vna, 1,
 						"192.168.1.200", "", "null",
 					),
+				),
+			},
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceUpdateNoAllowedAddressPair,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVNAV1AllowedAddressPairLength(&vna, 1, 0),
 				),
 			},
 		},
@@ -156,7 +146,7 @@ func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 2, "192.168.2.101"),
 					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 3, "192.168.3.50"),
 					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 3, "192.168.3.60"),
-					testAccCheckVNAV1FixedILength(&vna, 4, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 4, 0),
 				),
 			},
 		},
@@ -243,14 +233,14 @@ func TestAccVNAV1ApplianceBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
-					testAccCheckVNAV1FixedILength(&vna, 1, 1),
-					testAccCheckVNAV1FixedILength(&vna, 2, 0),
-					testAccCheckVNAV1FixedILength(&vna, 3, 0),
-					testAccCheckVNAV1FixedILength(&vna, 4, 0),
-					testAccCheckVNAV1FixedILength(&vna, 5, 0),
-					testAccCheckVNAV1FixedILength(&vna, 6, 0),
-					testAccCheckVNAV1FixedILength(&vna, 7, 0),
-					testAccCheckVNAV1FixedILength(&vna, 8, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 1, 1),
+					testAccCheckVNAV1FixedIPLength(&vna, 2, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 3, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 4, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 5, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 6, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 7, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 8, 0),
 				),
 			},
 		},
@@ -350,7 +340,7 @@ func testAccCheckVNAV1InterfaceHasIPAddress(
 				return nil
 			}
 		}
-		return fmt.Errorf("Virtual Network Appliance does not have expected IP adresss: %s", expectedAddress)
+		return fmt.Errorf("Virtual Network Appliance does not have expected IP address: %s", expectedAddress)
 	}
 }
 
@@ -358,18 +348,19 @@ func testAccCheckVNAV1AllowedAddressPairs(
 	vna *appliances.Appliance,
 	slotNumber int,
 	expectedIPAddress string,
-	// expectedMACAddress string,
 	expectedType string,
 	expectedVRID string,
 ) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
-		var thisIP, thisVRID, thisType string
+		var thisIPAddress, thisType, thisVRID string
 		actualAllowedAddressPairs := getAllowedAddressPairsBySlotNumber(vna, slotNumber)
+		log.Printf("[DEBUG] Start checking this Allowed Address Pair: %#v", actualAllowedAddressPairs)
+		// var success bool
 
 		for _, aap := range actualAllowedAddressPairs {
-			thisIP = aap.IPAddress
-			// thisMAC = aap.MACAddress
+			log.Printf("[DEBUG] Start checking each element of Allowed Address Pair: %#v", aap)
+			thisIPAddress = aap.IPAddress
 
 			log.Printf("[MYDEBUG] aap.VRID is : %#v", aap.VRID)
 			if aap.VRID == interface{}(nil) {
@@ -381,25 +372,56 @@ func testAccCheckVNAV1AllowedAddressPairs(
 			}
 			thisType = aap.Type
 
-			fmt.Printf(
+			log.Printf(
 				"[MYDEBUG] aap actual - IP, VRID, Type: %s %s %s",
-				thisIP, thisVRID, thisType,
+				thisIPAddress, thisVRID, thisType,
 			)
 
-			if thisIP == expectedIPAddress &&
+			// MACAddress is auto assigned value in case type = "vrrp"
+			// so is not possible to use as one of assertion conditions.
+			if thisIPAddress == expectedIPAddress &&
 				thisVRID == expectedVRID &&
 				thisType == expectedType {
+				log.Printf(
+					"[DEBUG] actual and expected allowed address pairs are completely matched. "+
+						"thisIPAddress <=> expectedIPAddress = %s <=> %s -- "+
+						"thisType <=> expectedType = %s <=> %s -- "+
+						"thisVRID <=> expectedVRID = %s <=> %s",
+					thisIPAddress, expectedIPAddress,
+					thisType, expectedType,
+					thisVRID, expectedVRID,
+				)
 				return nil
 			}
 		}
+
 		return fmt.Errorf(
 			"Virtual Network Appliance does not have expected allowed address pairs: %s %s %s",
-			thisIP, thisVRID, thisType,
+			thisIPAddress, thisVRID, thisType,
 		)
 	}
 }
 
-func testAccCheckVNAV1FixedILength(
+func testAccCheckVNAV1AllowedAddressPairLength(
+	vna *appliances.Appliance,
+	slotNumber int,
+	expectedLength int) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		actualAAPs := getAllowedAddressPairsBySlotNumber(vna, slotNumber)
+
+		actualLength := len(actualAAPs)
+		if actualLength != expectedLength {
+			return fmt.Errorf(
+				"Length of Allowed Address Pairs list is different. expected %d, actual %d",
+				expectedLength,
+				actualLength,
+			)
+		}
+		return nil
+	}
+}
+
+func testAccCheckVNAV1FixedIPLength(
 	vna *appliances.Appliance,
 	slotNumber int,
 	expectedLength int) resource.TestCheckFunc {
@@ -407,7 +429,7 @@ func testAccCheckVNAV1FixedILength(
 		actualFixedIPs := getFixedIPsBySlotNumber(vna, slotNumber)
 
 		actualLength := len(actualFixedIPs)
-		if len(actualFixedIPs) != expectedLength {
+		if actualLength != expectedLength {
 			return fmt.Errorf(
 				"Length of FixedIPs list is different. expected %d, actual %d",
 				expectedLength,
@@ -756,6 +778,43 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		type = ""
 		vrid = "null"	
 	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testAccVNAV1ApplianceUpdateNoAllowedAddressPair = fmt.Sprintf(`
+%s
+
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "%s"
+
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+    tags = {
+        k1 = "v1"
+    }
+
+	interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+		network_id = "${ecl_network_network_v2.network_1.id}"
+	}
+
+	interface_1_fixed_ips {
+		ip_address = "192.168.1.50"
+	}
+
+	interface_1_no_allowed_address_pairs = "true"
 
 	lifecycle {
 		ignore_changes = [
