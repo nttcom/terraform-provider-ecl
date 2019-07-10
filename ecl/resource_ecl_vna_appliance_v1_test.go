@@ -52,7 +52,7 @@ func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 					// Check allowed address pair
 					testAccCheckVNAV1AllowedAddressPairs(
 						&vna, 1,
-						"192.168.1.200", "aa:bb:cc:dd:ee:f1", "vrrp", "123",
+						"192.168.1.200", "vrrp", "123",
 					),
 				),
 			},
