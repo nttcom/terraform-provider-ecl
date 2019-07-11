@@ -137,6 +137,12 @@ func dataSourceVNAApplianceV1() *schema.Resource {
 				Computed: true,
 			},
 
+			"vm_status": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+
 			"operation_status": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -226,6 +232,10 @@ func dataSourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) erro
 
 	if v, ok := d.GetOk("os_login_status"); ok {
 		listOpts.OSLoginStatus = v.(string)
+	}
+
+	if v, ok := d.GetOk("vm_status"); ok {
+		listOpts.VMStatus = v.(string)
 	}
 
 	if v, ok := d.GetOk("operation_status"); ok {
