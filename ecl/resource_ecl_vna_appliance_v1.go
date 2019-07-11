@@ -673,51 +673,53 @@ func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 }
 
 func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.ServiceClient) error {
-	var updateMeta, updateMetaInInterface bool
+	var isMetaUpdated bool
+	var isAtLeastOneInterfaceUpdated bool
 
 	var updateMetadataOpts appliances.UpdateMetadataOpts
+
+	allInterfaces := appliances.UpdateMetadataInterfaces{}
+
 	if d.HasChange("name") {
-		updateMeta = true
+		isMetaUpdated = true
 		name := d.Get("name").(string)
 		updateMetadataOpts.Name = &name
 	}
 
 	if d.HasChange("description") {
-		updateMeta = true
+		isMetaUpdated = true
 		description := d.Get("description").(string)
 		updateMetadataOpts.Description = &description
 	}
 
 	if d.HasChange("tags") {
-		updateMeta = true
+		isMetaUpdated = true
 		tags := resourceTags(d)
 		updateMetadataOpts.Tags = &tags
 	}
 
-	updateMetadataInterfaces := appliances.UpdateMetadataInterfaces{}
 	for _, slotNumber := range []int{1, 2, 3, 4, 5, 6, 7, 8} {
+		isInterfaceMetaUpdated := false
 		updateMetadataInterface := appliances.UpdateMetadataInterface{}
 
 		nameKey := fmt.Sprintf("interface_%d_info.0.name", slotNumber)
 		if d.HasChange(nameKey) {
-			updateMeta = true
-			updateMetaInInterface = true
+			// updateMeta = true
+			isInterfaceMetaUpdated = true
 			name := d.Get(nameKey).(string)
 			updateMetadataInterface.Name = &name
 		}
 
 		descriptionKey := fmt.Sprintf("interface_%d_info.0.description", slotNumber)
 		if d.HasChange(descriptionKey) {
-			updateMeta = true
-			updateMetaInInterface = true
+			isInterfaceMetaUpdated = true
 			description := d.Get(descriptionKey).(string)
 			updateMetadataInterface.Description = &description
 		}
 
 		tagsKey := fmt.Sprintf("interface_%d_info.0.tags", slotNumber)
 		if d.HasChange(tagsKey) {
-			updateMeta = true
-			updateMetaInInterface = true
+			isInterfaceMetaUpdated = true
 
 			schemaTags := d.Get(tagsKey)
 			newTags := map[string]string{}
@@ -726,39 +728,72 @@ func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 			}
 			updateMetadataInterface.Tags = &newTags
 		}
-		switch slotNumber {
-		case 1:
-			updateMetadataInterfaces.Interface1 = &updateMetadataInterface
-			break
-		case 2:
-			updateMetadataInterfaces.Interface2 = &updateMetadataInterface
-			break
-		case 3:
-			updateMetadataInterfaces.Interface3 = &updateMetadataInterface
-			break
-		case 4:
-			updateMetadataInterfaces.Interface4 = &updateMetadataInterface
-			break
-		case 5:
-			updateMetadataInterfaces.Interface5 = &updateMetadataInterface
-			break
-		case 6:
-			updateMetadataInterfaces.Interface6 = &updateMetadataInterface
-			break
-		case 7:
-			updateMetadataInterfaces.Interface7 = &updateMetadataInterface
-			break
-		case 8:
-			updateMetadataInterfaces.Interface8 = &updateMetadataInterface
-			break
+		if isInterfaceMetaUpdated {
+			isAtLeastOneInterfaceUpdated = true
+
+			switch slotNumber {
+			case 1:
+				allInterfaces.Interface1 = &updateMetadataInterface
+				break
+			case 2:
+				allInterfaces.Interface2 = &updateMetadataInterface
+				break
+			case 3:
+				allInterfaces.Interface3 = &updateMetadataInterface
+				break
+			case 4:
+				allInterfaces.Interface4 = &updateMetadataInterface
+				break
+			case 5:
+				allInterfaces.Interface5 = &updateMetadataInterface
+				break
+			case 6:
+				allInterfaces.Interface6 = &updateMetadataInterface
+				break
+			case 7:
+				allInterfaces.Interface7 = &updateMetadataInterface
+				break
+			case 8:
+				allInterfaces.Interface8 = &updateMetadataInterface
+				break
+			}
+		} else {
+			switch slotNumber {
+			case 1:
+				allInterfaces.Interface1 = interface{}(nil)
+				break
+			case 2:
+				allInterfaces.Interface2 = interface{}(nil)
+				break
+			case 3:
+				allInterfaces.Interface3 = interface{}(nil)
+				break
+			case 4:
+				allInterfaces.Interface4 = interface{}(nil)
+				break
+			case 5:
+				allInterfaces.Interface5 = interface{}(nil)
+				break
+			case 6:
+				allInterfaces.Interface6 = interface{}(nil)
+				break
+			case 7:
+				allInterfaces.Interface7 = interface{}(nil)
+				break
+			case 8:
+				allInterfaces.Interface8 = interface{}(nil)
+				break
+			}
 		}
 	}
 
-	if updateMetaInInterface {
-		updateMetadataOpts.Interfaces = updateMetadataInterfaces
+	if isAtLeastOneInterfaceUpdated {
+		updateMetadataOpts.Interfaces = allInterfaces
+	} else {
+		updateMetadataOpts.Interfaces = interface{}(nil)
 	}
 
-	if updateMeta {
+	if isMetaUpdated || isAtLeastOneInterfaceUpdated {
 		log.Printf("[DEBUG] Updating VNA Metadata %s with options: %+v", d.Id(), updateMetadataOpts)
 		_, err := appliances.Update(client, d.Id(), updateMetadataOpts).Extract()
 		if err != nil {
