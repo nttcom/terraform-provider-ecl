@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
-	// "github.com/hashicorp/terraform/terraform"
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
