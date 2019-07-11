@@ -3,7 +3,6 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -75,19 +74,17 @@ func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccVNAV1ApplianceUpdateAllowedAddressPairVRRP,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVNAV1AllowedAddressPairs(
-						&vna, 1,
-						"192.168.1.200", "vrrp", "123",
-					),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.ip_address", "192.168.1.200"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.type", "vrrp"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.vrid", "123"),
 				),
 			},
 			resource.TestStep{
 				Config: testAccVNAV1ApplianceUpdateAllowedAddressPairNoType,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVNAV1AllowedAddressPairs(
-						&vna, 1,
-						"192.168.1.200", "", "null",
-					),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.ip_address", "192.168.1.200"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.type", ""),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.vrid", "null"),
 				),
 			},
 			resource.TestStep{
@@ -329,6 +326,10 @@ func testAccCheckVNAV1InterfaceHasConnectionWithNetwork(
 	}
 }
 
+// In current VNA implementation, order of each element of fixed_ips in response
+// will sometimes changed.
+// This function checks whether VNA has specified IP address
+// regardless of position of ip address element.
 func testAccCheckVNAV1InterfaceHasIPAddress(
 	vna *appliances.Appliance,
 	slotNumber int,
@@ -341,64 +342,6 @@ func testAccCheckVNAV1InterfaceHasIPAddress(
 			}
 		}
 		return fmt.Errorf("Virtual Network Appliance does not have expected IP address: %s", expectedAddress)
-	}
-}
-
-func testAccCheckVNAV1AllowedAddressPairs(
-	vna *appliances.Appliance,
-	slotNumber int,
-	expectedIPAddress string,
-	expectedType string,
-	expectedVRID string,
-) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-
-		var thisIPAddress, thisType, thisVRID string
-		actualAllowedAddressPairs := getAllowedAddressPairsBySlotNumber(vna, slotNumber)
-		log.Printf("[DEBUG] Start checking this Allowed Address Pair: %#v", actualAllowedAddressPairs)
-		// var success bool
-
-		for _, aap := range actualAllowedAddressPairs {
-			log.Printf("[DEBUG] Start checking each element of Allowed Address Pair: %#v", aap)
-			thisIPAddress = aap.IPAddress
-
-			log.Printf("[MYDEBUG] aap.VRID is : %#v", aap.VRID)
-			if aap.VRID == interface{}(nil) {
-				thisVRID = "null"
-				log.Printf("[MYDEBUG] thisVRID(if) %#v", thisVRID)
-			} else {
-				thisVRID = strconv.Itoa(int(aap.VRID.(float64)))
-				log.Printf("[MYDEBUG] thisVRID(else) %#v", thisVRID)
-			}
-			thisType = aap.Type
-
-			log.Printf(
-				"[MYDEBUG] aap actual - IP, VRID, Type: %s %s %s",
-				thisIPAddress, thisVRID, thisType,
-			)
-
-			// MACAddress is auto assigned value in case type = "vrrp"
-			// so is not possible to use as one of assertion conditions.
-			if thisIPAddress == expectedIPAddress &&
-				thisVRID == expectedVRID &&
-				thisType == expectedType {
-				log.Printf(
-					"[DEBUG] actual and expected allowed address pairs are completely matched. "+
-						"thisIPAddress <=> expectedIPAddress = %s <=> %s -- "+
-						"thisType <=> expectedType = %s <=> %s -- "+
-						"thisVRID <=> expectedVRID = %s <=> %s",
-					thisIPAddress, expectedIPAddress,
-					thisType, expectedType,
-					thisVRID, expectedVRID,
-				)
-				return nil
-			}
-		}
-
-		return fmt.Errorf(
-			"Virtual Network Appliance does not have expected allowed address pairs: %s %s %s",
-			thisIPAddress, thisVRID, thisType,
-		)
 	}
 }
 

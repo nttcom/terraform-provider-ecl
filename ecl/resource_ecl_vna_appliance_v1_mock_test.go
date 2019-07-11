@@ -49,15 +49,9 @@ func TestMockedAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
-					// Check allowed address pair part
-					testAccCheckVNAV1AllowedAddressPairs(
-						&vna, 1,
-						"192.168.1.200", "vrrp", "123",
-					),
-					testAccCheckVNAV1AllowedAddressPairs(
-						&vna, 1,
-						"192.168.1.201", "", "null",
-					),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.ip_address", "192.168.1.200"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.type", "vrrp"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_allowed_address_pairs.0.vrid", "123"),
 				),
 			},
 		},
