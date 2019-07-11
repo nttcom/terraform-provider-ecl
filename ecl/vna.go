@@ -171,6 +171,7 @@ func getInterfaceBySlotNumber(vna *appliances.Appliance, slotNumber int) applian
 	default:
 		break
 	}
+	log.Printf("[DEBUG] Retrieved Interface by slotNumber %d : %#v", slotNumber, result)
 	return result
 }
 func getFixedIPsBySlotNumber(vna *appliances.Appliance, slotNumber int) []appliances.FixedIPInResponse {
@@ -203,6 +204,7 @@ func getFixedIPsBySlotNumber(vna *appliances.Appliance, slotNumber int) []applia
 	default:
 		break
 	}
+	log.Printf("[DEBUG] Retrieved FixedIP by slotNumber %d : %#v", slotNumber, result)
 	return result
 }
 
@@ -236,5 +238,6 @@ func getAllowedAddressPairsBySlotNumber(vna *appliances.Appliance, slotNumber in
 	default:
 		break
 	}
+	log.Printf("[DEBUG] Retrieved Allowed Address Pair by slotNumber %d : %#v", slotNumber, result)
 	return result
 }
