@@ -257,11 +257,11 @@ The following arguments are supported:
   this can be referred to using Virtual Server (Nova)'s 
   list availability zones.
 
-* `virtual_network_appliance_plan_id` - (Required) ID of the Virtual_Network_Appliance_Plan.
+* `virtual_network_appliance_plan_id` - (Required) ID of the Virtual Network Appliance Plan.
 
 * `tenant_id` - (Optional) Tenant ID of the owner (UUID).
 
-* `tags` - (Optional) Tags of the Virtual_Network_Appliance.
+* `tags` - (Optional) Tags of the Virtual Network Appliance.
 
 * `interface_[slot number]_info` (Optional) The interface metadata and networkID of each interface.
 
@@ -273,7 +273,7 @@ The following arguments are supported:
 
 * `interface_[slot number]_no_allowed_address_pairs` (Optional) Set this true when you want to remove allowed address pairs from interface.
 
-The `interface_[slot number]` block supports:
+The `interface_[slot number]_info` block supports:
 
 * `name` - (Optional) Name of the interface.
 
@@ -288,7 +288,7 @@ The `interface_[slot number]` block supports:
 
 The `interface_[slot number]_fixed_ips` block supports:
 
-* `ip_address` - (Required) The IP address assign to Interface within subnet.	
+* `ip_address` - (Required) The IP address assign to interface within subnet.	
 
 The `interface_[slot number]_allowed_address_pairs` block supports:
 
@@ -319,3 +319,11 @@ The following attributes are exported:
 * `interfaces/[slot number]_fixed_ips/[index]/subnet_id` - See Argument Reference above.
 
 * `interfaces/[slot number]_allowed_address_pairs/[index]/mac_address` - See Argument Reference above.
+
+## Import
+
+Virtual Network Appliance can be imported using the `id`, e.g.
+
+```
+$ terraform import ecl_vna_appliance_v1.appliance_1 <appliance-id>
+```
