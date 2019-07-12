@@ -220,7 +220,7 @@ func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
 	})
 }
 
-func TestMockedAccVNAV1ApplianceReproduceBasic(t *testing.T) {
+func TestMockedAccVNAV1ApplianceSimpleBasic(t *testing.T) {
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -229,9 +229,9 @@ func TestMockedAccVNAV1ApplianceReproduceBasic(t *testing.T) {
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances", testMockVNAV1ApplianceReproducePost)
-	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterReproduceCreate)
-	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterReproduceCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances", testMockVNAV1ApplianceSimplePost)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterSimpleCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterSimpleCreate)
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceDelete)
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterDelete)
 	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetDeleteComplete)
@@ -244,7 +244,7 @@ func TestMockedAccVNAV1ApplianceReproduceBasic(t *testing.T) {
 		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccVNAV1ApplianceReproduceBasic,
+				Config: testMockedAccVNAV1ApplianceSimpleBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
 				),
@@ -280,37 +280,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
-var testMockedAccVNAV1ApplianceReproduceBasic = fmt.Sprintf(`
-resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "%s"
-
-    tags = {
-        k1 = "v1"
-    }
-
-	interface_1_info  {
-		name = "interface_1"
-		description = "interface_1_description"
-		network_id = "dummyNetworkID"
-	}
-
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.50"
-	}
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-		]
-	}
-}`,
-	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
-)
-
 var testMockedAccVNAV1ApplianceUpdateAllowedAddressPairBasic = fmt.Sprintf(`
 resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
@@ -319,18 +288,10 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "zone1-groupb"
 	virtual_network_appliance_plan_id = "%s"
 
-    tags = {
-        k1 = "v1"
-    }
-
     interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
         network_id = "dummyNetworkID"
-        tags = {
-            interfaceK1 = "interfaceV1"
-            interfaceK2 = "interfaceV2"
-        }
 	}
 
 	interface_1_fixed_ips {
@@ -431,18 +392,10 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "zone1-groupb"
 	virtual_network_appliance_plan_id = "%s"
 
-    tags = {
-        k1 = "v1"
-    }
-
     interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
         network_id = "dummyNetworkID"
-        tags = {
-            interfaceK1 = "interfaceV1"
-            interfaceK2 = "interfaceV2"
-        }
 	}
 
 	interface_1_fixed_ips {
@@ -726,9 +679,7 @@ response:
         		"id": "45db3e66-31af-45a6-8ad2-d01521726145",
         		"name": "appliance_1",
         		"description": "appliance_1_description",
-        		"tags": {
-        			"k1": "v1"
-        		},
+        		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
         		"availability_zone": "zone1-groupb",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
@@ -783,10 +734,7 @@ response:
         			"interface_1": {
         				"name": "interface_1",
         				"description": "interface_1_description",
-        				"tags": {
-                            "interfaceK1": "interfaceV1",
-                            "interfaceK2": "interfaceV2"
-                        },
+        				"tags": {},
         				"updatable": true,
         				"network_id": "dummyNetworkID",
         				"allowed_address_pairs": [],
@@ -841,9 +789,7 @@ response:
         		"id": "45db3e66-31af-45a6-8ad2-d01521726145",
         		"name": "appliance_1",
         		"description": "appliance_1_description",
-        		"tags": {
-        			"k1": "v1"
-        		},
+        		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
         		"availability_zone": "zone1-groupb",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
@@ -892,10 +838,6 @@ response:
         			"interface_1": {
         				"name": "interface_1",
         				"description": "interface_1_description",
-        				"tags": {
-                            "interfaceK1": "interfaceV1",
-                            "interfaceK2": "interfaceV2"
-                        },
         				"updatable": true,
         				"network_id": "dummyNetworkID",
         				"allowed_address_pairs": [
@@ -1050,115 +992,6 @@ response:
                 "os_monitoring_status": "initial",
                 "password": "Passw0rd",
                 "tags": {},
-                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
-                "vm_status": "initial"
-            }
-        }
-newStatus: Created
-`
-
-var testMockVNAV1ApplianceReproducePost = `
-request:
-    method: POST
-response:
-    code: 200
-    body: >
-        {
-            "virtual_network_appliance": {
-                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
-                "default_gateway": "192.168.1.1",
-                "description": "appliance_1_description",
-                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
-                "interfaces": {
-                    "interface_1": {
-                        "allowed_address_pairs": [],
-                        "description": "interface_1_description",
-                        "fixed_ips": [
-                            {
-                                "ip_address": "192.168.1.50",
-                                "subnet_id": ""
-                            }
-                        ],
-                        "name": "interface_1",
-                        "network_id": "7c51af83-43de-4eed-9362-2abf685dcb43",
-                        "tags": {},
-                        "updatable": true
-                    },
-                    "interface_2": {
-                        "allowed_address_pairs": [],
-                        "description": "",
-                        "fixed_ips": [],
-                        "name": "",
-                        "network_id": "",
-                        "tags": {},
-                        "updatable": true
-                    },
-                    "interface_3": {
-                        "allowed_address_pairs": [],
-                        "description": "",
-                        "fixed_ips": [],
-                        "name": "",
-                        "network_id": "",
-                        "tags": {},
-                        "updatable": true
-                    },
-                    "interface_4": {
-                        "allowed_address_pairs": [],
-                        "description": "",
-                        "fixed_ips": [],
-                        "name": "",
-                        "network_id": "",
-                        "tags": {},
-                        "updatable": true
-                    },
-                    "interface_5": {
-                        "allowed_address_pairs": [],
-                        "description": "",
-                        "fixed_ips": [],
-                        "name": "",
-                        "network_id": "",
-                        "tags": {},
-                        "updatable": true
-                    },
-                    "interface_6": {
-                        "allowed_address_pairs": [],
-                        "description": "",
-                        "fixed_ips": [],
-                        "name": "",
-                        "network_id": "",
-                        "tags": {},
-                        "updatable": true
-                    },
-                    "interface_7": {
-                        "allowed_address_pairs": [],
-                        "description": "",
-                        "fixed_ips": [],
-                        "name": "",
-                        "network_id": "",
-                        "tags": {},
-                        "updatable": true
-                    },
-                    "interface_8": {
-                        "allowed_address_pairs": [],
-                        "description": "",
-                        "fixed_ips": [],
-                        "name": "",
-                        "network_id": "",
-                        "tags": {},
-                        "updatable": true
-                    }
-                },
-                "name": "appliance_1",
-                "operation_status": "PROCESSING",
-                "os_login_status": "initial",
-                "os_monitoring_status": "initial",
-                "password": "YK8kWrwSiG0O",
-                "tags": {
-                    "k1": "v1"
-                },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
                 "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
@@ -1969,9 +1802,7 @@ response:
         		"id": "45db3e66-31af-45a6-8ad2-d01521726145",
         		"name": "appliance_1",
         		"description": "appliance_1_description",
-        		"tags": {
-        			"k1": "v1"
-        		},
+        		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
         		"availability_zone": "zone1-groupb",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
@@ -2026,10 +1857,7 @@ response:
         			"interface_1": {
         				"name": "interface_1",
         				"description": "interface_1_description",
-        				"tags": {
-                            "interfaceK1": "interfaceV1",
-                            "interfaceK2": "interfaceV2"
-                        },
+        				"tags": {},
         				"updatable": true,
         				"network_id": "dummyNetworkID",
         				"allowed_address_pairs": [],
@@ -2085,9 +1913,7 @@ response:
         		"id": "45db3e66-31af-45a6-8ad2-d01521726145",
         		"name": "appliance_1",
         		"description": "appliance_1_description",
-        		"tags": {
-        			"k1": "v1"
-        		},
+        		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
         		"availability_zone": "zone1-groupb",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
@@ -2142,10 +1968,7 @@ response:
         			"interface_1": {
         				"name": "interface_1",
         				"description": "interface_1_description",
-        				"tags": {
-                            "interfaceK1": "interfaceV1",
-                            "interfaceK2": "interfaceV2"
-                        },
+        				"tags": {},
         				"updatable": true,
         				"network_id": "dummyNetworkID",
         				"allowed_address_pairs": [],
@@ -2204,9 +2027,7 @@ response:
         		"id": "45db3e66-31af-45a6-8ad2-d01521726145",
         		"name": "appliance_1",
         		"description": "appliance_1_description",
-        		"tags": {
-        			"k1": "v1"
-        		},
+        		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
         		"availability_zone": "zone1-groupb",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
@@ -2255,10 +2076,7 @@ response:
         			"interface_1": {
         				"name": "interface_1",
         				"description": "interface_1_description",
-        				"tags": {
-                            "interfaceK1": "interfaceV1",
-                            "interfaceK2": "interfaceV2"
-                        },
+        				"tags": {},
         				"updatable": true,
         				"network_id": "dummyNetworkID",
         				"allowed_address_pairs": [
@@ -2327,9 +2145,7 @@ response:
         		"id": "45db3e66-31af-45a6-8ad2-d01521726145",
         		"name": "appliance_1",
         		"description": "appliance_1_description",
-        		"tags": {
-        			"k1": "v1"
-        		},
+        		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
         		"availability_zone": "zone1-groupb",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
@@ -2378,10 +2194,7 @@ response:
         			"interface_1": {
         				"name": "interface_1",
         				"description": "interface_1_description",
-        				"tags": {
-                            "interfaceK1": "interfaceV1",
-                            "interfaceK2": "interfaceV2"
-                        },
+        				"tags": {},
         				"updatable": true,
         				"network_id": "dummyNetworkID",
         				"allowed_address_pairs": [
@@ -2439,7 +2252,141 @@ counter:
     min: 4
 `
 
-var testMockVNAV1ApplianceProcessingAfterReproduceCreate = `
+var testMockedAccVNAV1ApplianceSimpleBasic = fmt.Sprintf(`
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "%s"
+
+	interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+        network_id = "dummyNetworkID"
+	}
+
+	interface_1_fixed_ips {
+		ip_address = "192.168.1.50"
+	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceSimplePost = `
+request:
+    method: POST
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "zone1-groupb",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.50",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_1",
+                        "network_id": "7c51af83-43de-4eed-9362-2abf685dcb43",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_2": {
+                        "allowed_address_pairs": [],
+                        "description": "",
+                        "fixed_ips": [],
+                        "name": "",
+                        "network_id": "",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_3": {
+                        "allowed_address_pairs": [],
+                        "description": "",
+                        "fixed_ips": [],
+                        "name": "",
+                        "network_id": "",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_4": {
+                        "allowed_address_pairs": [],
+                        "description": "",
+                        "fixed_ips": [],
+                        "name": "",
+                        "network_id": "",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_5": {
+                        "allowed_address_pairs": [],
+                        "description": "",
+                        "fixed_ips": [],
+                        "name": "",
+                        "network_id": "",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_6": {
+                        "allowed_address_pairs": [],
+                        "description": "",
+                        "fixed_ips": [],
+                        "name": "",
+                        "network_id": "",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_7": {
+                        "allowed_address_pairs": [],
+                        "description": "",
+                        "fixed_ips": [],
+                        "name": "",
+                        "network_id": "",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_8": {
+                        "allowed_address_pairs": [],
+                        "description": "",
+                        "fixed_ips": [],
+                        "name": "",
+                        "network_id": "",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "YK8kWrwSiG0O",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "vm_status": "initial"
+            }
+        }
+newStatus: Created
+`
+
+var testMockVNAV1ApplianceProcessingAfterSimpleCreate = `
 request:
     method: GET
 response:
@@ -2534,9 +2481,7 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "initial",
                 "os_monitoring_status": "initial",
-                "tags": {
-                    "k1": "v1"
-                },
+                "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
                 "vm_status": "initial"
@@ -2548,7 +2493,7 @@ counter:
     max: 3
 `
 
-var testMockVNAV1ApplianceGetActiveAfterReproduceCreate = `
+var testMockVNAV1ApplianceGetActiveAfterSimpleCreate = `
 request:
     method: GET
 response:
@@ -2643,9 +2588,7 @@ response:
                 "operation_status": "COMPLETE",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "tags": {
-                    "k1": "v1"
-                },
+                "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
                 "vm_status": "ACTIVE"
