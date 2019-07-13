@@ -276,7 +276,6 @@ func dataSourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) erro
 
 	vna := allAppliances[0]
 
-	log.Printf("[MYDEBUG] VNA: %#v", vna)
 	log.Printf("[DEBUG] Retrieved Virtual Network Appliance %s: %+v", d.Id(), vna)
 
 	d.SetId(vna.ID)
@@ -296,7 +295,7 @@ func dataSourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) erro
 
 		d.Set(
 			fmt.Sprintf("interface_%d_info", i),
-			getInterfaceMetaAsState(targetMeta))
+			getInterfaceInfoAsState(targetMeta))
 
 		d.Set(
 			fmt.Sprintf("interface_%d_fixed_ips", i),
