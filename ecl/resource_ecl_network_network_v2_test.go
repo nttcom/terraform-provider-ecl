@@ -368,8 +368,6 @@ resource "ecl_network_network_v2" "network_1" {
 	admin_state_up = "false"
 	tags = {
 		k1 = "v1"
-	}
-	tags = {
 		k2 = "v2"
 	}
 }

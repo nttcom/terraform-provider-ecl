@@ -38,8 +38,9 @@ func allowedAddessPairsSchema(slotNumber int) *schema.Schema {
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"ip_address": &schema.Schema{
-					Type:     schema.TypeString,
-					Required: true,
+					Type:         schema.TypeString,
+					Required:     true,
+					ValidateFunc: validation.SingleIP(),
 				},
 
 				"mac_address": &schema.Schema{
@@ -85,8 +86,9 @@ func fixedIPsSchema(slotNumber int) *schema.Schema {
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"ip_address": &schema.Schema{
-					Type:     schema.TypeString,
-					Required: true,
+					Type:         schema.TypeString,
+					Required:     true,
+					ValidateFunc: validation.SingleIP(),
 				},
 				"subnet_id": &schema.Schema{
 					Type:     schema.TypeString,
@@ -104,6 +106,7 @@ func interfaceInfoSchema() *schema.Schema {
 		Computed: true,
 		MinItems: 1,
 		MaxItems: 1,
+
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"name": &schema.Schema{
@@ -161,8 +164,9 @@ func resourceVNAApplianceV1() *schema.Resource {
 			},
 
 			"default_gateway": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.SingleIP(),
 			},
 
 			"availability_zone": &schema.Schema{
@@ -188,7 +192,6 @@ func resourceVNAApplianceV1() *schema.Resource {
 			"tags": &schema.Schema{
 				Type:     schema.TypeMap,
 				Optional: true,
-				Computed: true,
 			},
 
 			"interface_1_info":                     interfaceInfoSchema(),
@@ -307,7 +310,6 @@ func resourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error 
 	}
 
 	log.Printf("[DEBUG] Retrieved Virtual Network Appliance %s: %+v", d.Id(), vna)
-	log.Printf("[MYDEBUG] VNA: %#v", vna)
 
 	d.Set("name", vna.Name)
 	d.Set("description", vna.Description)
@@ -324,7 +326,7 @@ func resourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error 
 
 		d.Set(
 			fmt.Sprintf("interface_%d_info", i),
-			getInterfaceMetaAsState(targetMeta))
+			getInterfaceInfoAsState(targetMeta))
 
 		d.Set(
 			fmt.Sprintf("interface_%d_fixed_ips", i),

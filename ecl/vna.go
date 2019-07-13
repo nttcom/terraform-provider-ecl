@@ -72,7 +72,7 @@ func getInterfaceFixedIPsAsState(fixedIPs []appliances.FixedIPInResponse) []inte
 	return result
 }
 
-func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) []interface{} {
+func getInterfaceInfoAsState(singleInterface appliances.InterfaceInResponse) []interface{} {
 	var result []interface{}
 	result = []interface{}{}
 
@@ -84,11 +84,11 @@ func getInterfaceMetaAsState(singleInterface appliances.InterfaceInResponse) []i
 	meta["network_id"] = singleInterface.NetworkID
 	meta["updatable"] = singleInterface.Updatable
 
-	resultTags := map[string]string{}
-	for k, v := range singleInterface.Tags {
-		resultTags[k] = v
-	}
-	meta["tags"] = resultTags
+	// resultTags := map[string]string{}
+	// for k, v := range singleInterface.Tags {
+	// 	resultTags[k] = v
+	// }
+	meta["tags"] = singleInterface.Tags
 
 	result = append(result, meta)
 	log.Printf("[DEBUG] Result Interface data: %#v", result)
@@ -292,7 +292,7 @@ func updateAllowedAddressPairs(d *schema.ResourceData, meta interface{}, client 
 
 				addressInfo = append(addressInfo, allowedAddressPair)
 			}
-			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %#v", slotNumber, allowedAddressPairsKey, addressInfo)
+
 			updateAllowedAddressPairInterface.AllowedAddressPairs = &addressInfo
 
 			if _, ok := d.GetOk(noAllowedAddressPairsKey); ok {
@@ -301,8 +301,6 @@ func updateAllowedAddressPairs(d *schema.ResourceData, meta interface{}, client 
 				updateAllowedAddressPairInterface.AllowedAddressPairs = &addressInfo
 			}
 		}
-
-		log.Printf("[MYDEBUG] updateAllowedAddressPairInterface in slot %d: %#v", slotNumber, updateAllowedAddressPairInterface)
 
 		if isInterfaceUpdated {
 			isAtLeastOneInterfaceUpdated = true
@@ -415,10 +413,8 @@ func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 		if d.HasChange(networkIDKey) {
 			isInterfaceUpdated = true
 			networkID := d.Get(networkIDKey).(string)
-			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %s", slotNumber, networkIDKey, networkID)
 			updateFixedIPInterface.NetworkID = &networkID
 		}
-		log.Printf("[MYDEBUG] updateFixedIPInterface in slot %d: %#v", slotNumber, updateFixedIPInterface)
 
 		fixedIPsKey := fmt.Sprintf("interface_%d_fixed_ips", slotNumber)
 		noFixedIPsKey := fmt.Sprintf("interface_%d_no_fixed_ips", slotNumber)
@@ -437,7 +433,6 @@ func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 				addressInfo = append(addressInfo, fixedIP)
 			}
 
-			log.Printf("[MYDEBUG] slotNumber %d, %s has some change to: %#v", slotNumber, fixedIPsKey, addressInfo)
 			updateFixedIPInterface.FixedIPs = &addressInfo
 		}
 
@@ -446,8 +441,6 @@ func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 			addressInfo := []appliances.UpdateFixedIPAddressInfo{}
 			updateFixedIPInterface.FixedIPs = &addressInfo
 		}
-
-		log.Printf("[MYDEBUG] updateFixedIPInterface in slot %d: %#v", slotNumber, updateFixedIPInterface)
 
 		if isInterfaceUpdated {
 			isAtLeastOneInterfaceUpdated = true
@@ -588,6 +581,7 @@ func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 		}
 
 		tagsKey := fmt.Sprintf("interface_%d_info.0.tags", slotNumber)
+
 		if d.HasChange(tagsKey) {
 			isInterfaceMetaUpdated = true
 
@@ -598,6 +592,7 @@ func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 			}
 			updateMetadataInterface.Tags = &newTags
 		}
+
 		if isInterfaceMetaUpdated {
 			isAtLeastOneInterfaceUpdated = true
 

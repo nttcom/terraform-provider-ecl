@@ -45,7 +45,6 @@ func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
-					// testAccCheckVNAV1ApplianceTag(&vna, "k1", "v1"),
 				),
 			},
 			resource.TestStep{
@@ -74,6 +73,8 @@ func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1-update"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description-update"),
 
+					// TODO
+					// Even this test is successfully passed, actual resource test will be failed.
 					testAccCheckVNAV1ApplianceInterfaceTagLengthIsZERO(&vna.Interfaces.Interface1),
 				),
 			},
@@ -166,11 +167,11 @@ func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
-					// Check network id in interface metadata part
+
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_2_info.0.network_id", "dummyNetworkID2"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.network_id", "dummyNetworkID3"),
-					// Check fixed_ips part
+
 					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 1, "192.168.1.50"),
 					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 2, "192.168.2.101"),
 					testAccCheckVNAV1InterfaceHasIPAddress(&vna, 3, "192.168.3.50"),
