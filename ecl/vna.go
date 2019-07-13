@@ -16,6 +16,11 @@ import (
 
 const maxNumberOfInterfaces = 8
 
+const pollingSec = 30
+const createPollInterval = pollingSec * time.Second
+const updatePollInterval = pollingSec * time.Second
+const deletePollInterval = pollingSec * time.Second
+
 func getApplianceTags(d *schema.ResourceData) map[string]string {
 	rawTags := d.Get("tags").(map[string]interface{})
 	tags := map[string]string{}
@@ -251,7 +256,7 @@ func updateAllowedAddressPairs(d *schema.ResourceData, meta interface{}, client 
 
 	allInterfaces := appliances.UpdateAllowedAddressPairInterfaces{}
 
-	for _, slotNumber := range []int{1, 2, 3, 4, 5, 6, 7, 8} {
+	for slotNumber := 1; slotNumber <= maxNumberOfInterfaces; slotNumber++ {
 		isInterfaceUpdated := false
 		updateAllowedAddressPairInterface := appliances.UpdateAllowedAddressPairInterface{}
 
@@ -404,7 +409,7 @@ func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 
 	allInterfaces := appliances.UpdateFixedIPInterfaces{}
 
-	for _, slotNumber := range []int{1, 2, 3, 4, 5, 6, 7, 8} {
+	for slotNumber := 1; slotNumber <= maxNumberOfInterfaces; slotNumber++ {
 		isInterfaceUpdated := false
 		updateFixedIPInterface := appliances.UpdateFixedIPInterface{}
 
@@ -562,7 +567,7 @@ func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 		updateMetadataOpts.Tags = &tags
 	}
 
-	for _, slotNumber := range []int{1, 2, 3, 4, 5, 6, 7, 8} {
+	for slotNumber := 1; slotNumber <= maxNumberOfInterfaces; slotNumber++ {
 		isInterfaceMetaUpdated := false
 		updateMetadataInterface := appliances.UpdateMetadataInterface{}
 

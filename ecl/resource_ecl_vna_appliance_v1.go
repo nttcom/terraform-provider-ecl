@@ -13,12 +13,6 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-const pollingSec = 30
-
-const createPollInterval = pollingSec * time.Second
-const updatePollInterval = pollingSec * time.Second
-const deletePollInterval = pollingSec * time.Second
-
 func noAllowedAddressPairsSchema(slotNumber int) *schema.Schema {
 	conflictsWith := fmt.Sprintf("interface_%d_allowed_address_pairs", slotNumber)
 	return &schema.Schema{
@@ -136,7 +130,9 @@ func interfaceInfoSchema() *schema.Schema {
 }
 
 func resourceVNAApplianceV1() *schema.Resource {
-	return &schema.Resource{
+	var result *schema.Resource
+
+	result = &schema.Resource{
 		Create: resourceVNAApplianceV1Create,
 		Read:   resourceVNAApplianceV1Read,
 		Update: resourceVNAApplianceV1Update,
@@ -193,56 +189,18 @@ func resourceVNAApplianceV1() *schema.Resource {
 				Type:     schema.TypeMap,
 				Optional: true,
 			},
-
-			"interface_1_info":                     interfaceInfoSchema(),
-			"interface_1_fixed_ips":                fixedIPsSchema(1),
-			"interface_1_no_fixed_ips":             noFixedIPsSchema(1),
-			"interface_1_allowed_address_pairs":    allowedAddessPairsSchema(1),
-			"interface_1_no_allowed_address_pairs": noAllowedAddressPairsSchema(1),
-
-			"interface_2_info":                     interfaceInfoSchema(),
-			"interface_2_fixed_ips":                fixedIPsSchema(2),
-			"interface_2_no_fixed_ips":             noFixedIPsSchema(2),
-			"interface_2_allowed_address_pairs":    allowedAddessPairsSchema(2),
-			"interface_2_no_allowed_address_pairs": noAllowedAddressPairsSchema(2),
-
-			"interface_3_info":                     interfaceInfoSchema(),
-			"interface_3_fixed_ips":                fixedIPsSchema(3),
-			"interface_3_no_fixed_ips":             noFixedIPsSchema(3),
-			"interface_3_allowed_address_pairs":    allowedAddessPairsSchema(3),
-			"interface_3_no_allowed_address_pairs": noAllowedAddressPairsSchema(3),
-
-			"interface_4_info":                     interfaceInfoSchema(),
-			"interface_4_fixed_ips":                fixedIPsSchema(4),
-			"interface_4_no_fixed_ips":             noFixedIPsSchema(4),
-			"interface_4_allowed_address_pairs":    allowedAddessPairsSchema(4),
-			"interface_4_no_allowed_address_pairs": noAllowedAddressPairsSchema(4),
-
-			"interface_5_info":                     interfaceInfoSchema(),
-			"interface_5_fixed_ips":                fixedIPsSchema(5),
-			"interface_5_no_fixed_ips":             noFixedIPsSchema(5),
-			"interface_5_allowed_address_pairs":    allowedAddessPairsSchema(5),
-			"interface_5_no_allowed_address_pairs": noAllowedAddressPairsSchema(5),
-
-			"interface_6_info":                     interfaceInfoSchema(),
-			"interface_6_fixed_ips":                fixedIPsSchema(6),
-			"interface_6_no_fixed_ips":             noFixedIPsSchema(6),
-			"interface_6_allowed_address_pairs":    allowedAddessPairsSchema(6),
-			"interface_6_no_allowed_address_pairs": noAllowedAddressPairsSchema(6),
-
-			"interface_7_info":                     interfaceInfoSchema(),
-			"interface_7_fixed_ips":                fixedIPsSchema(7),
-			"interface_7_no_fixed_ips":             noFixedIPsSchema(7),
-			"interface_7_allowed_address_pairs":    allowedAddessPairsSchema(7),
-			"interface_7_no_allowed_address_pairs": noAllowedAddressPairsSchema(7),
-
-			"interface_8_info":                     interfaceInfoSchema(),
-			"interface_8_fixed_ips":                fixedIPsSchema(8),
-			"interface_8_no_fixed_ips":             noFixedIPsSchema(8),
-			"interface_8_allowed_address_pairs":    allowedAddessPairsSchema(8),
-			"interface_8_no_allowed_address_pairs": noAllowedAddressPairsSchema(8),
 		},
 	}
+
+	for i := 1; i <= maxNumberOfInterfaces; i++ {
+		result.Schema[fmt.Sprintf("interface_%d_info", i)] = interfaceInfoSchema()
+		result.Schema[fmt.Sprintf("interface_%d_fixed_ips", i)] = fixedIPsSchema(i)
+		result.Schema[fmt.Sprintf("interface_%d_no_fixed_ips", i)] = noFixedIPsSchema(i)
+		result.Schema[fmt.Sprintf("interface_%d_allowed_address_pairs", i)] = allowedAddessPairsSchema(i)
+		result.Schema[fmt.Sprintf("interface_%d_no_allowed_address_pairs", i)] = noAllowedAddressPairsSchema(i)
+	}
+
+	return result
 }
 
 func resourceVNAApplianceV1Create(d *schema.ResourceData, meta interface{}) error {

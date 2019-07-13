@@ -90,7 +90,8 @@ func interfaceInfoSchemaForDatasource() *schema.Schema {
 	}
 }
 func dataSourceVNAApplianceV1() *schema.Resource {
-	return &schema.Resource{
+	var result *schema.Resource
+	result = &schema.Resource{
 		Read: dataSourceVNAApplianceV1Read,
 
 		Schema: map[string]*schema.Schema{
@@ -199,6 +200,14 @@ func dataSourceVNAApplianceV1() *schema.Resource {
 			"interface_8_allowed_address_pairs": allowedAddessPairsSchemaForDatasource(),
 		},
 	}
+
+	for i := 1; i <= maxNumberOfInterfaces; i++ {
+		result.Schema[fmt.Sprintf("interface_%d_info", i)] = interfaceInfoSchemaForDatasource()
+		result.Schema[fmt.Sprintf("interface_%d_fixed_ips", i)] = fixedIPsSchemaForDatasource()
+		result.Schema[fmt.Sprintf("interface_%d_allowed_address_pairs", i)] = allowedAddessPairsSchemaForDatasource()
+	}
+
+	return result
 }
 
 func dataSourceVNAApplianceV1Read(d *schema.ResourceData, meta interface{}) error {
