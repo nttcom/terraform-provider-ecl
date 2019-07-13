@@ -88,11 +88,6 @@ func getInterfaceInfoAsState(singleInterface appliances.InterfaceInResponse) []i
 	meta["description"] = singleInterface.Description
 	meta["network_id"] = singleInterface.NetworkID
 	meta["updatable"] = singleInterface.Updatable
-
-	// resultTags := map[string]string{}
-	// for k, v := range singleInterface.Tags {
-	// 	resultTags[k] = v
-	// }
 	meta["tags"] = singleInterface.Tags
 
 	result = append(result, meta)
@@ -413,7 +408,6 @@ func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 		isInterfaceUpdated := false
 		updateFixedIPInterface := appliances.UpdateFixedIPInterface{}
 
-		// var networkID string
 		networkIDKey := fmt.Sprintf("interface_%d_info.0.network_id", slotNumber)
 		if d.HasChange(networkIDKey) {
 			isInterfaceUpdated = true
