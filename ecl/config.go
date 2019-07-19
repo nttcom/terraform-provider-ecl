@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+
 	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl"
 
@@ -269,6 +270,13 @@ func (c *Config) networkV2Client(region string) (*eclcloud.ServiceClient, error)
 
 func (c *Config) databaseV1Client(region string) (*eclcloud.ServiceClient, error) {
 	return ecl.NewDBV1(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
+}
+
+func (c *Config) securityOrderV1Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewSecurityOrderV1(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getEndpointType(),
 	})
