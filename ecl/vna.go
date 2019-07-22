@@ -42,7 +42,7 @@ func getInterfaceAllowedAddressPairsAsState(allowedAddressPairs []appliances.All
 
 		var vrid string
 
-		fmt.Printf("Type of aap.VRID: %s", reflect.TypeOf(aap.VRID))
+		log.Printf("[DEBUG] Type of aap.VRID: %s", reflect.TypeOf(aap.VRID))
 		if aap.VRID == interface{}(nil) {
 			log.Printf("[DEBUG] VRID has converted into null")
 			vrid = "null"
@@ -304,67 +304,39 @@ func updateAllowedAddressPairs(d *schema.ResourceData, meta interface{}, client 
 
 		if isInterfaceUpdated {
 			isAtLeastOneInterfaceUpdated = true
-			// thisInterface := interface {}
 			switch slotNumber {
 			case 1:
-				allInterfaces.Interface1 = updateAllowedAddressPairInterface
+				allInterfaces.Interface1 = &updateAllowedAddressPairInterface
 				break
 			case 2:
-				allInterfaces.Interface2 = updateAllowedAddressPairInterface
+				allInterfaces.Interface2 = &updateAllowedAddressPairInterface
 				break
 			case 3:
-				allInterfaces.Interface3 = updateAllowedAddressPairInterface
+				allInterfaces.Interface3 = &updateAllowedAddressPairInterface
 				break
 			case 4:
-				allInterfaces.Interface4 = updateAllowedAddressPairInterface
+				allInterfaces.Interface4 = &updateAllowedAddressPairInterface
 				break
 			case 5:
-				allInterfaces.Interface5 = updateAllowedAddressPairInterface
+				allInterfaces.Interface5 = &updateAllowedAddressPairInterface
 				break
 			case 6:
-				allInterfaces.Interface6 = updateAllowedAddressPairInterface
+				allInterfaces.Interface6 = &updateAllowedAddressPairInterface
 				break
 			case 7:
-				allInterfaces.Interface7 = updateAllowedAddressPairInterface
+				allInterfaces.Interface7 = &updateAllowedAddressPairInterface
 				break
 			case 8:
-				allInterfaces.Interface8 = updateAllowedAddressPairInterface
-				break
-			}
-		} else {
-			switch slotNumber {
-			case 1:
-				allInterfaces.Interface1 = interface{}(nil)
-				break
-			case 2:
-				allInterfaces.Interface2 = interface{}(nil)
-				break
-			case 3:
-				allInterfaces.Interface3 = interface{}(nil)
-				break
-			case 4:
-				allInterfaces.Interface4 = interface{}(nil)
-				break
-			case 5:
-				allInterfaces.Interface5 = interface{}(nil)
-				break
-			case 6:
-				allInterfaces.Interface6 = interface{}(nil)
-				break
-			case 7:
-				allInterfaces.Interface7 = interface{}(nil)
-				break
-			case 8:
-				allInterfaces.Interface8 = interface{}(nil)
+				allInterfaces.Interface8 = &updateAllowedAddressPairInterface
 				break
 			}
 		}
 	}
 
 	if isAtLeastOneInterfaceUpdated {
-		updateAllowedAddressPairOpts.Interfaces = allInterfaces
+		updateAllowedAddressPairOpts.Interfaces = &allInterfaces
 	} else {
-		updateAllowedAddressPairOpts.Interfaces = interface{}(nil)
+		updateAllowedAddressPairOpts.Interfaces = nil
 	}
 
 	if isAtLeastOneInterfaceUpdated {
@@ -445,64 +417,37 @@ func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 			isAtLeastOneInterfaceUpdated = true
 			switch slotNumber {
 			case 1:
-				allInterfaces.Interface1 = updateFixedIPInterface
+				allInterfaces.Interface1 = &updateFixedIPInterface
 				break
 			case 2:
-				allInterfaces.Interface2 = updateFixedIPInterface
+				allInterfaces.Interface2 = &updateFixedIPInterface
 				break
 			case 3:
-				allInterfaces.Interface3 = updateFixedIPInterface
+				allInterfaces.Interface3 = &updateFixedIPInterface
 				break
 			case 4:
-				allInterfaces.Interface4 = updateFixedIPInterface
+				allInterfaces.Interface4 = &updateFixedIPInterface
 				break
 			case 5:
-				allInterfaces.Interface5 = updateFixedIPInterface
+				allInterfaces.Interface5 = &updateFixedIPInterface
 				break
 			case 6:
-				allInterfaces.Interface6 = updateFixedIPInterface
+				allInterfaces.Interface6 = &updateFixedIPInterface
 				break
 			case 7:
-				allInterfaces.Interface7 = updateFixedIPInterface
+				allInterfaces.Interface7 = &updateFixedIPInterface
 				break
 			case 8:
-				allInterfaces.Interface8 = updateFixedIPInterface
-				break
-			}
-		} else {
-			switch slotNumber {
-			case 1:
-				allInterfaces.Interface1 = interface{}(nil)
-				break
-			case 2:
-				allInterfaces.Interface2 = interface{}(nil)
-				break
-			case 3:
-				allInterfaces.Interface3 = interface{}(nil)
-				break
-			case 4:
-				allInterfaces.Interface4 = interface{}(nil)
-				break
-			case 5:
-				allInterfaces.Interface5 = interface{}(nil)
-				break
-			case 6:
-				allInterfaces.Interface6 = interface{}(nil)
-				break
-			case 7:
-				allInterfaces.Interface7 = interface{}(nil)
-				break
-			case 8:
-				allInterfaces.Interface8 = interface{}(nil)
+				allInterfaces.Interface8 = &updateFixedIPInterface
 				break
 			}
 		}
 	}
 
 	if isAtLeastOneInterfaceUpdated {
-		updateFixedIPOpts.Interfaces = allInterfaces
+		updateFixedIPOpts.Interfaces = &allInterfaces
 	} else {
-		updateFixedIPOpts.Interfaces = interface{}(nil)
+		updateFixedIPOpts.Interfaces = nil
 	}
 
 	if isAtLeastOneInterfaceUpdated {
@@ -621,40 +566,13 @@ func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 				allInterfaces.Interface8 = &updateMetadataInterface
 				break
 			}
-		} else {
-			switch slotNumber {
-			case 1:
-				allInterfaces.Interface1 = interface{}(nil)
-				break
-			case 2:
-				allInterfaces.Interface2 = interface{}(nil)
-				break
-			case 3:
-				allInterfaces.Interface3 = interface{}(nil)
-				break
-			case 4:
-				allInterfaces.Interface4 = interface{}(nil)
-				break
-			case 5:
-				allInterfaces.Interface5 = interface{}(nil)
-				break
-			case 6:
-				allInterfaces.Interface6 = interface{}(nil)
-				break
-			case 7:
-				allInterfaces.Interface7 = interface{}(nil)
-				break
-			case 8:
-				allInterfaces.Interface8 = interface{}(nil)
-				break
-			}
 		}
 	}
 
 	if isAtLeastOneInterfaceUpdated {
-		updateMetadataOpts.Interfaces = allInterfaces
+		updateMetadataOpts.Interfaces = &allInterfaces
 	} else {
-		updateMetadataOpts.Interfaces = interface{}(nil)
+		updateMetadataOpts.Interfaces = nil
 	}
 
 	if isMetaUpdated || isAtLeastOneInterfaceUpdated {
