@@ -81,6 +81,50 @@ func TestAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 	})
 }
 
+// Test process -> PASSED
+// 1. create vna
+// 2. update name and description metadata
+func TestAccVNAV1ApplianceUpdateMetaWithoutInterface(t *testing.T) {
+	var vna appliances.Appliance
+	var n networks.Network
+	var sn subnets.Subnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceBasic,
+				Check: resource.ComposeTestCheckFunc(
+
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
+				),
+			},
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceUpdateMetaWithoutInterface,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", MaxLengthString),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", MaxLengthString),
+				),
+			},
+		},
+	})
+}
+
 // Test process -> Passed
 // 1. create vna
 // 2. connect interface2 with network-2
@@ -132,7 +176,6 @@ func TestAccVNAV1ApplianceConnectAndDisconnectInterface(t *testing.T) {
 func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 	var vna appliances.Appliance
 	var n networks.Network
-	// var sn subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckVNA(t) },
@@ -753,6 +796,42 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testAccVNAV1ApplianceUpdateMetaWithoutInterface = fmt.Sprintf(`
+%[1]s
+
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "%[3]s"
+	description = "%[3]s"
+	default_gateway = "192.168.1.1"
+	availability_zone = "zone1-groupb"
+	virtual_network_appliance_plan_id = "%[2]s"
+
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+	tags = {
+        k1 = "v1"
+    }
+
+	interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+		network_id = "${ecl_network_network_v2.network_1.id}"
+	}
+
+	interface_1_fixed_ips {
+		ip_address = "192.168.1.50"
+	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+	MaxLengthString,
 )
 
 var testAccVNAV1ApplianceUpdateAllowedAddressPairVRRP = fmt.Sprintf(`
