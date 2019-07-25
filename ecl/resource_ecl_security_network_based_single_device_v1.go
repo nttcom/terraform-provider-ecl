@@ -13,9 +13,13 @@ import (
 	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/single_devices"
-	"github.com/nttcom/eclcloud/ecl/sss/v1/users"
 	// "github.com/nttcom/eclcloud/ecl/sss/v1/users"
 )
+
+const securitySingleDevicePollIntervalSec = 1
+const securitySingleDeviceCreatePollInterval = securitySingleDevicePollIntervalSec * time.Second
+const securitySingleDeviceUpdatePollInterval = securitySingleDevicePollIntervalSec * time.Second
+const securitySingleDeviceDeletePollInterval = securitySingleDevicePollIntervalSec * time.Second
 
 // func SecurityNetworkBasedSingleDeviceV1() *schema.Resource {
 func resourceSecurityNetworkBasedSingleDeviceV1() *schema.Resource {
@@ -75,16 +79,27 @@ func resourceSecurityNetworkBasedSingleDeviceV1() *schema.Resource {
 	}
 }
 
-func gtHostForCreateAsOpts(d *schema.ResourceData) []single_devices.GtHost {
-	result := []single_devices.GtHost{}
+func gtHostForCreateAsOpts(d *schema.ResourceData) []single_devices.GtHostInCreate {
+	result := []single_devices.GtHostInCreate{}
 
-	gtHost := single_devices.GtHost{}
+	gtHost := single_devices.GtHostInCreate{}
 
 	gtHost.LicenseKind = d.Get("license_kind").(string)
 	gtHost.OperatingMode = d.Get("operating_mode").(string)
 	gtHost.AZGroup = d.Get("az_group").(string)
 
 	result = append(result, gtHost)
+
+	return result
+}
+func gtHostForDeleteAsOpts(d *schema.ResourceData) [1]single_devices.GtHostInDelete {
+	result := [1]single_devices.GtHostInDelete{}
+
+	gtHost := single_devices.GtHostInDelete{}
+
+	gtHost.HostName = d.Id()
+
+	result[0] = gtHost
 
 	return result
 }
@@ -137,7 +152,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 		Refresh:      waitForSingleDeviceOrderComplete(client, order.SoID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: 1 * time.Minute,
+		PollInterval: securitySingleDeviceCreatePollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -158,6 +173,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 	if err != nil {
 		return fmt.Errorf("Unable to retrieve list of devices after create: %s", err)
 	}
+	log.Printf("[DEBUG] allSingleDevices after creation: %#v", allDevicesAfter)
 
 	if len(allDevicesBefore) == len(allDevicesAfter) {
 		return fmt.Errorf("Unable to find newly created device")
@@ -212,7 +228,7 @@ func waitForSingleDeviceOrderComplete(client *eclcloud.ServiceClient, soID, tena
 
 		log.Printf("[DEBUG] ECL Security Service Order Status: %+v", order)
 
-		if order.ProgressRate == "100" {
+		if order.ProgressRate == 100 {
 			return order, "COMPLETE", nil
 		}
 
@@ -347,16 +363,48 @@ func resourceSecurityNetworkBasedSingleDeviceV1Update(d *schema.ResourceData, me
 
 func resourceSecurityNetworkBasedSingleDeviceV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.sssV1Client(GetRegion(d, config))
+	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL sss client: %s", err)
 	}
 
-	err = users.Delete(client, d.Id()).ExtractErr()
-	if err != nil {
-		return fmt.Errorf("Error deleting ECL user: %s", err)
+	tenantID := d.Get("tenant_id").(string)
+	locale := d.Get("locale").(string)
+
+	deleteOpts := single_devices.DeleteOpts{
+		SOKind:   "D",
+		TenantID: tenantID,
+		GtHost:   gtHostForDeleteAsOpts(d),
 	}
 
-	log.Printf("[DEBUG] User has successfully deleted.")
+	log.Printf("[DEBUG] Delete Options: %#v", deleteOpts)
+	order, err := single_devices.Delete(client, deleteOpts).Extract()
+	if err != nil {
+		return fmt.Errorf("Error deleting ECL security single device: %s", err)
+	}
+
+	log.Printf("[DEBUG] Delete request has successfully accepted.")
+
+	stateConf := &resource.StateChangeConf{
+		Pending:      []string{"PROCESSING"},
+		Target:       []string{"COMPLETE"},
+		Refresh:      waitForSingleDeviceOrderComplete(client, order.SoID, tenantID, locale),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        5 * time.Second,
+		PollInterval: securitySingleDeviceDeletePollInterval,
+		MinTimeout:   30 * time.Second,
+	}
+
+	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for single device order status (%s) to become ready: %s",
+			order.SoID, err)
+	}
+
+	// log.Printf("[DEBUG] Delete device is found as ID: %s", id)
+
+	d.SetId("")
+
 	return nil
 }

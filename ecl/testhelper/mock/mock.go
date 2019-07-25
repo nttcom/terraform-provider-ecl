@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -154,6 +155,7 @@ func (mc MockController) setupHandler(t *testing.T, path string, mocks []Mock) {
 			found = true
 			if v.NewStatus != "" {
 				v.Tracker.Status = v.NewStatus
+				log.Printf("[MOCKDEBUG] v.Tracker.Status has changed into -> %s", v.NewStatus)
 			}
 
 			if v.Request.Method == "GET" {
