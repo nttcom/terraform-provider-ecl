@@ -46,6 +46,18 @@ func TestMockedAccSecurityV1NetworkBasedSingleDeviceBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityV1NetworkBasedSingleDeviceExists(
 						"ecl_security_network_based_single_device_v1.single_device_1", &sd),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_single_device_v1.single_device_1",
+						"locale", "ja"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_single_device_v1.single_device_1",
+						"operating_mode", "FW"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_single_device_v1.single_device_1",
+						"license_kind", "02"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_single_device_v1.single_device_1",
+						"az_group", "zone1-groupb"),
 				),
 			},
 		},
