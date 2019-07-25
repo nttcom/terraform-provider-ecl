@@ -16,7 +16,7 @@ import (
 	// "github.com/nttcom/eclcloud/ecl/sss/v1/users"
 )
 
-const securitySingleDevicePollIntervalSec = 1
+const securitySingleDevicePollIntervalSec = 30
 const securitySingleDeviceCreatePollInterval = securitySingleDevicePollIntervalSec * time.Second
 const securitySingleDeviceUpdatePollInterval = securitySingleDevicePollIntervalSec * time.Second
 const securitySingleDeviceDeletePollInterval = securitySingleDevicePollIntervalSec * time.Second
@@ -144,12 +144,12 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 		return fmt.Errorf("Error creating ECL security single device: %s", err)
 	}
 
-	log.Printf("[DEBUG] User has successfully created.")
+	log.Printf("[DEBUG] User has successfully created with order: %#v", order)
 
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForSingleDeviceOrderComplete(client, order.SoID, tenantID, locale),
+		Refresh:      waitForSingleDeviceOrderComplete(client, order.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
 		PollInterval: securitySingleDeviceCreatePollInterval,
@@ -160,7 +160,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 	if err != nil {
 		return fmt.Errorf(
 			"Error waiting for single device order status (%s) to become ready: %s",
-			order.SoID, err)
+			order.ID, err)
 	}
 
 	allPagesAfter, err := single_devices.List(client, listOpts).AllPages()
@@ -220,8 +220,9 @@ func waitForSingleDeviceOrderComplete(client *eclcloud.ServiceClient, soID, tena
 		opts := service_order_status.GetOpts{
 			Locale:   locale,
 			TenantID: tenantID,
+			SoID:     soID,
 		}
-		order, err := service_order_status.Get(client, soID, opts).Extract()
+		order, err := service_order_status.Get(client, opts).Extract()
 		if err != nil {
 			return nil, "", err
 		}
@@ -383,12 +384,12 @@ func resourceSecurityNetworkBasedSingleDeviceV1Delete(d *schema.ResourceData, me
 		return fmt.Errorf("Error deleting ECL security single device: %s", err)
 	}
 
-	log.Printf("[DEBUG] Delete request has successfully accepted.")
+	log.Printf("[DEBUG] Delete request has successfully accepted with order: %#v", order)
 
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForSingleDeviceOrderComplete(client, order.SoID, tenantID, locale),
+		Refresh:      waitForSingleDeviceOrderComplete(client, order.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
 		PollInterval: securitySingleDeviceDeletePollInterval,
@@ -399,7 +400,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Delete(d *schema.ResourceData, me
 	if err != nil {
 		return fmt.Errorf(
 			"Error waiting for single device order status (%s) to become ready: %s",
-			order.SoID, err)
+			order.ID, err)
 	}
 
 	// log.Printf("[DEBUG] Delete device is found as ID: %s", id)
