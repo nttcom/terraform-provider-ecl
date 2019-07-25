@@ -3,7 +3,6 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"reflect"
 	"strconv"
 	"time"
 
@@ -42,7 +41,6 @@ func getInterfaceAllowedAddressPairsAsState(allowedAddressPairs []appliances.All
 
 		var vrid string
 
-		log.Printf("[DEBUG] Type of aap.VRID: %s", reflect.TypeOf(aap.VRID))
 		if aap.VRID == interface{}(nil) {
 			log.Printf("[DEBUG] VRID has converted into null")
 			vrid = "null"
