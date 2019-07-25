@@ -3,7 +3,7 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"strconv"
+	// "strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -58,7 +58,7 @@ func testAccCheckSecurityV1NetworkBasedSingleDeviceExists(n string, sd *single_d
 		log.Printf("[MYDEBUG] found: %#v", found)
 		log.Printf("[MYDEBUG] rs.Primary: %#v", rs.Primary)
 
-		if strconv.Itoa(found.ID) != rs.Primary.ID {
+		if found.Cell[2] != rs.Primary.ID {
 			return fmt.Errorf("Security single device not found")
 		}
 
