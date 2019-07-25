@@ -47,6 +47,7 @@ var (
 	OS_SWIFT_ENVIRONMENT                     = os.Getenv("OS_SWIFT_ENVIRONMENT")
 	OS_TENANT_ID                             = os.Getenv("OS_TENANT_ID")
 	OS_TENANT_NAME                           = os.Getenv("OS_TENANT_NAME")
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID     = os.Getenv("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID")
 	OS_VIRTUAL_STORAGE_ID                    = os.Getenv("OS_VIRTUAL_STORAGE_ID")
 	OS_VOLUME_TYPE_BLOCK_ENVIRONMENT         = os.Getenv("OS_VOLUME_TYPE_BLOCK_ENVIRONMENT")
 	OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT  = os.Getenv("OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT")
@@ -205,6 +206,14 @@ func testAccPreCheckVPN(t *testing.T) {
 
 	if OS_VPN_ENVIRONMENT == "" {
 		t.Skip("This environment does not support VPN tests")
+	}
+}
+
+func testAccPreCheckVNA(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID == "" {
+		t.Fatal("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID must be set for acceptance tests of virtual network appliance")
 	}
 }
 

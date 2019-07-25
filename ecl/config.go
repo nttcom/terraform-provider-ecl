@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+
 	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl"
 
@@ -276,6 +277,13 @@ func (c *Config) databaseV1Client(region string) (*eclcloud.ServiceClient, error
 
 func (c *Config) getEndpointType() eclcloud.Availability {
 	return eclcloud.AvailabilityPublic
+}
+
+func (c *Config) vnaV1Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewVNAV1(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
 }
 
 // StorageRetryMaxCount is a integer value that means
