@@ -21,6 +21,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/public_ips"
 	"github.com/nttcom/eclcloud/ecl/network/v2/static_routes"
 	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
+	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
 // LogRoundTripper satisfies the http.RoundTripper interface and is used to
@@ -255,6 +256,16 @@ func (opts SubnetCreateOpts) ToSubnetCreateMap() (map[string]interface{}, error)
 // ZoneCreateOpts represents the attributes used when creating a new DNS zone.
 type ZoneCreateOpts struct {
 	zones.CreateOpts
+}
+
+// VirtualNetworkApplianceCreateOpts represents the attributes used when creating a new VNA appliance.
+type VirtualNetworkApplianceCreateOpts struct {
+	appliances.CreateOpts
+}
+
+// ToVirtualNetworkApplianceCreateMap casts a CreateOpts struct to a map.
+func (opts VirtualNetworkApplianceCreateOpts) ToVirtualNetworkApplianceCreateMap() (map[string]interface{}, error) {
+	return BuildRequest(opts, "virtual_network_appliance")
 }
 
 // ToZoneCreateMap casts a CreateOpts struct to a map.

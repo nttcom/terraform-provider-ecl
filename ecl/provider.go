@@ -195,6 +195,7 @@ func Provider() terraform.ResourceProvider {
 			"ecl_storage_virtualstorage_v1":          dataSourceStorageVirtualStorageV1(),
 			"ecl_storage_volume_v1":                  dataSourceStorageVolumeV1(),
 			"ecl_storage_volumetype_v1":              dataSourceStorageVolumeTypeV1(),
+			"ecl_vna_appliance_v1":                   dataSourceVNAApplianceV1(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -220,6 +221,7 @@ func Provider() terraform.ResourceProvider {
 			"ecl_sss_user_v1":                             resourceSSSUserV1(),
 			"ecl_storage_virtualstorage_v1":               resourceStorageVirtualStorageV1(),
 			"ecl_storage_volume_v1":                       resourceStorageVolumeV1(),
+			"ecl_vna_appliance_v1":                        resourceVNAApplianceV1(),
 		},
 
 		ConfigureFunc: configureProvider,

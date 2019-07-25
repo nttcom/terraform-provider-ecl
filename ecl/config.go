@@ -286,6 +286,13 @@ func (c *Config) getEndpointType() eclcloud.Availability {
 	return eclcloud.AvailabilityPublic
 }
 
+func (c *Config) vnaV1Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewVNAV1(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
+}
+
 // StorageRetryMaxCount is a integer value that means
 // retry maximum count for request against storage SDP
 const StorageRetryMaxCount int = 30
