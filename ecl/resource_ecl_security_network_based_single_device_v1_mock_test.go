@@ -5,9 +5,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
-	// "github.com/hashicorp/terraform/terraform"
-
-	// "github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways"
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_firewall_utm_single"
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
@@ -17,7 +14,7 @@ const SoIDOfUpdate = "FGS_809F858574E94699952D0D7E7C58C81C"
 const SoIDOfDelete = "FGS_F2349100C7D24EF3ACD6B9A9F91FD220"
 
 func TestMockedAccSecurityV1NetworkBasedFirewallUTMBasic(t *testing.T) {
-	var sd security.SingleDevice
+	var sd security.SingleFirewallUTM
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()

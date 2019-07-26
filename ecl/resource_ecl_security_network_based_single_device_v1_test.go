@@ -3,19 +3,16 @@ package ecl
 import (
 	"fmt"
 	"log"
-
-	// "strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	// "github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways"
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_firewall_utm_single"
 )
 
 func TestAccSecurityV1NetworkBasedFirewallUTMBasic(t *testing.T) {
-	var sd security.SingleDevice
+	var sd security.SingleFirewallUTM
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
@@ -64,7 +61,7 @@ func TestAccSecurityV1NetworkBasedFirewallUTMBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckSecurityV1NetworkBasedFirewallUTMExists(n string, sd *security.SingleDevice) resource.TestCheckFunc {
+func testAccCheckSecurityV1NetworkBasedFirewallUTMExists(n string, sd *security.SingleFirewallUTM) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -81,14 +78,10 @@ func testAccCheckSecurityV1NetworkBasedFirewallUTMExists(n string, sd *security.
 			return fmt.Errorf("Error creating ECL security client: %s", err)
 		}
 
-		found, err := getSingleDeviceByHostName(client, rs.Primary.ID)
-		// found, err := security.Get(client, rs.Primary.ID).Extract()
+		found, err := getSingleFirewallUTMByHostName(client, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
-
-		log.Printf("[MYDEBUG] found: %#v", found)
-		log.Printf("[MYDEBUG] rs.Primary: %#v", rs.Primary)
 
 		if found.Cell[2] != rs.Primary.ID {
 			return fmt.Errorf("Security single device not found")
@@ -111,9 +104,8 @@ func testAccCheckSecurityV1NetworkBasedFirewallUTMDestroy(s *terraform.State) er
 		if rs.Type != "ecl_security_network_based_firewall_utm_single_v1" {
 			continue
 		}
-		// _, err := common_function_gateways.Get(client, rs.Primary.ID).Extract()
 
-		_, err := getSingleDeviceByHostName(client, rs.Primary.ID)
+		_, err := getSingleFirewallUTMByHostName(client, rs.Primary.ID)
 
 		if err == nil {
 			return fmt.Errorf("Common Function Gateway still exists")
