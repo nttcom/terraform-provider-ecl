@@ -3,6 +3,7 @@ package ecl
 import (
 	"fmt"
 	"log"
+
 	// "strconv"
 	"testing"
 
@@ -10,33 +11,52 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 
 	// "github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways"
-	"github.com/nttcom/eclcloud/ecl/security_order/v1/single_devices"
+	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_firewall_utm_single"
 )
 
-func TestAccSecurityV1NetworkBasedSingleDeviceBasic(t *testing.T) {
-	var sd single_devices.SingleDevice
+func TestAccSecurityV1NetworkBasedFirewallUTMBasic(t *testing.T) {
+	var sd security.SingleDevice
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV1NetworkBasedSingleDeviceDestroy,
+		CheckDestroy: testAccCheckSecurityV1NetworkBasedFirewallUTMDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccSecurityV1NetworkBasedSingleDeviceBasic,
+				Config: testAccSecurityV1NetworkBasedFirewallUTMBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV1NetworkBasedSingleDeviceExists(
-						"ecl_security_network_based_single_device_v1.single_device_1", &sd),
+					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_single_device_v1.single_device_1",
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
 						"locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_single_device_v1.single_device_1",
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
 						"operating_mode", "FW"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_single_device_v1.single_device_1",
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_single_device_v1.single_device_1",
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"az_group", "zone1-groupb"),
+				),
+			},
+			resource.TestStep{
+				Config: testAccSecurityV1NetworkBasedFirewallUTMUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"locale", "en"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"operating_mode", "UTM"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"license_kind", "08"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
 						"az_group", "zone1-groupb"),
 				),
 			},
@@ -44,7 +64,7 @@ func TestAccSecurityV1NetworkBasedSingleDeviceBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckSecurityV1NetworkBasedSingleDeviceExists(n string, sd *single_devices.SingleDevice) resource.TestCheckFunc {
+func testAccCheckSecurityV1NetworkBasedFirewallUTMExists(n string, sd *security.SingleDevice) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -62,7 +82,7 @@ func testAccCheckSecurityV1NetworkBasedSingleDeviceExists(n string, sd *single_d
 		}
 
 		found, err := getSingleDeviceByHostName(client, rs.Primary.ID)
-		// found, err := single_devices.Get(client, rs.Primary.ID).Extract()
+		// found, err := security.Get(client, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}
@@ -80,7 +100,7 @@ func testAccCheckSecurityV1NetworkBasedSingleDeviceExists(n string, sd *single_d
 	}
 }
 
-func testAccCheckSecurityV1NetworkBasedSingleDeviceDestroy(s *terraform.State) error {
+func testAccCheckSecurityV1NetworkBasedFirewallUTMDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	client, err := config.securityOrderV1Client(OS_REGION_NAME)
 	if err != nil {
@@ -88,7 +108,7 @@ func testAccCheckSecurityV1NetworkBasedSingleDeviceDestroy(s *terraform.State) e
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "ecl_security_network_based_single_device_v1" {
+		if rs.Type != "ecl_security_network_based_firewall_utm_single_v1" {
 			continue
 		}
 		// _, err := common_function_gateways.Get(client, rs.Primary.ID).Extract()
@@ -104,12 +124,24 @@ func testAccCheckSecurityV1NetworkBasedSingleDeviceDestroy(s *terraform.State) e
 	return nil
 }
 
-var testAccSecurityV1NetworkBasedSingleDeviceBasic = fmt.Sprintf(`
-resource "ecl_security_network_based_single_device_v1" "single_device_1" {
+var testAccSecurityV1NetworkBasedFirewallUTMBasic = fmt.Sprintf(`
+resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	operating_mode = "FW"
 	license_kind = "02"
+	az_group = "zone1-groupb"
+}
+`,
+	OS_TENANT_ID,
+)
+
+var testAccSecurityV1NetworkBasedFirewallUTMUpdate = fmt.Sprintf(`
+resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
+	tenant_id = "%s"
+	locale = "en"
+	operating_mode = "UTM"
+	license_kind = "08"
 	az_group = "zone1-groupb"
 }
 `,

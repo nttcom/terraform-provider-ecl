@@ -11,23 +11,23 @@ import (
 	"github.com/hashicorp/terraform/helper/validation"
 
 	"github.com/nttcom/eclcloud"
+	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_firewall_utm_single"
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
-	"github.com/nttcom/eclcloud/ecl/security_order/v1/single_devices"
 	// "github.com/nttcom/eclcloud/ecl/sss/v1/users"
 )
 
-const securitySingleDevicePollIntervalSec = 30
-const securitySingleDeviceCreatePollInterval = securitySingleDevicePollIntervalSec * time.Second
-const securitySingleDeviceUpdatePollInterval = securitySingleDevicePollIntervalSec * time.Second
-const securitySingleDeviceDeletePollInterval = securitySingleDevicePollIntervalSec * time.Second
+const securityFirewallUTMSingleDevicePollIntervalSec = 1
+const securityFirewallUTMSingleCreatePollInterval = securityFirewallUTMSingleDevicePollIntervalSec * time.Second
+const securityFirewallUTMSingleUpdatePollInterval = securityFirewallUTMSingleDevicePollIntervalSec * time.Second
+const securityFirewallUTMSingleDeletePollInterval = securityFirewallUTMSingleDevicePollIntervalSec * time.Second
 
-// func SecurityNetworkBasedSingleDeviceV1() *schema.Resource {
-func resourceSecurityNetworkBasedSingleDeviceV1() *schema.Resource {
+// func SecurityNetworkBasedFirewallUTMSingleV1() *schema.Resource {
+func resourceSecurityNetworkBasedFirewallUTMSingleV1() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceSecurityNetworkBasedSingleDeviceV1Create,
-		Read:   resourceSecurityNetworkBasedSingleDeviceV1Read,
-		Update: resourceSecurityNetworkBasedSingleDeviceV1Update,
-		Delete: resourceSecurityNetworkBasedSingleDeviceV1Delete,
+		Create: resourceSecurityNetworkBasedFirewallUTMSingleV1Create,
+		Read:   resourceSecurityNetworkBasedFirewallUTMSingleV1Read,
+		Update: resourceSecurityNetworkBasedFirewallUTMSingleV1Update,
+		Delete: resourceSecurityNetworkBasedFirewallUTMSingleV1Delete,
 
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -79,10 +79,10 @@ func resourceSecurityNetworkBasedSingleDeviceV1() *schema.Resource {
 	}
 }
 
-func gtHostForSingleDeviceCreateAsOpts(d *schema.ResourceData) [1]single_devices.GtHostInCreate {
-	result := [1]single_devices.GtHostInCreate{}
+func gtHostForFirewallUTMSingleCreateAsOpts(d *schema.ResourceData) [1]security.GtHostInCreate {
+	result := [1]security.GtHostInCreate{}
 
-	gtHost := single_devices.GtHostInCreate{}
+	gtHost := security.GtHostInCreate{}
 
 	gtHost.LicenseKind = d.Get("license_kind").(string)
 	gtHost.OperatingMode = d.Get("operating_mode").(string)
@@ -93,10 +93,10 @@ func gtHostForSingleDeviceCreateAsOpts(d *schema.ResourceData) [1]single_devices
 	return result
 }
 
-func gtHostForSingleDeviceUpdateAsOpts(d *schema.ResourceData) [1]single_devices.GtHostInUpdate {
-	result := [1]single_devices.GtHostInUpdate{}
+func gtHostForFirewallUTMSingleUpdateAsOpts(d *schema.ResourceData) [1]security.GtHostInUpdate {
+	result := [1]security.GtHostInUpdate{}
 
-	gtHost := single_devices.GtHostInUpdate{}
+	gtHost := security.GtHostInUpdate{}
 
 	gtHost.LicenseKind = d.Get("license_kind").(string)
 	gtHost.OperatingMode = d.Get("operating_mode").(string)
@@ -107,10 +107,10 @@ func gtHostForSingleDeviceUpdateAsOpts(d *schema.ResourceData) [1]single_devices
 	return result
 }
 
-func gtHostForSingleDeviceDeleteAsOpts(d *schema.ResourceData) [1]single_devices.GtHostInDelete {
-	result := [1]single_devices.GtHostInDelete{}
+func gtHostForFirewallUTMSingleDeleteAsOpts(d *schema.ResourceData) [1]security.GtHostInDelete {
+	result := [1]security.GtHostInDelete{}
 
-	gtHost := single_devices.GtHostInDelete{}
+	gtHost := security.GtHostInDelete{}
 
 	gtHost.HostName = d.Id()
 
@@ -119,7 +119,7 @@ func gtHostForSingleDeviceDeleteAsOpts(d *schema.ResourceData) [1]single_devices
 	return result
 }
 
-func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedFirewallUTMSingleV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
@@ -129,32 +129,32 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 	tenantID := d.Get("tenant_id").(string)
 	locale := d.Get("locale").(string)
 
-	listOpts := single_devices.ListOpts{
+	listOpts := security.ListOpts{
 		TenantID: tenantID,
 		Locale:   locale,
 	}
 
-	allPagesBefore, err := single_devices.List(client, listOpts).AllPages()
+	allPagesBefore, err := security.List(client, listOpts).AllPages()
 	if err != nil {
 		return fmt.Errorf("Unable to list of devices, before creating new single device: %s", err)
 	}
-	var allDevicesBefore []single_devices.SingleDevice
+	var allDevicesBefore []security.SingleDevice
 
-	err = single_devices.ExtractSingleDevicesInto(allPagesBefore, &allDevicesBefore)
+	err = security.ExtractSingleDevicesInto(allPagesBefore, &allDevicesBefore)
 
 	if err != nil {
 		return fmt.Errorf("Unable to retrieve device list before create: %s", err)
 	}
 	log.Printf("[DEBUG] allSingleDevices before creation: %#v", allDevicesBefore)
-	createOpts := single_devices.CreateOpts{
+	createOpts := security.CreateOpts{
 		SOKind:   "A",
 		TenantID: tenantID,
 		Locale:   locale,
-		GtHost:   gtHostForSingleDeviceCreateAsOpts(d),
+		GtHost:   gtHostForFirewallUTMSingleCreateAsOpts(d),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
-	order, err := single_devices.Create(client, createOpts).Extract()
+	order, err := security.Create(client, createOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security single device: %s", err)
 	}
@@ -167,7 +167,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 		Refresh:      waitForSingleDeviceOrderComplete(client, order.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securitySingleDeviceCreatePollInterval,
+		PollInterval: securityFirewallUTMSingleCreatePollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -178,13 +178,13 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 			order.ID, err)
 	}
 
-	allPagesAfter, err := single_devices.List(client, listOpts).AllPages()
+	allPagesAfter, err := security.List(client, listOpts).AllPages()
 	if err != nil {
 		return fmt.Errorf("Unable to list after to create single device: %s", err)
 	}
-	var allDevicesAfter []single_devices.SingleDevice
+	var allDevicesAfter []security.SingleDevice
 
-	err = single_devices.ExtractSingleDevicesInto(allPagesAfter, &allDevicesAfter)
+	err = security.ExtractSingleDevicesInto(allPagesAfter, &allDevicesAfter)
 	if err != nil {
 		return fmt.Errorf("Unable to retrieve list of devices after create: %s", err)
 	}
@@ -205,10 +205,10 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 
 	d.SetId(id)
 
-	return resourceSecurityNetworkBasedSingleDeviceV1Read(d, meta)
+	return resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d, meta)
 }
 
-func getNewlyCreatedDeviceID(before, after []single_devices.SingleDevice) string {
+func getNewlyCreatedDeviceID(before, after []security.SingleDevice) string {
 	// var beforeHostNames, afterHostNames []string
 	// var HostNameAfter string
 
@@ -252,26 +252,26 @@ func waitForSingleDeviceOrderComplete(client *eclcloud.ServiceClient, soID, tena
 	}
 }
 
-func getSingleDeviceByHostName(client *eclcloud.ServiceClient, hostName string) (single_devices.SingleDevice, error) {
-	var sd = single_devices.SingleDevice{}
+func getSingleDeviceByHostName(client *eclcloud.ServiceClient, hostName string) (security.SingleDevice, error) {
+	var sd = security.SingleDevice{}
 
-	listOpts := single_devices.ListOpts{
+	listOpts := security.ListOpts{
 		TenantID: os.Getenv("OS_TENANT_ID"),
 		Locale:   "en",
 	}
 
-	allPages, err := single_devices.List(client, listOpts).AllPages()
+	allPages, err := security.List(client, listOpts).AllPages()
 	if err != nil {
 		return sd, fmt.Errorf("Unable to list after to create single device: %s", err)
 	}
-	var allDevices []single_devices.SingleDevice
+	var allDevices []security.SingleDevice
 
-	err = single_devices.ExtractSingleDevicesInto(allPages, &allDevices)
+	err = security.ExtractSingleDevicesInto(allPages, &allDevices)
 	if err != nil {
 		return sd, fmt.Errorf("Unable to retrieve list of devices after create: %s", err)
 	}
 
-	var thisDevice single_devices.SingleDevice
+	var thisDevice security.SingleDevice
 	var found bool
 	for _, device := range allDevices {
 		if device.Cell[2] == hostName {
@@ -286,7 +286,7 @@ func getSingleDeviceByHostName(client *eclcloud.ServiceClient, hostName string) 
 	return thisDevice, nil
 }
 
-func resourceSecurityNetworkBasedSingleDeviceV1Read(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
@@ -300,19 +300,19 @@ func resourceSecurityNetworkBasedSingleDeviceV1Read(d *schema.ResourceData, meta
 	if err != nil {
 		return err
 	}
-	// device := dev.(single_devices.SingleDevice)
-	// allPages, err := single_devices.List(client, listOpts).AllPages()
+	// device := dev.(security.SingleDevice)
+	// allPages, err := security.List(client, listOpts).AllPages()
 	// if err != nil {
 	// 	return fmt.Errorf("Unable to list after to create single device: %s", err)
 	// }
-	// var allDevices []single_devices.SingleDevice
+	// var allDevices []security.SingleDevice
 
-	// err = single_devices.ExtractSingleDevicesInto(allPages, &allDevices)
+	// err = security.ExtractSingleDevicesInto(allPages, &allDevices)
 	// if err != nil {
 	// 	return fmt.Errorf("Unable to retrieve list of devices after create: %s", err)
 	// }
 
-	// var thisDevice single_devices.SingleDevice
+	// var thisDevice security.SingleDevice
 	// for _, device := range allDevices {
 	// 	if device.Cell[2] == d.Id()
 	// 	thisDevice = device
@@ -333,12 +333,12 @@ func resourceSecurityNetworkBasedSingleDeviceV1Read(d *schema.ResourceData, meta
 	d.Set("license_kind", licenseKind)
 	d.Set("az_group", azGroup)
 
-	log.Printf("[DEBUG] SecurityNetworkBasedSingleDeviceV1Read Succeeded")
+	log.Printf("[DEBUG] SecurityNetworkBasedFirewallUTMSingleV1Read Succeeded")
 
 	return nil
 }
 
-func resourceSecurityNetworkBasedSingleDeviceV1Update(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedFirewallUTMSingleV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
@@ -348,14 +348,15 @@ func resourceSecurityNetworkBasedSingleDeviceV1Update(d *schema.ResourceData, me
 	tenantID := d.Get("tenant_id").(string)
 	locale := d.Get("locale").(string)
 
-	updateOpts := single_devices.UpdateOpts{
-		SOKind: "M",
-		Locale: locale,
-		GtHost: gtHostForSingleDeviceUpdateAsOpts(d),
+	updateOpts := security.UpdateOpts{
+		SOKind:   "M",
+		TenantID: tenantID,
+		Locale:   locale,
+		GtHost:   gtHostForFirewallUTMSingleUpdateAsOpts(d),
 	}
 
 	log.Printf("[DEBUG] Update Options: %#v", updateOpts)
-	order, err := single_devices.Update(client, updateOpts).Extract()
+	order, err := security.Update(client, updateOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error updating ECL security single device: %s", err)
 	}
@@ -368,7 +369,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Update(d *schema.ResourceData, me
 		Refresh:      waitForSingleDeviceOrderComplete(client, order.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securitySingleDeviceUpdatePollInterval,
+		PollInterval: securityFirewallUTMSingleUpdatePollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -378,10 +379,10 @@ func resourceSecurityNetworkBasedSingleDeviceV1Update(d *schema.ResourceData, me
 			"Error waiting for single device order status (%s) to become ready: %s",
 			order.ID, err)
 	}
-	return resourceSecurityNetworkBasedSingleDeviceV1Read(d, meta)
+	return resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d, meta)
 }
 
-func resourceSecurityNetworkBasedSingleDeviceV1Delete(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedFirewallUTMSingleV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
@@ -391,14 +392,14 @@ func resourceSecurityNetworkBasedSingleDeviceV1Delete(d *schema.ResourceData, me
 	tenantID := d.Get("tenant_id").(string)
 	locale := d.Get("locale").(string)
 
-	deleteOpts := single_devices.DeleteOpts{
+	deleteOpts := security.DeleteOpts{
 		SOKind:   "D",
 		TenantID: tenantID,
-		GtHost:   gtHostForSingleDeviceDeleteAsOpts(d),
+		GtHost:   gtHostForFirewallUTMSingleDeleteAsOpts(d),
 	}
 
 	log.Printf("[DEBUG] Delete Options: %#v", deleteOpts)
-	order, err := single_devices.Delete(client, deleteOpts).Extract()
+	order, err := security.Delete(client, deleteOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error deleting ECL security single device: %s", err)
 	}
@@ -411,7 +412,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Delete(d *schema.ResourceData, me
 		Refresh:      waitForSingleDeviceOrderComplete(client, order.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securitySingleDeviceDeletePollInterval,
+		PollInterval: securityFirewallUTMSingleDeletePollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 
