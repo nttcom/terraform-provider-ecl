@@ -11,6 +11,10 @@ import (
 	"github.com/hashicorp/terraform/helper/validation"
 
 	"github.com/nttcom/eclcloud"
+
+	"github.com/nttcom/eclcloud/ecl/security_portal/v1/ports"
+	"github.com/nttcom/eclcloud/ecl/security_portal/v1/processes"
+
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_firewall_utm_single"
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
 )
@@ -36,6 +40,7 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1() *schema.Resource {
 			"tenant_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 
 			"locale": &schema.Schema{
@@ -65,6 +70,41 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1() *schema.Resource {
 			"az_group": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+			},
+
+			"port": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				MaxItems: 7,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enable": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"ip_address": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"network_id": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"subnet_id": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"mtu": &schema.Schema{
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"comment": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -203,7 +243,7 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData,
 	return nil
 }
 
-func resourceSecurityNetworkBasedFirewallUTMSingleV1Update(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedFirewallUTMSingleV1UpdateOrderAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
@@ -244,6 +284,96 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Update(d *schema.ResourceDat
 			"Error waiting for single firewall/utm order status (%s) to become ready: %s",
 			order.ID, err)
 	}
+
+	return nil
+}
+
+func resourceSecurityNetworkBasedFirewallUTMPortsForUpdate(d *schema.ResourceData) (ports.UpdateOpts, error) {
+	resultPorts := [7]ports.SinglePort{}
+
+	ifaces := d.Get("interfaces").([]interface{})
+	for _, iface := range ifaces {
+		p := ports.SinglePort{}
+		thisInterface := iface.(map[string]interface{})
+
+		p.EnablePort = thisInterface["enable_port"].(string)
+
+		if p.EnablePort == "true" {
+			p.IPAddress = thisInterface["ip_address"].(string)
+			p.NetworkID = thisInterface["network_id"].(string)
+			p.SubnetID = thisInterface["subnet_id"].(string)
+			p.Comment = thisInterface["comment"].(string)
+		}
+	}
+
+	result := ports.UpdateOpts{}
+	result.Port = resultPorts
+	return result, nil
+}
+
+func resourceSecurityNetworkBasedFirewallUTMSingleV1UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
+	config := meta.(*Config)
+	client, err := config.securityPortalV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating ECL security portal client: %s", err)
+	}
+
+	tenantID := d.Get("tenant_id").(string)
+	locale := d.Get("locale").(string)
+
+	updateOpts, err := resourceSecurityNetworkBasedFirewallUTMPortsForUpdate(d)
+	if err != nil {
+		return fmt.Errorf("Error getting port option in update: %s", err)
+	}
+	updateQueryOpts := ports.UpdateQueryOpts{
+		TenantID:  tenantID,
+		UserToken: client.TokenID,
+	}
+
+	log.Printf("[DEBUG] Update Options: %#v", updateOpts)
+	log.Printf("[DEBUG] Update Query Options: %#v", updateQueryOpts)
+	process, err := ports.Update(
+		client,
+		"utm",
+		updateOpts,
+		updateQueryOpts).Extract()
+
+	if err != nil {
+		return fmt.Errorf("Error updating ECL security single firewall/utm port: %s", err)
+	}
+
+	log.Printf("[DEBUG] Update request has successfully accepted with process: %#v", process)
+
+	stateConf := &resource.StateChangeConf{
+		Pending:      []string{"RUNNING"},
+		Target:       []string{"ENDED"},
+		Refresh:      waitForSingleFirewallUTMProcessComplete(client, process.ID, tenantID, locale),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        5 * time.Second,
+		PollInterval: securityFirewallUTMSingleUpdatePollInterval,
+		MinTimeout:   30 * time.Second,
+	}
+
+	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for single firewall/utm port management status (%s) to become ready: %s",
+			process.ID, err)
+	}
+
+	return nil
+}
+
+func resourceSecurityNetworkBasedFirewallUTMSingleV1Update(d *schema.ResourceData, meta interface{}) error {
+
+	if d.HasChange("locale") || d.HasChange("operating_mode") || d.HasChange("license_kind") {
+		resourceSecurityNetworkBasedFirewallUTMSingleV1UpdateOrderAPIPart(d, meta)
+	}
+
+	if d.HasChange("interfaces") {
+		resourceSecurityNetworkBasedFirewallUTMSingleV1UpdatePortalAPIPart(d, meta)
+	}
+
 	return resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d, meta)
 }
 
@@ -388,4 +518,26 @@ func gtHostForFirewallUTMSingleDeleteAsOpts(d *schema.ResourceData) [1]security.
 	result[0] = gtHost
 
 	return result
+}
+
+func waitForSingleFirewallUTMProcessComplete(client *eclcloud.ServiceClient, processID, tenantID, locale string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+
+		opts := processes.GetOpts{
+			TenantID:  tenantID,
+			UserToken: client.TokenID,
+		}
+		process, err := processes.Get(client, processID, opts).Extract()
+		if err != nil {
+			return nil, "", err
+		}
+
+		log.Printf("[DEBUG] ECL Security Service Process Status: %+v", process)
+
+		// if process.Status.Status == "ENDED" {
+		// 	return process, "COMPLETE", nil
+		// }
+
+		return process, process.Status.Status, nil
+	}
 }
