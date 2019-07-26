@@ -79,8 +79,8 @@ func resourceSecurityNetworkBasedSingleDeviceV1() *schema.Resource {
 	}
 }
 
-func gtHostForCreateAsOpts(d *schema.ResourceData) []single_devices.GtHostInCreate {
-	result := []single_devices.GtHostInCreate{}
+func gtHostForSingleDeviceCreateAsOpts(d *schema.ResourceData) [1]single_devices.GtHostInCreate {
+	result := [1]single_devices.GtHostInCreate{}
 
 	gtHost := single_devices.GtHostInCreate{}
 
@@ -88,11 +88,26 @@ func gtHostForCreateAsOpts(d *schema.ResourceData) []single_devices.GtHostInCrea
 	gtHost.OperatingMode = d.Get("operating_mode").(string)
 	gtHost.AZGroup = d.Get("az_group").(string)
 
-	result = append(result, gtHost)
+	result[0] = gtHost
 
 	return result
 }
-func gtHostForDeleteAsOpts(d *schema.ResourceData) [1]single_devices.GtHostInDelete {
+
+func gtHostForSingleDeviceUpdateAsOpts(d *schema.ResourceData) [1]single_devices.GtHostInUpdate {
+	result := [1]single_devices.GtHostInUpdate{}
+
+	gtHost := single_devices.GtHostInUpdate{}
+
+	gtHost.LicenseKind = d.Get("license_kind").(string)
+	gtHost.OperatingMode = d.Get("operating_mode").(string)
+	gtHost.HostName = d.Id()
+
+	result[0] = gtHost
+
+	return result
+}
+
+func gtHostForSingleDeviceDeleteAsOpts(d *schema.ResourceData) [1]single_devices.GtHostInDelete {
 	result := [1]single_devices.GtHostInDelete{}
 
 	gtHost := single_devices.GtHostInDelete{}
@@ -108,7 +123,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 	config := meta.(*Config)
 	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating ECL sss client: %s", err)
+		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
 
 	tenantID := d.Get("tenant_id").(string)
@@ -135,7 +150,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Create(d *schema.ResourceData, me
 		SOKind:   "A",
 		TenantID: tenantID,
 		Locale:   locale,
-		GtHost:   gtHostForCreateAsOpts(d),
+		GtHost:   gtHostForSingleDeviceCreateAsOpts(d),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -324,41 +339,45 @@ func resourceSecurityNetworkBasedSingleDeviceV1Read(d *schema.ResourceData, meta
 }
 
 func resourceSecurityNetworkBasedSingleDeviceV1Update(d *schema.ResourceData, meta interface{}) error {
-	// config := meta.(*Config)
-	// client, err := config.sssV1Client(GetRegion(d, config))
-	// if err != nil {
-	// 	return fmt.Errorf("Error creating ECL sss client: %s", err)
-	// }
+	config := meta.(*Config)
+	client, err := config.securityOrderV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating ECL security order client: %s", err)
+	}
 
-	// var hasChange bool
-	// var updateOpts users.UpdateOpts
+	tenantID := d.Get("tenant_id").(string)
+	locale := d.Get("locale").(string)
 
-	// if d.HasChange("login_id") {
-	// 	hasChange = true
-	// 	loginID := d.Get("login_id").(string)
-	// 	updateOpts.LoginID = &loginID
-	// }
+	updateOpts := single_devices.UpdateOpts{
+		SOKind: "M",
+		Locale: locale,
+		GtHost: gtHostForSingleDeviceUpdateAsOpts(d),
+	}
 
-	// if d.HasChange("mail_address") {
-	// 	hasChange = true
-	// 	mailAddress := d.Get("mail_address").(string)
-	// 	updateOpts.MailAddress = &mailAddress
-	// }
+	log.Printf("[DEBUG] Update Options: %#v", updateOpts)
+	order, err := single_devices.Update(client, updateOpts).Extract()
+	if err != nil {
+		return fmt.Errorf("Error updating ECL security single device: %s", err)
+	}
 
-	// if d.HasChange("password") {
-	// 	hasChange = true
-	// 	newPassword := d.Get("password").(string)
-	// 	updateOpts.NewPassword = &newPassword
-	// }
+	log.Printf("[DEBUG] Update request has successfully accepted with order: %#v", order)
 
-	// if hasChange {
-	// 	r := users.Update(client, d.Id(), updateOpts)
-	// 	if r.Err != nil {
-	// 		return fmt.Errorf("Error updating ECL user: %s", r.Err)
-	// 	}
-	// 	log.Printf("[DEBUG] User has successfully updated.")
-	// }
+	stateConf := &resource.StateChangeConf{
+		Pending:      []string{"PROCESSING"},
+		Target:       []string{"COMPLETE"},
+		Refresh:      waitForSingleDeviceOrderComplete(client, order.ID, tenantID, locale),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        5 * time.Second,
+		PollInterval: securitySingleDeviceUpdatePollInterval,
+		MinTimeout:   30 * time.Second,
+	}
 
+	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for single device order status (%s) to become ready: %s",
+			order.ID, err)
+	}
 	return resourceSecurityNetworkBasedSingleDeviceV1Read(d, meta)
 }
 
@@ -366,7 +385,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Delete(d *schema.ResourceData, me
 	config := meta.(*Config)
 	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating ECL sss client: %s", err)
+		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
 
 	tenantID := d.Get("tenant_id").(string)
@@ -375,7 +394,7 @@ func resourceSecurityNetworkBasedSingleDeviceV1Delete(d *schema.ResourceData, me
 	deleteOpts := single_devices.DeleteOpts{
 		SOKind:   "D",
 		TenantID: tenantID,
-		GtHost:   gtHostForDeleteAsOpts(d),
+		GtHost:   gtHostForSingleDeviceDeleteAsOpts(d),
 	}
 
 	log.Printf("[DEBUG] Delete Options: %#v", deleteOpts)
