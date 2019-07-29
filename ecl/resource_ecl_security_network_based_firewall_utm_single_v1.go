@@ -104,16 +104,16 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1() *schema.Resource {
 							Optional: true,
 							Computed: true,
 						},
-						"mtu": &schema.Schema{
-							Type:     schema.TypeInt,
-							Optional: true,
-							Computed: true,
-						},
-						"comment": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
+						// "mtu": &schema.Schema{
+						// 	Type:     schema.TypeInt,
+						// 	Optional: true,
+						// 	Computed: true,
+						// },
+						// "comment": &schema.Schema{
+						// 	Type:     schema.TypeString,
+						// 	Optional: true,
+						// 	Computed: true,
+						// },
 					},
 				},
 			},
@@ -299,6 +299,8 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData,
 	}
 
 	allDevicePages, err := device_interfaces.List(client, hostUUID, listOpts).AllPages()
+	log.Printf("[MYDEBUG] allDevicePages: %#v", allDevicePages)
+	log.Printf("[MYDEBUG] err: %#v", err)
 	if err != nil {
 		return fmt.Errorf("Unable to list interfaces: %s", err)
 	}
@@ -309,10 +311,17 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData,
 	}
 
 	deviceInterfaces := [7]map[string]string{}
-	for _, d := range allDevices {
+	// initialize
+	for index := range []int{0, 1, 2, 3, 4, 5, 6} {
+		thisDeviceInterface := map[string]string{}
+		thisDeviceInterface["enable"] = "false"
+		deviceInterfaces[index] = thisDeviceInterface
+	}
+
+	for _, dev := range allDevices {
 		thisDeviceInterface := map[string]string{}
 
-		index, err := strconv.Atoi(strings.Replace(d.OSPortID, "port", "", 1))
+		index, err := strconv.Atoi(strings.Replace(dev.MSAPortID, "port", "", 1))
 		if err != nil {
 			return fmt.Errorf("Error parsing device interface port number: %s", err)
 		}
@@ -322,9 +331,9 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData,
 		}
 
 		thisDeviceInterface["enable"] = "true"
-		thisDeviceInterface["ip_address"] = d.OSNetworkID
-		thisDeviceInterface["network_id"] = d.OSNetworkID
-		thisDeviceInterface["subnet_id"] = d.OSSubnetID
+		thisDeviceInterface["ip_address"] = dev.OSIPAddress
+		thisDeviceInterface["network_id"] = dev.OSNetworkID
+		thisDeviceInterface["subnet_id"] = dev.OSSubnetID
 
 		deviceInterfaces[index] = thisDeviceInterface
 	}
@@ -396,7 +405,7 @@ func resourceSecurityNetworkBasedFirewallUTMPortsForUpdate(d *schema.ResourceDat
 				p.IPAddress = thisInterface["ip_address"].(string)
 				p.NetworkID = thisInterface["network_id"].(string)
 				p.SubnetID = thisInterface["subnet_id"].(string)
-				p.Comment = thisInterface["comment"].(string)
+				// p.Comment = thisInterface["comment"].(string)
 			}
 		} else {
 			p.EnablePort = "false"

@@ -114,7 +114,7 @@ func TestMockedAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T)
 	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/ports/utm/%s", expectedNewFirewallUTMHostName), testMockSecurityV1NetworkBasedFirewallUTMUpdateInterface)
 	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV1NetworkBasedFirewallUTMGetProcessingAfterUpdateInterface)
 	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV1NetworkBasedFirewallUTMGetCompleteActiveAfterUpdateInterface)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListAfterUpdate)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListAfterInterfaceUpdate)
 	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedFirewallUTMListDevicesAfterUpdate)
 	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewFirewallUTMUUID), testMockSecurityV1NetworkBasedFirewallUTMListDeviceInterfacesAfterUpdate)
 
@@ -149,10 +149,6 @@ func TestMockedAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T)
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.network_id", "dummyNetwork1"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.subnet_id", "dummySubnet1"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.utm", "1500"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.comment", "Connect Interface1 to network1 and subnet1"),
 					// Interface 4
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.ip_address", "192.168.2.50"),
@@ -160,10 +156,6 @@ func TestMockedAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T)
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.network_id", "dummyNetwork2"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.subnet_id", "dummySubnet2"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.utm", "1500"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.comment", "Connect Interface4 to network1 and subnet1"),
 				),
 			},
 		},
@@ -194,38 +186,6 @@ resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
 	OS_TENANT_ID,
 )
 
-// var testMockedAccSecurityV1NetworkBasedFirewallUTMNetworkForUpdateInterface = `
-// resource "ecl_network_network_v2" "network_1" {
-//     name = "network_1_for_security_firewall_utm_single"
-// }
-
-// resource "ecl_network_subnet_v2" "subnet_1" {
-//     name = "subnet_1_for_security_firewall_utm_single"
-// 	cidr = "192.168.1.0/24"
-// 	network_id = "${ecl_network_network_v2.network_1.id}"
-// 	gateway_ip = "192.168.1.1"
-// 	allocation_pools {
-// 		start = "192.168.1.100"
-// 		end = "192.168.1.200"
-// 	}
-// }
-
-// resource "ecl_network_network_v2" "network_2" {
-// 	name = "network_2_for_security_firewall_utm_single"
-// }
-
-// resource "ecl_network_subnet_v2" "subnet_2" {
-// 	name = "subnet_2_for_security_firewall_utm_single"
-// 	cidr = "192.168.2.0/24"
-// 	network_id = "${ecl_network_network_v2.network_2.id}"
-// 	gateway_ip = "192.168.2.1"
-// 	allocation_pools {
-// 		start = "192.168.2.100"
-// 		end = "192.168.2.200"
-// 	}
-// }
-// `
-
 var testMockedAccSecurityV1NetworkBasedFirewallUTMUpdateInterface = fmt.Sprintf(`
 
 resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
@@ -235,27 +195,38 @@ resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
 	license_kind = "02"
 	az_group = "zone1-groupb"
 
-    port {
-        enable = "true"
-        ip_address = "192.168.1.50"
-        network_id = "dummyNetwork1"
-        subnet_id = "dummySubnet1"
-        mtu = 1500
-        comment = "Connect Interface1 to network1 and subnet1"
-    }
+  port {
+      enable = "true"
+      ip_address = "192.168.1.50"
+      network_id = "dummyNetwork1"
+      subnet_id = "dummySubnet1"
+  }
 
-    port {}
+  port {
+    enable = "false"
+  }
 
-    port {}
+  port {
+    enable = "false"
+  }
+  
+  port {
+      enable = "true"
+      ip_address = "192.168.2.50"
+      network_id = "dummyNetwork2"
+      subnet_id = "dummySubnet2"
+  }
 
-    port {
-        enable = "true"
-        ip_address = "192.168.2.50"
-        network_id = "dummyNetwork2"
-        subnet_id = "dummySubnet2"
-        mtu = 1500
-        comment = "Connect Interface4 to network2 and subnet1"
-    }
+  port {
+    enable = "false"
+  }
+  port {
+    enable = "false"
+  }
+  port {
+    enable = "false"
+  }
+
 }
 `,
 	OS_TENANT_ID,
@@ -635,6 +606,32 @@ response:
         }
 expectedStatus:
     - Updated
+`
+
+var testMockSecurityV1NetworkBasedFirewallUTMListAfterInterfaceUpdate = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "status": 1,
+            "code": "FOV-01",
+            "message": "Successful completion",
+            "records": 2,
+            "rows": [
+                {
+                    "id": 1,
+                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                },
+                {
+                    "id": 2,
+                    "cell": ["false", "1", "CES11811", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                }
+            ]
+        }
+expectedStatus:
+    - InterfaceIsUpdated
 `
 
 var testMockSecurityV1NetworkBasedFirewallUTMUpdateInterface = fmt.Sprintf(`
