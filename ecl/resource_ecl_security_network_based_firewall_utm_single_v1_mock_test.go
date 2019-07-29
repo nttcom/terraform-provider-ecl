@@ -20,79 +20,82 @@ const ProcessIDOfUpdateInterface = 85385
 const expectedNewFirewallUTMHostName = "CES11811"
 const expectedNewFirewallUTMUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
-// func TestMockedAccSecurityV1NetworkBasedFirewallUTMBasic(t *testing.T) {
-// 	var sd security.SingleFirewallUTM
+func TestMockedAccSecurityV1NetworkBasedFirewallUTMBasic(t *testing.T) {
+	var sd security.SingleFirewallUTM
 
-// 	mc := mock.NewMockController()
-// 	defer mc.TerminateMockControllerSafety()
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
 
-// 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
-// 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListBeforeCreate)
-// 	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedFirewallUTMCreate)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetProcessingAfterCreate)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetCompleteActiveAfterCreate)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListAfterCreate)
+	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedFirewallUTMListDevicesAfterCreate)
+	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewFirewallUTMUUID), testMockSecurityV1NetworkBasedFirewallUTMListDevicesAfterCreate)
 
-// 	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedFirewallUTMUpdate)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetProcessingAfterUpdate)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetCompleteActiveAfterUpdate)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListAfterUpdateInterface)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListBeforeCreate)
+	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedFirewallUTMCreate)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetProcessingAfterCreate)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetCompleteActiveAfterCreate)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListAfterCreate)
 
-// 	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedFirewallUTMDelete)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMProcessingAfterDelete)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetDeleteComplete)
-// 	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListAfterDelete)
+	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedFirewallUTMUpdate)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetProcessingAfterUpdate)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetCompleteActiveAfterUpdate)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListAfterUpdate)
 
-// 	mc.StartServer(t)
+	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedFirewallUTMDelete)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMProcessingAfterDelete)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedFirewallUTMGetDeleteComplete)
+	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedFirewallUTMListAfterDelete)
 
-// 	resource.Test(t, resource.TestCase{
-// 		PreCheck:     func() { testAccPreCheckSecurity(t) },
-// 		Providers:    testAccProviders,
-// 		CheckDestroy: testAccCheckSecurityV1NetworkBasedFirewallUTMDestroy,
-// 		Steps: []resource.TestStep{
-// 			resource.TestStep{
-// 				Config: testMockedAccSecurityV1NetworkBasedFirewallUTMBasic,
-// 				Check: resource.ComposeTestCheckFunc(
-// 					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
-// 					resource.TestCheckResourceAttr(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
-// 						"locale", "ja"),
-// 					resource.TestCheckResourceAttr(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
-// 						"operating_mode", "FW"),
-// 					resource.TestCheckResourceAttr(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
-// 						"license_kind", "02"),
-// 					resource.TestCheckResourceAttr(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
-// 						"az_group", "zone1-groupb"),
-// 				),
-// 			},
-// 			resource.TestStep{
-// 				Config: testMockedAccSecurityV1NetworkBasedFirewallUTMUpdate,
-// 				Check: resource.ComposeTestCheckFunc(
-// 					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
-// 					resource.TestCheckResourceAttr(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
-// 						"locale", "en"),
-// 					resource.TestCheckResourceAttr(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
-// 						"operating_mode", "UTM"),
-// 					resource.TestCheckResourceAttr(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
-// 						"license_kind", "08"),
-// 					resource.TestCheckResourceAttr(
-// 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
-// 						"az_group", "zone1-groupb"),
-// 				),
-// 			},
-// 		},
-// 	})
-// }
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckSecurity(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSecurityV1NetworkBasedFirewallUTMDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testMockedAccSecurityV1NetworkBasedFirewallUTMBasic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"locale", "ja"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"operating_mode", "FW"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"license_kind", "02"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"az_group", "zone1-groupb"),
+				),
+			},
+			resource.TestStep{
+				Config: testMockedAccSecurityV1NetworkBasedFirewallUTMUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"locale", "en"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"operating_mode", "UTM"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"license_kind", "08"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1",
+						"az_group", "zone1-groupb"),
+				),
+			},
+		},
+	})
+}
 
 func TestMockedAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T) {
 	var sd security.SingleFirewallUTM
@@ -278,7 +281,6 @@ response:
 expectedStatus:
     - Created
     - Updating
-    - Updated
 `
 
 var testMockSecurityV1NetworkBasedFirewallUTMListDevicesAfterCreate = `
@@ -310,6 +312,7 @@ response:
           ]
         }
 expectedStatus:
+    - Updated
     - Created
 `
 
@@ -357,6 +360,7 @@ response:
 expectedStatus:
     - Created
     - Updating
+    - Updated
 `
 
 var testMockSecurityV1NetworkBasedFirewallUTMListDeviceInterfacesAfterUpdate = `
