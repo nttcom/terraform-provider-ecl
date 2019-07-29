@@ -18,7 +18,7 @@ const SoIDOfDelete = "FGS_F2349100C7D24EF3ACD6B9A9F91FD220"
 const ProcessIDOfUpdateInterface = 85385
 
 const expectedNewFirewallUTMHostName = "CES11811"
-const expectedNewFirewallUTMUUID = "12768064-e7c9-44d1-b01d-e66f138a278e/interfaces"
+const expectedNewFirewallUTMUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
 // func TestMockedAccSecurityV1NetworkBasedFirewallUTMBasic(t *testing.T) {
 // 	var sd security.SingleFirewallUTM
@@ -371,7 +371,7 @@ response:
           ]
         }
 expectedStatus:
-    - Updated
+    - InterfaceIsUpdated
 `
 
 var testMockSecurityV1NetworkBasedFirewallUTMListDeviceInterfacesAfterCreate = `
@@ -419,7 +419,7 @@ response:
           ]
         }
 expectedStatus:
-    - Updated
+    - InterfaceIsUpdated
 `
 
 var testMockSecurityV1NetworkBasedFirewallUTMListAfterDelete = `
@@ -513,6 +513,7 @@ response:
 expectedStatus:
     - Created
     - Updated
+    - InterfaceIsUpdated
 newStatus: Deleted
 `,
 	SoIDOfDelete,
@@ -648,7 +649,7 @@ response:
         }
 expectedStatus:
     - Created
-newStatus: Updating
+newStatus: InterfaceIsUpdating
 `,
 	ProcessIDOfUpdateInterface,
 )
@@ -831,7 +832,7 @@ response:
           }
         }
 expectedStatus:
-    - Updating
+    - InterfaceIsUpdating
 counter:
     max: 3
 `
@@ -1014,8 +1015,8 @@ response:
           }
         }
 expectedStatus:
-    - Updating
-newStatus: Updated
+    - InterfaceIsUpdating
+newStatus: InterfaceIsUpdated
 counter:
     min: 4
 `
@@ -1043,5 +1044,5 @@ response:
             ]
         }
 expectedStatus:
-    - Updated
+    - InterfaceIsUpdated
 `
