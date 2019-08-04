@@ -7,6 +7,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
+	"github.com/nttcom/eclcloud/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_firewall_utm_single"
 )
 
@@ -54,6 +56,62 @@ func TestAccSecurityV1NetworkBasedFirewallUTMBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1",
 						"az_group", "zone1-groupb"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T) {
+	var sd security.SingleFirewallUTM
+	var n1, n2 networks.Network
+	var sn1, sn2 subnets.Subnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckSecurity(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSecurityV1NetworkBasedFirewallUTMDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccSecurityV1NetworkBasedFirewallUTMBasic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
+				),
+			},
+			resource.TestStep{
+				Config: testAccSecurityV1NetworkBasedFirewallUTMUpdateInterface,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
+
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n1),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn1),
+
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_2", &n2),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2", &sn2),
+
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.ip_address", "192.168.1.50"),
+					resource.TestCheckResourceAttrPtr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.network_id", &n1.ID),
+					resource.TestCheckResourceAttrPtr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.subnet_id", &sn1.ID),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.mtu", "1500"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.comment", "port 0 comment"),
+
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.ip_address", "192.168.2.50"),
+					resource.TestCheckResourceAttrPtr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.network_id", &n2.ID),
+					resource.TestCheckResourceAttrPtr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.subnet_id", &sn2.ID),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.mtu", "1500"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.comment", "port 3 comment"),
 				),
 			},
 		},
@@ -136,5 +194,94 @@ resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
 	az_group = "zone1-groupb"
 }
 `,
+	OS_TENANT_ID,
+)
+
+const testAccSecurityV1NetworkBasedFirewallUTMUpdateInterfaceNetworkSubnet1 = `
+resource "ecl_network_network_v2" "network_1" {
+	name = "network_1_for_utm_single"
+}
+
+resource "ecl_network_subnet_v2" "subnet_1" {
+	name = "subnet_1_for_utm_single"
+	cidr = "192.168.1.0/24"
+	network_id = "${ecl_network_network_v2.network_1.id}"
+	gateway_ip = "192.168.1.1"
+	allocation_pools {
+		start = "192.168.1.100"
+		end = "192.168.1.200"
+	}
+}
+`
+const testAccSecurityV1NetworkBasedFirewallUTMUpdateInterfaceNetworkSubnet2 = `
+resource "ecl_network_network_v2" "network_2" {
+	name = "network_2_for_utm_single"
+}
+
+resource "ecl_network_subnet_v2" "subnet_2" {
+	name = "subnet_2_for_utm_single"
+	cidr = "192.168.2.0/24"
+	network_id = "${ecl_network_network_v2.network_2.id}"
+	gateway_ip = "192.168.2.1"
+	allocation_pools {
+		start = "192.168.2.100"
+		end = "192.168.2.200"
+	}
+}
+`
+
+var testAccSecurityV1NetworkBasedFirewallUTMUpdateInterface = fmt.Sprintf(`
+%s
+%s
+
+resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
+	tenant_id = "%s"
+	locale = "ja"
+	operating_mode = "FW"
+	license_kind = "02"
+	az_group = "zone1-groupb"
+
+  port {
+      enable = "true"
+      ip_address = "192.168.1.50"
+      ip_address_prefix = 24
+      network_id = "${ecl_network_network_v2.network_1.id}"
+      subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
+      mtu = "1500"
+      comment = "port 0 comment"
+  }
+
+  port {
+    enable = "false"
+  }
+
+  port {
+    enable = "false"
+  }
+  
+  port {
+      enable = "true"
+      ip_address = "192.168.2.50"
+      ip_address_prefix = 24
+      network_id = "${ecl_network_network_v2.network_2.id}"
+      subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
+      mtu = "1500"
+      comment = "port 3 comment"
+  }
+
+  port {
+    enable = "false"
+  }
+  port {
+    enable = "false"
+  }
+  port {
+    enable = "false"
+  }
+
+}
+`,
+	testAccSecurityV1NetworkBasedFirewallUTMUpdateInterfaceNetworkSubnet1,
+	testAccSecurityV1NetworkBasedFirewallUTMUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
 )

@@ -24,7 +24,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
 )
 
-const securityFirewallUTMSingleFirewallUTMPollIntervalSec = 1
+const securityFirewallUTMSingleFirewallUTMPollIntervalSec = 30
 const securityFirewallUTMSingleCreatePollInterval = securityFirewallUTMSingleFirewallUTMPollIntervalSec * time.Second
 const securityFirewallUTMSingleUpdatePollInterval = securityFirewallUTMSingleFirewallUTMPollIntervalSec * time.Second
 const securityFirewallUTMSingleDeletePollInterval = securityFirewallUTMSingleFirewallUTMPollIntervalSec * time.Second
@@ -94,6 +94,11 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1() *schema.Resource {
 							Optional: true,
 							Computed: true,
 						},
+						"ip_address_prefix": &schema.Schema{
+							Type:     schema.TypeInt,
+							Optional: true,
+							// Computed: true,
+						},
 						"network_id": &schema.Schema{
 							Type:     schema.TypeString,
 							Optional: true,
@@ -104,16 +109,16 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1() *schema.Resource {
 							Optional: true,
 							Computed: true,
 						},
-						// "mtu": &schema.Schema{
-						// 	Type:     schema.TypeInt,
-						// 	Optional: true,
-						// 	Computed: true,
-						// },
-						// "comment": &schema.Schema{
-						// 	Type:     schema.TypeString,
-						// 	Optional: true,
-						// 	Computed: true,
-						// },
+						"mtu": &schema.Schema{
+							Type:     schema.TypeString,
+							Optional: true,
+							// Computed: true,
+						},
+						"comment": &schema.Schema{
+							Type:     schema.TypeString,
+							Optional: true,
+							// Computed: true,
+						},
 					},
 				},
 			},
@@ -298,7 +303,7 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData,
 		UserToken: pClient.TokenID,
 	}
 
-	allDevicePages, err := device_interfaces.List(client, hostUUID, listOpts).AllPages()
+	allDevicePages, err := device_interfaces.List(pClient, hostUUID, listOpts).AllPages()
 	log.Printf("[MYDEBUG] allDevicePages: %#v", allDevicePages)
 	log.Printf("[MYDEBUG] err: %#v", err)
 	if err != nil {
@@ -310,16 +315,16 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData,
 		return fmt.Errorf("Unable to extract device interfaces: %s", err)
 	}
 
-	deviceInterfaces := [7]map[string]string{}
+	deviceInterfaces := [7]map[string]interface{}{}
 	// initialize
 	for index := range []int{0, 1, 2, 3, 4, 5, 6} {
-		thisDeviceInterface := map[string]string{}
+		thisDeviceInterface := map[string]interface{}{}
 		thisDeviceInterface["enable"] = "false"
 		deviceInterfaces[index] = thisDeviceInterface
 	}
 
 	for _, dev := range allDevices {
-		thisDeviceInterface := map[string]string{}
+		thisDeviceInterface := map[string]interface{}{}
 
 		index, err := strconv.Atoi(strings.Replace(dev.MSAPortID, "port", "", 1))
 		if err != nil {
@@ -332,8 +337,22 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData,
 
 		thisDeviceInterface["enable"] = "true"
 		thisDeviceInterface["ip_address"] = dev.OSIPAddress
+
+		// ipAddress := dev.OSIPAddress
+		// splitted := strings.Split(ipAddress, "/")
+
+		prefix := d.Get(fmt.Sprintf("port.%d.ip_address_prefix", index)).(int)
+		thisDeviceInterface["ip_addess_prefix"] = prefix
+		// thisDeviceInterface["ip_addess"] = splitted[0]
+		// thisDeviceInterface["ip_address_prefix"] = splitted[1]
+
 		thisDeviceInterface["network_id"] = dev.OSNetworkID
 		thisDeviceInterface["subnet_id"] = dev.OSSubnetID
+
+		mtu := d.Get(fmt.Sprintf("port.%d.mtu", index)).(string)
+		comment := d.Get(fmt.Sprintf("port.%d.comment", index)).(string)
+		thisDeviceInterface["mtu"] = mtu
+		thisDeviceInterface["comment"] = comment
 
 		deviceInterfaces[index] = thisDeviceInterface
 	}
@@ -367,6 +386,8 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1UpdateOrderAPIPart(d *schema
 
 	log.Printf("[DEBUG] Update request has successfully accepted with order: %#v", order)
 
+	log.Printf("[DEBUG] Start waiting for single firewall/utm order becomes COMPLETE ...")
+
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
@@ -395,6 +416,7 @@ func resourceSecurityNetworkBasedFirewallUTMPortsForUpdate(d *schema.ResourceDat
 	ifaces := d.Get("port").([]interface{})
 	log.Printf("[DEBUG] Retrieved port information for update: %#v", ifaces)
 	for index, iface := range ifaces {
+		log.Printf("[MYDEBUG] iface is : %#v", iface)
 		p := ports.SinglePort{}
 
 		if _, ok := iface.(map[string]interface{}); ok {
@@ -402,15 +424,26 @@ func resourceSecurityNetworkBasedFirewallUTMPortsForUpdate(d *schema.ResourceDat
 
 			if thisInterface["enable"].(string) == "true" {
 				p.EnablePort = "true"
-				p.IPAddress = thisInterface["ip_address"].(string)
+
+				ipAddress := thisInterface["ip_address"].(string)
+				prefix := thisInterface["ip_address_prefix"].(int)
+
+				log.Printf("[MYDEBUG] ipAddress is : %#v", ipAddress)
+				log.Printf("[MYDEBUG] prefix is : %#v", prefix)
+
+				p.IPAddress = fmt.Sprintf("%s/%d", ipAddress, prefix)
+				log.Printf("[MYDEBUG] p.IPAddress is : %#v", p.IPAddress)
+
 				p.NetworkID = thisInterface["network_id"].(string)
 				p.SubnetID = thisInterface["subnet_id"].(string)
-				// p.Comment = thisInterface["comment"].(string)
+				p.MTU = thisInterface["mtu"].(string)
+				p.Comment = thisInterface["comment"].(string)
+				// p.MTU = "1500"
+				// p.Comment = fmt.Sprintf("Interface %d", index)
+			} else {
+				p.EnablePort = "false"
 			}
-		} else {
-			p.EnablePort = "false"
 		}
-
 		resultPorts[index] = p
 	}
 
@@ -455,6 +488,8 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1UpdatePortalAPIPart(d *schem
 	}
 
 	log.Printf("[DEBUG] Update request has successfully accepted with process: %#v", process)
+
+	log.Printf("[DEBUG] Start waiting for single firewall/utm process becomes ENDED ...")
 
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"RUNNING"},
@@ -517,6 +552,8 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Delete(d *schema.ResourceDat
 
 	log.Printf("[DEBUG] Delete request has successfully accepted with order: %#v", order)
 
+	log.Printf("[DEBUG] Start waiting for single firewall/utm order becomes COMPLETE ...")
+
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
@@ -541,8 +578,6 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Delete(d *schema.ResourceDat
 
 func waitForSingleFirewallUTMOrderComplete(client *eclcloud.ServiceClient, soID, tenantID, locale string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-
-		log.Printf("[DEBUG] Start waiting for single firewall/utm order becomes COMPLETE ...")
 
 		opts := service_order_status.GetOpts{
 			Locale:   locale,
@@ -642,7 +677,6 @@ func gtHostForFirewallUTMSingleDeleteAsOpts(d *schema.ResourceData) [1]security.
 func waitForSingleFirewallUTMProcessComplete(client *eclcloud.ServiceClient, processID, tenantID, locale string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 
-		log.Printf("[DEBUG] Start waiting for single firewall/utm process becomes ENDED ...")
 		opts := processes.GetOpts{
 			TenantID:  tenantID,
 			UserToken: client.TokenID,
@@ -652,7 +686,7 @@ func waitForSingleFirewallUTMProcessComplete(client *eclcloud.ServiceClient, pro
 			return nil, "", err
 		}
 
-		log.Printf("[DEBUG] ECL Security Service Process Status: %+v", process)
+		log.Printf("[DEBUG] ECL Security Service Process Status: %#v", process)
 
 		// if process.Status.Status == "ENDED" {
 		// 	return process, "COMPLETE", nil

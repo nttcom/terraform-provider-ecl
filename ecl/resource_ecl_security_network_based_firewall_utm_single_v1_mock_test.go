@@ -145,20 +145,28 @@ func TestMockedAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T)
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
-					// Interface 1
+
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.network_id", "dummyNetwork1"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.subnet_id", "dummySubnet1"),
-					// Interface 4
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.mtu", "1500"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.comment", "port 0 comment"),
+
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.ip_address", "192.168.2.50"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.network_id", "dummyNetwork2"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.subnet_id", "dummySubnet2"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.mtu", "1500"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.comment", "port 3 comment"),
 				),
 			},
 		},
@@ -201,8 +209,11 @@ resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
   port {
       enable = "true"
       ip_address = "192.168.1.50"
+      ip_address_prefix = 24
       network_id = "dummyNetwork1"
       subnet_id = "dummySubnet1"
+      mtu = "1500"
+      comment = "port 0 comment"
   }
 
   port {
@@ -216,8 +227,11 @@ resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
   port {
       enable = "true"
       ip_address = "192.168.2.50"
+      ip_address_prefix = 24
       network_id = "dummyNetwork2"
       subnet_id = "dummySubnet2"
+      mtu = "1500"
+      comment = "port 3 comment"
   }
 
   port {
