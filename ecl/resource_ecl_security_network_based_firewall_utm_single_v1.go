@@ -338,13 +338,8 @@ func resourceSecurityNetworkBasedFirewallUTMSingleV1Read(d *schema.ResourceData,
 		thisDeviceInterface["enable"] = "true"
 		thisDeviceInterface["ip_address"] = dev.OSIPAddress
 
-		// ipAddress := dev.OSIPAddress
-		// splitted := strings.Split(ipAddress, "/")
-
 		prefix := d.Get(fmt.Sprintf("port.%d.ip_address_prefix", index)).(int)
 		thisDeviceInterface["ip_addess_prefix"] = prefix
-		// thisDeviceInterface["ip_addess"] = splitted[0]
-		// thisDeviceInterface["ip_address_prefix"] = splitted[1]
 
 		thisDeviceInterface["network_id"] = dev.OSNetworkID
 		thisDeviceInterface["subnet_id"] = dev.OSSubnetID

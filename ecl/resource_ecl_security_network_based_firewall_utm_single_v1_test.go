@@ -91,6 +91,7 @@ func TestAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T) {
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_2", &n2),
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2", &sn2),
 
+					// port 0
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr(
@@ -102,6 +103,14 @@ func TestAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.comment", "port 0 comment"),
 
+					// port 1
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.1.enable", "false"),
+					// port 2
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.2.enable", "false"),
+
+					// port 3
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.ip_address", "192.168.2.50"),
 					resource.TestCheckResourceAttrPtr(
@@ -112,6 +121,55 @@ func TestAccSecurityV1NetworkBasedFirewallUTMUpdateInterface(t *testing.T) {
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.mtu", "1500"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.comment", "port 3 comment"),
+
+					// port 4
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.4.enable", "false"),
+					// port 5
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.5.enable", "false"),
+					// port 6
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.6.enable", "false"),
+				),
+			},
+
+			resource.TestStep{
+				Config: testAccSecurityV1NetworkBasedFirewallUTMUpdateInterface2,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedFirewallUTMExists(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", &sd),
+
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n1),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn1),
+
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_2", &n2),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2", &sn2),
+
+					// port 0
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.0.enable", "false"),
+
+					// port 1
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.1.enable", "false"),
+					// port 2
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.2.enable", "false"),
+
+					// port 3
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.3.enable", "false"),
+
+					// port 4
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.4.enable", "false"),
+					// port 5
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.5.enable", "false"),
+					// port 6
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_firewall_utm_single_v1.device_1", "port.6.enable", "false"),
 				),
 			},
 		},
@@ -267,6 +325,50 @@ resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
       subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
       mtu = "1500"
       comment = "port 3 comment"
+  }
+
+  port {
+    enable = "false"
+  }
+  port {
+    enable = "false"
+  }
+  port {
+    enable = "false"
+  }
+
+}
+`,
+	testAccSecurityV1NetworkBasedFirewallUTMUpdateInterfaceNetworkSubnet1,
+	testAccSecurityV1NetworkBasedFirewallUTMUpdateInterfaceNetworkSubnet2,
+	OS_TENANT_ID,
+)
+
+var testAccSecurityV1NetworkBasedFirewallUTMUpdateInterface2 = fmt.Sprintf(`
+%s
+%s
+
+resource "ecl_security_network_based_firewall_utm_single_v1" "device_1" {
+	tenant_id = "%s"
+	locale = "ja"
+	operating_mode = "FW"
+	license_kind = "02"
+	az_group = "zone1-groupb"
+
+  port {
+    enable = "false"
+  }
+
+  port {
+    enable = "false"
+  }
+
+  port {
+    enable = "false"
+  }
+  
+  port {
+    enable = "false"
   }
 
   port {
