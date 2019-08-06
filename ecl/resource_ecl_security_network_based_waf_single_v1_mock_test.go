@@ -53,7 +53,7 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV1NetworkBasedDeviceWAFSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV1NetworkBasedWAFSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
 				Config: testMockedAccSecurityV1NetworkBasedWAFSingleBasic,
@@ -123,7 +123,7 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV1NetworkBasedDeviceWAFSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV1NetworkBasedWAFSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
 				Config: testMockedAccSecurityV1NetworkBasedWAFSingleBasic,
