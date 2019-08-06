@@ -25,7 +25,6 @@ func singleDeviceSchema() map[string]*schema.Schema {
 		"operating_mode": &schema.Schema{
 			Type:     schema.TypeString,
 			Required: true,
-			// ForceNew: true,
 			ValidateFunc: validation.StringInSlice([]string{
 				"FW", "UTM", "WAF",
 			}, false),
@@ -42,6 +41,7 @@ func singleDeviceSchema() map[string]*schema.Schema {
 		"az_group": &schema.Schema{
 			Type:     schema.TypeString,
 			Required: true,
+			ForceNew: true,
 		},
 
 		"port": &schema.Schema{
@@ -53,8 +53,7 @@ func singleDeviceSchema() map[string]*schema.Schema {
 				Schema: map[string]*schema.Schema{
 					"enable": &schema.Schema{
 						Type:     schema.TypeString,
-						Optional: true,
-						Computed: true,
+						Required: true,
 					},
 					"ip_address": &schema.Schema{
 						Type:     schema.TypeString,
@@ -64,7 +63,6 @@ func singleDeviceSchema() map[string]*schema.Schema {
 					"ip_address_prefix": &schema.Schema{
 						Type:     schema.TypeInt,
 						Optional: true,
-						// Computed: true,
 					},
 					"network_id": &schema.Schema{
 						Type:     schema.TypeString,
@@ -79,12 +77,10 @@ func singleDeviceSchema() map[string]*schema.Schema {
 					"mtu": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
-						// Computed: true,
 					},
 					"comment": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
-						// Computed: true,
 					},
 				},
 			},
@@ -112,8 +108,7 @@ func singleWAFSchema() map[string]*schema.Schema {
 		"operating_mode": &schema.Schema{
 			Type:     schema.TypeString,
 			Optional: true,
-			// ForceNew: true,
-			Default: "WAF",
+			Default:  "WAF",
 			ValidateFunc: validation.StringInSlice([]string{
 				"WAF",
 			}, false),
@@ -130,6 +125,7 @@ func singleWAFSchema() map[string]*schema.Schema {
 		"az_group": &schema.Schema{
 			Type:     schema.TypeString,
 			Required: true,
+			ForceNew: true,
 		},
 
 		"port": &schema.Schema{
@@ -141,8 +137,7 @@ func singleWAFSchema() map[string]*schema.Schema {
 				Schema: map[string]*schema.Schema{
 					"enable": &schema.Schema{
 						Type:     schema.TypeString,
-						Optional: true,
-						Computed: true,
+						Required: true,
 					},
 					"ip_address": &schema.Schema{
 						Type:     schema.TypeString,
@@ -152,7 +147,6 @@ func singleWAFSchema() map[string]*schema.Schema {
 					"ip_address_prefix": &schema.Schema{
 						Type:     schema.TypeInt,
 						Optional: true,
-						// Computed: true,
 					},
 					"network_id": &schema.Schema{
 						Type:     schema.TypeString,
@@ -167,12 +161,10 @@ func singleWAFSchema() map[string]*schema.Schema {
 					"mtu": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
-						// Computed: true,
 					},
 					"comment": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
-						// Computed: true,
 					},
 				},
 			},
