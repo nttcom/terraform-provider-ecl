@@ -237,9 +237,16 @@ func resourceSecurityNetworkBasedDeviceSingleV1Read(d *schema.ResourceData, meta
 
 	operatingMode := device.Cell[3]
 	licenseKind := device.Cell[4]
-	azGroup := device.Cell[6]
+
+	var azGroup string
+	if operatingMode == "WAF" {
+		azGroup = device.Cell[5]
+	} else {
+		azGroup = device.Cell[6]
+	}
 
 	d.Set("operating_mode", operatingMode)
+
 	d.Set("license_kind", licenseKind)
 	d.Set("az_group", azGroup)
 
@@ -422,7 +429,7 @@ func resourceSecurityNetworkBasedDeviceSingleV1UpdatePortalAPIPart(d *schema.Res
 	deviceType := getTypeOfSingleDevice(d)
 	process, err := ports.Update(
 		client,
-		deviceType,
+		strings.ToLower(deviceType),
 		d.Id(),
 		updateOpts,
 		updateQueryOpts).Extract()
