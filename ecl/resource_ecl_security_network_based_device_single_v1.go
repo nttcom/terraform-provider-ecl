@@ -23,7 +23,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
 )
 
-const securityDeviceSinglePollIntervalSec = 30
+const securityDeviceSinglePollIntervalSec = 1
 const securityDeviceSingleCreatePollInterval = securityDeviceSinglePollIntervalSec * time.Second
 const securityDeviceSingleUpdatePollInterval = securityDeviceSinglePollIntervalSec * time.Second
 const securityDeviceSingleDeletePollInterval = securityDeviceSinglePollIntervalSec * time.Second
@@ -276,14 +276,26 @@ func resourceSecurityNetworkBasedDeviceSingleV1Read(d *schema.ResourceData, meta
 		return fmt.Errorf("Unable to extract device interfaces: %s", err)
 	}
 
-	deviceInterfaces := [7]map[string]interface{}{}
 	// initialize
-	for index := range []int{0, 1, 2, 3, 4, 5, 6} {
-		thisDeviceInterface := map[string]interface{}{}
-		thisDeviceInterface["enable"] = "false"
-		deviceInterfaces[index] = thisDeviceInterface
+
+	deviceInterfaces := []map[string]interface{}{}
+	var loopCounter []int
+
+	// deviceType := getTypeOfSingleDevice(d)
+	if deviceType == "WAF" {
+		loopCounter = []int{0}
+	} else {
+		loopCounter = []int{0, 1, 2, 3, 4, 5, 6}
 	}
 
+	for range loopCounter {
+		thisDeviceInterface := map[string]interface{}{}
+		thisDeviceInterface["enable"] = "false"
+		deviceInterfaces = append(deviceInterfaces, thisDeviceInterface)
+		// deviceInterfaces[index] = thisDeviceInterface
+	}
+
+	log.Printf("[MYDEBUG] deviceInterfaces: %#v", deviceInterfaces)
 	for _, dev := range allDevices {
 		thisDeviceInterface := map[string]interface{}{}
 
@@ -291,7 +303,15 @@ func resourceSecurityNetworkBasedDeviceSingleV1Read(d *schema.ResourceData, meta
 		if err != nil {
 			return fmt.Errorf("Error parsing device interface port number: %s", err)
 		}
-		index -= 4
+
+		if deviceType == "WAF" {
+			// map port 2(actual) as 0 to handle by list index in WAF
+			index -= 2
+		} else {
+			// map port 4 to 10 (actual) as 0 to 6 to handle by list index in FW/UTM
+			index -= 4
+		}
+
 		if index < 0 {
 			return fmt.Errorf("Wrong index number is returned from device interface list API. %s", err)
 		}
@@ -369,11 +389,11 @@ func resourceSecurityNetworkBasedDeviceSingleV1UpdateOrderAPIPart(d *schema.Reso
 }
 
 func resourceSecurityNetworkBasedSingleDevicePortsForUpdate(d *schema.ResourceData) (ports.UpdateOpts, error) {
-	resultPorts := [7]ports.SinglePort{}
+	resultPorts := []ports.SinglePort{}
 
 	ifaces := d.Get("port").([]interface{})
 	log.Printf("[DEBUG] Retrieved port information for update: %#v", ifaces)
-	for index, iface := range ifaces {
+	for _, iface := range ifaces {
 		p := ports.SinglePort{}
 
 		if _, ok := iface.(map[string]interface{}); ok {
@@ -395,7 +415,7 @@ func resourceSecurityNetworkBasedSingleDevicePortsForUpdate(d *schema.ResourceDa
 				p.EnablePort = "false"
 			}
 		}
-		resultPorts[index] = p
+		resultPorts = append(resultPorts, p)
 	}
 
 	log.Printf("[DEBUG] Port update parameters: %#v", resultPorts)

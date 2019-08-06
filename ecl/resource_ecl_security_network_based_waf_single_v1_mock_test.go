@@ -149,16 +149,16 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "port.0.comment", "port 0 comment"),
 
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.ip_address", "192.168.2.50"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.network_id", "dummyNetwork2"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.subnet_id", "dummySubnet2"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.mtu", "1500"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.comment", "port 3 comment"),
+					// resource.TestCheckResourceAttr(
+					// 	"ecl_security_network_based_waf_single_v1.waf_1", "port.3.ip_address", "192.168.2.50"),
+					// resource.TestCheckResourceAttr(
+					// 	"ecl_security_network_based_waf_single_v1.waf_1", "port.3.network_id", "dummyNetwork2"),
+					// resource.TestCheckResourceAttr(
+					// 	"ecl_security_network_based_waf_single_v1.waf_1", "port.3.subnet_id", "dummySubnet2"),
+					// resource.TestCheckResourceAttr(
+					// 	"ecl_security_network_based_waf_single_v1.waf_1", "port.3.mtu", "1500"),
+					// resource.TestCheckResourceAttr(
+					// 	"ecl_security_network_based_waf_single_v1.waf_1", "port.3.comment", "port 3 comment"),
 				),
 			},
 		},
@@ -204,35 +204,6 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
       mtu = "1500"
       comment = "port 0 comment"
   }
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-  
-  port {
-      enable = "true"
-      ip_address = "192.168.2.50"
-      ip_address_prefix = 24
-      network_id = "dummyNetwork2"
-      subnet_id = "dummySubnet2"
-      mtu = "1500"
-      comment = "port 3 comment"
-  }
-
-  port {
-    enable = "false"
-  }
-  port {
-    enable = "false"
-  }
-  port {
-    enable = "false"
-  }
-
 }
 `,
 	OS_TENANT_ID,
@@ -376,23 +347,13 @@ response:
           "device_interfaces": [
             {
               "os_ip_address": "192.168.1.50",
-              "msa_port_id": "port4",
-              "os_port_name": "port4-CES11892",
+              "msa_port_id": "port2",
+              "os_port_name": "port2-CES11892",
               "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
               "os_network_id": "dummyNetwork1",
               "os_port_status": "ACTIVE",
               "os_mac_address": "fa:16:3e:05:ff:66",
               "os_subnet_id": "dummySubnet1"
-            },
-            {
-              "os_ip_address": "192.168.2.50",
-              "msa_port_id": "port7",
-              "os_port_name": "port7-CES11892",
-              "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
-              "os_network_id": "dummyNetwork2",
-              "os_port_status": "ACTIVE",
-              "os_mac_address": "fa:16:3e:05:ff:67",
-              "os_subnet_id": "dummySubnet2"
             }
           ]
         }
