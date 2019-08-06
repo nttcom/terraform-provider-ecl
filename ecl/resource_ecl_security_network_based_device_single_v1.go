@@ -23,7 +23,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
 )
 
-const securityDeviceSinglePollIntervalSec = 1
+const securityDeviceSinglePollIntervalSec = 30
 const securityDeviceSingleCreatePollInterval = securityDeviceSinglePollIntervalSec * time.Second
 const securityDeviceSingleUpdatePollInterval = securityDeviceSinglePollIntervalSec * time.Second
 const securityDeviceSingleDeletePollInterval = securityDeviceSinglePollIntervalSec * time.Second

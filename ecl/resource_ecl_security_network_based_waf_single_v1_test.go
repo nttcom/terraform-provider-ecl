@@ -83,7 +83,6 @@ func TestAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_2", &n2),
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2", &sn2),
 
-					// port 0
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "port.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr(
@@ -94,35 +93,6 @@ func TestAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
 						"ecl_security_network_based_waf_single_v1.waf_1", "port.0.mtu", "1500"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "port.0.comment", "port 0 comment"),
-
-					// port 1
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.1.enable", "false"),
-					// port 2
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.2.enable", "false"),
-
-					// port 3
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.ip_address", "192.168.2.50"),
-					resource.TestCheckResourceAttrPtr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.network_id", &n2.ID),
-					resource.TestCheckResourceAttrPtr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.subnet_id", &sn2.ID),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.mtu", "1500"),
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.3.comment", "port 3 comment"),
-
-					// port 4
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.4.enable", "false"),
-					// port 5
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.5.enable", "false"),
-					// port 6
-					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "port.6.enable", "false"),
 				),
 			},
 
@@ -288,44 +258,15 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	license_kind = "02"
 	az_group = "zone1-groupb"
 
-  port {
-      enable = "true"
-      ip_address = "192.168.1.50"
-      ip_address_prefix = 24
-      network_id = "${ecl_network_network_v2.network_1.id}"
-      subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
-      mtu = "1500"
-      comment = "port 0 comment"
-  }
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-  
-  port {
-      enable = "true"
-      ip_address = "192.168.2.50"
-      ip_address_prefix = 24
-      network_id = "${ecl_network_network_v2.network_2.id}"
-      subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
-      mtu = "1500"
-      comment = "port 3 comment"
-  }
-
-  port {
-    enable = "false"
-  }
-  port {
-    enable = "false"
-  }
-  port {
-    enable = "false"
-  }
-
+    port {
+        enable = "true"
+        ip_address = "192.168.1.50"
+        ip_address_prefix = 24
+        network_id = "${ecl_network_network_v2.network_1.id}"
+        subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
+        mtu = "1500"
+        comment = "port 0 comment"
+    }
 }
 `,
 	testAccSecurityV1NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1,
@@ -338,37 +279,14 @@ var testAccSecurityV1NetworkBasedWAFSingleUpdateInterface2 = fmt.Sprintf(`
 %s
 
 resource "ecl_security_network_based_waf_single_v1" "waf_1" {
-	tenant_id = "%s"
-	locale = "ja"
-	license_kind = "02"
-	az_group = "zone1-groupb"
+    tenant_id = "%s"
+    locale = "ja"
+    license_kind = "02"
+    az_group = "zone1-groupb"
 
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-  
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-  port {
-    enable = "false"
-  }
-  port {
-    enable = "false"
-  }
-
+    port {
+        enable = "false"
+    }
 }
 `,
 	testAccSecurityV1NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1,
