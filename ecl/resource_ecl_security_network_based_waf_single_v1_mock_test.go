@@ -61,17 +61,13 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 					testAccCheckSecurityV1NetworkBasedWAFSingleExists(
 						"ecl_security_network_based_waf_single_v1.waf_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"locale", "ja"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"operating_mode", "WAF"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"license_kind", "02"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"az_group", "zone1-groupb"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", "zone1-groupb"),
 				),
 			},
 			resource.TestStep{
@@ -80,17 +76,13 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 					testAccCheckSecurityV1NetworkBasedWAFSingleExists(
 						"ecl_security_network_based_waf_single_v1.waf_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"locale", "en"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "locale", "en"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"operating_mode", "WAF"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"license_kind", "08"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"az_group", "zone1-groupb"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", "zone1-groupb"),
 				),
 			},
 		},
@@ -259,7 +251,7 @@ response:
             "records": 1,
             "rows": [{
             	"id": 1,
-            	"cell": ["false", "1", "CES11810", "WAF", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+            	"cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
             }]
         }
 expectedStatus:
@@ -281,11 +273,11 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "WAF", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "WAF", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "WAF", "02", "zone1-groupb", "jp4_zone1"]
                 }
             ]
         }
@@ -421,7 +413,7 @@ response:
             "records": 1,
             "rows": [{
             	"id": 1,
-            	"cell": ["false", "1", "CES11810", "WAF", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+            	"cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
             }]
         }
 expectedStatus:
@@ -611,11 +603,11 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "WAF", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "WAF", "08", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "WAF", "08", "zone1-groupb", "jp4_zone1"]
                 }
             ]
         }

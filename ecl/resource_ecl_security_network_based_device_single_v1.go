@@ -553,7 +553,7 @@ func waitForSingleDeviceOrderComplete(client *eclcloud.ServiceClient, soID, tena
 }
 
 func getSingleDeviceByHostName(client *eclcloud.ServiceClient, deviceType, hostName string) (security.SingleDevice, error) {
-	log.Printf("[DEBUG] Start getting hostname ...")
+	log.Printf("[DEBUG] Start getting %s by HostName %s ...", deviceType, hostName)
 	var sd = security.SingleDevice{}
 
 	listOpts := security.ListOpts{
@@ -584,6 +584,7 @@ func getSingleDeviceByHostName(client *eclcloud.ServiceClient, deviceType, hostN
 	if !found {
 		return sd, fmt.Errorf("[DEBUG] Specified single device %s not found", hostName)
 	}
+	log.Printf("[DEBUG] Host has found as: %#v", thisDevice)
 	return thisDevice, nil
 }
 

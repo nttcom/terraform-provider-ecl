@@ -24,96 +24,33 @@ func TestAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 					testAccCheckSecurityV1NetworkBasedWAFSingleExists(
 						"ecl_security_network_based_waf_single_v1.waf_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"locale", "ja"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"operating_mode", "WAF"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"license_kind", "02"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1",
-						"az_group", "zone1-groupb"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", "zone1-groupb"),
 				),
 			},
 			resource.TestStep{
 				Config: testAccSecurityV1NetworkBasedWAFSingleUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityV1NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v1.device_1", &sd),
+						"ecl_security_network_based_waf_single_v1.waf_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.device_1",
-						"locale", "en"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "locale", "en"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.device_1",
-						"operating_mode", "WAF"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.device_1",
-						"license_kind", "08"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.device_1",
-						"az_group", "zone1-groupb"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", "zone1-groupb"),
 				),
 			},
 		},
 	})
 }
-
-// func testAccCheckSecurityV1NetworkBasedWAFSingleExists(n string, sd *security.SingleDevice) resource.TestCheckFunc {
-// 	return func(s *terraform.State) error {
-// 		rs, ok := s.RootModule().Resources[n]
-// 		if !ok {
-// 			return fmt.Errorf("Not found: %s", n)
-// 		}
-
-// 		if rs.Primary.ID == "" {
-// 			return fmt.Errorf("No ID is set")
-// 		}
-
-// 		config := testAccProvider.Meta().(*Config)
-// 		client, err := config.securityOrderV1Client(OS_REGION_NAME)
-// 		if err != nil {
-// 			return fmt.Errorf("Error creating ECL security client: %s", err)
-// 		}
-
-// 		found, err := getSingleDeviceByHostName(client, rs.Primary.ID)
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		if found.Cell[2] != rs.Primary.ID {
-// 			return fmt.Errorf("Security single device not found")
-// 		}
-
-// 		*sd = found
-
-// 		return nil
-// 	}
-// }
-
-// func testAccCheckSecurityV1NetworkBasedWAFSingleDestroy(s *terraform.State) error {
-// 	config := testAccProvider.Meta().(*Config)
-// 	client, err := config.securityOrderV1Client(OS_REGION_NAME)
-// 	if err != nil {
-// 		return fmt.Errorf("Error creating ECL network client: %s", err)
-// 	}
-
-// 	for _, rs := range s.RootModule().Resources {
-// 		if rs.Type != "ecl_security_network_based_waf_single_v1" {
-// 			continue
-// 		}
-
-// 		_, err := getSingleDeviceByHostName(client, rs.Primary.ID)
-
-// 		if err == nil {
-// 			return fmt.Errorf("Common Function Gateway still exists")
-// 		}
-
-// 	}
-
-// 	return nil
-// }
 
 func testAccCheckSecurityV1NetworkBasedWAFSingleExists(n string, sd *security.SingleDevice) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
