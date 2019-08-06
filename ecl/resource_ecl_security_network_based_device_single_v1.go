@@ -50,8 +50,8 @@ func resourceSecurityNetworkBasedDeviceSingleV1() *schema.Resource {
 }
 
 func getTypeOfSingleDevice(d *schema.ResourceData) string {
-	operating_mode := d.Get("operating_mode").(string)
-	switch operating_mode {
+	operatingMode := d.Get("operating_mode").(string)
+	switch operatingMode {
 	case "WAF":
 		return "WAF"
 	default:
@@ -78,7 +78,7 @@ func resourceSecurityNetworkBasedDeviceSingleV1Create(d *schema.ResourceData, me
 
 	allPagesBefore, err := security.List(client, deviceType, listOpts).AllPages()
 	if err != nil {
-		return fmt.Errorf("Unable to list of devices, before creating new single device: %s", err)
+		return fmt.Errorf("Unable to get page of devices before creation: %s", err)
 	}
 	var allDevicesBefore []security.SingleDevice
 
@@ -124,7 +124,7 @@ func resourceSecurityNetworkBasedDeviceSingleV1Create(d *schema.ResourceData, me
 
 	allPagesAfter, err := security.List(client, deviceType, listOpts).AllPages()
 	if err != nil {
-		return fmt.Errorf("Unable to list after creating single device: %s", err)
+		return fmt.Errorf("Unable to get page of devices after creation: %s", err)
 	}
 	var allDevicesAfter []security.SingleDevice
 
@@ -201,7 +201,7 @@ func getUUIDFromServerHostName(client *eclcloud.ServiceClient, hostName string) 
 
 	err = devices.ExtractDevicesInto(allPages, &allDevices)
 	if err != nil {
-		return "", fmt.Errorf("Unable to extract result of list single device from portal api: %s", err)
+		return "", fmt.Errorf("Unable to extract list of single device by portal api: %s", err)
 	}
 
 	for _, device := range allDevices {
@@ -260,8 +260,6 @@ func resourceSecurityNetworkBasedDeviceSingleV1Read(d *schema.ResourceData, meta
 	}
 
 	allDevicePages, err := device_interfaces.List(pClient, hostUUID, listOpts).AllPages()
-	log.Printf("[MYDEBUG] allDevicePages: %#v", allDevicePages)
-	log.Printf("[MYDEBUG] err: %#v", err)
 	if err != nil {
 		return fmt.Errorf("Unable to list interfaces: %s", err)
 	}
@@ -369,7 +367,6 @@ func resourceSecurityNetworkBasedSingleDevicePortsForUpdate(d *schema.ResourceDa
 	ifaces := d.Get("port").([]interface{})
 	log.Printf("[DEBUG] Retrieved port information for update: %#v", ifaces)
 	for index, iface := range ifaces {
-		log.Printf("[MYDEBUG] iface is : %#v", iface)
 		p := ports.SinglePort{}
 
 		if _, ok := iface.(map[string]interface{}); ok {
@@ -381,18 +378,12 @@ func resourceSecurityNetworkBasedSingleDevicePortsForUpdate(d *schema.ResourceDa
 				ipAddress := thisInterface["ip_address"].(string)
 				prefix := thisInterface["ip_address_prefix"].(int)
 
-				log.Printf("[MYDEBUG] ipAddress is : %#v", ipAddress)
-				log.Printf("[MYDEBUG] prefix is : %#v", prefix)
-
 				p.IPAddress = fmt.Sprintf("%s/%d", ipAddress, prefix)
-				log.Printf("[MYDEBUG] p.IPAddress is : %#v", p.IPAddress)
 
 				p.NetworkID = thisInterface["network_id"].(string)
 				p.SubnetID = thisInterface["subnet_id"].(string)
 				p.MTU = thisInterface["mtu"].(string)
 				p.Comment = thisInterface["comment"].(string)
-				// p.MTU = "1500"
-				// p.Comment = fmt.Sprintf("Interface %d", index)
 			} else {
 				p.EnablePort = "false"
 			}
@@ -428,20 +419,13 @@ func resourceSecurityNetworkBasedDeviceSingleV1UpdatePortalAPIPart(d *schema.Res
 	log.Printf("[DEBUG] Update Options: %#v", updateOpts)
 	log.Printf("[DEBUG] Update Query Options: %#v", updateQueryOpts)
 
-	deviceType := "utm"
-	if d.Get("operating_mode").(string) == "WAF" {
-		deviceType = "waf"
-	}
-
+	deviceType := getTypeOfSingleDevice(d)
 	process, err := ports.Update(
 		client,
-		// "utm",
 		deviceType,
 		d.Id(),
 		updateOpts,
 		updateQueryOpts).Extract()
-	log.Printf("[MYDEBUG] process: %#v", process)
-	log.Printf("[MYDEBUG] error: %#v", err)
 
 	if err != nil {
 		return fmt.Errorf("Error updating ECL security single device port: %s", err)
@@ -649,10 +633,6 @@ func waitForSingleDeviceProcessComplete(client *eclcloud.ServiceClient, processI
 		}
 
 		log.Printf("[DEBUG] ECL Security Service Process Status: %#v", process)
-
-		// if process.Status.Status == "ENDED" {
-		// 	return process, "COMPLETE", nil
-		// }
 
 		return process, process.Status.Status, nil
 	}

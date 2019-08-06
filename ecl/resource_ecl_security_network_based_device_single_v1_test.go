@@ -223,7 +223,7 @@ func testAccCheckSecurityV1NetworkBasedDeviceSingleDestroy(s *terraform.State) e
 		_, err := getSingleDeviceByHostName(client, "UTM", rs.Primary.ID)
 
 		if err == nil {
-			return fmt.Errorf("Common Function Gateway still exists")
+			return fmt.Errorf("Security single device still exists")
 		}
 
 	}

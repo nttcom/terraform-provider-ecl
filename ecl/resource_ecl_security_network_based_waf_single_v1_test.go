@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/terraform"
 
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_single"
 )
@@ -15,46 +16,46 @@ func TestAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV1NetworkBasedDeviceSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV1NetworkBasedDeviceWAFSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
 				Config: testAccSecurityV1NetworkBasedWAFSingleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV1NetworkBasedDeviceSingleExists(
+					testAccCheckSecurityV1NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v1.waf_1", &sd),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_waf_single_v1.waf_1",
+						"locale", "ja"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_waf_single_v1.waf_1",
+						"operating_mode", "WAF"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_waf_single_v1.waf_1",
+						"license_kind", "02"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_waf_single_v1.waf_1",
+						"az_group", "zone1-groupb"),
+				),
+			},
+			resource.TestStep{
+				Config: testAccSecurityV1NetworkBasedWAFSingleUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedWAFSingleExists(
 						"ecl_security_network_based_waf_single_v1.device_1", &sd),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.device_1",
-						"locale", "ja"),
+						"locale", "en"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.device_1",
-						"operating_mode", "FW"),
+						"operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.device_1",
-						"license_kind", "02"),
+						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.device_1",
 						"az_group", "zone1-groupb"),
 				),
 			},
-			// resource.TestStep{
-			// 	Config: testAccSecurityV1NetworkBasedWAFSingleUpdate,
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		testAccCheckSecurityV1NetworkBasedWAFSingleExists(
-			// 			"ecl_security_network_based_waf_single_v1.device_1", &sd),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.device_1",
-			// 			"locale", "en"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.device_1",
-			// 			"operating_mode", "UTM"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.device_1",
-			// 			"license_kind", "08"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.device_1",
-			// 			"az_group", "zone1-groupb"),
-			// 	),
-			// },
 		},
 	})
 }
@@ -113,6 +114,61 @@ func TestAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 
 // 	return nil
 // }
+
+func testAccCheckSecurityV1NetworkBasedWAFSingleExists(n string, sd *security.SingleDevice) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("Not found: %s", n)
+		}
+
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("No ID is set")
+		}
+
+		config := testAccProvider.Meta().(*Config)
+		client, err := config.securityOrderV1Client(OS_REGION_NAME)
+		if err != nil {
+			return fmt.Errorf("Error creating ECL security client: %s", err)
+		}
+
+		found, err := getSingleDeviceByHostName(client, "WAF", rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+
+		if found.Cell[2] != rs.Primary.ID {
+			return fmt.Errorf("Security single WAF not found")
+		}
+
+		*sd = found
+
+		return nil
+	}
+}
+
+func testAccCheckSecurityV1NetworkBasedDeviceWAFSingleDestroy(s *terraform.State) error {
+	config := testAccProvider.Meta().(*Config)
+	client, err := config.securityOrderV1Client(OS_REGION_NAME)
+	if err != nil {
+		return fmt.Errorf("Error creating ECL network client: %s", err)
+	}
+
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "ecl_security_network_based_waf_single_v1" {
+			continue
+		}
+
+		_, err := getSingleDeviceByHostName(client, "WAF", rs.Primary.ID)
+
+		if err == nil {
+			return fmt.Errorf("Security single WAF still exists")
+		}
+
+	}
+
+	return nil
+}
 
 var testAccSecurityV1NetworkBasedWAFSingleBasic = fmt.Sprintf(`
 resource "ecl_security_network_based_waf_single_v1" "waf_1" {
