@@ -25,8 +25,9 @@ resource "ecl_security_network_based_device_waf_v1" "waf_1" {
 
 ### Attach port 4 and 7 with existing network
 
-Note: port 4 and 7 is regarded as port 0 and 4,
-  by using actual index number in terraform configurations.
+Note: WAF only has one port as port-2.
+  This port is regarded as port-0(means 1st port) 
+  in the configuration of Terraform.
 
 ```hcl
 resource "ecl_security_network_based_device_waf_v1" "waf_1" {
@@ -43,36 +44,6 @@ resource "ecl_security_network_based_device_waf_v1" "waf_1" {
     subnet_id = "0739738b-8afe-4414-a328-4afaf14156d0"
     mtu = "1500"
     comment = "port 0 comment"
-  }
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-  
-  port {
-    enable = "true"
-    ip_address = "192.168.2.50"
-    ip_address_prefix = 24
-    network_id = "a29348a4-2887-41c2-ae1e-46ddffd3f501"
-    subnet_id = "0739738b-8afe-4414-a328-4afaf14156d1"
-    mtu = "1500"
-    comment = "port 3 comment"
-  }
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
   }
 }
 ```

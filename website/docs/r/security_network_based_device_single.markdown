@@ -26,8 +26,9 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 
 ### Attach port 4 and 7 with existing network
 
-Note: port 4 and 7 is regarded as port 0 and 4,
-  by using actual index number in terraform configurations.
+Note: You can use port 4 to 7 on this device.
+  Those ports are regarded as port 0 and 4,
+  by using actual index number in Terraform configurations.
 
 ```hcl
 resource "ecl_security_network_based_device_single_v1" "device_1" {

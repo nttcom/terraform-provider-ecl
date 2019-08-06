@@ -132,7 +132,7 @@ func singleWAFSchema() map[string]*schema.Schema {
 			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
-			MaxItems: 7,
+			MaxItems: 1,
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"enable": &schema.Schema{

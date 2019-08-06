@@ -96,44 +96,22 @@ func TestAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
 				),
 			},
 
-			// resource.TestStep{
-			// 	Config: testAccSecurityV1NetworkBasedWAFSingleUpdateInterface2,
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		testAccCheckSecurityV1NetworkBasedWAFSingleExists(
-			// 			"ecl_security_network_based_waf_single_v1.waf_1", &sd),
+			resource.TestStep{
+				Config: testAccSecurityV1NetworkBasedWAFSingleUpdateInterface2,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v1.waf_1", &sd),
 
-			// 		testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n1),
-			// 		testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn1),
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n1),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn1),
 
-			// 		testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_2", &n2),
-			// 		testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2", &sn2),
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_2", &n2),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2", &sn2),
 
-			// 		// port 0
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.waf_1", "port.0.enable", "false"),
-
-			// 		// port 1
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.waf_1", "port.1.enable", "false"),
-			// 		// port 2
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.waf_1", "port.2.enable", "false"),
-
-			// 		// port 3
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.waf_1", "port.3.enable", "false"),
-
-			// 		// port 4
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.waf_1", "port.4.enable", "false"),
-			// 		// port 5
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.waf_1", "port.5.enable", "false"),
-			// 		// port 6
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_waf_single_v1.waf_1", "port.6.enable", "false"),
-			// 	),
-			// },
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_waf_single_v1.waf_1", "port.0.enable", "false"),
+				),
+			},
 		},
 	})
 }
