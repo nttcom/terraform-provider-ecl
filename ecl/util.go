@@ -11,7 +11,7 @@ import (
 
 	"github.com/nttcom/eclcloud"
 
-	"github.com/Unknwon/com"
+	"github.com/unknwon/com"
 	"github.com/hashicorp/terraform/flatmap"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
