@@ -12,10 +12,10 @@ Manages a V1 Network Based WAF(Single) resource within Enterprise Cloud.
 
 ## Example Usage
 
-### Basic Instance
+### Basic WAF
 
 ```hcl
-resource "ecl_security_network_based_device_waf_v1" "waf_1" {
+resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
 	locale = "ja"
 	license_kind = "02"
@@ -23,14 +23,14 @@ resource "ecl_security_network_based_device_waf_v1" "waf_1" {
 }
 ```
 
-### Attach port 4 and 7 with existing network
+### Attach port 2 with existing network
 
 Note: WAF only has one port as port-2.
-  This port is regarded as port-0(means 1st port) 
+  This port is regarded as port-0 which means 1st port
   in the configuration of Terraform.
 
 ```hcl
-resource "ecl_security_network_based_device_waf_v1" "waf_1" {
+resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
 	locale = "ja"
 	license_kind = "02"
@@ -47,41 +47,15 @@ resource "ecl_security_network_based_device_waf_v1" "waf_1" {
   }
 }
 ```
-### Detach all port from network
 
-Note: port 4 and 7 is regarded as port 0 and 4,
-  by using actual index number in terraform configurations.
+### Detach port 2 from network
 
 ```hcl
-resource "ecl_security_network_based_device_waf_v1" "waf_1" {
+resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
 	locale = "ja"
 	license_kind = "02"
 	az_group = "zone1-groupb"
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-  
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
-
-  port {
-    enable = "false"
-  }
 
   port {
     enable = "false"

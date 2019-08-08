@@ -42,8 +42,8 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 
 ### Attach port 4 and 7 with existing network
 
-Note: You can use port 4 to 7 on this device.
-  Those ports are regarded as port 0 and 4,
+Note: You can use port from 4 to 7 on this device.
+  Those ports are regarded as port from 0 to 6,
   by using actual index number in Terraform configurations.
 
 ```hcl
@@ -95,10 +95,8 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
   }
 }
 ```
-### Detach all port from network
 
-Note: port 4 and 7 is regarded as port 0 and 4,
-  by using actual index number in terraform configurations.
+### Detach all port from network
 
 ```hcl
 resource "ecl_security_network_based_device_single_v1" "device_1" {
@@ -162,7 +160,7 @@ The `port` block supports:
 
 * `ip_address` - (Required in case enabling the port) IP Address of the port.
 
-* `ip_address_prefix` - (Required in case enabling the port) IP Address prefix of the port
+* `ip_address_prefix` - (Required in case enabling the port) IP Address prefix of the port.
 
 * `network_id` - (Required in case enabling the port) Network ID to which the port is associated.
 
