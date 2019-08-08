@@ -1,7 +1,5 @@
 module github.com/nttcom/terraform-provider-ecl
 
-replace github.com/nttcom/eclcloud => ../eclcloud
-
 require (
 	github.com/hashicorp/terraform v0.12.6
 	github.com/nttcom/eclcloud v1.1.0
