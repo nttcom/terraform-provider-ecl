@@ -11,11 +11,11 @@ import (
 
 	"github.com/nttcom/eclcloud"
 
-	"github.com/unknwon/com"
 	"github.com/hashicorp/terraform/flatmap"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
+	"github.com/unknwon/com"
 )
 
 // BuildRequest takes an opts struct and builds a request body for
