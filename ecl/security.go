@@ -26,7 +26,7 @@ func singleDeviceSchema() map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Required: true,
 			ValidateFunc: validation.StringInSlice([]string{
-				"FW", "UTM", "WAF",
+				"FW", "UTM",
 			}, false),
 		},
 
