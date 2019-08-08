@@ -292,10 +292,8 @@ func resourceSecurityNetworkBasedDeviceSingleV1Read(d *schema.ResourceData, meta
 		thisDeviceInterface := map[string]interface{}{}
 		thisDeviceInterface["enable"] = "false"
 		deviceInterfaces = append(deviceInterfaces, thisDeviceInterface)
-		// deviceInterfaces[index] = thisDeviceInterface
 	}
 
-	log.Printf("[MYDEBUG] deviceInterfaces: %#v", deviceInterfaces)
 	for _, dev := range allDevices {
 		thisDeviceInterface := map[string]interface{}{}
 
