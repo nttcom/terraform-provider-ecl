@@ -12,7 +12,7 @@ Manages a V1 Network Based Device(Single) resource within Enterprise Cloud.
 
 ## Example Usage
 
-### Basic Instance
+### Basic Device
 
 ```hcl
 resource "ecl_security_network_based_device_single_v1" "device_1" {
@@ -20,6 +20,22 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	locale = "ja"
 	operating_mode = "FW"
 	license_kind = "02"
+	az_group = "zone1-groupb"
+}
+```
+
+### Change Metadata
+
+- Change operating_mode from FW to UTM
+- Change locale from ja to en
+- Change license_kind from 02 to 08
+
+```hcl
+resource "ecl_security_network_based_device_single_v1" "device_1" {
+	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
+	locale = "en"
+	operating_mode = "UTM"
+	license_kind = "08"
 	az_group = "zone1-groupb"
 }
 ```
