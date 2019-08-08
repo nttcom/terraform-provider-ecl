@@ -2,7 +2,6 @@ package mock
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -10,6 +9,8 @@ import (
 	"os"
 	"reflect"
 	"testing"
+
+	"gopkg.in/yaml.v2"
 )
 
 const (

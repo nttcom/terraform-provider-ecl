@@ -15,10 +15,10 @@ import (
 
 const maxNumberOfInterfaces = 8
 
-const pollingSec = 30
-const createPollInterval = pollingSec * time.Second
-const updatePollInterval = pollingSec * time.Second
-const deletePollInterval = pollingSec * time.Second
+const vnaPollingSec = 30
+const vnaCreatePollInterval = vnaPollingSec * time.Second
+const vnaUpdatePollInterval = vnaPollingSec * time.Second
+const vnaDeletePollInterval = vnaPollingSec * time.Second
 
 func getApplianceTags(d *schema.ResourceData) map[string]string {
 	rawTags := d.Get("tags").(map[string]interface{})
@@ -352,7 +352,7 @@ func updateAllowedAddressPairs(d *schema.ResourceData, meta interface{}, client 
 			Refresh:      waitForVirtualNetworkApplianceComplete(client, d.Id()),
 			Timeout:      d.Timeout(schema.TimeoutDelete),
 			Delay:        5 * time.Second,
-			PollInterval: updatePollInterval,
+			PollInterval: vnaUpdatePollInterval,
 			MinTimeout:   3 * time.Second,
 		}
 
@@ -463,7 +463,7 @@ func updateFixedIPs(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 			Refresh:      waitForVirtualNetworkApplianceComplete(client, d.Id()),
 			Timeout:      d.Timeout(schema.TimeoutDelete),
 			Delay:        5 * time.Second,
-			PollInterval: updatePollInterval,
+			PollInterval: vnaUpdatePollInterval,
 			MinTimeout:   3 * time.Second,
 		}
 
@@ -588,7 +588,7 @@ func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 			Refresh:      waitForVirtualNetworkApplianceComplete(client, d.Id()),
 			Timeout:      d.Timeout(schema.TimeoutDelete),
 			Delay:        5 * time.Second,
-			PollInterval: updatePollInterval,
+			PollInterval: vnaUpdatePollInterval,
 			MinTimeout:   3 * time.Second,
 		}
 

@@ -301,6 +301,13 @@ func testAccPreCheckImageMemberAccepter(t *testing.T) {
 	}
 }
 
+func testAccPreCheckSecurity(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_TENANT_ID == "" {
+		t.Fatal("OS_TENANT_ID must be set for acceptance tests of security")
+	}
+}
 func TestProvider(t *testing.T) {
 	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)

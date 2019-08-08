@@ -240,7 +240,7 @@ func resourceVNAApplianceV1Create(d *schema.ResourceData, meta interface{}) erro
 		Refresh:      waitForVirtualNetworkApplianceComplete(vnaClient, vna.ID),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: createPollInterval,
+		PollInterval: vnaCreatePollInterval,
 		MinTimeout:   10 * time.Second,
 	}
 
@@ -340,7 +340,7 @@ func resourceVNAApplianceV1Delete(d *schema.ResourceData, meta interface{}) erro
 		Target:     []string{"DELETED"},
 		Refresh:    waitForVirtualNetworkApplianceDelete(vnaClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
-		Delay:      deletePollInterval,
+		Delay:      vnaDeletePollInterval,
 		MinTimeout: 3 * time.Second,
 	}
 

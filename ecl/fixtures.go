@@ -177,6 +177,62 @@ response:
                             }
                         ],
                         "id": "c4c383a719cb489d8210328e17659620",
+                        "name": "mss-rfg",
+                        "type": "mss-rfg"
+                    },
+                    {
+                        "endpoints": [
+                            {
+                                "id": "d4c383a719cb489d8210328e17659621",
+                                "interface": "public",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "d4c383a719cb489d8210328e17659622",
+                                "interface": "internal",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "d4c383a719cb489d8210328e17659623",
+                                "interface": "admin",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            }
+                        ],
+                        "id": "d4c383a719cb489d8210328e17659620",
+                        "name": "mss-msa",
+                        "type": "mss-msa"
+                    },
+                    {
+                        "endpoints": [
+                            {
+                                "id": "c4c383a719cb489d8210328e17659631",
+                                "interface": "public",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "c4c383a719cb489d8210328e17659632",
+                                "interface": "internal",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "c4c383a719cb489d8210328e17659633",
+                                "interface": "admin",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]s"
+                            }
+                        ],
+                        "id": "c4c383a719cb489d8210328e17659620",
                         "name": "virtual-network-appliance",
                         "type": "virtual-network-appliance"
                     }
