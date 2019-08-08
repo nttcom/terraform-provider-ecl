@@ -277,11 +277,9 @@ func resourceSecurityNetworkBasedDeviceSingleV1Read(d *schema.ResourceData, meta
 	}
 
 	// initialize
-
 	deviceInterfaces := []map[string]interface{}{}
 	var loopCounter []int
 
-	// deviceType := getTypeOfSingleDevice(d)
 	if deviceType == "WAF" {
 		loopCounter = []int{0}
 	} else {
