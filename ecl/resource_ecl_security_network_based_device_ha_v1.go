@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -12,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha"
-	"github.com/nttcom/eclcloud/ecl/security_portal/v1/device_interfaces"
+	// "github.com/nttcom/eclcloud/ecl/security_portal/v1/device_interfaces"
 )
 
 func resourceSecurityNetworkBasedDeviceHAV1() *schema.Resource {
@@ -156,7 +155,7 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 	}
 
 	operatingMode := device1.Cell[4]
-	licenseKind := device.Cell[5]
+	licenseKind := device1.Cell[5]
 	d.Set("operating_mode", operatingMode)
 	d.Set("license_kind", licenseKind)
 
@@ -165,7 +164,34 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 	d.Set("host_1_az_group", az1)
 	d.Set("host_2_az_group", az2)
 
-	// Device Interface part will be implemented later.
+	haLink1NetworkID := device1.Cell[9]
+	haLink1SubnetID := device1.Cell[10]
+
+	haLink2NetworkID := device1.Cell[12]
+	haLink2SubnetID := device1.Cell[13]
+
+	haLink1Host1IPAddress := device1.Cell[11]
+	haLink1Host2IPAddress := device2.Cell[11]
+
+	haLink2Host1IPAddress := device1.Cell[14]
+	haLink2Host2IPAddress := device2.Cell[14]
+
+	haLink1Info := map[string]string{}
+	haLink1Info["network_id"] = haLink1NetworkID
+	haLink1Info["subnet_id"] = haLink1SubnetID
+	haLink1Info["host_1_ip_address"] = haLink1Host1IPAddress
+	haLink1Info["host_2_ip_address"] = haLink1Host2IPAddress
+
+	haLink2Info := map[string]string{}
+	haLink1Info["network_id"] = haLink2NetworkID
+	haLink1Info["subnet_id"] = haLink2SubnetID
+	haLink1Info["host_1_ip_address"] = haLink2Host1IPAddress
+	haLink1Info["host_2_ip_address"] = haLink2Host2IPAddress
+
+	d.Set("ha_link_1", haLink1Info)
+	d.Set("ha_link_2", haLink2Info)
+
+	// Device Interface is later.
 
 	return nil
 }
@@ -216,7 +242,7 @@ func resourceSecurityNetworkBasedDeviceHAV1Delete(d *schema.ResourceData, meta i
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForHADeviceOrderComplete(client, order.ID, tenantID, locale, deviceType),
+		Refresh:      waitForHADeviceOrderComplete(client, order.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
 		PollInterval: securityDeviceHADeletePollInterval,

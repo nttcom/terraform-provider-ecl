@@ -18,7 +18,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
 )
 
-const securityDeviceHAPollIntervalSec = 30
+const securityDeviceHAPollIntervalSec = 1
 const securityDeviceHACreatePollInterval = securityDeviceHAPollIntervalSec * time.Second
 const securityDeviceHAUpdatePollInterval = securityDeviceHAPollIntervalSec * time.Second
 const securityDeviceHADeletePollInterval = securityDeviceHAPollIntervalSec * time.Second
@@ -27,6 +27,8 @@ func haLinkSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeList,
 		Required: true,
+		MaxItems: 1,
+		MinItems: 1,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"network_id": &schema.Schema{
@@ -162,8 +164,11 @@ func gtHostForHADeviceCreateAsOpts(d *schema.ResourceData) [2]security.GtHostInC
 	gtHost2.AZGroup = d.Get("host_2_az_group").(string)
 
 	// HALink NetworkID/SubnetID
-	haLink1 := d.Get("ha_link_1").(map[string]interface{})
-	haLink2 := d.Get("ha_link_2").(map[string]interface{})
+	haLink1List := d.Get("ha_link_1").([]interface{})
+	haLink2List := d.Get("ha_link_2").([]interface{})
+
+	haLink1 := haLink1List[0].(map[string]interface{})
+	haLink2 := haLink2List[0].(map[string]interface{})
 
 	haLink1NetworkID := haLink1["network_id"].(string)
 	haLink1SubnetID := haLink1["subnet_id"].(string)
@@ -212,6 +217,7 @@ func getHADeviceByHostName(client *eclcloud.ServiceClient, hostName string) (sec
 	}
 
 	allPages, err := security.List(client, listOpts).AllPages()
+	log.Printf("[DEBUG] Got HA Device pages as: %#v", allPages)
 	if err != nil {
 		return hd, fmt.Errorf("Unable to list HA device to get hostname from result: %s", err)
 	}
@@ -221,6 +227,7 @@ func getHADeviceByHostName(client *eclcloud.ServiceClient, hostName string) (sec
 	if err != nil {
 		return hd, fmt.Errorf("Unable to extract result of HA device list api: %s", err)
 	}
+	log.Printf("[DEBUG] Extracted HA Devices as: %#v", allDevices)
 
 	var thisDevice security.HADevice
 	var found bool
@@ -248,10 +255,10 @@ func getIDFromHostNames(ids []string) string {
 	id2i, _ := strconv.Atoi(id2s)
 
 	if id1i < id2i {
-		return fmt.Sprintf("%s/%s", id1s, id2s)
+		return fmt.Sprintf("%s/%s", ids[0], ids[1])
 	}
 
-	return fmt.Sprintf("%s/%s", id2s, id1s)
+	return fmt.Sprintf("%s/%s", ids[1], ids[0])
 }
 
 func getNewlyCreatedHADeviceID(before, after []security.HADevice) []string {
