@@ -130,7 +130,6 @@ func resourceSecurityNetworkBasedDeviceSingleV1Create(d *schema.ResourceData, me
 func resourceSecurityNetworkBasedDeviceSingleV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	// Main Part
 	client, err := config.securityOrderV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
