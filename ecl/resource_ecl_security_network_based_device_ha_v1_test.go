@@ -41,25 +41,28 @@ func TestAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 						"host_2_az_group", "zone1-groupb"),
 				),
 			},
-			// resource.TestStep{
-			// 	Config: testAccSecurityV1NetworkBasedDeviceSingleUpdate,
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		testAccCheckSecurityV1NetworkBasedDeviceSingleExists(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1", &sd),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1",
-			// 			"locale", "en"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1",
-			// 			"operating_mode", "UTM"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1",
-			// 			"license_kind", "08"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1",
-			// 			"az_group", "zone1-groupb"),
-			// 	),
-			// },
+			resource.TestStep{
+				Config: testAccSecurityV1NetworkBasedDeviceHAUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v1.ha_1", &hd1, &hd2),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"locale", "en"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"operating_mode", "UTM_HA"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"license_kind", "08"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"host_1_az_group", "zone1-groupa"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"host_2_az_group", "zone1-groupb"),
+				),
+			},
 		},
 	})
 }
@@ -173,6 +176,40 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	locale = "ja"
 	operating_mode = "FW_HA"
 	license_kind = "02"
+
+	host_1_az_group = "zone1-groupa"
+	host_2_az_group = "zone1-groupb"
+  
+	ha_link_1 {
+		network_id = "${ecl_network_network_v2.network_1.id}"
+		subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
+		host_1_ip_address = "192.168.1.3"
+		host_2_ip_address = "192.168.1.4"
+	}
+
+	ha_link_2 {
+		network_id = "${ecl_network_network_v2.network_2.id}"
+		subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
+		host_1_ip_address = "192.168.2.3"
+		host_2_ip_address = "192.168.2.4"
+	}
+
+}
+`,
+	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet1,
+	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet2,
+	OS_TENANT_ID,
+)
+
+var testAccSecurityV1NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
+%s
+%s
+
+resource "ecl_security_network_based_device_ha_v1" "ha_1" {
+	tenant_id = "%s"
+	locale = "en"
+	operating_mode = "UTM_HA"
+	license_kind = "08"
 
 	host_1_az_group = "zone1-groupa"
 	host_2_az_group = "zone1-groupb"
