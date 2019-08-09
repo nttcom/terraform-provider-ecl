@@ -63,7 +63,7 @@ func resourceSecurityNetworkBasedDeviceHAV1Create(d *schema.ResourceData, meta i
 	}
 	log.Printf("[DEBUG] allSingleDevices before creation: %#v", allDevicesBefore)
 	createOpts := security.CreateOpts{
-		SOKind:   "A",
+		SOKind:   "AH",
 		TenantID: tenantID,
 		Locale:   locale,
 		GtHost:   gtHostForHADeviceCreateAsOpts(d),
@@ -222,7 +222,7 @@ func resourceSecurityNetworkBasedDeviceHAV1Delete(d *schema.ResourceData, meta i
 	locale := d.Get("locale").(string)
 
 	deleteOpts := security.DeleteOpts{
-		SOKind:   "D",
+		SOKind:   "DH",
 		TenantID: tenantID,
 		GtHost:   gtHostForHADeviceDeleteAsOpts(d),
 	}

@@ -18,7 +18,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
 )
 
-const securityDeviceHAPollIntervalSec = 1
+const securityDeviceHAPollIntervalSec = 30
 const securityDeviceHACreatePollInterval = securityDeviceHAPollIntervalSec * time.Second
 const securityDeviceHAUpdatePollInterval = securityDeviceHAPollIntervalSec * time.Second
 const securityDeviceHADeletePollInterval = securityDeviceHAPollIntervalSec * time.Second
@@ -289,12 +289,17 @@ func waitForHADeviceOrderComplete(client *eclcloud.ServiceClient, soID, tenantID
 			TenantID: tenantID,
 			SoID:     soID,
 		}
-		order, err := service_order_status.Get(client, "HA", opts).Extract()
+		order, err := service_order_status.Get(client, "UTM", opts).Extract()
 		if err != nil {
 			return nil, "", err
 		}
 
-		log.Printf("[DEBUG] ECL Security Service Order Status: %+v", order)
+		log.Printf("[DEBUG] ECL Security Service Order Status: %#v", order)
+
+		r := regexp.MustCompile(`^FOV-E`)
+		if r.MatchString(order.Code) {
+			return order, "ERROR", fmt.Errorf("Status becomes error %s: %s", order.Code, order.Message)
+		}
 
 		if order.ProgressRate == 100 {
 			return order, "COMPLETE", nil

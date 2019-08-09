@@ -2,11 +2,9 @@ package ecl
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
 
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha"
 
@@ -33,25 +31,25 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	// TODO
-	// mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
-	// mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID), testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
+	// mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
+	// mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID), testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
 
-	mc.Register(t, "single_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate)
-	mc.Register(t, "single_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHACreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGHAOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGHAOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate)
+	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHACreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterCreate)
 
 	// TODO
-	// mc.Register(t, "single_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHAUpdate)
-	// mc.Register(t, "single_device", "/API/ScreenEventFGHAOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterUpdate)
-	// mc.Register(t, "single_device", "/API/ScreenEventFGHAOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterUpdate)
-	// mc.Register(t, "single_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterUpdate)
+	// mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHAUpdate)
+	// mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterUpdate)
+	// mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterUpdate)
+	// mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterUpdate)
 
-	mc.Register(t, "single_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHADelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGHAOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAProcessingAfterDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGHAOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetDeleteComplete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterDelete)
+	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHADelete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAProcessingAfterDelete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetDeleteComplete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterDelete)
 
 	mc.StartServer(t)
 
@@ -103,81 +101,6 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 			// },
 		},
 	})
-}
-
-func testAccCheckSecurityV1NetworkBasedDeviceHAExists(n string, hd1, hd2 *security.HADevice) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[n]
-		if !ok {
-			return fmt.Errorf("Not found: %s", n)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("No ID is set")
-		}
-
-		config := testAccProvider.Meta().(*Config)
-		client, err := config.securityOrderV1Client(OS_REGION_NAME)
-		if err != nil {
-			return fmt.Errorf("Error creating ECL security client: %s", err)
-		}
-
-		ids := strings.Split(rs.Primary.ID, "/")
-		id1 := ids[0]
-		id2 := ids[1]
-
-		found1, err := getHADeviceByHostName(client, id1)
-		if err != nil {
-			return err
-		}
-
-		if found1.Cell[3] != id1 {
-			return fmt.Errorf("Security single device-1 not found")
-		}
-		*hd1 = found1
-
-		found2, err := getHADeviceByHostName(client, id2)
-		if err != nil {
-			return err
-		}
-
-		if found2.Cell[3] != id2 {
-			return fmt.Errorf("Security single device-2 not found")
-		}
-		*hd2 = found2
-
-		return nil
-	}
-}
-func testAccCheckSecurityV1NetworkBasedDeviceHADestroy(s *terraform.State) error {
-	config := testAccProvider.Meta().(*Config)
-	client, err := config.securityOrderV1Client(OS_REGION_NAME)
-	if err != nil {
-		return fmt.Errorf("Error creating ECL network client: %s", err)
-	}
-
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "ecl_security_network_based_device_single_v1" {
-			continue
-		}
-
-		ids := strings.Split(rs.Primary.ID, "/")
-		id1 := ids[0]
-		id2 := ids[1]
-
-		_, err := getHADeviceByHostName(client, id1)
-		if err == nil {
-			return fmt.Errorf("Security single device-1 still exists")
-		}
-
-		_, err = getHADeviceByHostName(client, id2)
-		if err == nil {
-			return fmt.Errorf("Security single device-2 still exists")
-		}
-
-	}
-
-	return nil
 }
 
 var testMockedAccSecurityV1NetworkBasedDeviceHABasic = fmt.Sprintf(`

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -500,6 +501,11 @@ func waitForSingleDeviceOrderComplete(client *eclcloud.ServiceClient, soID, tena
 		}
 
 		log.Printf("[DEBUG] ECL Security Service Order Status: %+v", order)
+
+		r := regexp.MustCompile(`^FOV-E`)
+		if r.MatchString(order.Code) {
+			return order, "ERROR", fmt.Errorf("Status becomes error %s: %s", order.Code, order.Message)
+		}
 
 		if order.ProgressRate == 100 {
 			return order, "COMPLETE", nil
