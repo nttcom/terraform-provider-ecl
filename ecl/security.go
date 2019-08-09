@@ -13,11 +13,12 @@ import (
 	"github.com/nttcom/eclcloud"
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_single"
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
+	"github.com/nttcom/eclcloud/ecl/security_portal/v1/devices"
 	"github.com/nttcom/eclcloud/ecl/security_portal/v1/ports"
 	"github.com/nttcom/eclcloud/ecl/security_portal/v1/processes"
 )
 
-const securityDeviceSinglePollIntervalSec = 30
+const securityDeviceSinglePollIntervalSec = 1
 const securityDeviceSingleCreatePollInterval = securityDeviceSinglePollIntervalSec * time.Second
 const securityDeviceSingleUpdatePollInterval = securityDeviceSinglePollIntervalSec * time.Second
 const securityDeviceSingleDeletePollInterval = securityDeviceSinglePollIntervalSec * time.Second
@@ -189,6 +190,48 @@ func singleWAFSchema() map[string]*schema.Schema {
 	}
 }
 
+func getUUIDFromServerHostName(client *eclcloud.ServiceClient, hostName string) (string, error) {
+
+	listOpts := devices.ListOpts{
+		TenantID:  os.Getenv("OS_TENANT_ID"),
+		UserToken: client.TokenID,
+	}
+
+	allPages, err := devices.List(client, listOpts).AllPages()
+	if err != nil {
+		return "", fmt.Errorf("Unable to list single device to get device UUID: %s", err)
+	}
+	var allDevices []devices.Device
+
+	err = devices.ExtractDevicesInto(allPages, &allDevices)
+	if err != nil {
+		return "", fmt.Errorf("Unable to extract list of single device by portal api: %s", err)
+	}
+
+	for _, device := range allDevices {
+		if device.MSADeviceID == hostName {
+			log.Printf("[DEBUG] Host UUID looking result: Host %s has UUID %s", hostName, device.OSServerID)
+			return device.OSServerID, nil
+		}
+	}
+
+	return "", fmt.Errorf("Unable to find corresponding server of %s", hostName)
+}
+
+func gtHostForSingleDeviceCreateAsOpts(d *schema.ResourceData) [1]security.GtHostInCreate {
+	result := [1]security.GtHostInCreate{}
+
+	gtHost := security.GtHostInCreate{}
+
+	gtHost.LicenseKind = d.Get("license_kind").(string)
+	gtHost.OperatingMode = d.Get("operating_mode").(string)
+	gtHost.AZGroup = d.Get("az_group").(string)
+
+	result[0] = gtHost
+
+	return result
+}
+
 func gtHostForSingleDeviceUpdateAsOpts(d *schema.ResourceData) [1]security.GtHostInUpdate {
 	result := [1]security.GtHostInUpdate{}
 
@@ -251,6 +294,41 @@ func getSingleDeviceByHostName(client *eclcloud.ServiceClient, deviceType, hostN
 	return thisDevice, nil
 }
 
+func resourceSecurityNetworkBasedSingleDevicePortsForUpdate(d *schema.ResourceData) (ports.UpdateOpts, error) {
+	resultPorts := []ports.SinglePort{}
+
+	ifaces := d.Get("port").([]interface{})
+	log.Printf("[DEBUG] Retrieved port information for update: %#v", ifaces)
+	for _, iface := range ifaces {
+		p := ports.SinglePort{}
+
+		if _, ok := iface.(map[string]interface{}); ok {
+			thisInterface := iface.(map[string]interface{})
+
+			if thisInterface["enable"].(string) == "true" {
+				p.EnablePort = "true"
+
+				ipAddress := thisInterface["ip_address"].(string)
+				prefix := thisInterface["ip_address_prefix"].(int)
+
+				p.IPAddress = fmt.Sprintf("%s/%d", ipAddress, prefix)
+
+				p.NetworkID = thisInterface["network_id"].(string)
+				p.SubnetID = thisInterface["subnet_id"].(string)
+				p.MTU = thisInterface["mtu"].(string)
+				p.Comment = thisInterface["comment"].(string)
+			} else {
+				p.EnablePort = "false"
+			}
+		}
+		resultPorts = append(resultPorts, p)
+	}
+
+	log.Printf("[DEBUG] Port update parameters: %#v", resultPorts)
+	result := ports.UpdateOpts{}
+	result.Port = resultPorts
+	return result, nil
+}
 func resourceSecurityNetworkBasedDeviceSingleV1UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.securityPortalV1Client(GetRegion(d, config))
@@ -430,6 +508,7 @@ func waitForSingleDeviceOrderComplete(client *eclcloud.ServiceClient, soID, tena
 		return order, "PROCESSING", nil
 	}
 }
+
 func waitForSingleDeviceProcessComplete(client *eclcloud.ServiceClient, processID, tenantID, locale string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 
