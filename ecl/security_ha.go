@@ -1,7 +1,12 @@
 package ecl
 
 import (
+	"fmt"
 	"log"
+	"os"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -35,7 +40,8 @@ func haLinkSchema() *schema.Schema {
 				},
 
 				"host_1_ip_address": &schema.Schema{
-					Required: schema.TypeInt,
+					Type:     schema.TypeString,
+					Required: true,
 				},
 
 				"host_2_ip_address": &schema.Schema{
@@ -196,7 +202,79 @@ func gtHostForHADeviceCreateAsOpts(d *schema.ResourceData) [2]security.GtHostInC
 	return result
 }
 
-func waitForHADeviceOrderComplete(client *eclcloud.ServiceClient, soID, tenantID, locale, deviceType string) resource.StateRefreshFunc {
+func getHADeviceByHostName(client *eclcloud.ServiceClient, hostName string) (security.HADevice, error) {
+	log.Printf("[DEBUG] Start getting HA Device by HostName %s ...", hostName)
+	var hd = security.HADevice{}
+
+	listOpts := security.ListOpts{
+		TenantID: os.Getenv("OS_TENANT_ID"),
+		Locale:   "en",
+	}
+
+	allPages, err := security.List(client, listOpts).AllPages()
+	if err != nil {
+		return hd, fmt.Errorf("Unable to list HA device to get hostname from result: %s", err)
+	}
+	var allDevices []security.HADevice
+
+	err = security.ExtractHADevicesInto(allPages, &allDevices)
+	if err != nil {
+		return hd, fmt.Errorf("Unable to extract result of HA device list api: %s", err)
+	}
+
+	var thisDevice security.HADevice
+	var found bool
+	for _, device := range allDevices {
+		if device.Cell[3] == hostName {
+			thisDevice = device
+			found = true
+			break
+		}
+	}
+	if !found {
+		return hd, fmt.Errorf("[DEBUG] Specified HA device %s not found", hostName)
+	}
+	log.Printf("[DEBUG] Host has found as: %#v", thisDevice)
+	return thisDevice, nil
+}
+
+func getIDFromHostNames(ids []string) string {
+
+	rep := regexp.MustCompile(`^[A-Za-z]+`)
+	id1s := rep.ReplaceAllString(ids[0], "")
+	id2s := rep.ReplaceAllString(ids[1], "")
+
+	id1i, _ := strconv.Atoi(id1s)
+	id2i, _ := strconv.Atoi(id2s)
+
+	if id1i < id2i {
+		return fmt.Sprintf("%s/%s", id1s, id2s)
+	}
+
+	return fmt.Sprintf("%s/%s", id2s, id1s)
+}
+
+func getNewlyCreatedHADeviceID(before, after []security.HADevice) []string {
+	result := []string{}
+
+	for _, af := range after {
+		hostNameAfter := af.Cell[3]
+		match := false
+		for _, bf := range before {
+			hostNameBefore := bf.Cell[3]
+			if hostNameAfter == hostNameBefore {
+				match = true
+			}
+		}
+		if !match {
+			result = append(result, hostNameAfter)
+		}
+	}
+
+	return result
+}
+
+func waitForHADeviceOrderComplete(client *eclcloud.ServiceClient, soID, tenantID, locale string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 
 		opts := service_order_status.GetOpts{
@@ -217,4 +295,21 @@ func waitForHADeviceOrderComplete(client *eclcloud.ServiceClient, soID, tenantID
 
 		return order, "PROCESSING", nil
 	}
+}
+
+func gtHostForHADeviceDeleteAsOpts(d *schema.ResourceData) [2]security.GtHostInDelete {
+	result := [2]security.GtHostInDelete{}
+
+	gtHost1 := security.GtHostInDelete{}
+	gtHost2 := security.GtHostInDelete{}
+
+	hostNames := strings.Split(d.Id(), "/")
+
+	gtHost1.HostName = hostNames[0]
+	gtHost2.HostName = hostNames[1]
+
+	result[0] = gtHost1
+	result[1] = gtHost2
+
+	return result
 }
