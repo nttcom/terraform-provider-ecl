@@ -198,10 +198,10 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 
 func resourceSecurityNetworkBasedDeviceHAV1Update(d *schema.ResourceData, meta interface{}) error {
 
-	// if d.HasChange("locale") || d.HasChange("operating_mode") || d.HasChange("license_kind") {
-	// 	log.Printf("[DEBUG] Start changing device by order api.")
-	// 	resourceSecurityNetworkBasedDeviceHAV1UpdateOrderAPIPart(d, meta)
-	// }
+	if d.HasChange("locale") || d.HasChange("operating_mode") || d.HasChange("license_kind") {
+		log.Printf("[DEBUG] Start changing device by order api.")
+		resourceSecurityNetworkBasedDeviceHAV1UpdateOrderAPIPart(d, meta)
+	}
 
 	// if d.HasChange("port") {
 	// 	log.Printf("[DEBUG] Start changing device by portal api.")

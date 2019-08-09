@@ -145,6 +145,82 @@ func haDeviceSchema() map[string]*schema.Schema {
 	}
 }
 
+func gtHostForHADeviceUpdateAsOpts(d *schema.ResourceData) [2]security.GtHostInUpdate {
+	result := [2]security.GtHostInUpdate{}
+
+	gtHost1 := security.GtHostInUpdate{}
+	gtHost2 := security.GtHostInUpdate{}
+
+	licenseKind := d.Get("license_kind").(string)
+	operatingMode := d.Get("operating_mode").(string)
+
+	gtHost1.LicenseKind = licenseKind
+	gtHost1.OperatingMode = operatingMode
+
+	gtHost2.LicenseKind = licenseKind
+	gtHost2.OperatingMode = operatingMode
+
+	hostNames := strings.Split(d.Id(), "/")
+
+	gtHost1.HostName = hostNames[0]
+	gtHost2.HostName = hostNames[1]
+
+	result[0] = gtHost1
+	result[1] = gtHost2
+
+	return result
+}
+
+func resourceSecurityNetworkBasedDeviceHAV1UpdateOrderAPIPart(d *schema.ResourceData, meta interface{}) error {
+	config := meta.(*Config)
+	client, err := config.securityOrderV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating ECL security order client: %s", err)
+	}
+
+	tenantID := d.Get("tenant_id").(string)
+	locale := d.Get("locale").(string)
+
+	updateOpts := security.UpdateOpts{
+		SOKind:   "MH",
+		TenantID: tenantID,
+		Locale:   locale,
+		GtHost:   gtHostForHADeviceUpdateAsOpts(d),
+	}
+
+	log.Printf("[DEBUG] Update Options: %#v", updateOpts)
+
+	order, err := security.Update(client, updateOpts).Extract()
+	if err != nil {
+		return fmt.Errorf("Error updating ECL security single device: %s", err)
+	}
+
+	log.Printf("[DEBUG] Update request has successfully accepted with order: %#v", order)
+
+	log.Printf("[DEBUG] Start waiting for single device order becomes COMPLETE ...")
+
+	stateConf := &resource.StateChangeConf{
+		Pending:      []string{"PROCESSING"},
+		Target:       []string{"COMPLETE"},
+		Refresh:      waitForHADeviceOrderComplete(client, order.ID, tenantID, locale),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        5 * time.Second,
+		PollInterval: securityDeviceHAUpdatePollInterval,
+		MinTimeout:   30 * time.Second,
+	}
+
+	log.Printf("[DEBUG] Finish waiting for single device update order becomes COMPLETE")
+
+	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for single device order status (%s) to become ready: %s",
+			order.ID, err)
+	}
+
+	return nil
+}
+
 func gtHostForHADeviceCreateAsOpts(d *schema.ResourceData) [2]security.GtHostInCreate {
 	result := [2]security.GtHostInCreate{}
 

@@ -40,11 +40,10 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
 	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterCreate)
 
-	// TODO
-	// mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHAUpdate)
-	// mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterUpdate)
-	// mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterUpdate)
-	// mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterUpdate)
+	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHAUpdate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterUpdate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterUpdate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterUpdate)
 
 	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHADelete)
 	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAProcessingAfterDelete)
@@ -80,25 +79,28 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 						"host_2_az_group", "zone1-groupb"),
 				),
 			},
-			// resource.TestStep{
-			// 	Config: testMockedAccSecurityV1NetworkBasedDeviceHAUpdate,
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		testAccCheckSecurityV1NetworkBasedDeviceHAExists(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1", &hd1, &hd2),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1",
-			// 			"locale", "en"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1",
-			// 			"operating_mode", "UTM"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1",
-			// 			"license_kind", "08"),
-			// 		resource.TestCheckResourceAttr(
-			// 			"ecl_security_network_based_device_ha_v1.ha_1",
-			// 			"az_group", "zone1-groupb"),
-			// 	),
-			// },
+			resource.TestStep{
+				Config: testMockedAccSecurityV1NetworkBasedDeviceHAUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityV1NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v1.ha_1", &hd1, &hd2),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"locale", "en"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"operating_mode", "UTM_HA"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"license_kind", "08"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"host_1_az_group", "zone1-groupa"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"host_2_az_group", "zone1-groupb"),
+				),
+			},
 		},
 	})
 }
@@ -126,7 +128,6 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 		host_1_ip_address = "192.168.2.3"
 		host_2_ip_address = "192.168.2.4"
 	}
-
 }
 `,
 	OS_TENANT_ID,
@@ -136,11 +137,26 @@ var testMockedAccSecurityV1NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
 resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	tenant_id = "%s"
 	locale = "en"
-	operating_mode = "UTM"
+	operating_mode = "UTM_HA"
 	license_kind = "08"
-	az_group = "zone1-groupb"
-}
-`,
+
+	host_1_az_group = "zone1-groupa"
+	host_2_az_group = "zone1-groupb"
+
+	ha_link_1 {
+		network_id = "DummyNetwork1"
+		subnet_id = "DummySubnet1"
+		host_1_ip_address = "192.168.1.3"
+		host_2_ip_address = "192.168.1.4"
+	}
+
+	ha_link_2 {
+		network_id = "DummyNetwork12"
+		subnet_id = "DummySubnet2"
+		host_1_ip_address = "192.168.2.3"
+		host_2_ip_address = "192.168.2.4"
+	}
+}`,
 	OS_TENANT_ID,
 )
 
@@ -577,15 +593,23 @@ response:
             "status": 1,
             "code": "FOV-01",
             "message": "Successful completion",
-            "records": 2,
+            "records": 4,
             "rows": [
                 {
-                    "id": 1,
-                    "cell": ["false", "1", "CES777", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "id": 1
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "id": 2
                 },
                 {
-                    "id": 2,
-                    "cell": ["false", "1", "CES888", "UTM", "08", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "1902F60E", "CES12085", "UTM_HA", "08", "ha", "zone1-groupa", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
+                    "id": 3
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12086", "UTM_HA", "08", "ha", "zone1-groupb", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
+                    "id": 4
                 }
             ]
         }
