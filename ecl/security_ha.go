@@ -470,13 +470,19 @@ func resourceSecurityNetworkBasedHADevicePortsForUpdate(d *schema.ResourceData) 
 			if thisInterface["enable"].(string) == "true" {
 				p.EnablePort = "true"
 
+				// host_1_ip_address, prefix and
+				// host_2_ip_address, prefix are the real IP address
+				// for both interface on host1 and host2.
+				// You need to add prefix for this configuration.
 				ipAddress1 := thisInterface["host_1_ip_address"].(string)
 				prefix1 := thisInterface["host_1_ip_address_prefix"].(int)
 
 				ipAddress2 := thisInterface["host_2_ip_address"].(string)
 				prefix2 := thisInterface["host_2_ip_address_prefix"].(int)
 
-				p.IPAddress = [2]string{
+				// In HA device case, you need to specify port.IPAddress
+				// as array with length = 2.
+				p.IPAddress = []string{
 					fmt.Sprintf("%s/%d", ipAddress1, prefix1),
 					fmt.Sprintf("%s/%d", ipAddress2, prefix2),
 				}
@@ -488,7 +494,11 @@ func resourceSecurityNetworkBasedHADevicePortsForUpdate(d *schema.ResourceData) 
 
 				p.EnablePing = thisInterface["enable_ping"].(string)
 				p.VRRPGroupID = thisInterface["vrrp_grp_id"].(string)
+
 				p.VRRPID = thisInterface["vrrp_id"].(string)
+
+				// VRRPIP is "Virtual" IP Address in VRRP configuration
+				// You do not need to add prefix for this VRRPIP
 				p.VRRPIPAddress = thisInterface["vrrp_ip_address"].(string)
 				p.Preempt = thisInterface["preempt"].(string)
 
