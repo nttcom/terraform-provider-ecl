@@ -16,6 +16,8 @@ import (
 	"github.com/nttcom/eclcloud"
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha"
 	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
+
+	ports "github.com/nttcom/eclcloud/ecl/security_portal/v1/ha_ports"
 )
 
 const securityDeviceHAPollIntervalSec = 30
@@ -112,15 +114,36 @@ func haDeviceSchema() map[string]*schema.Schema {
 						Type:     schema.TypeString,
 						Required: true,
 					},
-					"ip_address": &schema.Schema{
+					"vrrp_ip_address": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
 						Computed: true,
 					},
-					"ip_address_prefix": &schema.Schema{
+					// "vrrp_ip_address_prefix": &schema.Schema{
+					// 	Type:     schema.TypeInt,
+					// 	Optional: true,
+					// },
+
+					"host_1_ip_address": &schema.Schema{
+						Type:     schema.TypeString,
+						Optional: true,
+						Computed: true,
+					},
+					"host_1_ip_address_prefix": &schema.Schema{
 						Type:     schema.TypeInt,
 						Optional: true,
 					},
+
+					"host_2_ip_address": &schema.Schema{
+						Type:     schema.TypeString,
+						Optional: true,
+						Computed: true,
+					},
+					"host_2_ip_address_prefix": &schema.Schema{
+						Type:     schema.TypeInt,
+						Optional: true,
+					},
+
 					"network_id": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
@@ -138,6 +161,37 @@ func haDeviceSchema() map[string]*schema.Schema {
 					"comment": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
+					},
+
+					"enable_ping": &schema.Schema{
+						Type:     schema.TypeString,
+						Optional: true,
+						ValidateFunc: validation.StringInSlice([]string{
+							"true", "false",
+						}, false),
+					},
+
+					"vrrp_grp_id": &schema.Schema{
+						Type:     schema.TypeString,
+						Optional: true,
+					},
+
+					"vrrp_id": &schema.Schema{
+						Type:     schema.TypeString,
+						Optional: true,
+					},
+
+					"vrrp_ip": &schema.Schema{
+						Type:     schema.TypeString,
+						Optional: true,
+					},
+
+					"preempt": &schema.Schema{
+						Type:     schema.TypeString,
+						Optional: true,
+						ValidateFunc: validation.StringInSlice([]string{
+							"true", "false",
+						}, false),
 					},
 				},
 			},
@@ -400,4 +454,115 @@ func gtHostForHADeviceDeleteAsOpts(d *schema.ResourceData) [2]security.GtHostInD
 	result[1] = gtHost2
 
 	return result
+}
+
+func resourceSecurityNetworkBasedHADevicePortsForUpdate(d *schema.ResourceData) (ports.UpdateOpts, error) {
+	resultPorts := []ports.SinglePort{}
+
+	ifaces := d.Get("port").([]interface{})
+	log.Printf("[DEBUG] Retrieved port information for update: %#v", ifaces)
+	for _, iface := range ifaces {
+		p := ports.SinglePort{}
+
+		if _, ok := iface.(map[string]interface{}); ok {
+			thisInterface := iface.(map[string]interface{})
+
+			if thisInterface["enable"].(string) == "true" {
+				p.EnablePort = "true"
+
+				ipAddress1 := thisInterface["host_1_ip_address"].(string)
+				prefix1 := thisInterface["host_1_ip_address_prefix"].(int)
+
+				ipAddress2 := thisInterface["host_2_ip_address"].(string)
+				prefix2 := thisInterface["host_2_ip_address_prefix"].(int)
+
+				p.IPAddress = [2]string{
+					fmt.Sprintf("%s/%d", ipAddress1, prefix1),
+					fmt.Sprintf("%s/%d", ipAddress2, prefix2),
+				}
+
+				p.NetworkID = thisInterface["network_id"].(string)
+				p.SubnetID = thisInterface["subnet_id"].(string)
+				p.MTU = thisInterface["mtu"].(string)
+				p.Comment = thisInterface["comment"].(string)
+
+				p.EnablePing = thisInterface["enable_ping"].(string)
+				p.VRRPGroupID = thisInterface["vrrp_grp_id"].(string)
+				p.VRRPID = thisInterface["vrrp_id"].(string)
+				p.VRRPIPAddress = thisInterface["vrrp_ip_address"].(string)
+				p.Preempt = thisInterface["preempt"].(string)
+
+			} else {
+				p.EnablePort = "false"
+			}
+		}
+		resultPorts = append(resultPorts, p)
+	}
+
+	log.Printf("[DEBUG] Port update parameters: %#v", resultPorts)
+	result := ports.UpdateOpts{}
+	result.Port = resultPorts
+	return result, nil
+}
+
+func resourceSecurityNetworkBasedDeviceHAV1UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
+	config := meta.(*Config)
+	client, err := config.securityPortalV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating ECL security portal client: %s", err)
+	}
+
+	tenantID := d.Get("tenant_id").(string)
+	locale := d.Get("locale").(string)
+
+	hostNames := strings.Split(d.Id(), "/")
+	host1 := hostNames[0]
+	// host2 := hostNames[1]
+
+	updateOpts, err := resourceSecurityNetworkBasedHADevicePortsForUpdate(d)
+	if err != nil {
+		return fmt.Errorf("Error getting port-1 option in update: %s", err)
+	}
+	updateQueryOpts := ports.UpdateQueryOpts{
+		TenantID:  tenantID,
+		UserToken: client.TokenID,
+	}
+
+	log.Printf("[DEBUG] Update Options: %#v", updateOpts)
+	log.Printf("[DEBUG] Update Query Options: %#v", updateQueryOpts)
+
+	process, err := ports.Update(
+		client,
+		host1,
+		updateOpts,
+		updateQueryOpts).Extract()
+
+	if err != nil {
+		return fmt.Errorf("Error updating ECL security single device port: %s", err)
+	}
+
+	log.Printf("[DEBUG] Update request for %s has successfully accepted with process: %#v", d.Id(), process)
+
+	log.Printf("[DEBUG] Start waiting for single device process for %s becomes ENDED ...", d.Id())
+
+	stateConf := &resource.StateChangeConf{
+		Pending:      []string{"RUNNING"},
+		Target:       []string{"ENDED"},
+		Refresh:      waitForSingleDeviceProcessComplete(client, process.ID, tenantID, locale),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        5 * time.Second,
+		PollInterval: securityDeviceSingleUpdatePollInterval,
+		MinTimeout:   30 * time.Second,
+	}
+
+	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for single device port management status (%s) to become ready: %s",
+			process.ID, err)
+	}
+
+	log.Printf("[DEBUG] Finish waiting for single device portal api order becomes COMPLETE")
+
+	return nil
 }

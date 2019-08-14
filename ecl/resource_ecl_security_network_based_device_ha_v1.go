@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -11,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha"
-	// "github.com/nttcom/eclcloud/ecl/security_portal/v1/device_interfaces"
+	"github.com/nttcom/eclcloud/ecl/security_portal/v1/device_interfaces"
 )
 
 func resourceSecurityNetworkBasedDeviceHAV1() *schema.Resource {
@@ -193,6 +194,114 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 
 	// Device Interface is later.
 
+	pClient, err := config.securityPortalV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating ECL security portal client: %s", err)
+	}
+
+	hostUUID1, err := getUUIDFromServerHostName(pClient, id1)
+	if err != nil {
+		return fmt.Errorf("Unable to get host UUID of %s: %s", id1, err)
+	}
+
+	hostUUID2, err := getUUIDFromServerHostName(pClient, id2)
+	if err != nil {
+		return fmt.Errorf("Unable to get host UUID of %s: %s", id2, err)
+	}
+
+	listOpts := device_interfaces.ListOpts{
+		TenantID:  os.Getenv("OS_TENANT_ID"),
+		UserToken: pClient.TokenID,
+	}
+
+	host1AllDevicePages, err := device_interfaces.List(pClient, hostUUID1, listOpts).AllPages()
+	if err != nil {
+		return fmt.Errorf("Unable to list interfaces of host-1: %s", err)
+	}
+
+	host1AllDevices, err := device_interfaces.ExtractDeviceInterfaces(host1AllDevicePages)
+	if err != nil {
+		return fmt.Errorf("Unable to extract device interfaces of host-1: %s", err)
+	}
+
+	host2AllDevicePages, err := device_interfaces.List(pClient, hostUUID2, listOpts).AllPages()
+	if err != nil {
+		return fmt.Errorf("Unable to list interfaces of host-2: %s", err)
+	}
+
+	host2AllDevices, err := device_interfaces.ExtractDeviceInterfaces(host2AllDevicePages)
+	if err != nil {
+		return fmt.Errorf("Unable to extract device interfaces of host-2: %s", err)
+	}
+
+	// initialize
+	deviceInterfaces := []map[string]interface{}{}
+	loopCounter := []int{0, 1, 2, 3, 4, 5, 6}
+
+	for range loopCounter {
+		thisDeviceInterface := map[string]interface{}{}
+		thisDeviceInterface["enable"] = "false"
+		deviceInterfaces = append(deviceInterfaces, thisDeviceInterface)
+	}
+
+	for _, dev1 := range host1AllDevices {
+		thisDeviceInterface := map[string]interface{}{}
+
+		index1, err := strconv.Atoi(strings.Replace(dev1.MSAPortID, "port", "", 1))
+		if err != nil {
+			return fmt.Errorf("Error parsing host-1 device interface port number: %s", err)
+		}
+
+		index1 -= 4
+
+		if index1 < 0 {
+			return fmt.Errorf("Wrong index number is returned from host-1 device interface list API. %s", err)
+		}
+
+		thisDeviceInterface["enable"] = "true"
+
+		vrrpIP := d.Get(fmt.Sprintf("port.%d.vrrp_ip_address", index1)).(int)
+		thisDeviceInterface["vrrp_ip_addess"] = vrrpIP
+		vrrpIPPrefix := d.Get(fmt.Sprintf("port.%d.vrrp_ip_address_prefix", index1)).(int)
+		thisDeviceInterface["vrrp_ip_addess_prefix"] = vrrpIPPrefix
+
+		thisDeviceInterface["host_1_ip_address"] = dev1.OSIPAddress
+		prefixDev1 := d.Get(fmt.Sprintf("port.%d.host_1_ip_address_prefix", index1)).(int)
+		thisDeviceInterface["host_1_ip_address_prefix"] = prefixDev1
+
+		for _, dev2 := range host2AllDevices {
+			index2, err := strconv.Atoi(strings.Replace(dev2.MSAPortID, "port", "", 1))
+			if err != nil {
+				return fmt.Errorf("Error parsing host-2 device interface port number: %s", err)
+			}
+
+			if index2 != index1 {
+				continue
+			}
+			thisDeviceInterface["host_2_ip_address"] = dev2.OSIPAddress
+			prefixDev2 := d.Get(fmt.Sprintf("port.%d.host_2_ip_address_prefix", index1)).(int)
+			thisDeviceInterface["host_2_ip_address_prefix"] = prefixDev2
+		}
+
+		thisDeviceInterface["network_id"] = dev1.OSNetworkID
+		thisDeviceInterface["subnet_id"] = dev1.OSSubnetID
+
+		mtu := d.Get(fmt.Sprintf("port.%d.mtu", index1)).(string)
+		comment := d.Get(fmt.Sprintf("port.%d.comment", index1)).(string)
+
+		thisDeviceInterface["mtu"] = mtu
+
+		thisDeviceInterface["comment"] = comment
+
+		thisDeviceInterface["enable_ping"] = d.Get(fmt.Sprintf("port.%d.enable_ping", index1)).(string)
+
+		thisDeviceInterface["vrrp_id"] = d.Get(fmt.Sprintf("port.%d.vrrp_id", index1)).(string)
+
+		deviceInterfaces[index1] = thisDeviceInterface
+	}
+
+	d.Set("port", deviceInterfaces)
+
 	return nil
 }
 
@@ -203,10 +312,10 @@ func resourceSecurityNetworkBasedDeviceHAV1Update(d *schema.ResourceData, meta i
 		resourceSecurityNetworkBasedDeviceHAV1UpdateOrderAPIPart(d, meta)
 	}
 
-	// if d.HasChange("port") {
-	// 	log.Printf("[DEBUG] Start changing device by portal api.")
-	// 	resourceSecurityNetworkBasedDeviceHAV1UpdatePortalAPIPart(d, meta)
-	// }
+	if d.HasChange("port") {
+		log.Printf("[DEBUG] Start changing device by portal api.")
+		resourceSecurityNetworkBasedDeviceHAV1UpdatePortalAPIPart(d, meta)
+	}
 
 	return resourceSecurityNetworkBasedDeviceHAV1Read(d, meta)
 }

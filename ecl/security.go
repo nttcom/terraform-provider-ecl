@@ -330,6 +330,7 @@ func resourceSecurityNetworkBasedSingleDevicePortsForUpdate(d *schema.ResourceDa
 	result.Port = resultPorts
 	return result, nil
 }
+
 func resourceSecurityNetworkBasedDeviceSingleV1UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.securityPortalV1Client(GetRegion(d, config))
