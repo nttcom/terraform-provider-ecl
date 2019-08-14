@@ -19,7 +19,8 @@ const ProcessIDOfUpdateInterfaceHA = 85385
 
 const expectedNewHADeviceHostName1 = "CES12085"
 const expectedNewHADeviceHostName2 = "CES12086"
-const expectedNewHADeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
+const expectedNewHADeviceUUID1 = "12768064-e7c9-44d1-b01d-e66f138a278e"
+const expectedNewHADeviceUUID2 = "12768064-e7c9-44d1-b01d-e66f138a278f"
 
 func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 	var hd1, hd2 security.HADevice
@@ -31,8 +32,9 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	// TODO
-	// mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
-	// mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID), testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
+	mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID1), testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfaces)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID2), testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfaces)
 
 	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate)
 	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHACreate)
@@ -212,6 +214,20 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	OS_TENANT_ID,
 )
 
+var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfaces = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+          "devices": []
+        }
+expectedStatus:
+    - Updated
+    - Created
+`
+
 var testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate = `
 request:
     method: GET
@@ -283,8 +299,8 @@ response:
         {
           "devices": [
             {
-              "msa_device_id": "CES777",
-              "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
+              "msa_device_id": "CES12085",
+              "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
               "os_server_name": "UTM-CES11878",
               "os_availability_zone": "zone1-groupb",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
@@ -292,8 +308,8 @@ response:
               "os_server_status": "ACTIVE"
             },
             {
-              "msa_device_id": "CES888",
-              "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
+              "msa_device_id": "CES12086",
+              "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278f",
               "os_server_name": "WAF-CES11816",
               "os_availability_zone": "zone1-groupb",
               "os_admin_username": "jp4_sdp_mss_utm_admin",

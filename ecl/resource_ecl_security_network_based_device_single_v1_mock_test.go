@@ -30,7 +30,7 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate)
+	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfaces)
 
 	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListBeforeCreate)
 	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedDeviceSingleCreate)
@@ -295,6 +295,20 @@ response:
 expectedStatus:
     - Created
     - Updating
+`
+
+var testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfaces = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+          "devices": []
+        }
+expectedStatus:
+    - Updated
+    - Created
 `
 
 var testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate = `
