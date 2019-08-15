@@ -255,15 +255,17 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 		index1 -= 4
 
 		if index1 < 0 {
-			return fmt.Errorf("Wrong index number is returned from host-1 device interface list API. %s", err)
+			log.Printf("[DEBUG] Index number %d has found. Skip this interface to store state.", index1)
+			continue
 		}
+		log.Printf("[DEBUG] Processing port %d", index1)
 
 		thisDeviceInterface["enable"] = "true"
 
-		vrrpIP := d.Get(fmt.Sprintf("port.%d.vrrp_ip_address", index1)).(int)
+		vrrpIP := d.Get(fmt.Sprintf("port.%d.vrrp_ip_address", index1)).(string)
 		thisDeviceInterface["vrrp_ip_addess"] = vrrpIP
-		vrrpIPPrefix := d.Get(fmt.Sprintf("port.%d.vrrp_ip_address_prefix", index1)).(int)
-		thisDeviceInterface["vrrp_ip_addess_prefix"] = vrrpIPPrefix
+		// vrrpIPPrefix := d.Get(fmt.Sprintf("port.%d.vrrp_ip_address_prefix", index1)).(int)
+		// thisDeviceInterface["vrrp_ip_addess_prefix"] = vrrpIPPrefix
 
 		thisDeviceInterface["host_1_ip_address"] = dev1.OSIPAddress
 		prefixDev1 := d.Get(fmt.Sprintf("port.%d.host_1_ip_address_prefix", index1)).(int)

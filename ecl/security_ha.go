@@ -114,11 +114,7 @@ func haDeviceSchema() map[string]*schema.Schema {
 						Type:     schema.TypeString,
 						Required: true,
 					},
-					"vrrp_ip_address": &schema.Schema{
-						Type:     schema.TypeString,
-						Optional: true,
-						Computed: true,
-					},
+
 					// "vrrp_ip_address_prefix": &schema.Schema{
 					// 	Type:     schema.TypeInt,
 					// 	Optional: true,
@@ -181,10 +177,16 @@ func haDeviceSchema() map[string]*schema.Schema {
 						Optional: true,
 					},
 
-					"vrrp_ip": &schema.Schema{
+					"vrrp_ip_address": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
+						Computed: true,
 					},
+
+					// "vrrp_ip": &schema.Schema{
+					// 	Type:     schema.TypeString,
+					// 	Optional: true,
+					// },
 
 					"preempt": &schema.Schema{
 						Type:     schema.TypeString,
@@ -553,7 +555,7 @@ func resourceSecurityNetworkBasedDeviceHAV1UpdatePortalAPIPart(d *schema.Resourc
 
 	log.Printf("[DEBUG] Update request for %s has successfully accepted with process: %#v", d.Id(), process)
 
-	log.Printf("[DEBUG] Start waiting for single device process for %s becomes ENDED ...", d.Id())
+	log.Printf("[DEBUG] Start waiting for HA device process for %s becomes ENDED ...", d.Id())
 
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"RUNNING"},
@@ -561,7 +563,7 @@ func resourceSecurityNetworkBasedDeviceHAV1UpdatePortalAPIPart(d *schema.Resourc
 		Refresh:      waitForSingleDeviceProcessComplete(client, process.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityDeviceSingleUpdatePollInterval,
+		PollInterval: securityDeviceHAUpdatePollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 

@@ -353,22 +353,22 @@ response:
         {
           "devices": [
             {
-              "msa_device_id": "CES11810",
-              "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
-              "os_server_name": "UTM-CES11878",
-              "os_availability_zone": "zone1-groupb",
-              "os_admin_username": "jp4_sdp_mss_utm_admin",
-              "msa_device_type": "FW",
-              "os_server_status": "ACTIVE"
+                "msa_device_id": "CES11810",
+                "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
+                "os_server_name": "UTM-CES11878",
+                "os_availability_zone": "zone1-groupb",
+                "os_admin_username": "jp4_sdp_mss_utm_admin",
+                "msa_device_type": "FW",
+                "os_server_status": "ACTIVE"
             },
             {
-              "msa_device_id": "CES11811",
-              "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
-              "os_server_name": "WAF-CES11816",
-              "os_availability_zone": "zone1-groupb",
-              "os_admin_username": "jp4_sdp_mss_utm_admin",
-              "msa_device_type": "WAF",
-              "os_server_status": "ACTIVE"
+                "msa_device_id": "CES11811",
+                "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
+                "os_server_name": "WAF-CES11816",
+                "os_availability_zone": "zone1-groupb",
+                "os_admin_username": "jp4_sdp_mss_utm_admin",
+                "msa_device_type": "WAF",
+                "os_server_status": "ACTIVE"
             }
           ]
         }
@@ -400,24 +400,24 @@ response:
         {
           "device_interfaces": [
             {
-              "os_ip_address": "192.168.1.50",
-              "msa_port_id": "port4",
-              "os_port_name": "port4-CES11892",
-              "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
-              "os_network_id": "dummyNetwork1",
-              "os_port_status": "ACTIVE",
-              "os_mac_address": "fa:16:3e:05:ff:66",
-              "os_subnet_id": "dummySubnet1"
+                "os_ip_address": "192.168.1.50",
+                "msa_port_id": "port4",
+                "os_port_name": "port4-CES11892",
+                "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
+                "os_network_id": "dummyNetwork1",
+                "os_port_status": "ACTIVE",
+                "os_mac_address": "fa:16:3e:05:ff:66",
+                "os_subnet_id": "dummySubnet1"
             },
             {
-              "os_ip_address": "192.168.2.50",
-              "msa_port_id": "port7",
-              "os_port_name": "port7-CES11892",
-              "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
-              "os_network_id": "dummyNetwork2",
-              "os_port_status": "ACTIVE",
-              "os_mac_address": "fa:16:3e:05:ff:67",
-              "os_subnet_id": "dummySubnet2"
+                "os_ip_address": "192.168.2.50",
+                "msa_port_id": "port7",
+                "os_port_name": "port7-CES11892",
+                "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
+                "os_network_id": "dummyNetwork2",
+                "os_port_status": "ACTIVE",
+                "os_mac_address": "fa:16:3e:05:ff:67",
+                "os_subnet_id": "dummySubnet2"
             }
           ]
         }
@@ -437,8 +437,8 @@ response:
             "message": "Successful completion",
             "records": 1,
             "rows": [{
-            	"id": 1,
-            	"cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                "id": 1,
+                "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
             }]
         }
 expectedStatus:
