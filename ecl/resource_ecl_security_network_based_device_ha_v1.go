@@ -139,6 +139,8 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 	d.Set("tenant_id", tenantID)
 	d.Set("locale", locale)
 
+	log.Printf("[DEBUG] Setting Basic information into state.")
+
 	ids := d.Id()
 	idArr := strings.Split(ids, "/")
 
@@ -157,6 +159,7 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 
 	operatingMode := device1.Cell[4]
 	licenseKind := device1.Cell[5]
+
 	d.Set("operating_mode", operatingMode)
 	d.Set("license_kind", licenseKind)
 
@@ -189,11 +192,13 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 	haLink1Info["host_1_ip_address"] = haLink2Host1IPAddress
 	haLink1Info["host_2_ip_address"] = haLink2Host2IPAddress
 
+	log.Printf("[DEBUG] Setting HA Link information into state.")
 	d.Set("ha_link_1", haLink1Info)
 	d.Set("ha_link_2", haLink2Info)
 
 	// Device Interface is later.
 
+	log.Printf("[DEBUG] Setting Port information into state.")
 	pClient, err := config.securityPortalV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
@@ -245,6 +250,7 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 	}
 
 	for _, dev1 := range host1AllDevices {
+		log.Printf("[DEBUG] Setting Port information into state from device interface information: %#v", dev1)
 		thisDeviceInterface := map[string]interface{}{}
 
 		index1, err := strconv.Atoi(strings.Replace(dev1.MSAPortID, "port", "", 1))
@@ -303,6 +309,7 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 	}
 
 	d.Set("port", deviceInterfaces)
+	log.Printf("[DEBUG] Finished setting state.")
 
 	return nil
 }
