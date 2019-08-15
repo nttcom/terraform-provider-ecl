@@ -210,25 +210,25 @@ func TestAccSecurityV1NetworkBasedDeviceHAUpdateInterface(t *testing.T) {
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.user_subnet_2", &sn4),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.enabled", "false"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.enable", "false"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v1.ha_1", "port.1.enabled", "false"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.1.enable", "false"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v1.ha_1", "port.2.enabled", "false"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.2.enable", "false"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.enabled", "false"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.enable", "false"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v1.ha_1", "port.4.enabled", "false"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.4.enable", "false"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v1.ha_1", "port.5.enabled", "false"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.5.enable", "false"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v1.ha_1", "port.6.enabled", "false"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.6.enable", "false"),
 				),
 			},
 		},

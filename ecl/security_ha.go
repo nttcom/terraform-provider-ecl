@@ -29,6 +29,7 @@ func haLinkSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeList,
 		Required: true,
+		ForceNew: true,
 		MaxItems: 1,
 		MinItems: 1,
 		Elem: &schema.Resource{
@@ -115,11 +116,6 @@ func haDeviceSchema() map[string]*schema.Schema {
 						Required: true,
 					},
 
-					// "vrrp_ip_address_prefix": &schema.Schema{
-					// 	Type:     schema.TypeInt,
-					// 	Optional: true,
-					// },
-
 					"host_1_ip_address": &schema.Schema{
 						Type:     schema.TypeString,
 						Optional: true,
@@ -182,11 +178,6 @@ func haDeviceSchema() map[string]*schema.Schema {
 						Optional: true,
 						Computed: true,
 					},
-
-					// "vrrp_ip": &schema.Schema{
-					// 	Type:     schema.TypeString,
-					// 	Optional: true,
-					// },
 
 					"preempt": &schema.Schema{
 						Type:     schema.TypeString,
@@ -253,7 +244,7 @@ func resourceSecurityNetworkBasedDeviceHAV1UpdateOrderAPIPart(d *schema.Resource
 
 	log.Printf("[DEBUG] Update request has successfully accepted with order: %#v", order)
 
-	log.Printf("[DEBUG] Start waiting for single device order becomes COMPLETE ...")
+	log.Printf("[DEBUG] Start waiting for HA device order becomes COMPLETE ...")
 
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
@@ -265,12 +256,12 @@ func resourceSecurityNetworkBasedDeviceHAV1UpdateOrderAPIPart(d *schema.Resource
 		MinTimeout:   30 * time.Second,
 	}
 
-	log.Printf("[DEBUG] Finish waiting for single device update order becomes COMPLETE")
+	log.Printf("[DEBUG] Finish waiting for HA device update order becomes COMPLETE")
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
 		return fmt.Errorf(
-			"Error waiting for single device order status (%s) to become ready: %s",
+			"Error waiting for HA device order status (%s) to become ready: %s",
 			order.ID, err)
 	}
 
@@ -529,11 +520,10 @@ func resourceSecurityNetworkBasedDeviceHAV1UpdatePortalAPIPart(d *schema.Resourc
 
 	hostNames := strings.Split(d.Id(), "/")
 	host1 := hostNames[0]
-	// host2 := hostNames[1]
 
 	updateOpts, err := resourceSecurityNetworkBasedHADevicePortsForUpdate(d)
 	if err != nil {
-		return fmt.Errorf("Error getting port-1 option in update: %s", err)
+		return fmt.Errorf("Error getting port option in update: %s", err)
 	}
 	updateQueryOpts := ports.UpdateQueryOpts{
 		TenantID:  tenantID,
@@ -570,11 +560,11 @@ func resourceSecurityNetworkBasedDeviceHAV1UpdatePortalAPIPart(d *schema.Resourc
 	_, err = stateConf.WaitForState()
 	if err != nil {
 		return fmt.Errorf(
-			"Error waiting for single device port management status (%s) to become ready: %s",
+			"Error waiting for HA device port management status (%s) to become ready: %s",
 			process.ID, err)
 	}
 
-	log.Printf("[DEBUG] Finish waiting for single device portal api order becomes COMPLETE")
+	log.Printf("[DEBUG] Finish waiting for HA device portal api order becomes COMPLETE")
 
 	return nil
 }

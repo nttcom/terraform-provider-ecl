@@ -196,8 +196,6 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 	d.Set("ha_link_1", haLink1Info)
 	d.Set("ha_link_2", haLink2Info)
 
-	// Device Interface is later.
-
 	log.Printf("[DEBUG] Setting Port information into state.")
 	pClient, err := config.securityPortalV1Client(GetRegion(d, config))
 	if err != nil {
@@ -239,7 +237,6 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 		return fmt.Errorf("Unable to extract device interfaces of host-2: %s", err)
 	}
 
-	// initialize
 	deviceInterfaces := []map[string]interface{}{}
 	loopCounter := []int{0, 1, 2, 3, 4, 5, 6}
 
@@ -270,8 +267,6 @@ func resourceSecurityNetworkBasedDeviceHAV1Read(d *schema.ResourceData, meta int
 
 		vrrpIP := d.Get(fmt.Sprintf("port.%d.vrrp_ip_address", index1)).(string)
 		thisDeviceInterface["vrrp_ip_addess"] = vrrpIP
-		// vrrpIPPrefix := d.Get(fmt.Sprintf("port.%d.vrrp_ip_address_prefix", index1)).(int)
-		// thisDeviceInterface["vrrp_ip_addess_prefix"] = vrrpIPPrefix
 
 		thisDeviceInterface["host_1_ip_address"] = dev1.OSIPAddress
 		prefixDev1 := d.Get(fmt.Sprintf("port.%d.host_1_ip_address_prefix", index1)).(int)
