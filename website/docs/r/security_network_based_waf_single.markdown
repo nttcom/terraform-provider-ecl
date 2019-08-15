@@ -76,7 +76,7 @@ The following arguments are supported:
 
 * `az_group` - (Required) Set availability zone.
 
-* `port` - (Optional)
+* `port` - (Optional) Set port information.
 
 The `port` block supports:
 
@@ -106,11 +106,3 @@ The following attributes are exported:
 * `port/subnet_id` - See Argument Reference above.
 * `port/mtu` - See Argument Reference above.
 * `port/comment` - See Argument Reference above.
-
-## Import
-
-Network Based WAF(Single) can be imported using the `id`, e.g.
-
-```
-$ terraform import ecl_security_network_based_waf_single_v1.waf_1 <WAF Host Name>
-```

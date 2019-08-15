@@ -6,22 +6,24 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_single"
+	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-const SoIDOfCreate = "FGS_809F858574E94699952D0D7E7C58C81B"
-const SoIDOfUpdate = "FGS_809F858574E94699952D0D7E7C58C81C"
-const SoIDOfDelete = "FGS_F2349100C7D24EF3ACD6B9A9F91FD220"
+const SoIDOfCreateHA = "FGHA_809F858574E94699952D0D7E7C58C81B"
+const SoIDOfUpdateHA = "FGHA_809F858574E94699952D0D7E7C58C81C"
+const SoIDOfDeleteHA = "FGHA_F2349100C7D24EF3ACD6B9A9F91FD220"
 
-const ProcessIDOfUpdateInterface = 85385
+const ProcessIDOfUpdateInterfaceHA = 85385
 
-const expectedNewSingleDeviceHostName = "CES11811"
-const expectedNewSingleDeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
+const expectedNewHADeviceHostName1 = "CES12085"
+const expectedNewHADeviceHostName2 = "CES12086"
+const expectedNewHADeviceUUID1 = "12768064-e7c9-44d1-b01d-e66f138a278e"
+const expectedNewHADeviceUUID2 = "12768064-e7c9-44d1-b01d-e66f138a278f"
 
-func TestMockedAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
-	var sd security.SingleDevice
+func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
+	var hd1, hd2 security.HADevice
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
@@ -29,76 +31,84 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfaces)
+	// TODO
+	mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID1), testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfaces)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID2), testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfaces)
 
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListBeforeCreate)
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedDeviceSingleCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleGetProcessingAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleGetCompleteActiveAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate)
+	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHACreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterCreate)
 
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedDeviceSingleUpdate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleGetProcessingAfterUpdate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleGetCompleteActiveAfterUpdate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListAfterUpdate)
+	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHAUpdate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterUpdate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterUpdate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterUpdate)
 
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedDeviceSingleDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleProcessingAfterDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleGetDeleteComplete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListAfterDelete)
+	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHADelete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAProcessingAfterDelete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetDeleteComplete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterDelete)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV1NetworkBasedDeviceSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV1NetworkBasedDeviceHADestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV1NetworkBasedDeviceSingleBasic,
+				Config: testMockedAccSecurityV1NetworkBasedDeviceHABasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV1NetworkBasedDeviceSingleExists(
-						"ecl_security_network_based_device_single_v1.device_1", &sd),
+					testAccCheckSecurityV1NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v1.ha_1", &hd1, &hd2),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1",
+						"ecl_security_network_based_device_ha_v1.ha_1",
 						"locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1",
-						"operating_mode", "FW"),
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"operating_mode", "FW_HA"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1",
+						"ecl_security_network_based_device_ha_v1.ha_1",
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", "zone1-groupb"),
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"host_1_az_group", "zone1-groupa"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"host_2_az_group", "zone1-groupb"),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV1NetworkBasedDeviceSingleUpdate,
+				Config: testMockedAccSecurityV1NetworkBasedDeviceHAUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV1NetworkBasedDeviceSingleExists(
-						"ecl_security_network_based_device_single_v1.device_1", &sd),
+					testAccCheckSecurityV1NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v1.ha_1", &hd1, &hd2),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1",
+						"ecl_security_network_based_device_ha_v1.ha_1",
 						"locale", "en"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1",
-						"operating_mode", "UTM"),
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"operating_mode", "UTM_HA"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1",
+						"ecl_security_network_based_device_ha_v1.ha_1",
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", "zone1-groupb"),
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"host_1_az_group", "zone1-groupa"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1",
+						"host_2_az_group", "zone1-groupb"),
 				),
 			},
 		},
 	})
 }
 
-func TestMockedAccSecurityV1NetworkBasedDeviceSingleUpdateInterface(t *testing.T) {
-	var sd security.SingleDevice
+func TestMockedAccSecurityV1NetworkBasedDeviceHAUpdateInterface(t *testing.T) {
+	var hd1, hd2 security.HADevice
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
@@ -106,150 +116,253 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingleUpdateInterface(t *testing.T
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListBeforeCreate)
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedDeviceSingleCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleGetProcessingAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleGetCompleteActiveAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListAfterCreate)
-	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfacesAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate)
+	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHACreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterCreate)
+	mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID1), testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesAfterCreate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID2), testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesAfterCreate)
 
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/ports/utm/%s", expectedNewSingleDeviceHostName), testMockSecurityV1NetworkBasedDeviceSingleUpdateInterface)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV1NetworkBasedDeviceSingleGetProcessingAfterUpdateInterface)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV1NetworkBasedDeviceSingleGetCompleteActiveAfterUpdateInterface)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListAfterInterfaceUpdate)
-	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterUpdate)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfacesAfterUpdate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/ports/utm/ha/%s", expectedNewHADeviceHostName1), testMockSecurityV1NetworkBasedDeviceHAUpdateInterface)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterfaceHA), testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterUpdateInterface)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterfaceHA), testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterUpdateInterface)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterInterfaceUpdate)
+	mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterUpdate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID1), testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesOfHost1AfterUpdate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID2), testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesOfHost2AfterUpdate)
 
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV1NetworkBasedDeviceSingleDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleProcessingAfterDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceSingleGetDeleteComplete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListAfterDelete)
+	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV1NetworkBasedDeviceHADelete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAProcessingAfterDelete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV1NetworkBasedDeviceHAGetDeleteComplete)
+	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListAfterDelete)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV1NetworkBasedDeviceSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV1NetworkBasedDeviceHADestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV1NetworkBasedDeviceSingleBasic,
+				Config: testMockedAccSecurityV1NetworkBasedDeviceHABasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV1NetworkBasedDeviceSingleExists(
-						"ecl_security_network_based_device_single_v1.device_1", &sd),
+					testAccCheckSecurityV1NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v1.ha_1", &hd1, &hd2),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV1NetworkBasedDeviceSingleUpdateInterface,
+				Config: testMockedAccSecurityV1NetworkBasedDeviceHAUpdateInterface,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV1NetworkBasedDeviceSingleExists(
-						"ecl_security_network_based_device_single_v1.device_1", &sd),
+					testAccCheckSecurityV1NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v1.ha_1", &hd1, &hd2),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.0.ip_address", "192.168.1.50"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.vrrp_ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.0.network_id", "dummyNetwork1"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.network_id", "dummyNetwork-port1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.0.subnet_id", "dummySubnet1"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.subnet_id", "dummySubnet-port1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.0.mtu", "1500"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.mtu", "1500"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.0.comment", "port 0 comment"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.comment", "port 0 comment"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.host_1_ip_address", "10.0.0.1"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.host_1_ip_address_prefix", "24"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.host_2_ip_address", "10.0.0.2"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.0.host_2_ip_address_prefix", "24"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.3.ip_address", "192.168.2.50"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.vrrp_ip_address", "192.168.1.51"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.3.network_id", "dummyNetwork2"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.network_id", "dummyNetwork-port2"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.3.subnet_id", "dummySubnet2"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.subnet_id", "dummySubnet-port2"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.3.mtu", "1500"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.mtu", "1500"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v1.device_1", "port.3.comment", "port 3 comment"),
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.comment", "port 3 comment"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.host_1_ip_address", "10.0.0.3"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.host_1_ip_address_prefix", "24"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.host_2_ip_address", "10.0.0.4"),
+					resource.TestCheckResourceAttr(
+						"ecl_security_network_based_device_ha_v1.ha_1", "port.3.host_2_ip_address_prefix", "24"),
 				),
 			},
 		},
 	})
 }
 
-var testMockedAccSecurityV1NetworkBasedDeviceSingleBasic = fmt.Sprintf(`
-resource "ecl_security_network_based_device_single_v1" "device_1" {
+var testMockedAccSecurityV1NetworkBasedDeviceHABasic = fmt.Sprintf(`
+resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	tenant_id = "%s"
 	locale = "ja"
-	operating_mode = "FW"
+	operating_mode = "FW_HA"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+
+	host_1_az_group = "zone1-groupa"
+	host_2_az_group = "zone1-groupb"
+
+	ha_link_1 {
+		network_id = "DummyNetwork1"
+		subnet_id = "DummySubnet1"
+		host_1_ip_address = "192.168.1.3"
+		host_2_ip_address = "192.168.1.4"
+	}
+
+	ha_link_2 {
+		network_id = "DummyNetwork2"
+		subnet_id = "DummySubnet2"
+		host_1_ip_address = "192.168.2.3"
+		host_2_ip_address = "192.168.2.4"
+	}
 }
 `,
 	OS_TENANT_ID,
 )
 
-var testMockedAccSecurityV1NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
-resource "ecl_security_network_based_device_single_v1" "device_1" {
+var testMockedAccSecurityV1NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
+resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	tenant_id = "%s"
 	locale = "en"
-	operating_mode = "UTM"
+	operating_mode = "UTM_HA"
 	license_kind = "08"
-	az_group = "zone1-groupb"
-}
-`,
+
+	host_1_az_group = "zone1-groupa"
+	host_2_az_group = "zone1-groupb"
+
+	ha_link_1 {
+		network_id = "DummyNetwork1"
+		subnet_id = "DummySubnet1"
+		host_1_ip_address = "192.168.1.3"
+		host_2_ip_address = "192.168.1.4"
+	}
+
+	ha_link_2 {
+		network_id = "DummyNetwork2"
+		subnet_id = "DummySubnet2"
+		host_1_ip_address = "192.168.2.3"
+		host_2_ip_address = "192.168.2.4"
+	}
+}`,
 	OS_TENANT_ID,
 )
 
-var testMockedAccSecurityV1NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
+var testMockedAccSecurityV1NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
 
-resource "ecl_security_network_based_device_single_v1" "device_1" {
+resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	tenant_id = "%s"
 	locale = "ja"
-	operating_mode = "FW"
+	operating_mode = "FW_HA"
 	license_kind = "02"
-	az_group = "zone1-groupb"
 
-  port {
-      enable = "true"
-      ip_address = "192.168.1.50"
-      ip_address_prefix = 24
-      network_id = "dummyNetwork1"
-      subnet_id = "dummySubnet1"
-      mtu = "1500"
-      comment = "port 0 comment"
-  }
+	host_1_az_group = "zone1-groupa"
+	host_2_az_group = "zone1-groupb"
 
-  port {
-    enable = "false"
-  }
+	ha_link_1 {
+		network_id = "DummyNetwork1"
+		subnet_id = "DummySubnet1"
+		host_1_ip_address = "192.168.1.3"
+		host_2_ip_address = "192.168.1.4"
+	}
 
-  port {
-    enable = "false"
-  }
-  
-  port {
-      enable = "true"
-      ip_address = "192.168.2.50"
-      ip_address_prefix = 24
-      network_id = "dummyNetwork2"
-      subnet_id = "dummySubnet2"
-      mtu = "1500"
-      comment = "port 3 comment"
-  }
+	ha_link_2 {
+		network_id = "DummyNetwork2"
+		subnet_id = "DummySubnet2"
+		host_1_ip_address = "192.168.2.3"
+		host_2_ip_address = "192.168.2.4"
+	}
 
-  port {
-    enable = "false"
-  }
-  port {
-    enable = "false"
-  }
-  port {
-    enable = "false"
-  }
+	port {
+	    enable = "true"
+
+	    network_id = "dummyNetwork-port1"
+	    subnet_id = "dummySubnet-port1"
+	    mtu = "1500"
+		comment = "port 0 comment"
+		enable_ping = "true"
+
+		host_1_ip_address = "10.0.0.1"
+		host_1_ip_address_prefix = 24
+
+		host_2_ip_address = "10.0.0.2"
+		host_2_ip_address_prefix = 24
+
+		vrrp_ip_address = "192.168.1.50"
+		vrrp_grp_id = "1"
+		vrrp_id = "1"
+		preempt = "true"
+	}
+
+	port {
+	  enable = "false"
+	}
+
+	port {
+	  enable = "false"
+	}
+
+	port {
+	    enable = "true"
+
+	    network_id = "dummyNetwork-port2"
+	    subnet_id = "dummySubnet-port2"
+	    mtu = "1500"
+		comment = "port 3 comment"
+		enable_ping = "true"
+
+		host_1_ip_address = "10.0.0.3"
+		host_1_ip_address_prefix = 24
+
+		host_2_ip_address = "10.0.0.4"
+		host_2_ip_address_prefix = 24
+
+		vrrp_ip_address = "192.168.1.51"
+		vrrp_grp_id = "1"
+		vrrp_id = "2"
+		preempt = "true"
+	}
+
+	port {
+	    enable = "false"
+	}
+
+	port {
+	    enable = "false"
+	}
+
+	port {
+	    enable = "false"
+	}
 
 }
 `,
 	OS_TENANT_ID,
 )
 
-var testMockSecurityV1NetworkBasedDeviceSingleListBeforeCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfaces = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "devices": []
+        }
+expectedStatus:
+    - Updated
+    - Created
+`
+
+var testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate = `
 request:
     method: GET
 response:
@@ -260,17 +373,23 @@ response:
             "code": "FOV-01",
             "message": "Successful completion",
             "records": 1,
-            "rows": [{
-            	"id": 1,
-            	"cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
-            }]
+            "rows": [
+                {
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "id": 1
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "id": 2
+                }
+            ]
         }
 expectedStatus:
     - ""
 newStatus: PreCreate
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterCreate = `
 request:
     method: GET
 response:
@@ -280,15 +399,23 @@ response:
             "status": 1,
             "code": "FOV-01",
             "message": "Successful completion",
-            "records": 2,
+            "records": 1,
             "rows": [
                 {
-                    "id": 1,
-                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "id": 1
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "id": 2
                 },
                 {
-                    "id": 2,
-                    "cell": ["false", "1", "CES11811", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "1902F60E", "CES12085", "FW_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
+                    "id": 3
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12086", "FW_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
+                    "id": 4
                 }
             ]
         }
@@ -297,21 +424,7 @@ expectedStatus:
     - Updating
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfaces = `
-request:
-    method: GET
-response:
-    code: 200
-    body: >
-        {
-          "devices": []
-        }
-expectedStatus:
-    - Updated
-    - Created
-`
-
-var testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate = `
 request:
     method: GET
 response:
@@ -320,22 +433,22 @@ response:
         {
           "devices": [
             {
-              "msa_device_id": "CES11810",
-              "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
-              "os_server_name": "UTM-CES11878",
-              "os_availability_zone": "zone1-groupb",
-              "os_admin_username": "jp4_sdp_mss_utm_admin",
-              "msa_device_type": "FW",
-              "os_server_status": "ACTIVE"
+                "msa_device_id": "CES12085",
+                "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
+                "os_server_name": "UTM-CES11878",
+                "os_availability_zone": "zone1-groupb",
+                "os_admin_username": "jp4_sdp_mss_utm_admin",
+                "msa_device_type": "FW",
+                "os_server_status": "ACTIVE"
             },
             {
-              "msa_device_id": "CES11811",
-              "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
-              "os_server_name": "WAF-CES11816",
-              "os_availability_zone": "zone1-groupb",
-              "os_admin_username": "jp4_sdp_mss_utm_admin",
-              "msa_device_type": "WAF",
-              "os_server_status": "ACTIVE"
+                "msa_device_id": "CES12086",
+                "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278f",
+                "os_server_name": "WAF-CES11816",
+                "os_availability_zone": "zone1-groupb",
+                "os_admin_username": "jp4_sdp_mss_utm_admin",
+                "msa_device_type": "WAF",
+                "os_server_status": "ACTIVE"
             }
           ]
         }
@@ -344,7 +457,7 @@ expectedStatus:
     - Created
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterUpdate = `
 request:
     method: GET
 response:
@@ -353,8 +466,8 @@ response:
         {
           "devices": [
             {
-                "msa_device_id": "CES11810",
-                "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
+                "msa_device_id": "CES12085",
+                "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
                 "os_server_name": "UTM-CES11878",
                 "os_availability_zone": "zone1-groupb",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
@@ -362,8 +475,8 @@ response:
                 "os_server_status": "ACTIVE"
             },
             {
-                "msa_device_id": "CES11811",
-                "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
+                "msa_device_id": "CES12086",
+                "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278f",
                 "os_server_name": "WAF-CES11816",
                 "os_availability_zone": "zone1-groupb",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
@@ -376,14 +489,14 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfacesAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesAfterCreate = `
 request:
     method: GET
 response:
     code: 200
     body: >
         {
-          "device_interfaces": []
+            "device_interfaces": []
         }
 expectedStatus:
     - Created
@@ -391,7 +504,7 @@ expectedStatus:
     - Updated
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfacesAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesOfHost1AfterUpdate = `
 request:
     method: GET
 response:
@@ -399,33 +512,107 @@ response:
     body: >
         {
           "device_interfaces": [
-            {
-                "os_ip_address": "192.168.1.50",
+              {
+                "os_ip_address": "192.168.1.3",
+                "msa_port_id": "port2",
+                "os_port_name": "HA-Port01-First-CES12136",
+                "os_port_id": "a6471bfc-8d65-4fab-bdca-476cef33c0de",
+                "os_network_id": "e51d6712-93b7-40e2-97be-3de06df02ffc",
+                "os_port_status": "ACTIVE",
+                "os_mac_address": "fa:16:3e:62:41:e1",
+                "os_subnet_id": "1e925039-14d0-42b2-941a-69d180fcccdd"
+              },
+              {
+                "os_ip_address": "10.0.0.1",
                 "msa_port_id": "port4",
-                "os_port_name": "port4-CES11892",
-                "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
-                "os_network_id": "dummyNetwork1",
+                "os_port_name": "port4-CES12136",
+                "os_port_id": "e233ef27-6ccd-4be9-8da5-1316788ecf6b",
+                "os_network_id": "dummyNetwork-port1",
                 "os_port_status": "ACTIVE",
-                "os_mac_address": "fa:16:3e:05:ff:66",
-                "os_subnet_id": "dummySubnet1"
-            },
-            {
-                "os_ip_address": "192.168.2.50",
+                "os_mac_address": "fa:16:3e:79:0a:4a",
+                "os_subnet_id": "dummySubnet-port1"
+              },
+              {
+                "os_ip_address": "10.0.0.3",
                 "msa_port_id": "port7",
-                "os_port_name": "port7-CES11892",
-                "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
-                "os_network_id": "dummyNetwork2",
+                "os_port_name": "port4-CES12136",
+                "os_port_id": "e233ef27-6ccd-4be9-8da5-1316788ecf6b",
+                "os_network_id": "a16627e2-1043-4cbb-b032-8a68221c9e60",
                 "os_port_status": "ACTIVE",
-                "os_mac_address": "fa:16:3e:05:ff:67",
-                "os_subnet_id": "dummySubnet2"
-            }
+                "os_mac_address": "fa:16:3e:79:0a:4a",
+                "os_subnet_id": "ea3085cd-8cbb-4b7b-871f-2a6514fabd33"
+              },
+              {
+                "os_ip_address": "192.168.2.3",
+                "msa_port_id": "port3",
+                "os_port_name": "HA-Port02-First-CES12136",
+                "os_port_id": "e4cea571-fd7b-4798-bda4-07f739e6f9ce",
+                "os_network_id": "dummyNetwork-port2",
+                "os_port_status": "ACTIVE",
+                "os_mac_address": "fa:16:3e:c8:0a:10",
+                "os_subnet_id": "dummySubnet-port2"
+              }
+            ]
+        }
+expectedStatus:
+    - InterfaceIsUpdated
+`
+
+var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesOfHost2AfterUpdate = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+          "device_interfaces": [
+              {
+                "os_ip_address": "192.168.1.3",
+                "msa_port_id": "port2",
+                "os_port_name": "HA-Port01-First-CES12136",
+                "os_port_id": "a6471bfc-8d65-4fab-bdca-476cef33c0de",
+                "os_network_id": "e51d6712-93b7-40e2-97be-3de06df02ffc",
+                "os_port_status": "ACTIVE",
+                "os_mac_address": "fa:16:3e:62:41:e1",
+                "os_subnet_id": "1e925039-14d0-42b2-941a-69d180fcccdd"
+              },
+              {
+                "os_ip_address": "10.0.0.2",
+                "msa_port_id": "port4",
+                "os_port_name": "port4-CES12136",
+                "os_port_id": "e233ef27-6ccd-4be9-8da5-1316788ecf6b",
+                "os_network_id": "dummyNetwork-port1",
+                "os_port_status": "ACTIVE",
+                "os_mac_address": "fa:16:3e:79:0a:4a",
+                "os_subnet_id": "dummySubnet-port1"
+              },
+              {
+                "os_ip_address": "10.0.0.4",
+                "msa_port_id": "port7",
+                "os_port_name": "port4-CES12136",
+                "os_port_id": "e233ef27-6ccd-4be9-8da5-1316788ecf6b",
+                "os_network_id": "a16627e2-1043-4cbb-b032-8a68221c9e60",
+                "os_port_status": "ACTIVE",
+                "os_mac_address": "fa:16:3e:79:0a:4a",
+                "os_subnet_id": "ea3085cd-8cbb-4b7b-871f-2a6514fabd33"
+              },
+              {
+                "os_ip_address": "192.168.2.3",
+                "msa_port_id": "port3",
+                "os_port_name": "HA-Port02-First-CES12136",
+                "os_port_id": "e4cea571-fd7b-4798-bda4-07f739e6f9ce",
+                "os_network_id": "dummyNetwork-port2",
+                "os_port_status": "ACTIVE",
+                "os_mac_address": "fa:16:3e:c8:0a:10",
+                "os_subnet_id": "dummySubnet-port2"
+              }
           ]
         }
 expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterDelete = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterDelete = `
 request:
     method: GET
 response:
@@ -436,16 +623,22 @@ response:
             "code": "FOV-01",
             "message": "Successful completion",
             "records": 1,
-            "rows": [{
-                "id": 1,
-                "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
-            }]
+            "rows": [
+                {
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "id": 1
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "id": 2
+                }
+            ]
         }
 expectedStatus:
     - Deleted
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleCreate = fmt.Sprintf(`
+var testMockSecurityV1NetworkBasedDeviceHACreate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -461,10 +654,10 @@ expectedStatus:
     - PreCreate
 newStatus: Creating
 `,
-	SoIDOfCreate,
+	SoIDOfCreateHA,
 )
 
-var testMockSecurityV1NetworkBasedDeviceSingleGetProcessingAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterCreate = `
 request:
     method: GET
 response:
@@ -482,7 +675,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleGetCompleteActiveAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterCreate = `
 request:
     method: GET
 response:
@@ -501,7 +694,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleDelete = fmt.Sprintf(`
+var testMockSecurityV1NetworkBasedDeviceHADelete = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -519,10 +712,10 @@ expectedStatus:
     - InterfaceIsUpdated
 newStatus: Deleted
 `,
-	SoIDOfDelete,
+	SoIDOfDeleteHA,
 )
 
-var testMockSecurityV1NetworkBasedDeviceSingleProcessingAfterDelete = `
+var testMockSecurityV1NetworkBasedDeviceHAProcessingAfterDelete = `
 request:
     method: GET
 response:
@@ -540,7 +733,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleGetDeleteComplete = `
+var testMockSecurityV1NetworkBasedDeviceHAGetDeleteComplete = `
 request:
     method: GET
 response:
@@ -558,7 +751,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
+var testMockSecurityV1NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -574,10 +767,10 @@ expectedStatus:
     - Created
 newStatus: Updating
 `,
-	SoIDOfUpdate,
+	SoIDOfUpdateHA,
 )
 
-var testMockSecurityV1NetworkBasedDeviceSingleGetProcessingAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterUpdate = `
 request:
     method: GET
 response:
@@ -595,7 +788,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleGetCompleteActiveAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterUpdate = `
 request:
     method: GET
 response:
@@ -614,7 +807,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterUpdate = `
 request:
     method: GET
 response:
@@ -624,15 +817,23 @@ response:
             "status": 1,
             "code": "FOV-01",
             "message": "Successful completion",
-            "records": 2,
+            "records": 4,
             "rows": [
                 {
-                    "id": 1,
-                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "id": 1
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "id": 2
                 },
                 {
-                    "id": 2,
-                    "cell": ["false", "1", "CES11811", "UTM", "08", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "1902F60E", "CES12085", "UTM_HA", "08", "ha", "zone1-groupa", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
+                    "id": 3
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12086", "UTM_HA", "08", "ha", "zone1-groupb", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
+                    "id": 4
                 }
             ]
         }
@@ -640,7 +841,7 @@ expectedStatus:
     - Updated
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterInterfaceUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterInterfaceUpdate = `
 request:
     method: GET
 response:
@@ -653,12 +854,20 @@ response:
             "records": 2,
             "rows": [
                 {
-                    "id": 1,
-                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "id": 1
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "id": 2
                 },
                 {
-                    "id": 2,
-                    "cell": ["false", "1", "CES11811", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "1902F60E", "CES12085", "FW_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
+                    "id": 3
+                }, 
+                {
+                    "cell": ["false", "2", "1902F60E", "CES12086", "FW_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
+                    "id": 4
                 }
             ]
         }
@@ -666,7 +875,7 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
+var testMockSecurityV1NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
 request:
     method: PUT
 response:
@@ -680,10 +889,10 @@ expectedStatus:
     - Created
 newStatus: InterfaceIsUpdating
 `,
-	ProcessIDOfUpdateInterface,
+	ProcessIDOfUpdateInterfaceHA,
 )
 
-var testMockSecurityV1NetworkBasedDeviceSingleGetProcessingAfterUpdateInterface = `
+var testMockSecurityV1NetworkBasedDeviceHAGetProcessingAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -866,7 +1075,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleGetCompleteActiveAfterUpdateInterface = `
+var testMockSecurityV1NetworkBasedDeviceHAGetCompleteActiveAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -1050,7 +1259,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterUpdateInterface = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -1064,11 +1273,11 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES777", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "UTM", "08", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES888", "UTM", "08", "standalone", "zone1-groupb", "jp4_zone1"]
                 }
             ]
         }
