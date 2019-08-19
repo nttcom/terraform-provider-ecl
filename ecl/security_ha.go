@@ -69,7 +69,8 @@ func haDeviceSchema() map[string]*schema.Schema {
 
 		"locale": &schema.Schema{
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
+			Default:  "en",
 			ValidateFunc: validation.StringInSlice([]string{
 				"ja", "en",
 			}, false),

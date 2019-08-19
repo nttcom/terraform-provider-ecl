@@ -31,7 +31,7 @@ The following arguments are supported:
 
 * `tenant_id` - (Required) Tenant ID of the owner (UUID).
 
-* `locale` - (Required) Messages are displayed in Japanese or English 
+* `locale` - (Optional) Messages are displayed in Japanese or English 
   depending on this value. ja: Japanese, en: English. Default value is "en".
 
 * `service_order_service` - (Required) 
