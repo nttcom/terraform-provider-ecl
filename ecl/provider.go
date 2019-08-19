@@ -259,7 +259,7 @@ func init() {
 
 		"project_domain_name": "The name of the domain where the project resides (Identity v3).",
 
-		"project_domain_id": "The ID of the domain where the proejct resides (Identity v3).",
+		"project_domain_id": "The ID of the domain where the project resides (Identity v3).",
 
 		"domain_id": "The ID of the Domain to scope to (Identity v3).",
 
