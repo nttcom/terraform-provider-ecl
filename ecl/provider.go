@@ -216,6 +216,7 @@ func Provider() terraform.ResourceProvider {
 			"ecl_network_public_ip_v2":                    resourceNetworkPublicIPV2(),
 			"ecl_network_static_route_v2":                 resourceNetworkStaticRouteV2(),
 			"ecl_network_subnet_v2":                       resourceNetworkSubnetV2(),
+			"ecl_security_host_based_v1":                  resourceSecurityHostBasedV1(),
 			"ecl_security_network_based_device_ha_v1":     resourceSecurityNetworkBasedDeviceHAV1(),
 			"ecl_security_network_based_device_single_v1": resourceSecurityNetworkBasedDeviceSingleV1(),
 			"ecl_security_network_based_waf_single_v1":    resourceSecurityNetworkBasedWAFSingleV1(),
