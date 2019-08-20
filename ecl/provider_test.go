@@ -33,6 +33,7 @@ var (
 	OS_INTERNET_SERVICE_ID                   = os.Getenv("OS_INTERNET_SERVICE_ID")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
 	OS_LB_ENVIRONMENT                        = os.Getenv("OS_LB_ENVIRONMENT")
+	OS_MAIL_ADDRESS                          = os.Getenv("OS_MAIL_ADDRESS")
 	OS_MAGNUM_FLAVOR                         = os.Getenv("OS_MAGNUM_FLAVOR")
 	OS_NETWORK_ID                            = os.Getenv("OS_NETWORK_ID")
 	OS_POOL_NAME                             = os.Getenv("OS_POOL_NAME")
@@ -308,6 +309,14 @@ func testAccPreCheckSecurity(t *testing.T) {
 		t.Fatal("OS_TENANT_ID must be set for acceptance tests of security")
 	}
 }
+
+func testAccPreCheckSecurityHostBased(t *testing.T) {
+	testAccPreCheckSecurity(t)
+	if OS_MAIL_ADDRESS == "" {
+		t.Fatal("OS_MAIL_ADDRESS must be set for acceptance tests of host based security")
+	}
+}
+
 func TestProvider(t *testing.T) {
 	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)
