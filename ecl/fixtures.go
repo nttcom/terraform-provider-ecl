@@ -235,6 +235,34 @@ response:
                         "id": "c4c383a719cb489d8210328e17659620",
                         "name": "virtual-network-appliance",
                         "type": "virtual-network-appliance"
+                    },
+                    {
+                        "endpoints": [
+                            {
+                                "id": "1234567890abcdef1234567890abcde0",
+                                "interface": "admin",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]sv2/01234567890123456789abcdefabcdef"
+                            },
+                            {
+                                "id": "1234567890abcdef1234567890abcde1",
+                                "interface": "internal",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]sv2/01234567890123456789abcdefabcdef"
+                            },
+                            {
+                                "id": "1234567890abcdef1234567890abcde2",
+                                "interface": "public",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]sv2/01234567890123456789abcdefabcdef"
+                            }
+                        ],
+                        "id": "1234567890abcdef1234567890abcde3",
+                        "name": "baremetal-server",
+                        "type": "baremetal-server"
                     }
                 ],
                 "expires_at": "2018-11-28T02:48:52.111201Z",

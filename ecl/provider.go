@@ -178,6 +178,9 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
+			"ecl_baremetal_availability_zone_v2":     dataSourceBaremetalAvailabilityZoneV2(),
+			"ecl_baremetal_flavor_v2":                dataSourceBaremetalFlavorV2(),
+			"ecl_baremetal_keypair_v2":               dataSourceBaremetalKeypairV2(),
 			"ecl_compute_flavor_v2":                  dataSourceComputeFlavorV2(),
 			"ecl_compute_keypair_v2":                 dataSourceComputeKeypairV2(),
 			"ecl_dns_zone_v2":                        dataSourceDNSZoneV2(),
@@ -199,6 +202,8 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"ecl_baremetal_server_v2":                     resourceBaremetalServerV2(),
+			"ecl_baremetal_keypair_v2":                    resourceBaremetalKeypairV2(),
 			"ecl_compute_instance_v2":                     resourceComputeInstanceV2(),
 			"ecl_compute_keypair_v2":                      resourceComputeKeypairV2(),
 			"ecl_compute_volume_attach_v2":                resourceComputeVolumeAttachV2(),

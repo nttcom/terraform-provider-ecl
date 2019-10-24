@@ -233,6 +233,13 @@ func (c *Config) storageV1Client(region string) (*eclcloud.ServiceClient, error)
 	})
 }
 
+func (c *Config) baremetalV2Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewBaremetalV2(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
+}
+
 func (c *Config) computeV2Client(region string) (*eclcloud.ServiceClient, error) {
 	return ecl.NewComputeV2(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
