@@ -263,6 +263,34 @@ response:
                         "id": "1234567890abcdef1234567890abcde3",
                         "name": "baremetal-server",
                         "type": "baremetal-server"
+                    },
+                    {
+                        "endpoints": [
+                            {
+                                "id": "7c69821f-3246-4381-ba44-a91e4160cac6",
+                                "interface": "admin",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]sv1.0/1bc271e7a8af4d988ff91612f5b122f8"
+                            },
+                            {
+                                "id": "7c69821f-3246-4381-ba44-a91e4160cac6",
+                                "interface": "internal",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]sv1.0/1bc271e7a8af4d988ff91612f5b122f8"
+                            },
+                            {
+                                "id": "7c69821f-3246-4381-ba44-a91e4160cac6",
+                                "interface": "public",
+                                "region": "RegionOne",
+                                "region_id": "RegionOne",
+                                "url": "%[1]sv1.0/1bc271e7a8af4d988ff91612f5b122f8"
+                            }
+                        ],
+                        "id": "7c69821f-3246-4381-ba44-a91e4160cac6",
+                        "name": "dedicated-hypervisor",
+                        "type": "dedicated-hypervisor"
                     }
                 ],
                 "expires_at": "2018-11-28T02:48:52.111201Z",
