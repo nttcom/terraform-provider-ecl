@@ -7,14 +7,15 @@ Maintainers
 This provider plugin is maintained by:
 
 * Keiichi Hikita ([@keiichi-hikita](https://github.com/keiichi-hikita))
-* Yuma Maki ([@ymaki](https://github.com/ymaki))
-* Rinto Shimizu([@rintooo](https://github.com/rintooo))
+* Takuma Watanabe ([@t-wata](https://github.com/t-wata))
+* Kazunori Yoshihara ([@kazyshr](https://github.com/kazyshr))
+* Hitoyoshi Ohta ([@htysh](https://github.com/htysh))
 
 Requirements
 ------------
 
-- [Terraform](https://www.terraform.io/downloads.html) 0.11x
-- [Go](https://golang.org/doc/install) 1.11 (to build the provider plugin)
+- [Terraform](https://www.terraform.io/downloads.html) 0.12.x
+- [Go](https://golang.org/doc/install) 1.12 (to build the provider plugin)
 
 Building The Provider
 ---------------------
