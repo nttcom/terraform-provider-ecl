@@ -208,6 +208,8 @@ func Provider() terraform.ResourceProvider {
 			"ecl_compute_keypair_v2":                      resourceComputeKeypairV2(),
 			"ecl_compute_volume_attach_v2":                resourceComputeVolumeAttachV2(),
 			"ecl_compute_volume_v2":                       resourceComputeVolumeV2(),
+			"ecl_dedicated_hypervisor_server_v1":          resourceDedicatedHypervisorServerV1(),
+			"ecl_dedicated_hypervisor_license_v1":         resourceDedicatedHypervisorLicenseV1(),
 			"ecl_dns_recordset_v2":                        resourceDNSRecordSetV2(),
 			"ecl_dns_zone_v2":                             resourceDNSZoneV2(),
 			"ecl_imagestorages_image_v2":                  resourceImageStoragesImageV2(),

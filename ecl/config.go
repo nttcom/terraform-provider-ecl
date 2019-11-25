@@ -307,6 +307,13 @@ func (c *Config) vnaV1Client(region string) (*eclcloud.ServiceClient, error) {
 	})
 }
 
+func (c *Config) dedicatedHypervisorV1Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewDedicatedHypervisorV1(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
+}
+
 // StorageRetryMaxCount is a integer value that means
 // retry maximum count for request against storage SDP
 const StorageRetryMaxCount int = 30

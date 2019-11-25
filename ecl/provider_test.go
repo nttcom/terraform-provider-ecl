@@ -22,6 +22,7 @@ var (
 	OS_DB_DATASTORE_TYPE                     = os.Getenv("OS_DB_DATASTORE_TYPE")
 	OS_DB_DATASTORE_VERSION                  = os.Getenv("OS_DB_DATASTORE_VERSION")
 	OS_DB_ENVIRONMENT                        = os.Getenv("OS_DB_ENVIRONMENT")
+	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEPRECATED_ENVIRONMENT                = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
 	OS_DNS_ENVIRONMENT                       = os.Getenv("OS_DNS_ENVIRONMENT")
 	OS_EXTGW_ID                              = os.Getenv("OS_EXTGW_ID")
@@ -314,6 +315,14 @@ func testAccPreCheckSecurityHostBased(t *testing.T) {
 	testAccPreCheckSecurity(t)
 	if OS_MAIL_ADDRESS == "" {
 		t.Fatal("OS_MAIL_ADDRESS must be set for acceptance tests of host based security")
+	}
+}
+
+func testAccPreCheckDedicatedHypervisor(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_DEDICATED_HYPERVISOR_ENVIRONMENT == "" {
+		t.Skip("This environment does not support Dedicated Hypervisor tests. Set OS_DEDICATED_HYPERVISOR_ENVIRONMENT if you want to run Dedicated Hypervisor test")
 	}
 }
 
