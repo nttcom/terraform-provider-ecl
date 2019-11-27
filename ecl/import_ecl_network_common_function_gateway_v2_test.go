@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccNetworkV2CommonFunctionGatewayImportBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_network_common_function_gateway_v2.common_function_gateway_1"
 
 	resource.Test(t, resource.TestCase{

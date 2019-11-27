@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccDedicatedHypervisorV1ServerImportBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_dedicated_hypervisor_server_v1.server_1"
 
 	resource.Test(t, resource.TestCase{

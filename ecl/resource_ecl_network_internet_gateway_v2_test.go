@@ -12,6 +12,10 @@ import (
 )
 
 func TestAccNetworkV2InternetGatewayBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var internet_gateway internet_gateways.InternetGateway
 
 	resource.Test(t, resource.TestCase{

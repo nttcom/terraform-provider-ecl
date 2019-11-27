@@ -12,6 +12,10 @@ import (
 )
 
 func TestAccNetworkV2GatewayInterfaceBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var gatewayInterface gateway_interfaces.GatewayInterface
 
 	resource.Test(t, resource.TestCase{
@@ -48,6 +52,10 @@ func TestAccNetworkV2GatewayInterfaceBasic(t *testing.T) {
 }
 
 func TestAccNetworkV2GatewayInterfaceMultiGateway(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckGatewayInterface(t) },
 		Providers:    testAccProviders,

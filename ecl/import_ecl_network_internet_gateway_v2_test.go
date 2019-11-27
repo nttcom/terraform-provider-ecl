@@ -9,6 +9,10 @@ import (
 )
 
 func TestAccNetworkV2InternetGatewayImportBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_network_internet_gateway_v2.internet_gateway_1"
 
 	resource.Test(t, resource.TestCase{

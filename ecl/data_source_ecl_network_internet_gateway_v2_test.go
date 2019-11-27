@@ -10,6 +10,10 @@ import (
 )
 
 func TestAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckInternetGateway(t) },
 		Providers: testAccProviders,
@@ -30,7 +34,6 @@ func TestAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
 }
 
 func TestMockedAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
-
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 

@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccVNAV1ApplianceImportBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_vna_appliance_v1.appliance_1"
 
 	resource.Test(t, resource.TestCase{

@@ -11,6 +11,10 @@ import (
 )
 
 func TestAccNetworkV2CommonFunctionGatewayBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var cfGw common_function_gateways.CommonFunctionGateway
 
 	resource.Test(t, resource.TestCase{

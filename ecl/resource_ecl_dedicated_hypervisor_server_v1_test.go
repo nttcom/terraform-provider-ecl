@@ -13,6 +13,10 @@ import (
 )
 
 func TestAccDedicatedHypervisorV1ServerBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var server servers.Server
 
 	resource.Test(t, resource.TestCase{
