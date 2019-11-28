@@ -16,6 +16,12 @@ test: fmtcheck
 testacc: fmtcheck
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
+testacc-all: fmtcheck
+	TF_ACC=1 go test ./ecl -v -count=1 -timeout 240m -parallel 4
+
+testacc-short: fmtcheck
+	TF_ACC=1 go test ./ecl -v -short -count=1 -timeout 120m -parallel 4
+
 vet:
 	@echo "go vet ."
 	@go vet $$(go list ./... | grep -v vendor/) ; if [ $$? -eq 1 ]; then \
@@ -42,5 +48,4 @@ test-compile:
 	fi
 	go test -c $(TEST) $(TESTARGS)
 
-.PHONY: build test testacc vet fmt fmtcheck errcheck test-compile
-
+.PHONY: build test testacc testacc-all testacc-short vet fmt fmtcheck errcheck test-compile
