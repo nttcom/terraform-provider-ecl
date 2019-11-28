@@ -24,6 +24,7 @@ type MockController struct {
 	Trackers map[string]*Tracker
 	Mux      *http.ServeMux
 	Server   *httptest.Server
+	AuthURL  string
 }
 
 type Mock struct {
@@ -65,6 +66,7 @@ func NewMockController() *MockController {
 	mc.Server = httptest.NewServer(mc.Mux)
 
 	// ECL(Enterprise Cloud) provider specific setting.
+	mc.AuthURL = os.Getenv("OS_AUTH_URL")
 	os.Setenv("OS_AUTH_URL", mc.Endpoint()+"v3/")
 
 	return mc
@@ -72,6 +74,7 @@ func NewMockController() *MockController {
 
 func (mc *MockController) TerminateMockControllerSafety() {
 	mc.Server.Close()
+	os.Setenv("OS_AUTH_URL", mc.AuthURL)
 }
 
 func (mc MockController) Endpoint() string {
