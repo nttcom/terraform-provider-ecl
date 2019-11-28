@@ -311,7 +311,7 @@ func testAccNetworkV2PortDataSourcePortForDeviceID(name, description string, seg
 		network_id = "${ecl_network_network_v2.network_1.id}"
 		cidr = "192.168.1.0/24"
 		gateway_ip = "192.168.1.1"
-		allocation_pools = {
+		allocation_pools {
 			start = "192.168.1.100"
 			end = "192.168.1.200"
 		}
@@ -323,7 +323,7 @@ func testAccNetworkV2PortDataSourcePortForDeviceID(name, description string, seg
 		segmentation_type = "vlan"
 		segmentation_id = %d
 		network_id = "${ecl_network_network_v2.network_1.id}"
-		fixed_ip = {
+		fixed_ip {
 			subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
 			ip_address = "192.168.1.50"
 		}

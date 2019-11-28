@@ -222,7 +222,7 @@ const testAccComputeVolumeV2VolumeBasic = `
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   description = "volume description"
-  metadata {
+  metadata = {
     foo = "bar"
   }
   size = 15
@@ -233,7 +233,7 @@ const testAccComputeVolumeV2VolumeUpdate = `
 resource "ecl_compute_volume_v2" "volume_1" {
   name = ""
   description = "volume description-updated"
-  metadata {
+  metadata = {
     foo = "bar"
   }
   size = 15
@@ -243,7 +243,7 @@ const testAccComputeVolumeV2VolumeUpdate2 = `
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1-updated"
   description = ""
-  metadata {
+  metadata = {
     foo = "bar"
   }
   size = 15

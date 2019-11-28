@@ -24,6 +24,7 @@ var (
 	OS_DB_ENVIRONMENT                        = os.Getenv("OS_DB_ENVIRONMENT")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEPRECATED_ENVIRONMENT                = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
+	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
 	OS_DNS_ENVIRONMENT                       = os.Getenv("OS_DNS_ENVIRONMENT")
 	OS_EXTGW_ID                              = os.Getenv("OS_EXTGW_ID")
 	OS_FLAVOR_ID                             = os.Getenv("OS_FLAVOR_ID")
@@ -92,6 +93,13 @@ func testAccPreCheckSSSTenant(t *testing.T) {
 	waitSeconds := 45
 	log.Printf("[DEBUG] Waiting %d seconds before starting TestCase...", waitSeconds)
 	time.Sleep(time.Duration(waitSeconds) * time.Second)
+}
+
+func testAccPreCheckDefaultZone(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_DEFAULT_ZONE == "" {
+		t.Skip("This environment does not support tests which use default zone. Set OS_DEFAULT_ZONE if you want to run instance with bootable block device")
+	}
 }
 
 func testAccPreCheckSSSUser(t *testing.T) {

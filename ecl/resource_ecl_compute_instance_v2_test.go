@@ -182,7 +182,10 @@ func TestAccComputeV2InstanceBootFromVolumeWhichHasImageSource(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			testAccPreCheckDefaultZone(t)
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
 		Steps: []resource.TestStep{
@@ -202,7 +205,10 @@ func TestAccComputeV2InstanceBlockDeviceExistingVolume(t *testing.T) {
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			testAccPreCheckDefaultZone(t)
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
 		Steps: []resource.TestStep{
@@ -254,7 +260,10 @@ func TestAccComputeV2InstanceBootFromVolumeForceNew(t *testing.T) {
 	var instance1_2 servers.Server
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			testAccPreCheckDefaultZone(t)
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
 		Steps: []resource.TestStep{
@@ -281,7 +290,10 @@ func TestAccComputeV2InstanceBlockDeviceNewVolume(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			testAccPreCheckDefaultZone(t)
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
 		Steps: []resource.TestStep{
@@ -695,7 +707,7 @@ resource "ecl_network_network_v2" "network_1" {
   network_id = "${ecl_network_network_v2.network_1.id}"
   cidr = "192.168.1.0/24"
   gateway_ip = "192.168.1.1"
-  allocation_pools = {
+  allocation_pools {
     start = "192.168.1.100"
     end = "192.168.1.200"
   }
@@ -706,7 +718,7 @@ var testAccComputeV2InstanceBasic = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "i"
-  metadata {
+  metadata = {
     foo = "bar"
   }
   network {
@@ -721,7 +733,7 @@ var testAccComputeV2InstanceUpdate = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "%s"
-  metadata {
+  metadata = {
     foo = "bar"
   }
   network {
@@ -781,6 +793,7 @@ var testAccComputeV2InstanceBootFromVolumeWhichHasImageSource = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  availability_zone = "%s"
   block_device {
     uuid = "%s"
     source_type = "image"
@@ -794,7 +807,9 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`, testCreateNetworkForInstance, OS_IMAGE_ID)
+`, testCreateNetworkForInstance,
+	OS_DEFAULT_ZONE,
+	OS_IMAGE_ID)
 
 var testAccComputeV2InstanceBlockDeviceExistingVolume = fmt.Sprintf(`
 %s
@@ -802,10 +817,12 @@ var testAccComputeV2InstanceBlockDeviceExistingVolume = fmt.Sprintf(`
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   size = 15
+  availability_zone = "%s"
 }
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  availability_zone = "%s"
   block_device {
     uuid = "%s"
     source_type = "image"
@@ -825,7 +842,10 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`, testCreateNetworkForInstance, OS_IMAGE_ID)
+`, testCreateNetworkForInstance,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_IMAGE_ID)
 
 var testKeyPairForInstance = `
 resource "ecl_compute_keypair_v2" "kp_1" {
@@ -868,13 +888,15 @@ resource "ecl_compute_instance_v2" "instance_1" {
 }
 `,
 	testCreateNetworkForInstance,
-	testKeyPairForInstance)
+	testKeyPairForInstance,
+)
 
 var testAccComputeV2InstanceBootFromVolumeForceNew1 = fmt.Sprintf(`
 %s
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  availability_zone = "%s"
   block_device {
     uuid = "%s"
     source_type = "image"
@@ -888,13 +910,18 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`, testCreateNetworkForInstance, OS_IMAGE_ID)
+`,
+	testCreateNetworkForInstance,
+	OS_DEFAULT_ZONE,
+	OS_IMAGE_ID,
+)
 
 var testAccComputeV2InstanceBootFromVolumeForceNew2 = fmt.Sprintf(`
 %s
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  availability_zone = "%s"
   block_device {
     uuid = "%s"
     source_type = "image"
@@ -908,13 +935,18 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`, testCreateNetworkForInstance, OS_IMAGE_ID)
+`,
+	testCreateNetworkForInstance,
+	OS_DEFAULT_ZONE,
+	OS_IMAGE_ID,
+)
 
 var testAccComputeV2InstanceBlockDeviceNewVolume = fmt.Sprintf(`
 %s
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  availability_zone = "%s"
   block_device {
     uuid = "%s"
     source_type = "image"
@@ -934,8 +966,11 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`, testCreateNetworkForInstance,
-	OS_IMAGE_ID)
+`,
+	testCreateNetworkForInstance,
+	OS_DEFAULT_ZONE,
+	OS_IMAGE_ID,
+)
 
 // var testAccComputeV2InstanceBlockDeviceExistingVolume = fmt.Sprintf(`
 // %s
@@ -1028,7 +1063,7 @@ var testAccComputeV2InstanceMetadataRemove1 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  metadata {
+  metadata = {
     k1 = "v1"
     k2 = "v2"
   }
@@ -1044,7 +1079,7 @@ var testAccComputeV2InstanceMetadataRemove2 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  metadata {
+  metadata = {
     k3 = "v3"
     k1 = "v1"
   }
@@ -1173,7 +1208,7 @@ var testAccComputeV2InstanceConnectToCreatedPort = fmt.Sprintf(`
 
 resource "ecl_network_port_v2" "port_1" {
   network_id = "${ecl_network_network_v2.network_1.id}"
-  fixed_ip = {
+  fixed_ip {
     subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
     ip_address = "192.168.1.50"
   }
