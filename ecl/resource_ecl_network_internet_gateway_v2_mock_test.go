@@ -11,7 +11,7 @@ import (
 )
 
 func TestMockedAccNetworkV2InternetGatewayBasic(t *testing.T) {
-	var internet_gateway internet_gateways.InternetGateway
+	var internetGateway internet_gateways.InternetGateway
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
@@ -42,7 +42,7 @@ func TestMockedAccNetworkV2InternetGatewayBasic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkV2InternetGatewayBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2InternetGatewayExists("ecl_network_internet_gateway_v2.internet_gateway_1", &internet_gateway),
+					testAccCheckNetworkV2InternetGatewayExists("ecl_network_internet_gateway_v2.internet_gateway_1", &internetGateway),
 				),
 			},
 			resource.TestStep{

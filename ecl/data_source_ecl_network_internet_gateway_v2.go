@@ -112,17 +112,17 @@ func dataSourceNetworkInternetGatewayV2Read(d *schema.ResourceData, meta interfa
 			" Please try a more specific search criteria")
 	}
 
-	internet_gateway := allInternetGateways[0]
+	internetGateway := allInternetGateways[0]
 
-	log.Printf("[DEBUG] Retrieved InternetGateway %s: %+v", internet_gateway.ID, internet_gateway)
-	d.SetId(internet_gateway.ID)
+	log.Printf("[DEBUG] Retrieved InternetGateway %s: %+v", internetGateway.ID, internetGateway)
+	d.SetId(internetGateway.ID)
 
-	d.Set("description", internet_gateway.Description)
-	d.Set("internet_service_id", internet_gateway.InternetServiceID)
-	d.Set("name", internet_gateway.Name)
-	d.Set("qos_option_id", internet_gateway.QoSOptionID)
-	d.Set("status", internet_gateway.Status)
-	d.Set("tenant_id", internet_gateway.TenantID)
+	d.Set("description", internetGateway.Description)
+	d.Set("internet_service_id", internetGateway.InternetServiceID)
+	d.Set("name", internetGateway.Name)
+	d.Set("qos_option_id", internetGateway.QoSOptionID)
+	d.Set("status", internetGateway.Status)
+	d.Set("tenant_id", internetGateway.TenantID)
 	d.Set("region", GetRegion(d, config))
 
 	return nil

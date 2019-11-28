@@ -14,7 +14,7 @@ func TestAccNetworkV2InternetGatewayBasic(t *testing.T) {
 		t.Skip("skip this test in short mode")
 	}
 
-	var internet_gateway internet_gateways.InternetGateway
+	var internetGateway internet_gateways.InternetGateway
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckInternetGateway(t) },
@@ -24,7 +24,7 @@ func TestAccNetworkV2InternetGatewayBasic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkV2InternetGatewayBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2InternetGatewayExists("ecl_network_internet_gateway_v2.internet_gateway_1", &internet_gateway),
+					testAccCheckNetworkV2InternetGatewayExists("ecl_network_internet_gateway_v2.internet_gateway_1", &internetGateway),
 				),
 			},
 			resource.TestStep{
@@ -70,7 +70,7 @@ func testAccCheckNetworkV2InternetGatewayDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckNetworkV2InternetGatewayExists(n string, internet_gateway *internet_gateways.InternetGateway) resource.TestCheckFunc {
+func testAccCheckNetworkV2InternetGatewayExists(n string, internetGateway *internet_gateways.InternetGateway) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -96,7 +96,7 @@ func testAccCheckNetworkV2InternetGatewayExists(n string, internet_gateway *inte
 			return fmt.Errorf("Internet gateway not found")
 		}
 
-		*internet_gateway = *found
+		*internetGateway = *found
 
 		return nil
 	}
