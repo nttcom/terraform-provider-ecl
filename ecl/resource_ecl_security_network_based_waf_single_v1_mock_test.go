@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -21,6 +22,10 @@ const SoIDOfWAFDelete = "FGWAF_F2349100C7D24EF3ACD6B9A9F91FD220"
 // const expectedNewSingleDeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
 func TestMockedAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
@@ -90,6 +95,10 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 }
 
 func TestMockedAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()

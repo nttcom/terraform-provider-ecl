@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/nttcom/eclcloud/ecl/dedicated_hypervisor/v1/servers"
@@ -12,6 +13,10 @@ import (
 )
 
 func TestMockedDedicatedHypervisorV1ServerBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	var server servers.Server
 
 	mc := mock.NewMockController()

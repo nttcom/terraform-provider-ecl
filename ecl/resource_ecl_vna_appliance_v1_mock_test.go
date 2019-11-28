@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -11,6 +12,10 @@ import (
 )
 
 func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -83,6 +88,10 @@ func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -130,6 +139,10 @@ func TestMockedAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -183,6 +196,10 @@ func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -222,6 +239,10 @@ func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceSimpleBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()

@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -9,6 +10,10 @@ import (
 )
 
 func TestMockedAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
@@ -45,6 +50,9 @@ func TestMockedAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
 }
 
 func TestMockedAccNetworkV2InternetGatewayDataSourceTestQueries(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()

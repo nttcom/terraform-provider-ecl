@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -9,6 +10,10 @@ import (
 )
 
 func TestMockedAccNetworkV2InternetGatewayImportBasic(t *testing.T) {
+	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
+		t.Skipf("skip this test in %s region", region)
+	}
+
 	resourceName := "ecl_network_internet_gateway_v2.internet_gateway_1"
 
 	mc := mock.NewMockController()
