@@ -19,12 +19,13 @@ const (
 	FakeTokenID = "0123456789abcdef01234567890abcdef"
 )
 
+var authURL = os.Getenv("OS_AUTH_URL")
+
 type MockController struct {
 	Mocks    map[string][]Mock //key should be API path
 	Trackers map[string]*Tracker
 	Mux      *http.ServeMux
 	Server   *httptest.Server
-	AuthURL  string
 }
 
 type Mock struct {
@@ -66,7 +67,6 @@ func NewMockController() *MockController {
 	mc.Server = httptest.NewServer(mc.Mux)
 
 	// ECL(Enterprise Cloud) provider specific setting.
-	mc.AuthURL = os.Getenv("OS_AUTH_URL")
 	os.Setenv("OS_AUTH_URL", mc.Endpoint()+"v3/")
 
 	return mc
@@ -74,7 +74,7 @@ func NewMockController() *MockController {
 
 func (mc *MockController) TerminateMockControllerSafety() {
 	mc.Server.Close()
-	os.Setenv("OS_AUTH_URL", mc.AuthURL)
+	os.Setenv("OS_AUTH_URL", authURL)
 }
 
 func (mc MockController) Endpoint() string {
