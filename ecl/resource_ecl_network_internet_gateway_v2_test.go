@@ -177,8 +177,8 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 }
 
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
-    name = "%s",
-    description = "%s",
+    name = "%s"
+    description = "%s"
     internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
     qos_option_id = "%s"
 }
@@ -193,8 +193,8 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 }
 
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
-    name = "",
-    description = "",
+    name = ""
+    description = ""
     internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
     qos_option_id = "%s"
 }
@@ -244,7 +244,7 @@ counter:
     min: 4
 `
 
-var testMockNetworkV2InternetGatewayGetPendingCreate = `
+var testMockNetworkV2InternetGatewayGetPendingCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -256,7 +256,7 @@ response:
                 "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
                 "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
                 "name": "Terraform_Test_Internet_Gateway_01",
-                "qos_option_id": "e497bbc3-1127-4490-a51d-93582c40ab40",
+                "qos_option_id": "%s",
                 "status": "PENDING_CREATE",
                 "tenant_id": "01234567890123456789abcdefabcdef"
             }
@@ -265,9 +265,11 @@ expectedStatus:
     - Created
 counter:
     max: 3
-`
+`,
+	OS_QOS_OPTION_ID_10M,
+)
 
-var testMockNetworkV2InternetGatewayGetUpdated1 = `
+var testMockNetworkV2InternetGatewayGetUpdated1 = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -279,7 +281,7 @@ response:
                 "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
                 "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
                 "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "qos_option_id": "4861fe30-d941-4199-8a20-eef1b2625a92",
+                "qos_option_id": "%s",
                 "status": "ACTIVE",
                 "tenant_id": "01234567890123456789abcdefabcdef"
             }
@@ -288,9 +290,11 @@ expectedStatus:
     - Updated1
 counter:
     min: 4
-`
+`,
+	OS_QOS_OPTION_ID_100M,
+)
 
-var testMockNetworkV2InternetGatewayGetUpdated2 = `
+var testMockNetworkV2InternetGatewayGetUpdated2 = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -302,7 +306,7 @@ response:
                 "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
                 "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
                 "name": "",
-                "qos_option_id": "e497bbc3-1127-4490-a51d-93582c40ab40",
+                "qos_option_id": "%s",
                 "status": "ACTIVE",
                 "tenant_id": "01234567890123456789abcdefabcdef"
             }
@@ -311,7 +315,9 @@ expectedStatus:
     - Updated2
 counter:
     min: 4
-`
+`,
+	OS_QOS_OPTION_ID_10M,
+)
 
 var testMockNetworkV2InternetGatewayGetPendingUpdate1 = `
 request:
