@@ -2,7 +2,6 @@ package ecl
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -18,8 +17,8 @@ const SoIDOfUpdateM2HostBased = "FGHA_809F858574E94699952D0D7E7C58C81C"
 const SoIDOfDeleteHostBased = "FGHA_F2349100C7D24EF3ACD6B9A9F91FD220"
 
 func TestMockedAccSecurityV1HostBasedBasic(t *testing.T) {
-	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
-		t.Skipf("skip this test in %s region", region)
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
 
 	var hs security.HostBasedSecurity

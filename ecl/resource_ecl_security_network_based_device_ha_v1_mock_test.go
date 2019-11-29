@@ -2,7 +2,6 @@ package ecl
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -24,8 +23,8 @@ const expectedNewHADeviceUUID1 = "12768064-e7c9-44d1-b01d-e66f138a278e"
 const expectedNewHADeviceUUID2 = "12768064-e7c9-44d1-b01d-e66f138a278f"
 
 func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
-	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
-		t.Skipf("skip this test in %s region", region)
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
 
 	var hd1, hd2 security.HADevice
@@ -113,8 +112,8 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 }
 
 func TestMockedAccSecurityV1NetworkBasedDeviceHAUpdateInterface(t *testing.T) {
-	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
-		t.Skipf("skip this test in %s region", region)
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
 
 	var hd1, hd2 security.HADevice

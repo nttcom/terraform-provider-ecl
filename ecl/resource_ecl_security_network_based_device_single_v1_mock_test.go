@@ -2,7 +2,6 @@ package ecl
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -22,8 +21,8 @@ const expectedNewSingleDeviceHostName = "CES11811"
 const expectedNewSingleDeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
 func TestMockedAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
-	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
-		t.Skipf("skip this test in %s region", region)
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
 
 	var sd security.SingleDevice
@@ -103,8 +102,8 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
 }
 
 func TestMockedAccSecurityV1NetworkBasedDeviceSingleUpdateInterface(t *testing.T) {
-	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
-		t.Skipf("skip this test in %s region", region)
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
 
 	var sd security.SingleDevice

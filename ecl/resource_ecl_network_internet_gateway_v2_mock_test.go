@@ -2,7 +2,6 @@ package ecl
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -12,8 +11,8 @@ import (
 )
 
 func TestMockedAccNetworkV2InternetGatewayBasic(t *testing.T) {
-	if region := os.Getenv("OS_REGION_NAME"); region != "RegionOne" {
-		t.Skipf("skip this test in %s region", region)
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
 
 	var internetGateway internet_gateways.InternetGateway
