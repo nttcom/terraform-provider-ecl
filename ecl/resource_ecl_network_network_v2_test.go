@@ -405,7 +405,7 @@ resource "ecl_network_network_v2" "network_1" {
   name = "network_1"
   description = "network_1_description"
   plane = "storage"
-	admin_state_up = "true"
+  admin_state_up = "true"
 }
 `
 
@@ -433,8 +433,8 @@ resource "ecl_network_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-	network_id = "${ecl_network_network_v2.network_1.id}"
-	depends_on = ["ecl_network_network_v2.network_1"]
+  network_id = "${ecl_network_network_v2.network_1.id}"
+  depends_on = ["ecl_network_network_v2.network_1"]
 }
 
 resource "ecl_network_port_v2" "port_1" {
@@ -443,9 +443,9 @@ resource "ecl_network_port_v2" "port_1" {
   network_id = "${ecl_network_network_v2.network_1.id}"
 
   fixed_ip {
-    "subnet_id" =  "${ecl_network_subnet_v2.subnet_1.id}"
-    "ip_address" =  "192.168.199.23"
-	}
+    subnet_id =  "${ecl_network_subnet_v2.subnet_1.id}"
+    ip_address =  "192.168.199.23"
+  }
 	
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
@@ -455,9 +455,9 @@ resource "ecl_compute_instance_v2" "instance_1" {
 
   network {
     port = "${ecl_network_port_v2.port_1.id}"
-	}
-	
-	depends_on = ["ecl_network_port_v2.port_1"]
+  }
+
+  depends_on = ["ecl_network_port_v2.port_1"]
 }
 `
 
@@ -466,7 +466,7 @@ resource "ecl_network_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
   tags = {
-	  "sample_key" = "sample_value"
+    "sample_key" = "sample_value"
   }
 }
 `
