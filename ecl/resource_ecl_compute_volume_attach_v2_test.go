@@ -162,7 +162,7 @@ resource "ecl_network_subnet_v2" "subnet_1" {
   network_id = "${ecl_network_network_v2.network_1.id}"
   cidr = "192.168.1.0/24"
   gateway_ip = "192.168.1.1"
-  allocation_pools = {
+  allocation_pools {
     start = "192.168.1.100"
     end = "192.168.1.200"
   }
@@ -178,11 +178,13 @@ resource "ecl_compute_instance_v2" "instance_1" {
     uuid = "${ecl_network_network_v2.network_1.id}"
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
+  availability_zone = "zone1-groupb"
 }
 
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   size = 15
+  availability_zone = "zone1-groupb"
 }
 
 resource "ecl_compute_volume_attach_v2" "va_1" {
@@ -201,11 +203,13 @@ resource "ecl_compute_instance_v2" "instance_1" {
     uuid = "${ecl_network_network_v2.network_1.id}"
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
+  availability_zone = "zone1-groupb"
 }
 
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   size = 15
+  availability_zone = "zone1-groupb"
 }
 
 resource "ecl_compute_volume_attach_v2" "va_1" {

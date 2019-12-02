@@ -482,9 +482,6 @@ resource "ecl_network_port_v2" "port_1" {
 
 	tags = {
 		k1 = "v1"
-	}
-
-	tags = {
 		k2 = "v2"
 	}
 
@@ -876,7 +873,7 @@ const testValidateNetworkV2PortConflictsNoFixedIPAndFixedIPs = `
 resource "ecl_network_port_v2" "port_1" {
 	network_id = "dummy_network"
 	no_fixed_ip = "true"
-	fixed_ip = {
+	fixed_ip {
 		subnet_id =  "dummy_subnet"
     ip_address = "192.168.199.1"
 	}
