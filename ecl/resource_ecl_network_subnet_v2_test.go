@@ -502,13 +502,13 @@ resource "ecl_network_network_v2" "network_1" {
 }
 
 resource "ecl_network_subnet_v2" "subnet_1" {
-	name = "subnet_1"
+  name = "subnet_1"
   cidr = "192.168.199.0/24"
   network_id = "${ecl_network_network_v2.network_1.id}"
 
-	tags {
-		k1 = "v1"
-	}
+  tags = {
+    k1 = "v1"
+  }
 }`
 
 const testAccNetworkV2SubnetTagUpdate1 = `
@@ -518,14 +518,14 @@ resource "ecl_network_network_v2" "network_1" {
 }
 
 resource "ecl_network_subnet_v2" "subnet_1" {
-	name = "subnet_1"
+  name = "subnet_1"
   cidr = "192.168.199.0/24"
   network_id = "${ecl_network_network_v2.network_1.id}"
 
-	tags {
-		k1 = "v1",
-		k2 = "v2"
-	}
+  tags = {
+    k1 = "v1",
+    k2 = "v2"
+  }
 }`
 
 const testAccNetworkV2SubnetTagUpdate2 = `
@@ -535,7 +535,7 @@ resource "ecl_network_network_v2" "network_1" {
 }
 
 resource "ecl_network_subnet_v2" "subnet_1" {
-	name = "subnet_1"
+  name = "subnet_1"
   cidr = "192.168.199.0/24"
   network_id = "${ecl_network_network_v2.network_1.id}"
 }`
