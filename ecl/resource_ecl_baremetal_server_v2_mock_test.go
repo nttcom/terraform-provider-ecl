@@ -12,6 +12,10 @@ import (
 )
 
 func TestMockedBaremetalV2ServerBasic(t *testing.T) {
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	}
+
 	var server servers.Server
 
 	mc := mock.NewMockController()

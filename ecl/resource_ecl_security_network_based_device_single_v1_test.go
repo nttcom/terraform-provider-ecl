@@ -13,6 +13,10 @@ import (
 )
 
 func TestAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var sd security.SingleDevice
 
 	resource.Test(t, resource.TestCase{
@@ -63,6 +67,10 @@ func TestAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
 }
 
 func TestAccSecurityV1NetworkBasedDeviceSingleUpdateInterface(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var sd security.SingleDevice
 	var n1, n2 networks.Network
 	var sn1, sn2 subnets.Subnet

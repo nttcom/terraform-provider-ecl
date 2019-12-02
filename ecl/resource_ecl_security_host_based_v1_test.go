@@ -11,6 +11,10 @@ import (
 )
 
 func TestAccSecurityV1HostBasedBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var hs security.HostBasedSecurity
 
 	resource.Test(t, resource.TestCase{

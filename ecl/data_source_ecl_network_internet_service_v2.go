@@ -94,15 +94,15 @@ func dataSourceNetworkInternetServiceV2Read(d *schema.ResourceData, meta interfa
 			" Please try a more specific search criteria")
 	}
 
-	internet_service := allInternetServices[0]
+	internetService := allInternetServices[0]
 
-	log.Printf("[DEBUG] Retrieved InternetService %s: %+v", internet_service.ID, internet_service)
-	d.SetId(internet_service.ID)
+	log.Printf("[DEBUG] Retrieved InternetService %s: %+v", internetService.ID, internetService)
+	d.SetId(internetService.ID)
 
-	d.Set("description", internet_service.Description)
-	d.Set("minimal_submask_length", internet_service.MinimalSubmaskLength)
-	d.Set("name", internet_service.Name)
-	d.Set("zone", internet_service.Zone)
+	d.Set("description", internetService.Description)
+	d.Set("minimal_submask_length", internetService.MinimalSubmaskLength)
+	d.Set("name", internetService.Name)
+	d.Set("zone", internetService.Zone)
 	d.Set("region", GetRegion(d, config))
 
 	return nil

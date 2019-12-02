@@ -9,6 +9,9 @@ import (
 )
 
 func TestAccVNAV1ApplianceDataSourceBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckVNA(t) },

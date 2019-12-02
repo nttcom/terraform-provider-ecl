@@ -21,6 +21,10 @@ const SoIDOfWAFDelete = "FGWAF_F2349100C7D24EF3ACD6B9A9F91FD220"
 // const expectedNewSingleDeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
 func TestMockedAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	}
+
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
@@ -90,6 +94,10 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 }
 
 func TestMockedAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	}
+
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()

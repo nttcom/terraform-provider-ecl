@@ -19,6 +19,8 @@ const (
 	FakeTokenID = "0123456789abcdef01234567890abcdef"
 )
 
+var authURL = os.Getenv("OS_AUTH_URL")
+
 type MockController struct {
 	Mocks    map[string][]Mock //key should be API path
 	Trackers map[string]*Tracker
@@ -72,6 +74,7 @@ func NewMockController() *MockController {
 
 func (mc *MockController) TerminateMockControllerSafety() {
 	mc.Server.Close()
+	os.Setenv("OS_AUTH_URL", authURL)
 }
 
 func (mc MockController) Endpoint() string {

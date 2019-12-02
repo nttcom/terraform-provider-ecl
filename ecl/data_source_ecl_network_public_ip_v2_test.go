@@ -9,6 +9,10 @@ import (
 )
 
 func TestAccNetworkV2PublicIPDataSourceBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckPublicIP(t) },
 		Providers: testAccProviders,
@@ -29,6 +33,10 @@ func TestAccNetworkV2PublicIPDataSourceBasic(t *testing.T) {
 }
 
 func TestAccNetworkV2PublicIPDataSourceTestQueries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckPublicIP(t) },
 		Providers: testAccProviders,

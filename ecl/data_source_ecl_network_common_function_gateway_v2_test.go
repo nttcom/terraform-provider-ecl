@@ -9,6 +9,10 @@ import (
 )
 
 func TestAccNetworkV2CommonFunctionGatewayDataSourceBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommonFunctionGateway(t) },
 		Providers: testAccProviders,

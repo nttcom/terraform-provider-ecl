@@ -20,6 +20,10 @@ var MaxLengthString = repeatedString("a", 255)
 // 2. set each metadata by max length strings
 // 3. set those values as blank
 func TestAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vna appliances.Appliance
 	var n networks.Network
 	var sn subnets.Subnet
@@ -85,6 +89,10 @@ func TestAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 // 1. create vna
 // 2. update name and description metadata
 func TestAccVNAV1ApplianceUpdateMetaWithoutInterface(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vna appliances.Appliance
 	var n networks.Network
 	var sn subnets.Subnet
@@ -130,6 +138,10 @@ func TestAccVNAV1ApplianceUpdateMetaWithoutInterface(t *testing.T) {
 // 2. connect interface2 with network-2
 // 3. disconnect interface2 from network-2
 func TestAccVNAV1ApplianceConnectAndDisconnectInterface(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vna appliances.Appliance
 	var n, n2 networks.Network
 	var sn subnets.Subnet
@@ -174,6 +186,10 @@ func TestAccVNAV1ApplianceConnectAndDisconnectInterface(t *testing.T) {
 // 3. set(change and over write) allowed address pairs which has type of "" and VRID is "null"
 // 4. unset allowed address pairs and check if length is correctly set as 0
 func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vna appliances.Appliance
 	var n networks.Network
 
@@ -216,6 +232,10 @@ func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 }
 
 func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vna appliances.Appliance
 	var n, n2, n3, n4 networks.Network
 	var sn subnets.Subnet
@@ -278,6 +298,10 @@ func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 }
 
 func TestAccVNAV1ApplianceBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vna appliances.Appliance
 	var n networks.Network
 	var sn subnets.Subnet

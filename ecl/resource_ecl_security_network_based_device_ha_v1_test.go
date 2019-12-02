@@ -14,6 +14,10 @@ import (
 )
 
 func TestAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var hd1, hd2 security.HADevice
 
 	resource.Test(t, resource.TestCase{
@@ -70,6 +74,10 @@ func TestAccSecurityV1NetworkBasedDeviceHABasic(t *testing.T) {
 }
 
 func TestAccSecurityV1NetworkBasedDeviceHAUpdateInterface(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var hd1, hd2 security.HADevice
 	var n1, n2, n3, n4 networks.Network
 	var sn1, sn2, sn3, sn4 subnets.Subnet

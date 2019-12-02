@@ -11,6 +11,10 @@ import (
 )
 
 func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -83,6 +87,10 @@ func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -130,6 +138,10 @@ func TestMockedAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -183,6 +195,10 @@ func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()
@@ -222,6 +238,10 @@ func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceSimpleBasic(t *testing.T) {
+	if OS_REGION_NAME != "RegionOne" {
+		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	}
+
 	var vna appliances.Appliance
 
 	mc := mock.NewMockController()

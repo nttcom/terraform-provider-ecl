@@ -11,6 +11,10 @@ import (
 )
 
 func TestAccNetworkV2PublicIPBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var publicIP public_ips.PublicIP
 
 	resource.Test(t, resource.TestCase{
