@@ -2,10 +2,34 @@ package ecl
 
 import (
 	"fmt"
+	"reflect"
+	"sort"
 	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
+
+// ValidateStorageVolumeIQNs checks if input slice of IQNs
+// is ordered by alpha-numeric order
+func ValidateStorageVolumeIQNs() schema.SchemaValidateFunc {
+	return func(i interface{}, k string) (s []string, es []error) {
+		var from, to []string
+
+		for _, f := range i.([]string) {
+			from = append(from, f)
+			to = append(to, f)
+		}
+
+		sort.Strings(from)
+
+		if reflect.DeepEqual(from, to) {
+			return
+		}
+
+		es = append(es, fmt.Errorf("Given IQNs is not ordered by alpha-numeric order"))
+		return
+	}
+}
 
 // IntInSlice returns a SchemaValidateFunc which tests if the provided value
 // is of type int and matches the value of an element in the valid slice

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"sort"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -259,7 +260,11 @@ func resourceStorageVolumeV1Read(d *schema.ResourceData, meta interface{}) error
 	d.Set("iops_per_gb", v.IOPSPerGB)
 	d.Set("throughput", v.Throughput)
 	d.Set("percent_snapshot_reserve_used", v.PercentSnapshotReserveUsed)
-	d.Set("initiator_iqns", resourceListOfString(v.InitiatorIQNs))
+
+	iqns := resourceListOfString(v.InitiatorIQNs)
+	sort.Strings(iqns)
+	d.Set("initiator_iqns", iqns)
+
 	d.Set("target_ips", resourceListOfString(v.TargetIPs))
 	d.Set("snapshot_ids", resourceListOfString(v.SnapshotIDs))
 	d.Set("export_rules", resourceListOfString(v.ExportRules))
