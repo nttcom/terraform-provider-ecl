@@ -322,7 +322,7 @@ func TestAccStorageV1VolumeForceNewByIOPSPerGB(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VolumeForceNewBySize checkes if ForceNew about volume works correctly
+// TestAccStorageV1VolumeForceNewBySize checks if ForceNew about volume works correctly
 // This test changes size parameter by using 2 configs
 // and check if resource is deleted and re-created
 func TestAccStorageV1VolumeForceNewBySize(t *testing.T) {
@@ -771,6 +771,7 @@ resource "ecl_storage_volume_v1" "volume_1" {
 
 const testValidateStorageV1VolumeConflictsIOPSPerGBAndThroughput = `
 resource "ecl_storage_volume_v1" "volume_1" {
+	name = "conflict"
 	size = "100"
 	iops_per_gb = "2"
 	throughput = "50"
@@ -780,6 +781,7 @@ resource "ecl_storage_volume_v1" "volume_1" {
 
 var testValidateStorageV1VolumeConflictsInitiatorIQNsAndThroughput = fmt.Sprintf(`
 resource "ecl_storage_volume_v1" "volume_1" {
+	name = "conflict"
 	size = "100"
 	initiator_iqns = ["%s"]
 	throughput = "50"
