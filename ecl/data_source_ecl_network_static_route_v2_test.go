@@ -122,7 +122,7 @@ resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
 }
 
 resource "ecl_network_gateway_interface_v2" "gateway_interface_1" {
-    description = "test_gateway_interface1",
+    description = "test_gateway_interface1"
     gw_vipv4 = "192.168.200.1"
     internet_gw_id = "${ecl_network_internet_gateway_v2.internet_gateway_1.id}"
     name = "Terraform_Test_Gateway_Interface_01"
@@ -136,8 +136,8 @@ resource "ecl_network_gateway_interface_v2" "gateway_interface_1" {
 }
 
 resource "ecl_network_public_ip_v2" "public_ip_1" {
-  name = "Terraform_Test_Public_IP_01",
-  description = "test_public_ip1",
+  name = "Terraform_Test_Public_IP_01"
+  description = "test_public_ip1"
   internet_gw_id = "${ecl_network_internet_gateway_v2.internet_gateway_1.id}"
   submask_length = 32
 }

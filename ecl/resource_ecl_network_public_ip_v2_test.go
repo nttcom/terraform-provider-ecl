@@ -109,10 +109,10 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 }
 
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
-    name = "Terraform_Test_Internet_Gateway_01"
-    description = "test_internet_gateway"
-    internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
-    qos_option_id = "%s"
+	name = "Terraform_Test_Internet_Gateway_01"
+	description = "test_internet_gateway"
+	internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
+	qos_option_id = "%s"
 }
 
 resource "ecl_network_public_ip_v2" "public_ip_1" {
@@ -123,7 +123,8 @@ resource "ecl_network_public_ip_v2" "public_ip_1" {
 }
 `,
 	OS_QOS_OPTION_ID_10M,
-	"${ecl_network_internet_gateway_v2.internet_gateway_1.id}")
+	"${ecl_network_internet_gateway_v2.internet_gateway_1.id}",
+)
 
 var testAccNetworkV2PublicIPUpdate = fmt.Sprintf(`
 data "ecl_network_internet_service_v2" "internet_service_1" {
@@ -131,17 +132,17 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 }
 
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
-    name = "Terraform_Test_Internet_Gateway_01"
-	  description = "test_internet_gateway"
-	  internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
-    qos_option_id = "%s"
+	name = "Terraform_Test_Internet_Gateway_01"
+	description = "test_internet_gateway"
+	internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
+	qos_option_id = "%s"
 }
 
 resource "ecl_network_public_ip_v2" "public_ip_1" {
-  name = "%s",
-  description = "%s",
-  internet_gw_id = "%s"
-  submask_length = 32
+	name = "%s"
+	description = "%s"
+	internet_gw_id = "%s"
+	submask_length = 32
 }
 `,
 	OS_QOS_OPTION_ID_10M,
@@ -155,18 +156,19 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 }
 
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
-    name = "Terraform_Test_Internet_Gateway_01"
-	  description = "test_internet_gateway"
-	  internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
-    qos_option_id = "%s"
+	name = "Terraform_Test_Internet_Gateway_01"
+	description = "test_internet_gateway"
+	internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
+	qos_option_id = "%s"
 }
 
 resource "ecl_network_public_ip_v2" "public_ip_1" {
-  name = "",
-  description = "",
-  internet_gw_id = "%s"
-  submask_length = 32
+	name = ""
+	description = ""
+	internet_gw_id = "%s"
+ 	submask_length = 32
 }
 `,
 	OS_QOS_OPTION_ID_10M,
-	"${ecl_network_internet_gateway_v2.internet_gateway_1.id}")
+	"${ecl_network_internet_gateway_v2.internet_gateway_1.id}",
+)

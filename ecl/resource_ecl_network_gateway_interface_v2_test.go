@@ -65,6 +65,10 @@ func TestAccNetworkV2GatewayInterfaceMultiGateway(t *testing.T) {
 				Config:      testAccNetworkV2GatewayInterfaceMultiGateway,
 				ExpectError: regexp.MustCompile("\"internet_gw_id\": conflicts with vpn_gw_id"),
 			},
+			resource.TestStep{
+				Config:      testAccNetworkV2GatewayInterfaceMultiGateway,
+				ExpectError: regexp.MustCompile("\"vpn_gw_id\": conflicts with internet_gw_id"),
+			},
 		},
 	})
 }
@@ -156,7 +160,7 @@ resource "ecl_network_gateway_interface_v2" "gateway_interface_1" {
     primary_ipv4 = "192.168.200.2"
     secondary_ipv4 = "192.168.200.3"
     service_type = "internet"
-    vrid=1
+    vrid = 1
     depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
 `,
@@ -240,11 +244,12 @@ resource "ecl_network_gateway_interface_v2" "gateway_interface_1" {
 	primary_ipv4 = "192.168.200.2"
 	secondary_ipv4 = "192.168.200.3"
 	service_type = "internet"
-	vrid=1
+	vrid = 1
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
 `,
-	OS_QOS_OPTION_ID_10M)
+	OS_QOS_OPTION_ID_10M,
+)
 
 var testAccNetworkV2GatewayInterfaceMultiGateway = fmt.Sprintf(`
 resource "ecl_network_network_v2" "network_1" {
@@ -281,8 +286,9 @@ resource "ecl_network_gateway_interface_v2" "gateway_interface_1" {
 	secondary_ipv4 = "192.168.200.3"
 	service_type = "internet"
 	vpn_gw_id = "dummy_id"
-	vrid=1
+	vrid = 1
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
 `,
-	OS_QOS_OPTION_ID_10M)
+	OS_QOS_OPTION_ID_10M,
+)
