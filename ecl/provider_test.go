@@ -21,7 +21,6 @@ var (
 	OS_CONTAINER_INFRA_ENVIRONMENT           = os.Getenv("OS_CONTAINER_INFRA_ENVIRONMENT")
 	OS_DB_DATASTORE_TYPE                     = os.Getenv("OS_DB_DATASTORE_TYPE")
 	OS_DB_DATASTORE_VERSION                  = os.Getenv("OS_DB_DATASTORE_VERSION")
-	OS_DB_ENVIRONMENT                        = os.Getenv("OS_DB_ENVIRONMENT")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEPRECATED_ENVIRONMENT                = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
@@ -184,14 +183,6 @@ func testAccPreCheckSwift(t *testing.T) {
 
 	if OS_SWIFT_ENVIRONMENT == "" {
 		t.Skip("This environment does not support Swift tests")
-	}
-}
-
-func testAccPreCheckDatabase(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_DB_ENVIRONMENT == "" {
-		t.Skip("This environment does not support Database tests")
 	}
 }
 

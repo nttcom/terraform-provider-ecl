@@ -646,8 +646,6 @@ func NewServiceClient(service string, opts *ClientOpts) (*eclcloud.ServiceClient
 	switch service {
 	case "compute":
 		return ecl.NewComputeV2(pClient, eo)
-	case "database":
-		return ecl.NewDBV1(pClient, eo)
 	case "dns":
 		return ecl.NewDNSV2(pClient, eo)
 	case "identity":
