@@ -78,7 +78,7 @@ func resourceStorageVolumeV1() *schema.Resource {
 				}, false),
 			},
 			"initiator_iqns": &schema.Schema{
-				Type:          schema.TypeList,
+				Type:          schema.TypeSet,
 				Optional:      true,
 				ConflictsWith: []string{"throughput"},
 				Elem:          &schema.Schema{Type: schema.TypeString},
@@ -275,7 +275,7 @@ func resourceStorageVolumeV1Read(d *schema.ResourceData, meta interface{}) error
 func parseIQNForRequest(d *schema.ResourceData) []string {
 	iqns := []string{}
 	if d.Get("initiator_iqns") != nil {
-		for _, v := range d.Get("initiator_iqns").([]interface{}) {
+		for _, v := range d.Get("initiator_iqns").(*schema.Set).List() {
 			iqns = append(iqns, v.(string))
 		}
 	}
