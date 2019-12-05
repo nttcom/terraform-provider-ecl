@@ -688,8 +688,8 @@ resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   }
 
   host_routes {
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
   }
 
   host_routes {
