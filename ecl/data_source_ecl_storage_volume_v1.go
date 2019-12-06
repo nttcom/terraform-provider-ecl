@@ -3,7 +3,6 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"sort"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/nttcom/eclcloud/ecl/storage/v1/volumes"
@@ -72,9 +71,7 @@ func volumeSchemaSet(d *schema.ResourceData, v *volumes.Volume) error {
 	d.Set("throughput", v.Throughput)
 	d.Set("percent_snapshot_reserve_used", v.PercentSnapshotReserveUsed)
 
-	iqns := resourceListOfString(v.InitiatorIQNs)
-	sort.Strings(iqns)
-	err := d.Set("initiator_iqns", iqns)
+	err := d.Set("initiator_iqns", resourceListOfString(v.InitiatorIQNs))
 	if err != nil {
 		log.Printf("[DEBUG] Unable to set initiator_iqns: %s", err)
 	}
