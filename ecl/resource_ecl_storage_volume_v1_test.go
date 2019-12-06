@@ -69,8 +69,6 @@ func TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume(t *testi
 						"ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "size", "100"),
-					resource.TestCheckResourceAttr(
-						"ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
 				),
 			},
 			resource.TestStep{
@@ -88,10 +86,6 @@ func TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume(t *testi
 						"ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "size", "100"),
-					resource.TestCheckResourceAttr(
-						"ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
-					resource.TestCheckResourceAttr(
-						"ecl_storage_volume_v1.volume_1", "initiator_iqns.1", IQN02),
 				),
 			},
 			resource.TestStep{
@@ -294,8 +288,6 @@ func TestAccStorageV1VolumeForceNewByIOPSPerGB(t *testing.T) {
 						"ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "size", "100"),
-					resource.TestCheckResourceAttr(
-						"ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
 				),
 			},
 			resource.TestStep{
@@ -314,8 +306,6 @@ func TestAccStorageV1VolumeForceNewByIOPSPerGB(t *testing.T) {
 						"ecl_storage_volume_v1.volume_1", "iops_per_gb", "4"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "size", "100"),
-					resource.TestCheckResourceAttr(
-						"ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
 				),
 			},
 		},
@@ -349,8 +339,6 @@ func TestAccStorageV1VolumeForceNewBySize(t *testing.T) {
 						"ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "size", "100"),
-					resource.TestCheckResourceAttr(
-						"ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
 				),
 			},
 			resource.TestStep{
@@ -369,8 +357,6 @@ func TestAccStorageV1VolumeForceNewBySize(t *testing.T) {
 						"ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "size", "250"),
-					resource.TestCheckResourceAttr(
-						"ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
 				),
 			},
 		},
