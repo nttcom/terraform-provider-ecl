@@ -143,13 +143,13 @@ var testAccImageStoragesV2MemberAccepterUpdate = fmt.Sprintf(`
 
 var testAccImageStoragesV2MemberAccepterInvalidStatus = fmt.Sprintf(`
 provider "ecl" {
-alias = "accepter_tenant"
-tenant_id = "%s"
+    alias = "accepter_tenant"
+    tenant_id = "%s"
 }
 
 provider "ecl" {
-alias = "requester_tenant"
-tenant_id = "%s"
+    alias = "requester_tenant"
+    tenant_id = "%s"
 }
 
 resource "ecl_imagestorages_image_v2" "image_1" {

@@ -107,7 +107,7 @@ resource "ecl_imagestorages_image_v2" "image_1" {
   disk_format = "qcow2"
   local_file_path = "%s"
   tags = ["cirros-tf_1"]
-  properties {
+  properties = {
     foo = "bar"
     bar = "foo"
   }
@@ -158,7 +158,7 @@ var testAccImageStoragesV2ImageDataSourceProperty = fmt.Sprintf(`
 %s
 
 data "ecl_imagestorages_image_v2" "image_1" {
-  properties {
+  properties = {
     foo = "bar"
     bar = "foo"
   }
