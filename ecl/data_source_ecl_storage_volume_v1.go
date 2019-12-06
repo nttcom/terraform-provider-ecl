@@ -38,7 +38,7 @@ func dataSourceStorageVolumeV1() *schema.Resource {
 				Computed: true,
 			},
 			"initiator_iqns": &schema.Schema{
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
