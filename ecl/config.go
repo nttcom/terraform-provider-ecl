@@ -275,13 +275,6 @@ func (c *Config) networkV2Client(region string) (*eclcloud.ServiceClient, error)
 	})
 }
 
-func (c *Config) databaseV1Client(region string) (*eclcloud.ServiceClient, error) {
-	return ecl.NewDBV1(c.OsClient, eclcloud.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
-	})
-}
-
 func (c *Config) securityOrderV1Client(region string) (*eclcloud.ServiceClient, error) {
 	return ecl.NewSecurityOrderV1(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
@@ -309,6 +302,13 @@ func (c *Config) vnaV1Client(region string) (*eclcloud.ServiceClient, error) {
 
 func (c *Config) dedicatedHypervisorV1Client(region string) (*eclcloud.ServiceClient, error) {
 	return ecl.NewDedicatedHypervisorV1(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
+}
+
+func (c *Config) rcaV1Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewRCAV1(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getEndpointType(),
 	})

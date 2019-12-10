@@ -420,7 +420,7 @@ func downloadImage(tempImageSavePath, imageSourceURL string) {
 
 var testAccImageStoragesV2ImageBasic = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -432,7 +432,7 @@ var testAccImageStoragesV2ImageBasic = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageName1 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -440,7 +440,7 @@ var testAccImageStoragesV2ImageName1 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageName2 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "%s"
+      name = "%s"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -449,7 +449,7 @@ var testAccImageStoragesV2ImageName2 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageName3 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = ""
+      name = ""
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -457,7 +457,7 @@ var testAccImageStoragesV2ImageName3 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageTags1 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -466,7 +466,7 @@ var testAccImageStoragesV2ImageTags1 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageTags2 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -475,7 +475,7 @@ var testAccImageStoragesV2ImageTags2 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageTags3 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -484,7 +484,7 @@ var testAccImageStoragesV2ImageTags3 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageTags4 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -493,7 +493,7 @@ var testAccImageStoragesV2ImageTags4 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageVisibility1 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -502,7 +502,7 @@ var testAccImageStoragesV2ImageVisibility1 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageVisibility2 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
@@ -511,12 +511,12 @@ var testAccImageStoragesV2ImageVisibility2 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageProperties1 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
 
-      properties {
+      properties = {
         foo = "bar"
         bar = "foo"
       }
@@ -524,36 +524,36 @@ var testAccImageStoragesV2ImageProperties1 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageProperties2 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
 
-      properties {
+      properties = {
         foo = "bar"
       }
   }`, localFileForResourceTest)
 
 var testAccImageStoragesV2ImageProperties3 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
 
-      properties {
+      properties = {
         foo = "baz"
       }
   }`, localFileForResourceTest)
 
 var testAccImageStoragesV2ImageProperties4 = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-      name   = "Temp Terraform AccTest"
+      name = "Temp Terraform AccTest"
       local_file_path = "%s"
       container_format = "bare"
       disk_format = "qcow2"
 
-      properties {
+      properties = {
         foo = "baz"
         bar = "foo"
       }
@@ -561,7 +561,7 @@ var testAccImageStoragesV2ImageProperties4 = fmt.Sprintf(`
 
 var testAccImageStoragesV2ImageLicenseSwitch = fmt.Sprintf(`
   resource "ecl_imagestorages_image_v2" "image_1" {
-    name   = "Temp Terraform AccTest"
+    name = "Temp Terraform AccTest"
     local_file_path = "%s"
     container_format = "bare"
     disk_format = "qcow2"

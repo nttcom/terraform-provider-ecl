@@ -138,26 +138,6 @@
           </ul>
         </li>
 
-        <% if false %>
-        <li<%= sidebar_current("docs-ecl-resource-db") %>>
-          <a href="#">Database Resources</a>
-          <ul class="nav nav-visible">
-            <li<%= sidebar_current("docs-ecl-resource-db-configuration-v1") %>>
-              <a href="/docs/providers/ecl/r/db_configuration_v1.html">ecl_db_configuration_v1</a>
-            </li>
-            <li<%= sidebar_current("docs-ecl-resource-db-database-v1") %>>
-              <a href="/docs/providers/ecl/r/db_database_v1.html">ecl_db_database_v1</a>
-            </li>
-            <li<%= sidebar_current("docs-ecl-resource-db-instance-v1") %>>
-              <a href="/docs/providers/ecl/r/db_instance_v1.html">ecl_db_instance_v1</a>
-            </li>
-            <li<%= sidebar_current("docs-ecl-resource-db-user-v1") %>>
-              <a href="/docs/providers/ecl/r/db_user_v1.html">ecl_db_user_v1</a>
-            </li>
-          </ul>
-        </li>
-        <% end %>
-
         <li<%= sidebar_current("docs-ecl-resource-dns") %>>
           <a href="#">DNS Resources</a>
           <ul class="nav nav-visible">
@@ -251,6 +231,15 @@
           </ul>
         </li>
         <% end %>
+
+        <li<%= sidebar_current("docs-ecl-resource-rca") %>>
+          <a href="#">RCA Resources</a>
+          <ul class="nav nav-visible">
+            <li<%= sidebar_current("docs-ecl-resource-rca-user-v1") %>>
+              <a href="/docs/providers/ecl/r/rca_user_v1.html">ecl_rca_user_v1</a>
+            </li>
+          </ul>
+        </li>
 
         <li<%= sidebar_current("docs-ecl-resource-sss") %>>
           <a href="#">SSS Resources</a>
