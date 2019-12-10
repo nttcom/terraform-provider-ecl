@@ -80,12 +80,19 @@ func testAccCheckNetworkV2InternetServiceDataSourceID(n string) resource.TestChe
 }
 
 func testAccReturnMinimalSubmaskLength(region string) int {
-	minimal_submask_length := 26
-	if region == "lab4ec" {
-		minimal_submask_length = 28
+	var minimalSubmaskLength int
+	switch region {
+	case "jp1":
+	case "jp3":
+	case "jp4":
+	case "jp5":
+	case "lab3ec":
+		minimalSubmaskLength = 26
+		break
+	default:
+		minimalSubmaskLength = 28
 	}
-
-	return minimal_submask_length
+	return minimalSubmaskLength
 }
 
 var testAccNetworkV2InternetServiceDataSourceBasic = fmt.Sprintf(`
