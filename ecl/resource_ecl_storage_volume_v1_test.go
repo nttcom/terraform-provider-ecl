@@ -3,7 +3,9 @@ package ecl
 import (
 	"fmt"
 	"log"
+	"reflect"
 	"regexp"
+	"sort"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -30,6 +32,7 @@ func TestAccStorageV1VolumeTimeout(t *testing.T) {
 					testAccCheckStorageV1VolumeExists("ecl_storage_volume_v1.volume_1", &v),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "name", "volume_1"),
+					testAccStorageV1VolumeCheckInitiatorIQNs(&v, []string{IQN01}),
 				),
 			},
 		},
@@ -69,6 +72,7 @@ func TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume(t *testi
 						"ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "size", "100"),
+					testAccStorageV1VolumeCheckInitiatorIQNs(&v, []string{IQN01}),
 				),
 			},
 			resource.TestStep{
@@ -86,6 +90,7 @@ func TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume(t *testi
 						"ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_volume_v1.volume_1", "size", "100"),
+					testAccStorageV1VolumeCheckInitiatorIQNs(&v, []string{IQN01, IQN02}),
 				),
 			},
 			resource.TestStep{
@@ -249,6 +254,17 @@ func TestAccStorageV1VolumeCreateNetworkAndFileStandardVirtualStorageAndVolume(t
 			},
 		},
 	})
+}
+
+func testAccStorageV1VolumeCheckInitiatorIQNs(v *volumes.Volume, expected []string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		actual := v.InitiatorIQNs
+		sort.Strings(actual)
+		if !reflect.DeepEqual(actual, expected) {
+			return fmt.Errorf("Expected IQNs are %#v, got %#v", expected, actual)
+		}
+		return nil
+	}
 }
 
 func testCheckVolumeIDIsChanged(v1, v2 *volumes.Volume) resource.TestCheckFunc {
