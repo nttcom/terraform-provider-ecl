@@ -2,9 +2,10 @@ package ecl
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/nttcom/eclcloud/ecl/storage/v1/volumes"
-	"log"
 )
 
 func dataSourceStorageVolumeV1() *schema.Resource {
@@ -37,7 +38,7 @@ func dataSourceStorageVolumeV1() *schema.Resource {
 				Computed: true,
 			},
 			"initiator_iqns": &schema.Schema{
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
@@ -69,6 +70,7 @@ func volumeSchemaSet(d *schema.ResourceData, v *volumes.Volume) error {
 	d.Set("iops_per_gb", v.IOPSPerGB)
 	d.Set("throughput", v.Throughput)
 	d.Set("percent_snapshot_reserve_used", v.PercentSnapshotReserveUsed)
+
 	err := d.Set("initiator_iqns", resourceListOfString(v.InitiatorIQNs))
 	if err != nil {
 		log.Printf("[DEBUG] Unable to set initiator_iqns: %s", err)
@@ -79,7 +81,7 @@ func volumeSchemaSet(d *schema.ResourceData, v *volumes.Volume) error {
 		log.Printf("[DEBUG] Unable to set target_ips: %s", err)
 	}
 
-	err = d.Set("snapshot_ids", resourceListOfString(v.InitiatorIQNs))
+	err = d.Set("snapshot_ids", resourceListOfString(v.SnapshotIDs))
 	if err != nil {
 		log.Printf("[DEBUG] Unable to set snapshot_ids: %s", err)
 	}

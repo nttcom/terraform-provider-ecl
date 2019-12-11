@@ -469,19 +469,17 @@ var testAccStorageV1VirtualStorageBasic = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1"
   description = "first test virtual storage"
-  volume_type_id = "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_id = "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.10",
+    start = "192.168.1.10"
     end = "192.168.1.20"
   }
-  host_routes = [
-    {
-      destination = "1.1.1.0/24"
-      nexthop = "192.168.1.1"
-    }
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
 	OS_STORAGE_VOLUME_TYPE_ID,
@@ -494,22 +492,20 @@ resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1-updated"
   description = "first test virtual storage-updated"
   volume_type_id = "%s"
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.9",
+    start = "192.168.1.9"
     end = "192.168.1.21"
   }
-  host_routes = [
-	{
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
-	  },
-	{
-		destination = "1.1.2.0/24"
-		nexthop = "192.168.1.1"
-	  }
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
+  host_routes {
+    destination = "1.1.2.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
 	OS_STORAGE_VOLUME_TYPE_ID,
@@ -521,19 +517,17 @@ var testAccStorageV1VirtualStorageTimeout = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1"
   description = "first test virtual storage"
-  volume_type_id = "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_id = "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.10",
+    start = "192.168.1.10"
     end = "192.168.1.20"
   }
-  host_routes = [
-    {
-      destination = "1.1.1.0/24"
-      nexthop = "192.168.1.1"
-	}
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
   timeouts {
     create = "30m"
     delete = "30m"
@@ -549,19 +543,17 @@ var testAccStorageV1VirtualStorageVolumeTypeNameBlock = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1"
   description = "first test virtual storage"
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.10",
+    start = "192.168.1.10"
     end = "192.168.1.20"
   }
-  host_routes = [
-    {
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
-	  }
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
 	VOLUME_TYPE_NAME_BLOCK,
@@ -573,23 +565,21 @@ var testAccStorageV1VirtualStorageVolumeTypeNameBlockUpdate = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1-updated"
   description = "first test virtual storage-updated"
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.9",
+    start = "192.168.1.9"
     end = "192.168.1.21"
   }
-  host_routes = [
-    {
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
-	},
-	{
-		destination = "1.1.2.0/24"
-		nexthop = "192.168.1.1"
-	}
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
+  host_routes {
+    destination = "1.1.2.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
 	VOLUME_TYPE_NAME_BLOCK,
@@ -600,11 +590,11 @@ var testAccStorageV1VirtualStorageVolumeTypeNameBlockUpdate2 = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1-updated"
   description = ""
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.9",
+    start = "192.168.1.9"
     end = "192.168.1.21"
   }
 }
@@ -618,19 +608,17 @@ var testAccStorageV1VirtualStorageVolumeTypeNameFilePremium = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1"
   description = "first test virtual storage"
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.10",
+    start = "192.168.1.10"
     end = "192.168.1.20"
   }
-  host_routes = [
-    {
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
-	}
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetStoragePlane,
 	VOLUME_TYPE_NAME_FILE_PREMIUM,
@@ -642,23 +630,22 @@ var testAccStorageV1VirtualStorageVolumeTypeNameFilePremiumUpdate = fmt.Sprintf(
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1-updated"
   description = "first test virtual storage-updated"
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.9",
+    start = "192.168.1.9"
     end = "192.168.1.21"
   }
-  host_routes = [
-	{
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
-	},
-	{
-		destination = "1.1.2.0/24"
-		nexthop = "192.168.1.1"
-	}
-  ]
+
+  host_routes{
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
+  host_routes {
+    destination = "1.1.2.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetStoragePlane,
 	VOLUME_TYPE_NAME_FILE_PREMIUM,
@@ -670,19 +657,17 @@ var testAccStorageV1VirtualStorageVolumeTypeNameFileStandard = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1"
   description = "first test virtual storage"
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.10",
+    start = "192.168.1.10"
     end = "192.168.1.20"
   }
-  host_routes = [
-    {
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
-	}
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetStoragePlane,
 	VOLUME_TYPE_NAME_FILE_STANDARD,
@@ -694,23 +679,23 @@ var testAccStorageV1VirtualStorageVolumeTypeNameFileStandardUpdate = fmt.Sprintf
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1-updated"
   description = "first test virtual storage-updated"
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.9",
+    start = "192.168.1.9"
     end = "192.168.1.21"
   }
-  host_routes = [
-	{
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
-	},
-	{
-		destination = "1.1.2.0/24"
-		nexthop = "192.168.1.1"
-	}
-  ]
+
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
+
+  host_routes {
+    destination = "1.1.2.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetStoragePlane,
 	VOLUME_TYPE_NAME_FILE_STANDARD,
@@ -722,19 +707,17 @@ var testAccStorageV1VirtualStorageCheckForceNewByNetworkBasic = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1"
   description = "first test virtual storage"
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_1.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
-    start = "192.168.1.10",
+    start = "192.168.1.10"
     end = "192.168.1.20"
   }
-  host_routes = [
-    {
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.1.1"
-	  }
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.1.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
 	VOLUME_TYPE_NAME_BLOCK,
@@ -762,23 +745,21 @@ resource "ecl_network_subnet_v2" "subnet_2" {
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1-forcednew"
   description = "first test virtual storage-forcednew"
-  volume_type_name= "%s",
-  network_id = "${ecl_network_network_v2.network_2.id}",
+  volume_type_name= "%s"
+  network_id = "${ecl_network_network_v2.network_2.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
   ip_addr_pool = {
-    start = "192.168.2.10",
+    start = "192.168.2.10"
     end = "192.168.2.20"
   }
-  host_routes = [
-    {
-		destination = "1.1.1.0/24"
-		nexthop = "192.168.2.1"
-	},
-	{
-		destination = "1.1.2.0/24"
-		nexthop = "192.168.2.1"
-	}
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop = "192.168.2.1"
+  }
+  host_routes {
+    destination = "1.1.2.0/24"
+    nexthop = "192.168.2.1"
+  }
 }
 `, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
 	VOLUME_TYPE_NAME_BLOCK,

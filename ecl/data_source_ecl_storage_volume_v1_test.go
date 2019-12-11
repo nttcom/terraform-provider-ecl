@@ -31,10 +31,6 @@ func TestAccStorageV1VolumeDataSourceBasic(t *testing.T) {
 						"data.ecl_storage_volume_v1.volume_1", "size", "100"),
 					resource.TestCheckResourceAttr(
 						"data.ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
-					resource.TestCheckResourceAttr(
-						"data.ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
-					resource.TestCheckResourceAttr(
-						"data.ecl_storage_volume_v1.volume_1", "initiator_iqns.1", IQN02),
 				),
 			},
 		},
@@ -64,10 +60,6 @@ func TestAccStorageV1VolumeDataSourceID(t *testing.T) {
 						"data.ecl_storage_volume_v1.volume_1", "size", "100"),
 					resource.TestCheckResourceAttr(
 						"data.ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
-					resource.TestCheckResourceAttr(
-						"data.ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
-					resource.TestCheckResourceAttr(
-						"data.ecl_storage_volume_v1.volume_1", "initiator_iqns.1", IQN02),
 				),
 			},
 		},
@@ -97,8 +89,6 @@ func TestAccStorageV1VolumeDataSourceCreateAllResourcesAsBlock(t *testing.T) {
 						"data.ecl_storage_volume_v1.volume_1", "size", "100"),
 					resource.TestCheckResourceAttr(
 						"data.ecl_storage_volume_v1.volume_1", "iops_per_gb", "2"),
-					resource.TestCheckResourceAttr(
-						"data.ecl_storage_volume_v1.volume_1", "initiator_iqns.0", IQN01),
 				),
 			},
 		},
