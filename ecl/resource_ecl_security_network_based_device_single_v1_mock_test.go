@@ -20,7 +20,7 @@ const ProcessIDOfUpdateInterface = 85385
 const expectedNewSingleDeviceHostName = "CES11811"
 const expectedNewSingleDeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
-func TestMockedAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
+func TestMockedAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}

@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/static_routes"
 )
 
-func TestAccNetworkV2StaticRouteBasic(t *testing.T) {
+func TestAccNetworkV2StaticRoute_basic(t *testing.T) {
 	var staticRoute static_routes.StaticRoute
 
 	resource.Test(t, resource.TestCase{
@@ -47,7 +47,7 @@ func TestAccNetworkV2StaticRouteBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2StaticRouteMultiGateway(t *testing.T) {
+func TestAccNetworkV2StaticRoute_multiGateway(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckStaticRoute(t) },
 		Providers:    testAccProviders,

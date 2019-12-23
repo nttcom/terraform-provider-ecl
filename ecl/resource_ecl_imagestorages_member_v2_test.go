@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccImageStoragesV2MemberBasic(t *testing.T) {
+func TestAccImageStoragesV2Member_basic(t *testing.T) {
 	var member members.Member
 
 	resource.Test(t, resource.TestCase{

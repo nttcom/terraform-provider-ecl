@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccImageStoragesV2MemberAccepterBasic(t *testing.T) {
+func TestAccImageStoragesV2MemberAccepter_basic(t *testing.T) {
 	var providers []*schema.Provider
 
 	resource.Test(t, resource.TestCase{
@@ -39,7 +39,7 @@ func TestAccImageStoragesV2MemberAccepterBasic(t *testing.T) {
 	})
 }
 
-func TestAccImageStoragesV2MemberAccepterInvalidStatus(t *testing.T) {
+func TestAccImageStoragesV2MemberAccepter_invalidStatus(t *testing.T) {
 	var providers []*schema.Provider
 
 	resource.Test(t, resource.TestCase{

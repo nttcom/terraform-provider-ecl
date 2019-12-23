@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccSSSV1TenantDataSourceBasic(t *testing.T) {
+func TestAccSSSV1TenantDataSource_basic(t *testing.T) {
 	projectName := fmt.Sprintf("tf_test_%s", acctest.RandString(15))
 	projectDescription := acctest.RandString(20)
 

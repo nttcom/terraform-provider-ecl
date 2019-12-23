@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccNetworkV2InternetServiceDataSourceBasic(t *testing.T) {
+func TestAccNetworkV2InternetServiceDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckInternetService(t) },
 		Providers: testAccProviders,
@@ -25,7 +25,7 @@ func TestAccNetworkV2InternetServiceDataSourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2InternetServiceDataSourceTestQueries(t *testing.T) {
+func TestAccNetworkV2InternetServiceDataSource_queries(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckInternetService(t) },
 		Providers: testAccProviders,

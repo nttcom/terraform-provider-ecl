@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccSSSV1TenantImportBasic(t *testing.T) {
+func TestAccSSSV1TenantImport_basic(t *testing.T) {
 	resourceName := "ecl_sss_tenant_v1.tenant_1"
 	var projectName = fmt.Sprintf("ACCPTTEST-%s", acctest.RandString(15))
 

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccComputeV2FlavorDataSourceBasic(t *testing.T) {
+func TestAccComputeV2FlavorDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -35,7 +35,7 @@ func TestAccComputeV2FlavorDataSourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2FlavorDataSourceTestQueries(t *testing.T) {
+func TestAccComputeV2FlavorDataSource_queries(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

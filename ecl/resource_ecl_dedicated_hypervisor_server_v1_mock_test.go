@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-func TestMockedDedicatedHypervisorV1ServerBasic(t *testing.T) {
+func TestMockedDedicatedHypervisorV1Server_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}

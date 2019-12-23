@@ -10,7 +10,7 @@ import (
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/host_based"
 )
 
-func TestAccSecurityV1HostBasedBasic(t *testing.T) {
+func TestAccSecurityV1HostBased_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

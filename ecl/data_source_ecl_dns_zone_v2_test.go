@@ -11,7 +11,7 @@ import (
 
 var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))
 
-func TestAccDNSV2ZoneDataSourceBasic(t *testing.T) {
+func TestAccDNSV2ZoneDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckDNS(t) },
 		Providers: testAccProviders,
@@ -30,7 +30,7 @@ func TestAccDNSV2ZoneDataSourceBasic(t *testing.T) {
 		},
 	})
 }
-func TestAccDNSV2ZoneDataSourceQueryDomainName(t *testing.T) {
+func TestAccDNSV2ZoneDataSource_queryDomainName(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckDNS(t) },
 		Providers: testAccProviders,

@@ -13,7 +13,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
 )
 
-func TestAccNetworkV2PortBasic(t *testing.T) {
+func TestAccNetworkV2Port_basic(t *testing.T) {
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -78,7 +78,7 @@ func TestAccNetworkV2PortBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortConflictsNoFixedIPAndFixedIPs(t *testing.T) {
+func TestAccNetworkV2Port_conflictsNoFixedIPAndFixedIPs(t *testing.T) {
 	pattern1 := "\"no_fixed_ip\": conflicts with fixed_ip"
 	pattern2 := "\"fixed_ip\": conflicts with no_fixed_ip"
 	resource.Test(t, resource.TestCase{
@@ -97,7 +97,7 @@ func TestAccNetworkV2PortConflictsNoFixedIPAndFixedIPs(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortFixedIPBasic(t *testing.T) {
+func TestAccNetworkV2Port_FixedIPBasic(t *testing.T) {
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -132,7 +132,7 @@ func TestAccNetworkV2PortFixedIPBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortNoIP(t *testing.T) {
+func TestAccNetworkV2Port_noIP(t *testing.T) {
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -155,7 +155,7 @@ func TestAccNetworkV2PortNoIP(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortMultipleNoIP(t *testing.T) {
+func TestAccNetworkV2Port_multipleNoIP(t *testing.T) {
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -178,7 +178,7 @@ func TestAccNetworkV2PortMultipleNoIP(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortAllowedAddressPairs(t *testing.T) {
+func TestAccNetworkV2Port_allowedAddressPairs(t *testing.T) {
 	var network networks.Network
 	var subnet subnets.Subnet
 	var vrrpPort1, vrrpPort2, instancePort ports.Port
@@ -203,7 +203,7 @@ func TestAccNetworkV2PortAllowedAddressPairs(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortAllowedAddressPairsNoMAC(t *testing.T) {
+func TestAccNetworkV2Port_allowedAddressPairsNoMAC(t *testing.T) {
 	var network networks.Network
 	var subnet subnets.Subnet
 	var vrrpPort1, vrrpPort2, instancePort ports.Port
@@ -228,7 +228,7 @@ func TestAccNetworkV2PortAllowedAddressPairsNoMAC(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortMultipleFixedIPs(t *testing.T) {
+func TestAccNetworkV2Port_multipleFixedIPs(t *testing.T) {
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -251,7 +251,7 @@ func TestAccNetworkV2PortMultipleFixedIPs(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortTimeout(t *testing.T) {
+func TestAccNetworkV2Port_timeout(t *testing.T) {
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -273,7 +273,7 @@ func TestAccNetworkV2PortTimeout(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortFixedIPs(t *testing.T) {
+func TestAccNetworkV2Port_fixedIPs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -292,7 +292,7 @@ func TestAccNetworkV2PortFixedIPs(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortNoFixedIP(t *testing.T) {
+func TestAccNetworkV2Port_noFixedIP(t *testing.T) {
 	var port ports.Port
 
 	resource.Test(t, resource.TestCase{

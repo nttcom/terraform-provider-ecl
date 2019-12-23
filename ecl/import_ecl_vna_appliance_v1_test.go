@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccVNAV1ApplianceImportBasic(t *testing.T) {
+func TestAccVNAV1ApplianceImport_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

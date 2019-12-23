@@ -13,7 +13,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
 )
 
-func TestAccNetworkV2NetworkBasic(t *testing.T) {
+func TestAccNetworkV2Network_basic(t *testing.T) {
 	var network networks.Network
 
 	resource.Test(t, resource.TestCase{
@@ -72,7 +72,7 @@ func TestAccNetworkV2NetworkBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2NetworkPlaneForceNew(t *testing.T) {
+func TestAccNetworkV2Network_planeForceNew(t *testing.T) {
 	var n1 networks.Network
 	var n2 networks.Network
 
@@ -97,7 +97,7 @@ func TestAccNetworkV2NetworkPlaneForceNew(t *testing.T) {
 		},
 	})
 }
-func TestAccNetworkV2NetworkNetstack(t *testing.T) {
+func TestAccNetworkV2Network_netstack(t *testing.T) {
 	var network networks.Network
 	var subnet subnets.Subnet
 
@@ -118,7 +118,7 @@ func TestAccNetworkV2NetworkNetstack(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2NetworkFullstack(t *testing.T) {
+func TestAccNetworkV2Network_fullstack(t *testing.T) {
 	var instance servers.Server
 	var network networks.Network
 	var port ports.Port
@@ -142,7 +142,7 @@ func TestAccNetworkV2NetworkFullstack(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2NetworkWithTag(t *testing.T) {
+func TestAccNetworkV2Network_withTag(t *testing.T) {
 	var network networks.Network
 
 	resource.Test(t, resource.TestCase{
@@ -161,7 +161,7 @@ func TestAccNetworkV2NetworkWithTag(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2NetworkTimeout(t *testing.T) {
+func TestAccNetworkV2Network_timeout(t *testing.T) {
 	var network networks.Network
 
 	resource.Test(t, resource.TestCase{

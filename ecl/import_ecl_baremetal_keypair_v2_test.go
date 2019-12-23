@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccBaremetalV2KeypairImportBasic(t *testing.T) {
+func TestAccBaremetalV2KeypairImport_basic(t *testing.T) {
 	resourceName := "ecl_baremetal_keypair_v2.kp_1"
 
 	resource.Test(t, resource.TestCase{

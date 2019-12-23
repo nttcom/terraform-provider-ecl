@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDNSV2RecordSetImportBasic(t *testing.T) {
+func TestAccDNSV2RecordSetImport_basic(t *testing.T) {
 	zoneName := randomZoneName()
 	resourceName := "ecl_dns_recordset_v2.recordset_1"
 

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccNetworkV2GatewayInterfaceDataSourceBasic(t *testing.T) {
+func TestAccNetworkV2GatewayInterfaceDataSource_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -32,7 +32,7 @@ func TestAccNetworkV2GatewayInterfaceDataSourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2GatewayInterfaceDataSourceTestQueries(t *testing.T) {
+func TestAccNetworkV2GatewayInterfaceDataSource_queries(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

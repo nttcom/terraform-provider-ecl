@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccVNAV1ApplianceDataSourceBasic(t *testing.T) {
+func TestAccVNAV1ApplianceDataSource_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

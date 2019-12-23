@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccNetworkV2SubnetDataSourceBasic(t *testing.T) {
+func TestAccNetworkV2SubnetDataSource_basic(t *testing.T) {
 	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
 
 	resource.Test(t, resource.TestCase{
@@ -34,7 +34,7 @@ func TestAccNetworkV2SubnetDataSourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetDataSourceTestQueries(t *testing.T) {
+func TestAccNetworkV2SubnetDataSource_queries(t *testing.T) {
 	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
 
 	resource.Test(t, resource.TestCase{
@@ -84,7 +84,7 @@ func TestAccNetworkV2SubnetDataSourceTestQueries(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetDataSourceNetworkIdAttribute(t *testing.T) {
+func TestAccNetworkV2SubnetDataSource_networkIDAttribute(t *testing.T) {
 	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
 
 	resource.Test(t, resource.TestCase{

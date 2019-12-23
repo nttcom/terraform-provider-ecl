@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/dns/v2/zones"
 )
 
-func TestAccDNSV2ZoneBasic(t *testing.T) {
+func TestAccDNSV2Zone_basic(t *testing.T) {
 	var zone zones.Zone
 	var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))
 
@@ -48,7 +48,7 @@ func TestAccDNSV2ZoneBasic(t *testing.T) {
 	})
 }
 
-func TestAccDNSV2ZoneTimeout(t *testing.T) {
+func TestAccDNSV2Zone_timeout(t *testing.T) {
 	var zone zones.Zone
 	var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))
 

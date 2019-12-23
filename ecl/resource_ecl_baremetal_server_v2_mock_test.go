@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/baremetal/v2/servers"
 )
 
-func TestMockedBaremetalV2ServerBasic(t *testing.T) {
+func TestMockedBaremetalV2Server_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}

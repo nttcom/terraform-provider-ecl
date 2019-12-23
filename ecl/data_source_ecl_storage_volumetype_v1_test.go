@@ -11,7 +11,7 @@ import (
 // Skip test for "File Storage Standard" service type.
 // Because in some region , that service type is not available.
 
-func TestAccStorageV1VolumeTypeDataSourceBlockStorageBasic(t *testing.T) {
+func TestAccStorageV1VolumeTypeDataSourceBlockStorage_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -27,7 +27,7 @@ func TestAccStorageV1VolumeTypeDataSourceBlockStorageBasic(t *testing.T) {
 		},
 	})
 }
-func TestAccStorageV1VolumeTypeDataSourceBlockStorageByID(t *testing.T) {
+func TestAccStorageV1VolumeTypeDataSourceBlockStorage_id(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckStorage(t) },
 		Providers: testAccProviders,
@@ -43,7 +43,7 @@ func TestAccStorageV1VolumeTypeDataSourceBlockStorageByID(t *testing.T) {
 		},
 	})
 }
-func TestAccStorageV1VolumeTypeDataSourceFileStoragePremiumBasic(t *testing.T) {
+func TestAccStorageV1VolumeTypeDataSourceFileStoragePremium_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFileStorageServiceType(t, true, false) },
 		Providers: testAccProviders,

@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/gateway_interfaces"
 )
 
-func TestAccNetworkV2GatewayInterfaceBasic(t *testing.T) {
+func TestAccNetworkV2GatewayInterface_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -51,7 +51,7 @@ func TestAccNetworkV2GatewayInterfaceBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2GatewayInterfaceMultiGateway(t *testing.T) {
+func TestAccNetworkV2GatewayInterface_multiGateway(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

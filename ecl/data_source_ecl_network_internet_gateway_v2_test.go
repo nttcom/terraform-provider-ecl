@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
+func TestAccNetworkV2InternetGatewayDataSource_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -32,7 +32,7 @@ func TestAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2InternetGatewayDataSourceTestQueries(t *testing.T) {
+func TestAccNetworkV2InternetGatewayDataSource_queries(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckInternetGateway(t) },
 		Providers: testAccProviders,

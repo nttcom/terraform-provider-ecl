@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccNetworkV2PortImportBasic(t *testing.T) {
+func TestAccNetworkV2PortImport_basic(t *testing.T) {
 	resourceName := "ecl_network_port_v2.port_1"
 
 	resource.Test(t, resource.TestCase{
@@ -30,7 +30,7 @@ func TestAccNetworkV2PortImportBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortImportAllowedAddressPairs(t *testing.T) {
+func TestAccNetworkV2PortImport_allowedAddressPairs(t *testing.T) {
 	resourceName := "ecl_network_port_v2.instance_port"
 
 	resource.Test(t, resource.TestCase{
@@ -54,7 +54,7 @@ func TestAccNetworkV2PortImportAllowedAddressPairs(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortImportAllowedAddressPairsNoMAC(t *testing.T) {
+func TestAccNetworkV2PortImport_allowedAddressPairsNoMAC(t *testing.T) {
 	resourceName := "ecl_network_port_v2.instance_port"
 
 	resource.Test(t, resource.TestCase{

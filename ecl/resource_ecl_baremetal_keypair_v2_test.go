@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/baremetal/v2/keypairs"
 )
 
-func TestAccBaremetalV2KeypairBasic(t *testing.T) {
+func TestAccBaremetalV2Keypair_basic(t *testing.T) {
 	var keypair keypairs.KeyPair
 
 	fingerprintRe := regexp.MustCompile(`[a-f0-9:]+`)
@@ -33,7 +33,7 @@ func TestAccBaremetalV2KeypairBasic(t *testing.T) {
 	})
 }
 
-func TestAccBaremetalV2KeypairGeneratePrivate(t *testing.T) {
+func TestAccBaremetalV2Keypair_generatePrivate(t *testing.T) {
 	var keypair keypairs.KeyPair
 
 	fingerprintRe := regexp.MustCompile(`[a-f0-9:]+`)

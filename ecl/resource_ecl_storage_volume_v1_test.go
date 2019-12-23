@@ -18,8 +18,8 @@ import (
 const IQN01 string = "iqn.2003-01.org.sample-iscsi.node1.x8664:sn.2613f8620d98"
 const IQN02 string = "iqn.2003-01.org.sample-iscsi.node1.x8664:sn.2613f8620d99"
 
-// TestAccStorageV1VolumeTimeout just check Timeout section is correctly worked or not
-func TestAccStorageV1VolumeTimeout(t *testing.T) {
+// TestAccStorageV1Volume_timeout just check Timeout section is correctly worked or not
+func TestAccStorageV1Volume_timeout(t *testing.T) {
 	var v volumes.Volume
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckStorageVolume(t) },
@@ -39,7 +39,7 @@ func TestAccStorageV1VolumeTimeout(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume is practical test case from user's stand point
+// TestAccStorageV1Volume_createNetworkAndBlockVirtualStorageAndVolume is practical test case from user's stand point
 // This function test followings
 //		1. Create network and subnet which be connected from virtual storage
 //		2. Create virtual storage by using environment values as Block Storage type
@@ -48,7 +48,7 @@ func TestAccStorageV1VolumeTimeout(t *testing.T) {
 //		5. Update it by modified HCL configurations
 //		6. Check if new configuration is correctly applied
 //		7. Check if new configuration is correctly applied
-func TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume(t *testing.T) {
+func TestAccStorageV1Volume_createNetworkAndBlockVirtualStorageAndVolume(t *testing.T) {
 	var v volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -115,8 +115,8 @@ func TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume(t *testi
 	})
 }
 
-// TestAccStorageV1VolumeCreateNetworkAndFilePremiumVirtualStorageAndVolume is practical test case from user's stand point
-// This test is almost same as TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume
+// TestAccStorageV1Volume_createNetworkAndFilePremiumVirtualStorageAndVolume is practical test case from user's stand point
+// This test is almost same as TestAccStorageV1Volume_createNetworkAndBlockVirtualStorageAndVolume
 // Only difference between them is prior one is test for Block Storage type service,
 // and later one is test for File Storage Premium type
 //
@@ -129,7 +129,7 @@ func TestAccStorageV1VolumeCreateNetworkAndBlockVirtualStorageAndVolume(t *testi
 //		6. Check if new configuration is correctly applied
 //		7. Repeat 5 and 6 by another configurations
 
-func TestAccStorageV1VolumeCreateNetworkAndFilePremiumVirtualStorageAndVolume(t *testing.T) {
+func TestAccStorageV1Volume_createNetworkAndFilePremiumVirtualStorageAndVolume(t *testing.T) {
 	var v volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -195,7 +195,7 @@ func TestAccStorageV1VolumeCreateNetworkAndFilePremiumVirtualStorageAndVolume(t 
 		},
 	})
 }
-func TestAccStorageV1VolumeCreateNetworkAndFileStandardVirtualStorageAndVolume(t *testing.T) {
+func TestAccStorageV1Volume_createNetworkAndFileStandardVirtualStorageAndVolume(t *testing.T) {
 	var v volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -277,10 +277,10 @@ func testCheckVolumeIDIsChanged(v1, v2 *volumes.Volume) resource.TestCheckFunc {
 	}
 }
 
-// TestAccStorageV1VolumeForceNewByIOPSPerGB checkes if ForceNew about volume works correctly
+// TestAccStorageV1Volume_forceNewByIOPSPerGB checkes if ForceNew about volume works correctly
 // This test changes iops_per_gb parameter by using 2 configs
 // and check if resource is deleted and re-created
-func TestAccStorageV1VolumeForceNewByIOPSPerGB(t *testing.T) {
+func TestAccStorageV1Volume_forceNewByIOPSPerGB(t *testing.T) {
 	var v1, v2 volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -328,10 +328,10 @@ func TestAccStorageV1VolumeForceNewByIOPSPerGB(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VolumeForceNewBySize checks if ForceNew about volume works correctly
+// TestAccStorageV1Volume_forceNewBySize checks if ForceNew about volume works correctly
 // This test changes size parameter by using 2 configs
 // and check if resource is deleted and re-created
-func TestAccStorageV1VolumeForceNewBySize(t *testing.T) {
+func TestAccStorageV1Volume_forceNewBySize(t *testing.T) {
 	var v1, v2 volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -379,11 +379,11 @@ func TestAccStorageV1VolumeForceNewBySize(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VolumeForceNewByThroughput checkes if ForceNew about volume works correctly
+// TestAccStorageV1Volume_forceNewByThroughput checks if ForceNew about volume works correctly
 // This test changes throughput parameter by using 2 configs
 // and check if resource is deleted and re-created
 // [Note] This test CRUD all of resources, different from above two ForceNew test
-func TestAccStorageV1VolumeForceNewByThroughput(t *testing.T) {
+func TestAccStorageV1Volume_forceNewByThroughput(t *testing.T) {
 	var v1, v2 volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -434,9 +434,9 @@ func TestAccStorageV1VolumeForceNewByThroughput(t *testing.T) {
 	})
 }
 
-// TestValidateStorageV1VolumeCheckConflictsIOPSPerGBAndThroughput checks "ConflictsWith" parameter
+// TestValidateStorageV1Volume_checkConflictsIOPSPerGBAndThroughput checks "ConflictsWith" parameter
 // correctly works or not between iops_per_gb and throuthput
-func TestValidateStorageV1VolumeCheckConflictsIOPSPerGBAndThroughput(t *testing.T) {
+func TestValidateStorageV1Volume_checkConflictsIOPSPerGBAndThroughput(t *testing.T) {
 	pattern1 := "\"iops_per_gb\": conflicts with throughput"
 	pattern2 := "\"throughput\": conflicts with iops_per_gb"
 	resource.Test(t, resource.TestCase{
@@ -455,9 +455,9 @@ func TestValidateStorageV1VolumeCheckConflictsIOPSPerGBAndThroughput(t *testing.
 	})
 }
 
-// TestValidateStorageV1VolumeCheckConflictsInitiatorIQNsAndThroughput checks "ConflictsWith" parameter
+// TestValidateStorageV1Volume_checkConflictsInitiatorIQNsAndThroughput checks "ConflictsWith" parameter
 // correctly works or not between initiator_iqns and throuthput
-func TestValidateStorageV1VolumeCheckConflictsInitiatorIQNsAndThroughput(t *testing.T) {
+func TestValidateStorageV1Volume_checkConflictsInitiatorIQNsAndThroughput(t *testing.T) {
 	pattern1 := "\"initiator_iqns\": conflicts with throughput"
 	pattern2 := "\"throughput\": conflicts with initiator_iqns"
 	resource.Test(t, resource.TestCase{

@@ -8,7 +8,7 @@ import (
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-func TestMockedAccNetworkV2InternetGatewayImportBasic(t *testing.T) {
+func TestMockedAccNetworkV2InternetGatewayImport_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}

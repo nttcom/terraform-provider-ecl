@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccImageStoragesV2ImageImportBasic(t *testing.T) {
+func TestAccImageStoragesV2ImageImport_basic(t *testing.T) {
 	resourceName := "ecl_imagestorages_image_v2.image_1"
 
 	resource.Test(t, resource.TestCase{

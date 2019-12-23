@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccNetworkV2PortDataSourceBasic(t *testing.T) {
+func TestAccNetworkV2PortDataSource_basic(t *testing.T) {
 	name, description, segmentationID := generateNetworkPortQueryParams()
 
 	resource.Test(t, resource.TestCase{
@@ -33,7 +33,7 @@ func TestAccNetworkV2PortDataSourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortDataSourceTestQueries(t *testing.T) {
+func TestAccNetworkV2PortDataSource_queries(t *testing.T) {
 	name, description, segmentationID := generateNetworkPortQueryParams()
 
 	resource.Test(t, resource.TestCase{
@@ -77,7 +77,7 @@ func TestAccNetworkV2PortDataSourceTestQueries(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2PortDataSourceTestQueriesDeviceID(t *testing.T) {
+func TestAccNetworkV2PortDataSource_queriesDeviceID(t *testing.T) {
 	name, description, segmentationID := generateNetworkPortQueryParams()
 
 	resource.Test(t, resource.TestCase{
@@ -96,7 +96,7 @@ func TestAccNetworkV2PortDataSourceTestQueriesDeviceID(t *testing.T) {
 		},
 	})
 }
-func TestAccNetworkV2PortDataSourceNetworkIdAttribute(t *testing.T) {
+func TestAccNetworkV2PortDataSource_networkIDAttribute(t *testing.T) {
 	name, description, segmentationID := generateNetworkPortQueryParams()
 
 	resource.Test(t, resource.TestCase{

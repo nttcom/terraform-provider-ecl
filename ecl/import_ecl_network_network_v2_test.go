@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccNetworkV2NetworkImportBasic(t *testing.T) {
+func TestAccNetworkV2NetworkImport_basic(t *testing.T) {
 	resourceName := "ecl_network_network_v2.network_1"
 
 	resource.Test(t, resource.TestCase{

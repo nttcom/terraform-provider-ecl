@@ -8,7 +8,7 @@ import (
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-func TestMockedAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
+func TestMockedAccNetworkV2InternetGatewayDataSource_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
@@ -48,7 +48,7 @@ func TestMockedAccNetworkV2InternetGatewayDataSourceBasic(t *testing.T) {
 	})
 }
 
-func TestMockedAccNetworkV2InternetGatewayDataSourceTestQueries(t *testing.T) {
+func TestMockedAccNetworkV2InternetGatewayDataSource_queries(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}

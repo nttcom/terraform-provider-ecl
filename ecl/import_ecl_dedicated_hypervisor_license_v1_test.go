@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDedicatedHypervisorV1LicenseImportBasic(t *testing.T) {
+func TestAccDedicatedHypervisorV1LicenseImport_basic(t *testing.T) {
 	resourceName := "ecl_dedicated_hypervisor_license_v1.license_1"
 
 	resource.Test(t, resource.TestCase{

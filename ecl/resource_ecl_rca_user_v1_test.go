@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccRCAV1UserBasic(t *testing.T) {
+func TestAccRCAV1User_basic(t *testing.T) {
 	var user users.User
 
 	resource.Test(t, resource.TestCase{

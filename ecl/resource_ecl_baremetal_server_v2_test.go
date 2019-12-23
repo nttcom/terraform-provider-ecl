@@ -9,7 +9,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/baremetal/v2/servers"
 )
 
-func TestAccBaremetalV2ServerBasic(t *testing.T) {
+func TestAccBaremetalV2Server_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

@@ -20,7 +20,7 @@ import (
 	"github.com/nttcom/eclcloud/pagination"
 )
 
-func TestAccComputeV2InstanceBasic(t *testing.T) {
+func TestAccComputeV2Instance_basic(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -53,7 +53,7 @@ func TestAccComputeV2InstanceBasic(t *testing.T) {
 		},
 	})
 }
-func TestAccComputeV2InstanceResize(t *testing.T) {
+func TestAccComputeV2Instance_resize(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -80,7 +80,7 @@ func TestAccComputeV2InstanceResize(t *testing.T) {
 		},
 	})
 }
-func TestAccComputeV2InstanceUserData(t *testing.T) {
+func TestAccComputeV2Instance_userData(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -100,7 +100,7 @@ func TestAccComputeV2InstanceUserData(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceInitialStateActive(t *testing.T) {
+func TestAccComputeV2Instance_initialStateActive(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -139,7 +139,7 @@ func TestAccComputeV2InstanceInitialStateActive(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceInitialStateShutoff(t *testing.T) {
+func TestAccComputeV2Instance_initialStateShutoff(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -178,7 +178,7 @@ func TestAccComputeV2InstanceInitialStateShutoff(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceBootFromVolumeWhichHasImageSource(t *testing.T) {
+func TestAccComputeV2Instance_bootFromVolumeWhichHasImageSource(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -200,7 +200,7 @@ func TestAccComputeV2InstanceBootFromVolumeWhichHasImageSource(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceBlockDeviceExistingVolume(t *testing.T) {
+func TestAccComputeV2Instance_blockDeviceExistingVolume(t *testing.T) {
 	var instance servers.Server
 	var volume volumes.Volume
 
@@ -223,7 +223,7 @@ func TestAccComputeV2InstanceBlockDeviceExistingVolume(t *testing.T) {
 		},
 	})
 }
-func TestAccComputeV2InstanceKeyPairForceNew(t *testing.T) {
+func TestAccComputeV2Instance_keyPairForceNew(t *testing.T) {
 	var instance1_1 servers.Server
 	var instance1_2 servers.Server
 
@@ -255,7 +255,7 @@ func TestAccComputeV2InstanceKeyPairForceNew(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceBootFromVolumeForceNew(t *testing.T) {
+func TestAccComputeV2Instance_bootFromVolumeForceNew(t *testing.T) {
 	var instance1_1 servers.Server
 	var instance1_2 servers.Server
 
@@ -286,7 +286,7 @@ func TestAccComputeV2InstanceBootFromVolumeForceNew(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceBlockDeviceNewVolume(t *testing.T) {
+func TestAccComputeV2Instance_blockDeviceNewVolume(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -307,7 +307,7 @@ func TestAccComputeV2InstanceBlockDeviceNewVolume(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceAccessIPv4(t *testing.T) {
+func TestAccComputeV2Instance_accessIPv4(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -327,7 +327,7 @@ func TestAccComputeV2InstanceAccessIPv4(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceChangeFixedIP(t *testing.T) {
+func TestAccComputeV2Instance_changeFixedIP(t *testing.T) {
 	var instance1_1 servers.Server
 	var instance1_2 servers.Server
 
@@ -359,7 +359,7 @@ func TestAccComputeV2InstanceChangeFixedIP(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceStopBeforeDestroy(t *testing.T) {
+func TestAccComputeV2Instance_stopBeforeDestroy(t *testing.T) {
 	var instance servers.Server
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -376,7 +376,7 @@ func TestAccComputeV2InstanceStopBeforeDestroy(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceMetadataRemove(t *testing.T) {
+func TestAccComputeV2Instance_metadataRemove(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -420,7 +420,7 @@ func TestAccComputeV2InstanceMetadataRemove(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceTimeout(t *testing.T) {
+func TestAccComputeV2Instance_timeout(t *testing.T) {
 	var instance servers.Server
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -437,7 +437,7 @@ func TestAccComputeV2InstanceTimeout(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceNetworkNameToID(t *testing.T) {
+func TestAccComputeV2Instance_networkNameToID(t *testing.T) {
 	var instance servers.Server
 	var network networks.Network
 	resource.Test(t, resource.TestCase{
@@ -458,7 +458,7 @@ func TestAccComputeV2InstanceNetworkNameToID(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceMultipleNICs(t *testing.T) {
+func TestAccComputeV2Instance_multipleNICs(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -476,7 +476,7 @@ func TestAccComputeV2InstanceMultipleNICs(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceConnectToCreatedPort(t *testing.T) {
+func TestAccComputeV2Instance_connectToCreatedPort(t *testing.T) {
 	var instance servers.Server
 	var port ports.Port
 
@@ -500,7 +500,7 @@ func TestAccComputeV2InstanceConnectToCreatedPort(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2InstanceConnectToNetworkByName(t *testing.T) {
+func TestAccComputeV2Instance_connectToNetworkByName(t *testing.T) {
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{

@@ -23,7 +23,7 @@ const VOLUME_TYPE_NAME_FILE_STANDARD = "standard_nfs_na"
 //		4. Update it by modified HCL configurations
 //			All parameters are updated except ip addr pool start
 //		5. Check if new configuration is correctly applied
-func TestAccStorageV1VirtualStorageBasic(t *testing.T) {
+func TestAccStorageV1VirtualStorage_basic(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckStorage(t) },
@@ -79,8 +79,8 @@ func TestAccStorageV1VirtualStorageBasic(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VirtualStorageTimeout just check Timeout section is correctly worked or not
-func TestAccStorageV1VirtualStorageTimeout(t *testing.T) {
+// TestAccStorageV1VirtualStorage_timeout just check Timeout section is correctly worked or not
+func TestAccStorageV1VirtualStorage_timeout(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckStorage(t) },
@@ -99,13 +99,13 @@ func TestAccStorageV1VirtualStorageTimeout(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VirtualStorageVolumeTypeNameBlock is practical test case from user's stand point
+// TestAccStorageV1VirtualStorage_volumeTypeNameBlock is practical test case from user's stand point
 // In this test case, volume_type_name is used. Even this is not API original parameter
 // but is meant to enhance user's convenience
 // This test is the case of Block Storage service
 // Test items are almost same as TestAccStorageV1VirtualStorageBasic
 // Create -> Parameter Confirmation -> Update -> Parameter Confirmation(All parameters are correctly updated or not)
-func TestAccStorageV1VirtualStorageVolumeTypeNameBlock(t *testing.T) {
+func TestAccStorageV1VirtualStorage_volumeTypeNameBlock(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckStorage(t) },
@@ -169,13 +169,13 @@ func TestAccStorageV1VirtualStorageVolumeTypeNameBlock(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VirtualStorageVolumeTypeNameFilePremium is practical test case from user's stand point
+// TestAccStorageV1VirtualStorage_volumeTypeNameFilePremium is practical test case from user's stand point
 // In this test case, volume_type_name is used. Even this is not API original parameter
 // but is meant to enhance user's convenience
 // This test is the case of File Storage(Premium) service
 // Test items are almost same as TestAccStorageV1VirtualStorageBasic
 // Create -> Parameter Confirmation -> Update -> Parameter Confirmation(All parameters are correctly updated or not)
-func TestAccStorageV1VirtualStorageVolumeTypeNameFilePremium(t *testing.T) {
+func TestAccStorageV1VirtualStorage_volumeTypeNameFilePremium(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -233,13 +233,13 @@ func TestAccStorageV1VirtualStorageVolumeTypeNameFilePremium(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VirtualStorageVolumeTypeNameFileStandard is practical test case from user's stand point
+// TestAccStorageV1VirtualStorage_volumeTypeNameFileStandard is practical test case from user's stand point
 // In this test case, volume_type_name is used. Even this is not API original parameter
 // but is meant to enhance user's convenience
 // This test is the case of File Storage(Standard) service
 // Test items are almost same as TestAccStorageV1VirtualStorageBasic
 // Create -> Parameter Confirmation -> Update -> Parameter Confirmation(All parameters are correctly updated or not)
-func TestAccStorageV1VirtualStorageVolumeTypeNameFileStandard(t *testing.T) {
+func TestAccStorageV1VirtualStorage_volumeTypeNameFileStandard(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -307,7 +307,7 @@ func testCheckVirtualStorageIDIsChanged(vs1, vs2 *virtualstorages.VirtualStorage
 	}
 }
 
-// TestAccStorageV1VirtualStorageForceNewByNetwork check if ForceNew works correctly
+// TestAccStorageV1VirtualStorage_forceNewByNetwork check if ForceNew works correctly
 // This function has 2 TestSteps
 // Firstly, create virtual storage with new network
 // Secondly, create another network and change network_id of virtual storage as new network
@@ -315,7 +315,7 @@ func testCheckVirtualStorageIDIsChanged(vs1, vs2 *virtualstorages.VirtualStorage
 // So this test case check whether 1st and 2nd virtual storage ID points different UUID correctly or not
 // Each ID is inserted into virtualStorageIDs slice by beggining of each TestStep by using "testCheckIDIsChanged"
 // and also be compared in same function
-func TestAccStorageV1VirtualStorageForceNewByNetwork(t *testing.T) {
+func TestAccStorageV1VirtualStorage_forceNewByNetwork(t *testing.T) {
 	var vs1, vs2 virtualstorages.VirtualStorage
 
 	resource.Test(t, resource.TestCase{

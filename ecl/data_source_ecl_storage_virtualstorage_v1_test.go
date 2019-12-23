@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccStorageV1VirtualStorageDataSourceBasic(t *testing.T) {
+func TestAccStorageV1VirtualStorageDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckStorage(t) },
 		Providers: testAccProviders,
@@ -39,7 +39,7 @@ func TestAccStorageV1VirtualStorageDataSourceBasic(t *testing.T) {
 		},
 	})
 }
-func TestAccStorageV1VirtualStorageDataSourceID(t *testing.T) {
+func TestAccStorageV1VirtualStorageDataSource_id(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckStorage(t) },
 		Providers: testAccProviders,

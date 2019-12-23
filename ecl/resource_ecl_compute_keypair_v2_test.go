@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/keypairs"
 )
 
-func TestAccComputeV2KeypairBasic(t *testing.T) {
+func TestAccComputeV2Keypair_basic(t *testing.T) {
 	var keypair keypairs.KeyPair
 
 	resource.Test(t, resource.TestCase{
@@ -29,7 +29,7 @@ func TestAccComputeV2KeypairBasic(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2KeypairGeneratePrivate(t *testing.T) {
+func TestAccComputeV2Keypair_generatePrivate(t *testing.T) {
 	var keypair keypairs.KeyPair
 
 	fingerprintRe := regexp.MustCompile(`[a-f0-9:]+`)

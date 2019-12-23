@@ -10,7 +10,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways"
 )
 
-func TestAccNetworkV2CommonFunctionGatewayBasic(t *testing.T) {
+func TestAccNetworkV2CommonFunctionGateway_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
