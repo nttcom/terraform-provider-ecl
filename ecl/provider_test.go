@@ -62,13 +62,13 @@ func init() {
 	testAccProvider = Provider().(*schema.Provider)
 	testAccProviders = map[string]terraform.ResourceProvider{
 		"ecl":          testAccProvider,
-		"ecl_accepter": acceptProvider().(*schema.Provider),
+		"ecl_accepter": accepter().(*schema.Provider),
 	}
 }
 
-// acceptProvider returns a schema.Provider with accepter tenant specified by OS_ACCEPTER_TENANT_ID.
+// accepter returns a schema.Provider with accepter tenant specified by OS_ACCEPTER_TENANT_ID.
 // Used by acceptance tests of ecl_imagestorages_member_accepter_v2 resource.
-func acceptProvider() terraform.ResourceProvider {
+func accepter() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"auth_url": &schema.Schema{
