@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDNSV2ZoneImportBasic(t *testing.T) {
+func TestAccDNSV2ZoneImport_basic(t *testing.T) {
 	var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))
 	resourceName := "ecl_dns_zone_v2.zone_1"
 

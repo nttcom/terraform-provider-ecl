@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccNetworkV2InternetGatewayImportBasic(t *testing.T) {
+func TestAccNetworkV2InternetGatewayImport_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

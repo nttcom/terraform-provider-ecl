@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDedicatedHypervisorV1ServerImportBasic(t *testing.T) {
+func TestAccDedicatedHypervisorV1ServerImport_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

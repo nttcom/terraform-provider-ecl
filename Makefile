@@ -48,7 +48,10 @@ test-compile:
 	fi
 	go test -c $(TEST) $(TESTARGS)
 
+lint:
+	tfproviderlint ./...
+
 vendor:
 	go mod vendor
 
-.PHONY: build test testacc testacc-all testacc-short vet fmt fmtcheck errcheck test-compile vendor
+.PHONY: build test testacc testacc-all testacc-short vet fmt fmtcheck errcheck test-compile lint vendor

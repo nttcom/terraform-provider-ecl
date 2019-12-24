@@ -10,7 +10,7 @@ import (
 
 const localFileForDataSourceTest = "/tmp/tempfile.img"
 
-func TestAccImageStoragesV2ImageDataSourceBasic(t *testing.T) {
+func TestAccImageStoragesV2ImageDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -45,7 +45,7 @@ func TestAccImageStoragesV2ImageDataSourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccImagesV2ImageDataSourceTestQueries(t *testing.T) {
+func TestAccImagesV2ImageDataSource_queries(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

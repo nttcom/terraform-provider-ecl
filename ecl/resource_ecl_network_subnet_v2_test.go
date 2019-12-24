@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
 )
 
-func TestAccNetworkV2SubnetBasic(t *testing.T) {
+func TestAccNetworkV2Subnet_basic(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -113,7 +113,7 @@ func TestAccNetworkV2SubnetBasic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetForceNewByCIDR(t *testing.T) {
+func TestAccNetworkV2Subnet_forceNewByCIDR(t *testing.T) {
 	var sn1 subnets.Subnet
 	var sn2 subnets.Subnet
 
@@ -139,7 +139,7 @@ func TestAccNetworkV2SubnetForceNewByCIDR(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetTag(t *testing.T) {
+func TestAccNetworkV2Subnet_tag(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -176,7 +176,7 @@ func TestAccNetworkV2SubnetTag(t *testing.T) {
 		},
 	})
 }
-func TestAccNetworkV2SubnetEnableDHCP(t *testing.T) {
+func TestAccNetworkV2Subnet_enableDHCP(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -196,7 +196,7 @@ func TestAccNetworkV2SubnetEnableDHCP(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetDisableDHCP(t *testing.T) {
+func TestAccNetworkV2Subnet_disableDHCP(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -216,7 +216,7 @@ func TestAccNetworkV2SubnetDisableDHCP(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetNoGateway(t *testing.T) {
+func TestAccNetworkV2Subnet_noGateway(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -236,7 +236,7 @@ func TestAccNetworkV2SubnetNoGateway(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetImpliedGateway(t *testing.T) {
+func TestAccNetworkV2Subnet_impliedGateway(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -256,7 +256,7 @@ func TestAccNetworkV2SubnetImpliedGateway(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetConflictsGateway(t *testing.T) {
+func TestAccNetworkV2Subnet_conflictsGateway(t *testing.T) {
 	pattern1 := "\"no_gateway\": conflicts with gateway_ip"
 	pattern2 := "\"gateway_ip\": conflicts with no_gateway"
 	resource.Test(t, resource.TestCase{
@@ -275,7 +275,7 @@ func TestAccNetworkV2SubnetConflictsGateway(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetTimeout(t *testing.T) {
+func TestAccNetworkV2Subnet_timeout(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -293,7 +293,7 @@ func TestAccNetworkV2SubnetTimeout(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2SubnetNTP(t *testing.T) {
+func TestAccNetworkV2Subnet_ntp(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{

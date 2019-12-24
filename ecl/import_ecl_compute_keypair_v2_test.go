@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccComputeV2KeypairImportBasic(t *testing.T) {
+func TestAccComputeV2KeypairImport_basic(t *testing.T) {
 	resourceName := "ecl_compute_keypair_v2.kp_1"
 
 	resource.Test(t, resource.TestCase{

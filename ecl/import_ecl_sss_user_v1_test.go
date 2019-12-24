@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccSSSV1UserImportBasic(t *testing.T) {
+func TestAccSSSV1UserImport_basic(t *testing.T) {
 	resourceName := "ecl_sss_user_v1.user_1"
 	var loginID = fmt.Sprintf("ACCPTTEST-%s", acctest.RandString(15))
 

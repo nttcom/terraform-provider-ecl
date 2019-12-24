@@ -10,7 +10,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
 )
 
-func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
+func TestMockedAccVNAV1Appliance_updateMetaBasic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
@@ -86,7 +86,7 @@ func TestMockedAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 	})
 }
 
-func TestMockedAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
+func TestMockedAccVNAV1Appliance_updateAllowedAddressPairBasic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
@@ -137,7 +137,7 @@ func TestMockedAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 	})
 }
 
-func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
+func TestMockedAccVNAV1ApplianceUpdateFixedIP_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
@@ -194,7 +194,7 @@ func TestMockedAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 	})
 }
 
-func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
+func TestMockedAccVNAV1Appliance_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}
@@ -237,7 +237,7 @@ func TestMockedAccVNAV1ApplianceBasic(t *testing.T) {
 	})
 }
 
-func TestMockedAccVNAV1ApplianceSimpleBasic(t *testing.T) {
+func TestMockedAccVNAV1ApplianceSimple_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}

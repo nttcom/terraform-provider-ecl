@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/ports"
 )
 
-func TestAccNetworkV2NetworkDataSourceTestQueries(t *testing.T) {
+func TestAccNetworkV2NetworkDataSource_queries(t *testing.T) {
 	var networkName = fmt.Sprintf("ACPTTEST%s-network", acctest.RandString(5))
 	var networkDescription = fmt.Sprintf("ACPTTEST%s-network-description", acctest.RandString(5))
 
@@ -68,7 +68,7 @@ func TestAccNetworkV2NetworkDataSourceTestQueries(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2NetworkDataSourceCreateResource(t *testing.T) {
+func TestAccNetworkV2NetworkDataSource_createResource(t *testing.T) {
 	var port ports.Port
 	var networkName = fmt.Sprintf("ACPTTEST%s-network", acctest.RandString(5))
 	var networkDescription = fmt.Sprintf("ACPTTEST%s-network-description", acctest.RandString(5))

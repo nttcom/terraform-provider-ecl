@@ -9,7 +9,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/internet_gateways"
 )
 
-func TestAccNetworkV2InternetGatewayBasic(t *testing.T) {
+func TestAccNetworkV2InternetGateway_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

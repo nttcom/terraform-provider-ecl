@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccNetworkV2StaticRouteImportBasic(t *testing.T) {
+func TestAccNetworkV2StaticRouteImport_basic(t *testing.T) {
 	resourceName := "ecl_network_static_route_v2.static_route_1"
 
 	resource.Test(t, resource.TestCase{

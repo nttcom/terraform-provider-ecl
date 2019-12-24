@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccRCAV1UserImportBasic(t *testing.T) {
+func TestAccRCAV1UserImport_basic(t *testing.T) {
 	resourceName := "ecl_rca_user_v1.user_1"
 
 	resource.Test(t, resource.TestCase{

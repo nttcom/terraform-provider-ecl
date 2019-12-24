@@ -57,21 +57,186 @@ var (
 
 var testAccProviders map[string]terraform.ResourceProvider
 var testAccProvider *schema.Provider
-var testAccProviderFactories func(providers *[]*schema.Provider) map[string]terraform.ResourceProviderFactory
 
 func init() {
 	testAccProvider = Provider().(*schema.Provider)
 	testAccProviders = map[string]terraform.ResourceProvider{
-		"ecl": testAccProvider,
+		"ecl":          testAccProvider,
+		"ecl_accepter": accepter().(*schema.Provider),
 	}
-	testAccProviderFactories = func(providers *[]*schema.Provider) map[string]terraform.ResourceProviderFactory {
-		return map[string]terraform.ResourceProviderFactory{
-			"ecl": func() (terraform.ResourceProvider, error) {
-				p := Provider()
-				*providers = append(*providers, p.(*schema.Provider))
-				return p, nil
+}
+
+// accepter returns a schema.Provider with accepter tenant specified by OS_ACCEPTER_TENANT_ID.
+// Used by acceptance tests of ecl_imagestorages_member_accepter_v2 resource.
+func accepter() terraform.ResourceProvider {
+	return &schema.Provider{
+		Schema: map[string]*schema.Schema{
+			"auth_url": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_AUTH_URL", ""),
+				Description: descriptions["auth_url"],
 			},
-		}
+
+			"region": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: descriptions["region"],
+				DefaultFunc: schema.EnvDefaultFunc("OS_REGION_NAME", ""),
+			},
+
+			"user_name": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_USERNAME", ""),
+				Description: descriptions["user_name"],
+			},
+
+			"user_id": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_USER_ID", ""),
+				Description: descriptions["user_name"],
+			},
+
+			"tenant_id": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_ACCEPTER_TENANT_ID", ""),
+				Description: descriptions["tenant_id"],
+			},
+
+			"tenant_name": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"OS_TENANT_NAME",
+					"OS_PROJECT_NAME",
+				}, ""),
+				Description: descriptions["tenant_name"],
+			},
+
+			"password": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_PASSWORD", ""),
+				Description: descriptions["password"],
+			},
+
+			"token": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"OS_TOKEN",
+					"OS_AUTH_TOKEN",
+				}, ""),
+				Description: descriptions["token"],
+			},
+
+			"user_domain_name": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_USER_DOMAIN_NAME", ""),
+				Description: descriptions["user_domain_name"],
+			},
+
+			"user_domain_id": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_USER_DOMAIN_ID", ""),
+				Description: descriptions["user_domain_id"],
+			},
+
+			"project_domain_name": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_PROJECT_DOMAIN_NAME", ""),
+				Description: descriptions["project_domain_name"],
+			},
+
+			"project_domain_id": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_PROJECT_DOMAIN_ID", ""),
+				Description: descriptions["project_domain_id"],
+			},
+
+			"domain_id": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_DOMAIN_ID", ""),
+				Description: descriptions["domain_id"],
+			},
+
+			"domain_name": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_DOMAIN_NAME", ""),
+				Description: descriptions["domain_name"],
+			},
+
+			"default_domain": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_DEFAULT_DOMAIN", "default"),
+				Description: descriptions["default_domain"],
+			},
+
+			"insecure": &schema.Schema{
+				Type:        schema.TypeBool,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_INSECURE", nil),
+				Description: descriptions["insecure"],
+			},
+
+			"endpoint_type": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", ""),
+			},
+
+			"cacert_file": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_CACERT", ""),
+				Description: descriptions["cacert_file"],
+			},
+
+			"cert": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_CERT", ""),
+				Description: descriptions["cert"],
+			},
+
+			"key": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_KEY", ""),
+				Description: descriptions["key"],
+			},
+
+			"cloud": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_CLOUD", ""),
+				Description: descriptions["cloud"],
+			},
+
+			"force_sss_endpoint": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_FORCE_SSS_ENDPOINT", ""),
+				Description: descriptions["force_sss_endpoint"],
+			},
+		},
+
+		ResourcesMap: map[string]*schema.Resource{
+			"ecl_imagestorages_member_accepter_v2": resourceImageStoragesMemberAccepterV2(),
+		},
+
+		ConfigureFunc: configureProvider,
 	}
 }
 

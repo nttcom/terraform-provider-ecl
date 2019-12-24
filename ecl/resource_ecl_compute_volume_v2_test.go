@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/computevolume/v2/volumes"
 )
 
-func TestAccComputeVolumeV2VolumeBasic(t *testing.T) {
+func TestAccComputeVolumeV2Volume_basic(t *testing.T) {
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{
@@ -75,7 +75,7 @@ func TestAccComputeVolumeV2VolumeBasic(t *testing.T) {
 	})
 }
 
-func TestAccComputeVolumeV2VolumeFromImage(t *testing.T) {
+func TestAccComputeVolumeV2Volume_fromImage(t *testing.T) {
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{
@@ -95,7 +95,7 @@ func TestAccComputeVolumeV2VolumeFromImage(t *testing.T) {
 	})
 }
 
-func TestAccComputeVolumeV2VolumeTimeout(t *testing.T) {
+func TestAccComputeVolumeV2Volume_timeout(t *testing.T) {
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{

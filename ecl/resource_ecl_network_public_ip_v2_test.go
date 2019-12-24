@@ -10,7 +10,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/public_ips"
 )
 
-func TestAccNetworkV2PublicIPBasic(t *testing.T) {
+func TestAccNetworkV2PublicIP_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

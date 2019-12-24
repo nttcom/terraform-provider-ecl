@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccDedicatedHypervisorV1LicenseBasic(t *testing.T) {
+func TestAccDedicatedHypervisorV1License_basic(t *testing.T) {
 	var license licenses.License
 
 	resource.Test(t, resource.TestCase{

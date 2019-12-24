@@ -12,7 +12,7 @@ import (
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_single"
 )
 
-func TestAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
+func TestAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -66,7 +66,7 @@ func TestAccSecurityV1NetworkBasedDeviceSingleBasic(t *testing.T) {
 	})
 }
 
-func TestAccSecurityV1NetworkBasedDeviceSingleUpdateInterface(t *testing.T) {
+func TestAccSecurityV1NetworkBasedDeviceSingle_updateInterface(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

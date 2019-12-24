@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/sss/v1/users"
 )
 
-func TestAccSSSV1UserBasic(t *testing.T) {
+func TestAccSSSV1User_basic(t *testing.T) {
 	var user users.User
 	var loginID = fmt.Sprintf("ACCPTTEST-%s", acctest.RandString(15))
 	var mailAddress = fmt.Sprintf("%s@example.com", loginID)

@@ -16,7 +16,7 @@ func randomZoneName() string {
 	return fmt.Sprintf("ACPTTEST-zone-%s.com.", acctest.RandString(5))
 }
 
-func TestAccDNSV2RecordSetBasic(t *testing.T) {
+func TestAccDNSV2RecordSet_basic(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
 
@@ -99,7 +99,7 @@ func TestAccDNSV2RecordSetBasic(t *testing.T) {
 	})
 }
 
-func TestAccDNSV2RecordSetIPv6(t *testing.T) {
+func TestAccDNSV2RecordSet_ipv6(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
 

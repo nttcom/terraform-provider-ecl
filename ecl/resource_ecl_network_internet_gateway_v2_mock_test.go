@@ -10,7 +10,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/internet_gateways"
 )
 
-func TestMockedAccNetworkV2InternetGatewayBasic(t *testing.T) {
+func TestMockedAccNetworkV2InternetGateway_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
 		t.Skipf("skip this test in %s region", OS_REGION_NAME)
 	}

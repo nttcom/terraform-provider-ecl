@@ -13,7 +13,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/computevolume/v2/volumes"
 )
 
-func TestAccComputeVolumeV2AttachBasic(t *testing.T) {
+func TestAccComputeVolumeV2Attach_basic(t *testing.T) {
 	var va volumes.Attachment
 
 	resource.Test(t, resource.TestCase{
@@ -31,7 +31,7 @@ func TestAccComputeVolumeV2AttachBasic(t *testing.T) {
 	})
 }
 
-func TestAccComputeVolumeV2AttachTimeout(t *testing.T) {
+func TestAccComputeVolumeV2Attach_timeout(t *testing.T) {
 	var va volumes.Attachment
 
 	resource.Test(t, resource.TestCase{

@@ -19,7 +19,7 @@ var MaxLengthString = repeatedString("a", 255)
 // 1. create vna
 // 2. set each metadata by max length strings
 // 3. set those values as blank
-func TestAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
+func TestAccVNAV1Appliance_updateMetaBasic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -88,7 +88,7 @@ func TestAccVNAV1ApplianceUpdateMetaBasic(t *testing.T) {
 // Test process -> PASSED
 // 1. create vna
 // 2. update name and description metadata
-func TestAccVNAV1ApplianceUpdateMetaWithoutInterface(t *testing.T) {
+func TestAccVNAV1Appliance_updateMetaWithoutInterface(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -137,7 +137,7 @@ func TestAccVNAV1ApplianceUpdateMetaWithoutInterface(t *testing.T) {
 // 1. create vna
 // 2. connect interface2 with network-2
 // 3. disconnect interface2 from network-2
-func TestAccVNAV1ApplianceConnectAndDisconnectInterface(t *testing.T) {
+func TestAccVNAV1Appliance_connectAndDisconnectInterface(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -185,7 +185,7 @@ func TestAccVNAV1ApplianceConnectAndDisconnectInterface(t *testing.T) {
 // 2. set allowed address pairs which has type of "VRRP" and VRID=123
 // 3. set(change and over write) allowed address pairs which has type of "" and VRID is "null"
 // 4. unset allowed address pairs and check if length is correctly set as 0
-func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
+func TestAccVNAV1Appliance_updateAllowedAddressPairBasic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -231,7 +231,7 @@ func TestAccVNAV1ApplianceUpdateAllowedAddressPairBasic(t *testing.T) {
 	})
 }
 
-func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
+func TestAccVNAV1Appliance_updateFixedIPBasic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -297,7 +297,7 @@ func TestAccVNAV1ApplianceUpdateFixedIPBasic(t *testing.T) {
 	})
 }
 
-func TestAccVNAV1ApplianceBasic(t *testing.T) {
+func TestAccVNAV1Appliance_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}

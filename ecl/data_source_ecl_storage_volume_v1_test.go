@@ -8,12 +8,12 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-// TestAccStorageV1VolumeDataSourceBasic is basic test of volume
+// TestAccStorageV1VolumeDataSource_basic is basic test of volume
 // 	(Note) you need to prepare Virtual Storage and set the ID of that as Env value.
 //	This test function does followings
 // 		1. Create volume under pre created virtual storage
 // 		2. Refer that volume as datasource by using volume name to find it
-func TestAccStorageV1VolumeDataSourceBasic(t *testing.T) {
+func TestAccStorageV1VolumeDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckStorage(t) },
 		Providers: testAccProviders,
@@ -37,12 +37,12 @@ func TestAccStorageV1VolumeDataSourceBasic(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VolumeDataSourceID is basic test of volume
+// TestAccStorageV1VolumeDataSource_id is basic test of volume
 // 	(Note) you need to prepare Virtual Storage and set the ID of that as Env value.
 //	This test function does followings
 // 		1. Create volume under pre created virtual storage
 // 		2. Refer that volume as datasource by using volume ID to find it
-func TestAccStorageV1VolumeDataSourceID(t *testing.T) {
+func TestAccStorageV1VolumeDataSource_id(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckStorage(t) },
 		Providers: testAccProviders,
@@ -66,12 +66,12 @@ func TestAccStorageV1VolumeDataSourceID(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VolumeDataSourceCreateAllResourcesAsBlock create all of relevant resources
+// TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock create all of relevant resources
 // about data source test as Block Storage service
 // 	This test function does followings
 // 		1. Create network virtual storage, volume prior to data source
 // 		2. Refer that volume as datasource by using volume ID to find it
-func TestAccStorageV1VolumeDataSourceCreateAllResourcesAsBlock(t *testing.T) {
+func TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckStorage(t) },
 		Providers: testAccProviders,
@@ -95,12 +95,12 @@ func TestAccStorageV1VolumeDataSourceCreateAllResourcesAsBlock(t *testing.T) {
 	})
 }
 
-// TestAccStorageV1VolumeDataSourceCreateAllResourcesAsPremium create all of relevant resources
+// TestAccStorageV1VolumeDataSource_createAllResourcesAsFilePremium create all of relevant resources
 // about data source test as File Storage Premium service
 // 	This test function does followings
 // 		1. Create network virtual storage, volume prior to data source
 // 		2. Refer that volume as datasource by using volume ID to find it
-func TestAccStorageV1VolumeDataSourceCreateAllResourcesAsFilePremium(t *testing.T) {
+func TestAccStorageV1VolumeDataSource_createAllResourcesAsFilePremium(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheckStorage(t)
@@ -126,7 +126,7 @@ func TestAccStorageV1VolumeDataSourceCreateAllResourcesAsFilePremium(t *testing.
 		},
 	})
 }
-func TestAccStorageV1VolumeDataSourceCreateAllResourcesAsFileStandard(t *testing.T) {
+func TestAccStorageV1VolumeDataSource_createAllResourcesAsFileStandard(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheckStorage(t)

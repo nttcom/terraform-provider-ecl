@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccStorageV1VirtualStorageImportBasic(t *testing.T) {
+func TestAccStorageV1VirtualStorageImport_basic(t *testing.T) {
 	resourceName := "ecl_storage_virtualstorage_v1.virtualstorage_1"
 
 	resource.Test(t, resource.TestCase{

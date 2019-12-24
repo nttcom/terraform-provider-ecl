@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccComputeVolumeV2VolumeImportBasic(t *testing.T) {
+func TestAccComputeVolumeV2VolumeImport_basic(t *testing.T) {
 	resourceName := "ecl_compute_volume_v2.volume_1"
 
 	resource.Test(t, resource.TestCase{

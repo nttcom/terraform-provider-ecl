@@ -14,7 +14,7 @@ import (
 	"github.com/nttcom/eclcloud/ecl/sss/v1/tenants"
 )
 
-func TestAccSSSV1TenantBasic(t *testing.T) {
+func TestAccSSSV1Tenant_basic(t *testing.T) {
 	var tenant tenants.Tenant
 	var tenantName = fmt.Sprintf("ACCPTTEST-%s", acctest.RandString(15))
 

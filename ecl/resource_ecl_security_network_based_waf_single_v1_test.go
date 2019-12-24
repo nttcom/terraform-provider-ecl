@@ -12,7 +12,7 @@ import (
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_single"
 )
 
-func TestAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
+func TestAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -58,7 +58,7 @@ func TestAccSecurityV1NetworkBasedWAFSingleBasic(t *testing.T) {
 	})
 }
 
-func TestAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
+func TestAccSecurityV1NetworkBasedWAFSingle_updateInterface(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
