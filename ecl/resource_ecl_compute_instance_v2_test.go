@@ -224,8 +224,8 @@ func TestAccComputeV2Instance_blockDeviceExistingVolume(t *testing.T) {
 	})
 }
 func TestAccComputeV2Instance_keyPairForceNew(t *testing.T) {
-	var instance1_1 servers.Server
-	var instance1_2 servers.Server
+	var instance1 servers.Server
+	var instance2 servers.Server
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -236,7 +236,7 @@ func TestAccComputeV2Instance_keyPairForceNew(t *testing.T) {
 				Config: testAccComputeV2InstanceKeyPairForceNew1,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"ecl_compute_instance_v2.instance_1", &instance1_1),
+						"ecl_compute_instance_v2.instance_1", &instance1),
 					resource.TestCheckResourceAttr(
 						"ecl_compute_instance_v2.instance_1", "key_pair", "kp_1"),
 				),
@@ -245,10 +245,10 @@ func TestAccComputeV2Instance_keyPairForceNew(t *testing.T) {
 				Config: testAccComputeV2InstanceKeyPairForceNew2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"ecl_compute_instance_v2.instance_1", &instance1_2),
+						"ecl_compute_instance_v2.instance_1", &instance2),
 					resource.TestCheckResourceAttr(
 						"ecl_compute_instance_v2.instance_1", "key_pair", "kp_2"),
-					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1_1, &instance1_2),
+					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1, &instance2),
 				),
 			},
 		},
@@ -256,8 +256,8 @@ func TestAccComputeV2Instance_keyPairForceNew(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_bootFromVolumeForceNew(t *testing.T) {
-	var instance1_1 servers.Server
-	var instance1_2 servers.Server
+	var instance1 servers.Server
+	var instance2 servers.Server
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -271,15 +271,15 @@ func TestAccComputeV2Instance_bootFromVolumeForceNew(t *testing.T) {
 				Config: testAccComputeV2InstanceBootFromVolumeForceNew1,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"ecl_compute_instance_v2.instance_1", &instance1_1),
+						"ecl_compute_instance_v2.instance_1", &instance1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2InstanceBootFromVolumeForceNew2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"ecl_compute_instance_v2.instance_1", &instance1_2),
-					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1_1, &instance1_2),
+						"ecl_compute_instance_v2.instance_1", &instance2),
+					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1, &instance2),
 				),
 			},
 		},
@@ -328,8 +328,8 @@ func TestAccComputeV2Instance_accessIPv4(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_changeFixedIP(t *testing.T) {
-	var instance1_1 servers.Server
-	var instance1_2 servers.Server
+	var instance1 servers.Server
+	var instance2 servers.Server
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -340,7 +340,7 @@ func TestAccComputeV2Instance_changeFixedIP(t *testing.T) {
 				Config: testAccComputeV2InstanceChangeFixedIP1,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"ecl_compute_instance_v2.instance_1", &instance1_1),
+						"ecl_compute_instance_v2.instance_1", &instance1),
 					resource.TestCheckResourceAttr(
 						"ecl_compute_instance_v2.instance_1", "access_ip_v4", "192.168.1.10"),
 				),
@@ -349,8 +349,8 @@ func TestAccComputeV2Instance_changeFixedIP(t *testing.T) {
 				Config: testAccComputeV2InstanceChangeFixedIP2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"ecl_compute_instance_v2.instance_1", &instance1_2),
-					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1_1, &instance1_2),
+						"ecl_compute_instance_v2.instance_1", &instance2),
+					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1, &instance2),
 					resource.TestCheckResourceAttr(
 						"ecl_compute_instance_v2.instance_1", "access_ip_v4", "192.168.1.20"),
 				),
@@ -697,6 +697,12 @@ func testAccCheckComputeV2InstanceState(
 	}
 }
 
+const testImageDataSource = `
+data "ecl_imagestorages_image_v2" "image_1" {
+	name = "CentOS-7.5-1804_64_virtual-server_02"
+}
+`
+
 const testCreateNetworkForInstance = `
 resource "ecl_network_network_v2" "network_1" {
   name = "network_1"
@@ -718,6 +724,8 @@ var testAccComputeV2InstanceBasic = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "i"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   metadata = {
     foo = "bar"
   }
@@ -733,6 +741,8 @@ var testAccComputeV2InstanceUpdate = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "%s"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   metadata = {
     foo = "bar"
   }
@@ -754,6 +764,8 @@ var testAccComputeV2InstanceUserData = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   user_data = "#!/bin/sh\necho 'HOGE'"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -767,6 +779,7 @@ var testAccComputeV2InstanceResizeBase = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -780,6 +793,7 @@ var testAccComputeV2InstanceResizeUpdate = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
   flavor_id = "1CPU-4GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -791,11 +805,14 @@ resource "ecl_compute_instance_v2" "instance_1" {
 var testAccComputeV2InstanceBootFromVolumeWhichHasImageSource = fmt.Sprintf(`
 %s
 
+%s
+
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  flavor_id = "1CPU-2GB"
   availability_zone = "%s"
   block_device {
-    uuid = "%s"
+    uuid = "${data.ecl_imagestorages_image_v2.image_1.id}"
     source_type = "image"
     volume_size = 15
     boot_index = 0
@@ -807,11 +824,13 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`, testCreateNetworkForInstance,
-	OS_DEFAULT_ZONE,
-	OS_IMAGE_ID)
+`, testImageDataSource,
+	testCreateNetworkForInstance,
+	OS_DEFAULT_ZONE)
 
 var testAccComputeV2InstanceBlockDeviceExistingVolume = fmt.Sprintf(`
+%s
+
 %s
 
 resource "ecl_compute_volume_v2" "volume_1" {
@@ -822,9 +841,11 @@ resource "ecl_compute_volume_v2" "volume_1" {
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_id = "${data.ecl_imagestorages_image_v2.image_1.id}"
+  flavor_id = "1CPU-2GB"
   availability_zone = "%s"
   block_device {
-    uuid = "%s"
+    uuid = "${data.ecl_imagestorages_image_v2.image_1.id}"
     source_type = "image"
     destination_type = "local"
     boot_index = 0
@@ -842,10 +863,10 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`, testCreateNetworkForInstance,
+`, testImageDataSource,
+	testCreateNetworkForInstance,
 	OS_DEFAULT_ZONE,
-	OS_DEFAULT_ZONE,
-	OS_IMAGE_ID)
+	OS_DEFAULT_ZONE)
 
 var testKeyPairForInstance = `
 resource "ecl_compute_keypair_v2" "kp_1" {
@@ -863,6 +884,8 @@ var testAccComputeV2InstanceKeyPairForceNew1 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   key_pair = "${ecl_compute_keypair_v2.kp_1.name}"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -880,6 +903,8 @@ var testAccComputeV2InstanceKeyPairForceNew2 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   key_pair = "${ecl_compute_keypair_v2.kp_2.name}"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -894,11 +919,14 @@ resource "ecl_compute_instance_v2" "instance_1" {
 var testAccComputeV2InstanceBootFromVolumeForceNew1 = fmt.Sprintf(`
 %s
 
+%s
+
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  flavor_id = "1CPU-2GB"
   availability_zone = "%s"
   block_device {
-    uuid = "%s"
+    uuid = "${data.ecl_imagestorages_image_v2.image_1.id}"
     source_type = "image"
     volume_size = 15
     boot_index = 0
@@ -910,20 +938,22 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`,
+`, testImageDataSource,
 	testCreateNetworkForInstance,
 	OS_DEFAULT_ZONE,
-	OS_IMAGE_ID,
 )
 
 var testAccComputeV2InstanceBootFromVolumeForceNew2 = fmt.Sprintf(`
 %s
 
+%s
+
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  flavor_id = "1CPU-2GB"
   availability_zone = "%s"
   block_device {
-    uuid = "%s"
+    uuid = "${data.ecl_imagestorages_image_v2.image_1.id}"
     source_type = "image"
     volume_size = 40
     boot_index = 0
@@ -935,20 +965,23 @@ resource "ecl_compute_instance_v2" "instance_1" {
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
-`,
+`, testImageDataSource,
 	testCreateNetworkForInstance,
 	OS_DEFAULT_ZONE,
-	OS_IMAGE_ID,
 )
 
 var testAccComputeV2InstanceBlockDeviceNewVolume = fmt.Sprintf(`
 %s
 
+%s
+
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_id = "${data.ecl_imagestorages_image_v2.image_1.id}"
+  flavor_id = "1CPU-2GB"
   availability_zone = "%s"
   block_device {
-    uuid = "%s"
+    uuid = "${data.ecl_imagestorages_image_v2.image_1.id}"
     source_type = "image"
     destination_type = "local"
     boot_index = 0
@@ -967,42 +1000,10 @@ resource "ecl_compute_instance_v2" "instance_1" {
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 }
 `,
+	testImageDataSource,
 	testCreateNetworkForInstance,
 	OS_DEFAULT_ZONE,
-	OS_IMAGE_ID,
 )
-
-// var testAccComputeV2InstanceBlockDeviceExistingVolume = fmt.Sprintf(`
-// %s
-
-// resource "ecl_compute_volume_v2" "volume_1" {
-//   name = "volume_1"
-//   size = 15
-// }
-
-// resource "ecl_compute_instance_v2" "instance_1" {
-//   name = "instance_1"
-//   block_device {
-//     uuid = "%s"
-//     source_type = "image"
-//     destination_type = "local"
-//     boot_index = 0
-//     delete_on_termination = true
-//   }
-//   block_device {
-//     uuid = "${ecl_compute_volume_v2.volume_1.id}"
-//     source_type = "volume"
-//     destination_type = "volume"
-//     boot_index = 1
-//     delete_on_termination = true
-//   }
-//   network {
-//     uuid = "${ecl_network_network_v2.network_1.id}"
-//   }
-//   depends_on = ["ecl_network_subnet_v2.subnet_1"]
-// }
-// `, testCreateNetworkForInstance,
-// 	OS_IMAGE_ID)
 
 var testAccComputeV2InstanceAccessIPv4 = fmt.Sprintf(`
 %s
@@ -1011,6 +1012,8 @@ resource "ecl_compute_instance_v2" "instance_1" {
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
 
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -1024,6 +1027,8 @@ var testAccComputeV2InstanceChangeFixedIP1 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
     fixed_ip_v4 = "192.168.1.10"
@@ -1037,6 +1042,8 @@ var testAccComputeV2InstanceChangeFixedIP2 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
     fixed_ip_v4 = "192.168.1.20"
@@ -1050,6 +1057,8 @@ var testAccComputeV2InstanceStopBeforeDestroy = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   stop_before_destroy = true
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -1063,6 +1072,8 @@ var testAccComputeV2InstanceMetadataRemove1 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   metadata = {
     k1 = "v1"
     k2 = "v2"
@@ -1079,6 +1090,8 @@ var testAccComputeV2InstanceMetadataRemove2 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   metadata = {
     k3 = "v3"
     k1 = "v1"
@@ -1095,6 +1108,8 @@ var testAccComputeV2InstanceMetadataRemove3 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
 
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -1108,6 +1123,8 @@ var testAccComputeV2InstanceTimeout = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
 
   timeouts {
     create = "10m"
@@ -1124,6 +1141,8 @@ var testAccComputeV2InstanceNetworkNameToID = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
 
   network {
     name = "${ecl_network_network_v2.network_1.name}"
@@ -1137,6 +1156,8 @@ var testAccComputeV2InstanceStateActive = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   power_state = "active"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -1150,6 +1171,8 @@ var testAccComputeV2InstanceStateShutoff = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   power_state = "shutoff"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -1182,6 +1205,8 @@ func testAccComputeV2InstanceMultipleNICs() string {
 	result += `
 	resource "ecl_compute_instance_v2" "instance_1" {
 	  name = "instance_1"
+	  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+	  flavor_id = "1CPU-2GB"
 	  depends_on = [`
 
 	for i := 0; i < nicMax; i++ {
@@ -1218,6 +1243,8 @@ resource "ecl_compute_instance_v2" "instance_1" {
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 
   name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
 
   network {
     port = "${ecl_network_port_v2.port_1.id}"
@@ -1232,6 +1259,8 @@ resource "ecl_compute_instance_v2" "instance_1" {
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 
   name = "instance_1"
+  flavor_id = "1CPU-2GB"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
 
   network {
     name = "${ecl_network_network_v2.network_1.name}"

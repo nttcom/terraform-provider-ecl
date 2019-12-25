@@ -198,14 +198,6 @@ Acceptance Tests are a crucial part of adding features or fixing a bug. Please
 make sure to read the core [testing](https://www.terraform.io/docs/extend/testing/index.html)
 documentation for more information about how Acceptance Tests work.
 
-In order to run the Acceptance Tests, you'll need to set the following
-environment variables:
-
-* `OS_IMAGE_ID` or `OS_IMAGE_NAME` - a UUID or name of an existing image in
-  images storage service.
-
-* `OS_FLAVOR_ID` or `OS_FLAVOR_NAME` - an ID or name of an existing flavor.
-
 The following additional environment variables might be required depending on
 the feature or bug you're testing:
 

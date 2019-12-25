@@ -20,10 +20,6 @@ var (
 	OS_COMMON_FUNCTION_POOL_ID               = os.Getenv("OS_COMMON_FUNCTION_POOL_ID")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
-	OS_FLAVOR_ID                             = os.Getenv("OS_FLAVOR_ID")
-	OS_FLAVOR_NAME                           = os.Getenv("OS_FLAVOR_NAME")
-	OS_IMAGE_ID                              = os.Getenv("OS_IMAGE_ID")
-	OS_IMAGE_NAME                            = os.Getenv("OS_IMAGE_NAME")
 	OS_INTERNET_SERVICE_ID                   = os.Getenv("OS_INTERNET_SERVICE_ID")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
 	OS_MAIL_ADDRESS                          = os.Getenv("OS_MAIL_ADDRESS")
@@ -292,14 +288,6 @@ func testAccPreCheckCommonFunctionGateway(t *testing.T) {
 	}
 }
 
-func testAccPreCheckNetwork(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_IMAGE_ID == "" && OS_FLAVOR_NAME == "" {
-		t.Fatal("OS_IMAGE_ID or OS_FLAVOR_NAME must be set for acceptance tests of netowrk")
-	}
-}
-
 func testAccPreCheck(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 }
@@ -309,20 +297,6 @@ func testAccPreCheckVNA(t *testing.T) {
 
 	if OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID == "" {
 		t.Fatal("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID must be set for acceptance tests of virtual network appliance")
-	}
-}
-
-func testAccPreOnlineResize(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	v := os.Getenv("OS_ONLINE_RESIZE")
-	if v == "" {
-		t.Skip("This environment does not support online blockstorage resize tests")
-	}
-
-	v = os.Getenv("OS_FLAVOR_NAME")
-	if v == "" {
-		t.Skip("OS_FLAVOR_NAME required to support online blockstorage resize tests")
 	}
 }
 

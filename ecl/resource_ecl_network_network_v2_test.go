@@ -125,7 +125,7 @@ func TestAccNetworkV2Network_fullstack(t *testing.T) {
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckNetwork(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkV2NetworkDestroy,
 		Steps: []resource.TestStep{
@@ -451,7 +451,9 @@ resource "ecl_network_port_v2" "port_1" {
 }
 
 resource "ecl_compute_instance_v2" "instance_1" {
-	name = "instance_1"
+  name = "instance_1"
+  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
 
   network {
     port = "${ecl_network_port_v2.port_1.id}"

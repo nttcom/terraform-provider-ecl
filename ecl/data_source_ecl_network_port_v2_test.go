@@ -332,6 +332,8 @@ func testAccNetworkV2PortDataSourcePortForDeviceID(name, description string, seg
 	resource "ecl_compute_instance_v2" "instance_1" {
 		depends_on = ["ecl_network_subnet_v2.subnet_1"]
 		name = "instance_1"
+		image_name = "CentOS-7.5-1804_64_virtual-server_02"
+		flavor_id = "1CPU-2GB"
 		network {
 			port = "${ecl_network_port_v2.port_1.id}"
 		}
