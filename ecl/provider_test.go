@@ -18,41 +18,25 @@ import (
 var (
 	OS_ACCEPTER_TENANT_ID                    = os.Getenv("OS_ACCEPTER_TENANT_ID")
 	OS_COMMON_FUNCTION_POOL_ID               = os.Getenv("OS_COMMON_FUNCTION_POOL_ID")
-	OS_CONTAINER_INFRA_ENVIRONMENT           = os.Getenv("OS_CONTAINER_INFRA_ENVIRONMENT")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
-	OS_DEPRECATED_ENVIRONMENT                = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
-	OS_DNS_ENVIRONMENT                       = os.Getenv("OS_DNS_ENVIRONMENT")
-	OS_EXTGW_ID                              = os.Getenv("OS_EXTGW_ID")
 	OS_FLAVOR_ID                             = os.Getenv("OS_FLAVOR_ID")
 	OS_FLAVOR_NAME                           = os.Getenv("OS_FLAVOR_NAME")
-	OS_FW_ENVIRONMENT                        = os.Getenv("OS_FW_ENVIRONMENT")
 	OS_IMAGE_ID                              = os.Getenv("OS_IMAGE_ID")
 	OS_IMAGE_NAME                            = os.Getenv("OS_IMAGE_NAME")
 	OS_INTERNET_SERVICE_ID                   = os.Getenv("OS_INTERNET_SERVICE_ID")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
-	OS_LB_ENVIRONMENT                        = os.Getenv("OS_LB_ENVIRONMENT")
 	OS_MAIL_ADDRESS                          = os.Getenv("OS_MAIL_ADDRESS")
-	OS_MAGNUM_FLAVOR                         = os.Getenv("OS_MAGNUM_FLAVOR")
-	OS_NETWORK_ID                            = os.Getenv("OS_NETWORK_ID")
-	OS_POOL_NAME                             = os.Getenv("OS_POOL_NAME")
 	OS_QOS_OPTION_ID_100M                    = os.Getenv("OS_QOS_OPTION_ID_100M")
 	OS_QOS_OPTION_ID_10M                     = os.Getenv("OS_QOS_OPTION_ID_10M")
 	OS_REGION_NAME                           = os.Getenv("OS_REGION_NAME")
-	OS_FORCE_SSS_ENDPOINT                    = os.Getenv("OS_FORCE_SSS_ENDPOINT")
 	OS_SSS_TENANT_ENVIRONMENT                = os.Getenv("OS_SSS_TENANT_ENVIRONMENT")
 	OS_SSS_USER_ENVIRONMENT                  = os.Getenv("OS_SSS_USER_ENVIRONMENT")
 	OS_STORAGE_VOLUME_TYPE_ID                = os.Getenv("OS_STORAGE_VOLUME_TYPE_ID")
-	OS_SUBNET_ID                             = os.Getenv("OS_SUBNET_ID")
-	OS_SWIFT_ENVIRONMENT                     = os.Getenv("OS_SWIFT_ENVIRONMENT")
 	OS_TENANT_ID                             = os.Getenv("OS_TENANT_ID")
-	OS_TENANT_NAME                           = os.Getenv("OS_TENANT_NAME")
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID     = os.Getenv("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID")
-	OS_VIRTUAL_STORAGE_ID                    = os.Getenv("OS_VIRTUAL_STORAGE_ID")
-	OS_VOLUME_TYPE_BLOCK_ENVIRONMENT         = os.Getenv("OS_VOLUME_TYPE_BLOCK_ENVIRONMENT")
 	OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT  = os.Getenv("OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT")
 	OS_VOLUME_TYPE_FILE_STANDARD_ENVIRONMENT = os.Getenv("OS_VOLUME_TYPE_FILE_STANDARD_ENVIRONMENT")
-	OS_VPN_ENVIRONMENT                       = os.Getenv("OS_VPN_ENVIRONMENT")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -318,59 +302,6 @@ func testAccPreCheckNetwork(t *testing.T) {
 
 func testAccPreCheck(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
-
-	// Do not run the test if this is a deprecated testing environment.
-	if OS_DEPRECATED_ENVIRONMENT != "" {
-		t.Skip("This environment only runs deprecated tests")
-	}
-}
-
-func testAccPreCheckDeprecated(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_DEPRECATED_ENVIRONMENT == "" {
-		t.Skip("This environment does not support deprecated tests")
-	}
-}
-
-func testAccPreCheckDNS(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_DNS_ENVIRONMENT == "" {
-		t.Skip("This environment does not support DNS tests. Set OS_DNS_ENVIRONMENT if you want to run DNS test")
-	}
-}
-
-func testAccPreCheckSwift(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_SWIFT_ENVIRONMENT == "" {
-		t.Skip("This environment does not support Swift tests")
-	}
-}
-
-func testAccPreCheckLB(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_LB_ENVIRONMENT == "" {
-		t.Skip("This environment does not support LB tests")
-	}
-}
-
-func testAccPreCheckFW(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_FW_ENVIRONMENT == "" {
-		t.Skip("This environment does not support FW tests")
-	}
-}
-
-func testAccPreCheckVPN(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_VPN_ENVIRONMENT == "" {
-		t.Skip("This environment does not support VPN tests")
-	}
 }
 
 func testAccPreCheckVNA(t *testing.T) {
@@ -378,14 +309,6 @@ func testAccPreCheckVNA(t *testing.T) {
 
 	if OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID == "" {
 		t.Fatal("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID must be set for acceptance tests of virtual network appliance")
-	}
-}
-
-func testAccPreCheckContainerInfra(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_CONTAINER_INFRA_ENVIRONMENT == "" {
-		t.Skip("This environment does not support Container Infra tests")
 	}
 }
 

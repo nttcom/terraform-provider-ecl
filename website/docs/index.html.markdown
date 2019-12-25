@@ -209,9 +209,6 @@ environment variables:
 The following additional environment variables might be required depending on
 the feature or bug you're testing:
 
-* `OS_DNS_ENVIRONMENT` - Required if you're working on the `ecl_dns_*`
-  resources. Set this value to "1" to enable testing these resources.
-
 * `OS_QOS_OPTION_ID_100M` - a UUID or name of an existing qos option
   corresponds to 100 MB best effort type.
 
@@ -220,10 +217,6 @@ the feature or bug you're testing:
 
 * `OS_SSS_TENANT_ENVIRONMENT` - Required if you're working on the 
   `ecl_sss_tenant` resources. 
-  Set this value to "1" to enable testing these resources.
-
-* `OS_VOLUME_TYPE_BLOCK_ENVIRONMENT` - Required if you're working on the 
-  `ecl_storage_*` resources on block storage service.
   Set this value to "1" to enable testing these resources.
 
 * `OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT` - Required if you're working 
