@@ -20,7 +20,6 @@ var (
 	OS_COMMON_FUNCTION_POOL_ID               = os.Getenv("OS_COMMON_FUNCTION_POOL_ID")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
-	OS_INTERNET_SERVICE_ID                   = os.Getenv("OS_INTERNET_SERVICE_ID")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
 	OS_MAIL_ADDRESS                          = os.Getenv("OS_MAIL_ADDRESS")
 	OS_QOS_OPTION_ID_100M                    = os.Getenv("OS_QOS_OPTION_ID_100M")
@@ -328,9 +327,6 @@ func testAccPreCheckInternetService(t *testing.T) {
 
 	if OS_REGION_NAME == "" {
 		t.Skip("Skipping test because OS_REGION_NAME is not set")
-	}
-	if OS_INTERNET_SERVICE_ID == "" {
-		t.Fatal("OS_INTERNET_SERVICE_ID must be set for acceptance tests")
 	}
 	if OS_INTERNET_SERVICE_ZONE_NAME == "" {
 		t.Fatal("OS_INTERNET_SERVICE_ZONE_NAME must be set for acceptance tests")

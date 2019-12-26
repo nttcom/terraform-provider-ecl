@@ -61,15 +61,15 @@ func TestMockedAccNetworkV2InternetServiceDataSource_queries(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccNetworkV2InternetServiceDataSourceID,
+				Config: testAccNetworkV2InternetServiceDataSourceName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2InternetServiceDataSourceID("data.ecl_network_internet_service_v2.internet_service_1"),
 				),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2InternetServiceDataSourceName,
+				Config: testAccNetworkV2InternetServiceDataSourceID,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2InternetServiceDataSourceID("data.ecl_network_internet_service_v2.internet_service_1"),
+					testAccCheckNetworkV2InternetServiceDataSourceID("data.ecl_network_internet_service_v2.internet_service_2"),
 				),
 			},
 			resource.TestStep{
