@@ -21,7 +21,6 @@ var (
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
-	OS_MAIL_ADDRESS                          = os.Getenv("OS_MAIL_ADDRESS")
 	OS_QOS_OPTION_ID_100M                    = os.Getenv("OS_QOS_OPTION_ID_100M")
 	OS_QOS_OPTION_ID_10M                     = os.Getenv("OS_QOS_OPTION_ID_10M")
 	OS_REGION_NAME                           = os.Getenv("OS_REGION_NAME")
@@ -363,13 +362,6 @@ func testAccPreCheckSecurity(t *testing.T) {
 
 	if OS_TENANT_ID == "" {
 		t.Fatal("OS_TENANT_ID must be set for acceptance tests of security")
-	}
-}
-
-func testAccPreCheckSecurityHostBased(t *testing.T) {
-	testAccPreCheckSecurity(t)
-	if OS_MAIL_ADDRESS == "" {
-		t.Fatal("OS_MAIL_ADDRESS must be set for acceptance tests of host based security")
 	}
 }
 
