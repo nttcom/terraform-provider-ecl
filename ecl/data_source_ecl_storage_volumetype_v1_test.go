@@ -27,9 +27,10 @@ func TestAccStorageV1VolumeTypeDataSourceBlockStorage_basic(t *testing.T) {
 		},
 	})
 }
+
 func TestAccStorageV1VolumeTypeDataSourceBlockStorage_id(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStorage(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
@@ -43,6 +44,7 @@ func TestAccStorageV1VolumeTypeDataSourceBlockStorage_id(t *testing.T) {
 		},
 	})
 }
+
 func TestAccStorageV1VolumeTypeDataSourceFileStoragePremium_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFileStorageServiceType(t, true, false) },
@@ -81,11 +83,11 @@ data "ecl_storage_volumetype_v1" "vt" {
 }
 `, VOLUME_TYPE_NAME_BLOCK)
 
-var testAccStorageV1VolumeTypeOfBlockStorageByID = fmt.Sprintf(`
+var testAccStorageV1VolumeTypeOfBlockStorageByID = `
 data "ecl_storage_volumetype_v1" "vt" {
-  volume_type_id = "%s"
+  volume_type_id = "6328d234-7939-4d61-9216-736de66d15f9"
 }
-`, OS_STORAGE_VOLUME_TYPE_ID)
+`
 
 var testAccStorageV1VolumeTypeOfFileStoragePremiumByName = fmt.Sprintf(`
 data "ecl_storage_volumetype_v1" "vt" {

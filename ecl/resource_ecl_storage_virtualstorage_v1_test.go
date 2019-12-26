@@ -26,7 +26,7 @@ const VOLUME_TYPE_NAME_FILE_STANDARD = "standard_nfs_na"
 func TestAccStorageV1VirtualStorage_basic(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorage(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VirtualStorageDestroy,
 		Steps: []resource.TestStep{
@@ -39,7 +39,7 @@ func TestAccStorageV1VirtualStorage_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "description", "first test virtual storage"),
 					resource.TestCheckResourceAttr(
-						"ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", OS_STORAGE_VOLUME_TYPE_ID),
+						"ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", "6328d234-7939-4d61-9216-736de66d15f9"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "ip_addr_pool.start", "192.168.1.10"),
 					resource.TestCheckResourceAttr(
@@ -59,7 +59,7 @@ func TestAccStorageV1VirtualStorage_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "description", "first test virtual storage-updated"),
 					resource.TestCheckResourceAttr(
-						"ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", OS_STORAGE_VOLUME_TYPE_ID),
+						"ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", "6328d234-7939-4d61-9216-736de66d15f9"),
 
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "ip_addr_pool.start", "192.168.1.9"),
@@ -83,7 +83,7 @@ func TestAccStorageV1VirtualStorage_basic(t *testing.T) {
 func TestAccStorageV1VirtualStorage_timeout(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorage(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VirtualStorageDestroy,
 		Steps: []resource.TestStep{
@@ -108,7 +108,7 @@ func TestAccStorageV1VirtualStorage_timeout(t *testing.T) {
 func TestAccStorageV1VirtualStorage_volumeTypeNameBlock(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorage(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VirtualStorageDestroy,
 		Steps: []resource.TestStep{
@@ -179,7 +179,7 @@ func TestAccStorageV1VirtualStorage_volumeTypeNameFilePremium(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckStorage(t)
+			testAccPreCheck(t)
 			testAccPreCheckFileStorageServiceType(t, true, false)
 		},
 		Providers:    testAccProviders,
@@ -243,7 +243,7 @@ func TestAccStorageV1VirtualStorage_volumeTypeNameFileStandard(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckStorage(t)
+			testAccPreCheck(t)
 			testAccPreCheckFileStorageServiceType(t, false, true)
 		},
 		Providers:    testAccProviders,
@@ -319,7 +319,7 @@ func TestAccStorageV1VirtualStorage_forceNewByNetwork(t *testing.T) {
 	var vs1, vs2 virtualstorages.VirtualStorage
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorage(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VirtualStorageDestroy,
 		Steps: []resource.TestStep{
@@ -332,7 +332,7 @@ func TestAccStorageV1VirtualStorage_forceNewByNetwork(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "description", "first test virtual storage"),
 					resource.TestCheckResourceAttr(
-						"ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", OS_STORAGE_VOLUME_TYPE_ID),
+						"ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", "6328d234-7939-4d61-9216-736de66d15f9"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "ip_addr_pool.start", "192.168.1.10"),
 					resource.TestCheckResourceAttr(
@@ -353,7 +353,7 @@ func TestAccStorageV1VirtualStorage_forceNewByNetwork(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "description", "first test virtual storage-forcednew"),
 					resource.TestCheckResourceAttr(
-						"ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", OS_STORAGE_VOLUME_TYPE_ID),
+						"ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", "6328d234-7939-4d61-9216-736de66d15f9"),
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "ip_addr_pool.start", "192.168.2.10"),
 					resource.TestCheckResourceAttr(
@@ -469,7 +469,7 @@ var testAccStorageV1VirtualStorageBasic = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1"
   description = "first test virtual storage"
-  volume_type_id = "%s"
+  volume_type_id = "6328d234-7939-4d61-9216-736de66d15f9"
   network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
@@ -481,9 +481,7 @@ resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
     nexthop = "192.168.1.1"
   }
 }
-`, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
-	OS_STORAGE_VOLUME_TYPE_ID,
-)
+`, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane)
 
 var testAccStorageV1VirtualStorageUpdate = fmt.Sprintf(`
 %s
@@ -491,7 +489,7 @@ var testAccStorageV1VirtualStorageUpdate = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1-updated"
   description = "first test virtual storage-updated"
-  volume_type_id = "%s"
+  volume_type_id = "6328d234-7939-4d61-9216-736de66d15f9"
   network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
@@ -507,9 +505,7 @@ resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
     nexthop = "192.168.1.1"
   }
 }
-`, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
-	OS_STORAGE_VOLUME_TYPE_ID,
-)
+`, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane)
 
 var testAccStorageV1VirtualStorageTimeout = fmt.Sprintf(`
 %s
@@ -517,7 +513,7 @@ var testAccStorageV1VirtualStorageTimeout = fmt.Sprintf(`
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
   name = "virtualstorage_1"
   description = "first test virtual storage"
-  volume_type_id = "%s"
+  volume_type_id = "6328d234-7939-4d61-9216-736de66d15f9"
   network_id = "${ecl_network_network_v2.network_1.id}"
   subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
   ip_addr_pool = {
@@ -533,9 +529,7 @@ resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
     delete = "30m"
   }
 }
-`, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane,
-	OS_STORAGE_VOLUME_TYPE_ID,
-)
+`, testAccStorageV1VirtualStorageNetworkAndSubnetDataPlane)
 
 var testAccStorageV1VirtualStorageVolumeTypeNameBlock = fmt.Sprintf(`
 %s

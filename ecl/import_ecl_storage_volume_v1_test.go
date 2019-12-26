@@ -10,7 +10,7 @@ func TestAccStorageV1VolumeImport_basic(t *testing.T) {
 	resourceName := "ecl_storage_volume_v1.volume_1"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorage(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VolumeDestroy,
 		Steps: []resource.TestStep{

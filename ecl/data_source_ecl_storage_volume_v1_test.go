@@ -15,7 +15,7 @@ import (
 // 		2. Refer that volume as datasource by using volume name to find it
 func TestAccStorageV1VolumeDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStorage(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
@@ -44,7 +44,7 @@ func TestAccStorageV1VolumeDataSource_basic(t *testing.T) {
 // 		2. Refer that volume as datasource by using volume ID to find it
 func TestAccStorageV1VolumeDataSource_id(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStorage(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
@@ -73,7 +73,7 @@ func TestAccStorageV1VolumeDataSource_id(t *testing.T) {
 // 		2. Refer that volume as datasource by using volume ID to find it
 func TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStorage(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
@@ -103,7 +103,7 @@ func TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock(t *testing.T) {
 func TestAccStorageV1VolumeDataSource_createAllResourcesAsFilePremium(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckStorage(t)
+			testAccPreCheck(t)
 			testAccPreCheckFileStorageServiceType(t, true, false)
 		},
 		Providers: testAccProviders,
@@ -129,7 +129,7 @@ func TestAccStorageV1VolumeDataSource_createAllResourcesAsFilePremium(t *testing
 func TestAccStorageV1VolumeDataSource_createAllResourcesAsFileStandard(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckStorage(t)
+			testAccPreCheck(t)
 			testAccPreCheckFileStorageServiceType(t, false, true)
 		},
 		Providers: testAccProviders,

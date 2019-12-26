@@ -26,7 +26,6 @@ var (
 	OS_REGION_NAME                           = os.Getenv("OS_REGION_NAME")
 	OS_SSS_TENANT_ENVIRONMENT                = os.Getenv("OS_SSS_TENANT_ENVIRONMENT")
 	OS_SSS_USER_ENVIRONMENT                  = os.Getenv("OS_SSS_USER_ENVIRONMENT")
-	OS_STORAGE_VOLUME_TYPE_ID                = os.Getenv("OS_STORAGE_VOLUME_TYPE_ID")
 	OS_TENANT_ID                             = os.Getenv("OS_TENANT_ID")
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID     = os.Getenv("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID")
 	OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT  = os.Getenv("OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT")
@@ -247,20 +246,6 @@ func testAccPreCheckSSSUser(t *testing.T) {
 	if OS_SSS_USER_ENVIRONMENT == "" {
 		t.Skip("This environment does not support sss user tests. Set OS_SSS_USER_ENVIRONMENT if you want to run SSS User tests")
 	}
-}
-
-// Prior to storage test, you need to find volume_type_id
-// corredponding to Block Device type's one
-func testAccPreCheckStorage(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-	if OS_STORAGE_VOLUME_TYPE_ID == "" {
-		t.Fatal("OS_STORAGE_VOLUME_TYPE_ID must be set for acceptance tests of storage")
-	}
-}
-
-// Prior to storage test, you need to create one virtual storage of Block storage type
-func testAccPreCheckStorageVolume(t *testing.T) {
-	testAccPreCheckStorage(t)
 }
 
 // File Storage has two types of services. Premium and Standard.
