@@ -207,10 +207,6 @@ the feature or bug you're testing:
 * `OS_QOS_OPTION_ID_10M` - a UUID or name of an existing qos option
   corresponds to 10 MB best effort type.
 
-* `OS_SSS_TENANT_ENVIRONMENT` - Required if you're working on the 
-  `ecl_sss_tenant` resources. 
-  Set this value to "1" to enable testing these resources.
-
 * `OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT` - Required if you're working 
   on the `ecl_storage_*` resources on file storage service premium plan.
   Set this value to "1" to enable testing these resources.

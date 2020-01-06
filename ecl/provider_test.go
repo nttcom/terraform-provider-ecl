@@ -24,8 +24,6 @@ var (
 	OS_QOS_OPTION_ID_100M                    = os.Getenv("OS_QOS_OPTION_ID_100M")
 	OS_QOS_OPTION_ID_10M                     = os.Getenv("OS_QOS_OPTION_ID_10M")
 	OS_REGION_NAME                           = os.Getenv("OS_REGION_NAME")
-	OS_SSS_TENANT_ENVIRONMENT                = os.Getenv("OS_SSS_TENANT_ENVIRONMENT")
-	OS_SSS_USER_ENVIRONMENT                  = os.Getenv("OS_SSS_USER_ENVIRONMENT")
 	OS_TENANT_ID                             = os.Getenv("OS_TENANT_ID")
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID     = os.Getenv("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID")
 	OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT  = os.Getenv("OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT")
@@ -226,9 +224,7 @@ func testAccPreCheckRequiredEnvVars(t *testing.T) {
 
 func testAccPreCheckSSSTenant(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
-	if OS_SSS_TENANT_ENVIRONMENT == "" {
-		t.Skip("This environment does not support sss tenant tests. Set OS_SSS_TENANT_ENVIRONMENT if you want to run SSS Tenant tests")
-	}
+
 	waitSeconds := 45
 	log.Printf("[DEBUG] Waiting %d seconds before starting TestCase...", waitSeconds)
 	time.Sleep(time.Duration(waitSeconds) * time.Second)
@@ -238,13 +234,6 @@ func testAccPreCheckDefaultZone(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 	if OS_DEFAULT_ZONE == "" {
 		t.Skip("This environment does not support tests which use default zone. Set OS_DEFAULT_ZONE if you want to run instance with bootable block device")
-	}
-}
-
-func testAccPreCheckSSSUser(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-	if OS_SSS_USER_ENVIRONMENT == "" {
-		t.Skip("This environment does not support sss user tests. Set OS_SSS_USER_ENVIRONMENT if you want to run SSS User tests")
 	}
 }
 
