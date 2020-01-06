@@ -174,7 +174,7 @@ var testAccComputeVolumeV2AttachBasic = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -201,7 +201,7 @@ var testAccComputeVolumeV2AttachTimeout = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"

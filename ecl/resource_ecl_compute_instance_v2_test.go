@@ -699,7 +699,7 @@ func testAccCheckComputeV2InstanceState(
 
 const testImageDataSource = `
 data "ecl_imagestorages_image_v2" "image_1" {
-	name = "CentOS-7.5-1804_64_virtual-server_02"
+	name = "Ubuntu-18.04.1_64_virtual-server_02"
 }
 `
 
@@ -724,7 +724,7 @@ var testAccComputeV2InstanceBasic = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "i"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   metadata = {
     foo = "bar"
@@ -741,7 +741,7 @@ var testAccComputeV2InstanceUpdate = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "%s"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   metadata = {
     foo = "bar"
@@ -764,7 +764,7 @@ var testAccComputeV2InstanceUserData = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   user_data = "#!/bin/sh\necho 'HOGE'"
   network {
@@ -779,7 +779,7 @@ var testAccComputeV2InstanceResizeBase = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -793,7 +793,7 @@ var testAccComputeV2InstanceResizeUpdate = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-4GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -884,7 +884,7 @@ var testAccComputeV2InstanceKeyPairForceNew1 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   key_pair = "${ecl_compute_keypair_v2.kp_1.name}"
   network {
@@ -903,7 +903,7 @@ var testAccComputeV2InstanceKeyPairForceNew2 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   key_pair = "${ecl_compute_keypair_v2.kp_2.name}"
   network {
@@ -1012,7 +1012,7 @@ resource "ecl_compute_instance_v2" "instance_1" {
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
 
   network {
@@ -1027,7 +1027,7 @@ var testAccComputeV2InstanceChangeFixedIP1 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -1042,7 +1042,7 @@ var testAccComputeV2InstanceChangeFixedIP2 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
@@ -1057,7 +1057,7 @@ var testAccComputeV2InstanceStopBeforeDestroy = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   stop_before_destroy = true
   network {
@@ -1072,7 +1072,7 @@ var testAccComputeV2InstanceMetadataRemove1 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   metadata = {
     k1 = "v1"
@@ -1090,7 +1090,7 @@ var testAccComputeV2InstanceMetadataRemove2 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   metadata = {
     k3 = "v3"
@@ -1108,7 +1108,7 @@ var testAccComputeV2InstanceMetadataRemove3 = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
 
   network {
@@ -1123,7 +1123,7 @@ var testAccComputeV2InstanceTimeout = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
 
   timeouts {
@@ -1141,7 +1141,7 @@ var testAccComputeV2InstanceNetworkNameToID = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
 
   network {
@@ -1156,7 +1156,7 @@ var testAccComputeV2InstanceStateActive = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   power_state = "active"
   network {
@@ -1171,7 +1171,7 @@ var testAccComputeV2InstanceStateShutoff = fmt.Sprintf(`
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   power_state = "shutoff"
   network {
@@ -1205,7 +1205,7 @@ func testAccComputeV2InstanceMultipleNICs() string {
 	result += `
 	resource "ecl_compute_instance_v2" "instance_1" {
 	  name = "instance_1"
-	  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+	  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
 	  flavor_id = "1CPU-2GB"
 	  depends_on = [`
 
@@ -1243,7 +1243,7 @@ resource "ecl_compute_instance_v2" "instance_1" {
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
 
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
 
   network {
@@ -1260,7 +1260,7 @@ resource "ecl_compute_instance_v2" "instance_1" {
 
   name = "instance_1"
   flavor_id = "1CPU-2GB"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
 
   network {
     name = "${ecl_network_network_v2.network_1.name}"

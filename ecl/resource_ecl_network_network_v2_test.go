@@ -452,7 +452,7 @@ resource "ecl_network_port_v2" "port_1" {
 
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
 
   network {

@@ -261,7 +261,7 @@ const testAccComputeVolumeV2VolumeFromImage = `
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   size = 15
-  image_name = "CentOS-7.5-1804_64_virtual-server_02"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
 }
 `
 
