@@ -198,33 +198,14 @@ Acceptance Tests are a crucial part of adding features or fixing a bug. Please
 make sure to read the core [testing](https://www.terraform.io/docs/extend/testing/index.html)
 documentation for more information about how Acceptance Tests work.
 
-In order to run the Acceptance Tests, you'll need to set the following
-environment variables:
-
-* `OS_IMAGE_ID` or `OS_IMAGE_NAME` - a UUID or name of an existing image in
-  images storage service.
-
-* `OS_FLAVOR_ID` or `OS_FLAVOR_NAME` - an ID or name of an existing flavor.
-
 The following additional environment variables might be required depending on
 the feature or bug you're testing:
-
-* `OS_DNS_ENVIRONMENT` - Required if you're working on the `ecl_dns_*`
-  resources. Set this value to "1" to enable testing these resources.
 
 * `OS_QOS_OPTION_ID_100M` - a UUID or name of an existing qos option
   corresponds to 100 MB best effort type.
 
 * `OS_QOS_OPTION_ID_10M` - a UUID or name of an existing qos option
   corresponds to 10 MB best effort type.
-
-* `OS_SSS_TENANT_ENVIRONMENT` - Required if you're working on the 
-  `ecl_sss_tenant` resources. 
-  Set this value to "1" to enable testing these resources.
-
-* `OS_VOLUME_TYPE_BLOCK_ENVIRONMENT` - Required if you're working on the 
-  `ecl_storage_*` resources on block storage service.
-  Set this value to "1" to enable testing these resources.
 
 * `OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT` - Required if you're working 
   on the `ecl_storage_*` resources on file storage service premium plan.

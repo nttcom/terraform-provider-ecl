@@ -14,7 +14,7 @@ func TestAccSSSV1UserImport_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckSSSUser(t)
+			testAccPreCheck(t)
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSSSV1UserDestroy,

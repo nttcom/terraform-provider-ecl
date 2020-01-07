@@ -31,15 +31,15 @@ func TestAccNetworkV2InternetServiceDataSource_queries(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccNetworkV2InternetServiceDataSourceID,
+				Config: testAccNetworkV2InternetServiceDataSourceName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2InternetServiceDataSourceID("data.ecl_network_internet_service_v2.internet_service_1"),
 				),
 			},
 			resource.TestStep{
-				Config: testAccNetworkV2InternetServiceDataSourceName,
+				Config: testAccNetworkV2InternetServiceDataSourceID,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2InternetServiceDataSourceID("data.ecl_network_internet_service_v2.internet_service_1"),
+					testAccCheckNetworkV2InternetServiceDataSourceID("data.ecl_network_internet_service_v2.internet_service_2"),
 				),
 			},
 			resource.TestStep{
@@ -95,29 +95,33 @@ func testAccReturnMinimalSubmaskLength(region string) int {
 	return minimalSubmaskLength
 }
 
-var testAccNetworkV2InternetServiceDataSourceBasic = fmt.Sprintf(`
+var testAccNetworkV2InternetServiceDataSourceBasic = `
 data "ecl_network_internet_service_v2" "internet_service_1" {
     name = "Internet-Service-01"
 }
-`)
+`
 
-var testAccNetworkV2InternetServiceDataSourceID = fmt.Sprintf(`
+var testAccNetworkV2InternetServiceDataSourceID = `
 data "ecl_network_internet_service_v2" "internet_service_1" {
-  internet_service_id = "%s"
+    name = "Internet-Service-01"
 }
-`,
-	OS_INTERNET_SERVICE_ID)
 
-var testAccNetworkV2InternetServiceDataSourceName = fmt.Sprintf(`
+data "ecl_network_internet_service_v2" "internet_service_2" {
+  internet_service_id = "${data.ecl_network_internet_service_v2.internet_service_1.id}"
+}
+`
+
+var testAccNetworkV2InternetServiceDataSourceName = `
 data "ecl_network_internet_service_v2" "internet_service_1" {
   name = "Internet-Service-01"
 }
-`)
-var testAccNetworkV2InternetServiceDataSourceDescription = fmt.Sprintf(`
+`
+
+var testAccNetworkV2InternetServiceDataSourceDescription = `
 data "ecl_network_internet_service_v2" "internet_service_1" {
     description = ""
 }
-`)
+`
 
 var testAccNetworkV2InternetServiceDataSourceMinimalSubmaskLength = fmt.Sprintf(`
 data "ecl_network_internet_service_v2" "internet_service_1" {

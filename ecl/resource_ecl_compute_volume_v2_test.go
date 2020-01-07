@@ -257,13 +257,13 @@ resource "ecl_compute_volume_v2" "volume_1" {
 }
 `
 
-var testAccComputeVolumeV2VolumeFromImage = fmt.Sprintf(`
+const testAccComputeVolumeV2VolumeFromImage = `
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   size = 15
-  image_id = "%s"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
 }
-`, OS_IMAGE_ID)
+`
 
 const testAccComputeVolumeV2VolumeTimeout = `
 resource "ecl_compute_volume_v2" "volume_1" {

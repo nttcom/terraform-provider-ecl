@@ -11,7 +11,7 @@ func TestAccDNSV2RecordSetImport_basic(t *testing.T) {
 	resourceName := "ecl_dns_recordset_v2.recordset_1"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckDNS(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDNSV2RecordSetDestroy,
 		Steps: []resource.TestStep{

@@ -22,7 +22,7 @@ const IQN02 string = "iqn.2003-01.org.sample-iscsi.node1.x8664:sn.2613f8620d99"
 func TestAccStorageV1Volume_timeout(t *testing.T) {
 	var v volumes.Volume
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorageVolume(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VolumeDestroy,
 		Steps: []resource.TestStep{
@@ -53,7 +53,7 @@ func TestAccStorageV1Volume_createNetworkAndBlockVirtualStorageAndVolume(t *test
 	var vs virtualstorages.VirtualStorage
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorageVolume(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VolumeDestroy,
 		Steps: []resource.TestStep{
@@ -135,7 +135,7 @@ func TestAccStorageV1Volume_createNetworkAndFilePremiumVirtualStorageAndVolume(t
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckStorageVolume(t)
+			testAccPreCheck(t)
 			testAccPreCheckFileStorageServiceType(t, true, false)
 		},
 		Providers:    testAccProviders,
@@ -201,7 +201,7 @@ func TestAccStorageV1Volume_createNetworkAndFileStandardVirtualStorageAndVolume(
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckStorageVolume(t)
+			testAccPreCheck(t)
 			testAccPreCheckFileStorageServiceType(t, false, true)
 		},
 		Providers:    testAccProviders,
@@ -285,7 +285,7 @@ func TestAccStorageV1Volume_forceNewByIOPSPerGB(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorageVolume(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VolumeDestroy,
 		Steps: []resource.TestStep{
@@ -336,7 +336,7 @@ func TestAccStorageV1Volume_forceNewBySize(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStorageVolume(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStorageV1VolumeDestroy,
 		Steps: []resource.TestStep{
@@ -389,7 +389,7 @@ func TestAccStorageV1Volume_forceNewByThroughput(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckStorageVolume(t)
+			testAccPreCheck(t)
 			testAccPreCheckFileStorageServiceType(t, true, false)
 		},
 		Providers:    testAccProviders,

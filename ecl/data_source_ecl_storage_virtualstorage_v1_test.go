@@ -10,7 +10,7 @@ import (
 
 func TestAccStorageV1VirtualStorageDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStorage(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
@@ -25,7 +25,7 @@ func TestAccStorageV1VirtualStorageDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_storage_virtualstorage_v1.virtualstorage_1", "description", "first test virtual storage"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", OS_STORAGE_VOLUME_TYPE_ID),
+						"data.ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", "6328d234-7939-4d61-9216-736de66d15f9"),
 					resource.TestCheckResourceAttr(
 						"data.ecl_storage_virtualstorage_v1.virtualstorage_1", "ip_addr_pool.start", "192.168.1.10"),
 					resource.TestCheckResourceAttr(
@@ -41,7 +41,7 @@ func TestAccStorageV1VirtualStorageDataSource_basic(t *testing.T) {
 }
 func TestAccStorageV1VirtualStorageDataSource_id(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStorage(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
@@ -54,7 +54,7 @@ func TestAccStorageV1VirtualStorageDataSource_id(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"data.ecl_storage_virtualstorage_v1.virtualstorage_1", "name", "virtualstorage_1"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", OS_STORAGE_VOLUME_TYPE_ID),
+						"data.ecl_storage_virtualstorage_v1.virtualstorage_1", "volume_type_id", "6328d234-7939-4d61-9216-736de66d15f9"),
 					resource.TestCheckResourceAttr(
 						"data.ecl_storage_virtualstorage_v1.virtualstorage_1", "ip_addr_pool.start", "192.168.1.10"),
 					resource.TestCheckResourceAttr(

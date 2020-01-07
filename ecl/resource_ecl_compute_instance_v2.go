@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"time"
 
@@ -62,16 +61,14 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Computed: true,
 			},
 			"flavor_id": &schema.Schema{
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_FLAVOR_ID", nil),
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
 			},
 			"flavor_name": &schema.Schema{
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_FLAVOR_NAME", nil),
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
 			},
 			"user_data": &schema.Schema{
 				Type:     schema.TypeString,
@@ -748,22 +745,9 @@ func getimageIDFromConfig(computeClient *eclcloud.ServiceClient, d *schema.Resou
 
 	if imageID := d.Get("image_id").(string); imageID != "" {
 		return imageID, nil
-	} else {
-		// try the OS_IMAGE_ID environment variable
-		if v := os.Getenv("OS_IMAGE_ID"); v != "" {
-			return v, nil
-		}
 	}
 
-	imageName := d.Get("image_name").(string)
-	if imageName == "" {
-		// try the OS_IMAGE_NAME environment variable
-		if v := os.Getenv("OS_IMAGE_NAME"); v != "" {
-			imageName = v
-		}
-	}
-
-	if imageName != "" {
+	if imageName := d.Get("image_name").(string); imageName != "" {
 		imageID, err := images.IDFromName(computeClient, imageName)
 		if err != nil {
 			return "", err

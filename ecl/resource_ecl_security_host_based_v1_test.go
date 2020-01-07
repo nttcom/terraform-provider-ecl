@@ -18,7 +18,7 @@ func TestAccSecurityV1HostBased_basic(t *testing.T) {
 	var hs security.HostBasedSecurity
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckSecurityHostBased(t) },
+		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSecurityV1HostBasedDestroy,
 		Steps: []resource.TestStep{
@@ -38,7 +38,7 @@ func TestAccSecurityV1HostBased_basic(t *testing.T) {
 						"max_agent_value", "1"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_host_based_v1.host_1",
-						"mail_address", OS_MAIL_ADDRESS),
+						"mail_address", "hoge@example.com"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_host_based_v1.host_1",
 						"dsm_lang", "ja"),
@@ -63,7 +63,7 @@ func TestAccSecurityV1HostBased_basic(t *testing.T) {
 						"max_agent_value", "1"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_host_based_v1.host_1",
-						"mail_address", OS_MAIL_ADDRESS),
+						"mail_address", "hoge@example.com"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_host_based_v1.host_1",
 						"dsm_lang", "ja"),
@@ -88,7 +88,7 @@ func TestAccSecurityV1HostBased_basic(t *testing.T) {
 						"max_agent_value", "2"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_host_based_v1.host_1",
-						"mail_address", OS_MAIL_ADDRESS),
+						"mail_address", "hoge@example.com"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_host_based_v1.host_1",
 						"dsm_lang", "ja"),
@@ -113,7 +113,7 @@ func TestAccSecurityV1HostBased_basic(t *testing.T) {
 						"max_agent_value", "3"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_host_based_v1.host_1",
-						"mail_address", OS_MAIL_ADDRESS),
+						"mail_address", "hoge@example.com"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_host_based_v1.host_1",
 						"dsm_lang", "ja"),
@@ -195,14 +195,11 @@ resource "ecl_security_host_based_v1" "host_1" {
 	locale = "ja"
 	service_order_service = "Managed Anti-Virus"
 	max_agent_value = 1
-	mail_address = "%s"
+	mail_address = "hoge@example.com"
 	dsm_lang = "ja"
 	time_zone = "Asia/Tokyo"
 }
-`,
-	OS_TENANT_ID,
-	OS_MAIL_ADDRESS,
-)
+`, OS_TENANT_ID)
 
 var testAccSecurityV1HostBasedUpdateM1 = fmt.Sprintf(`
 resource "ecl_security_host_based_v1" "host_1" {
@@ -210,14 +207,11 @@ resource "ecl_security_host_based_v1" "host_1" {
 	locale = "ja"
 	service_order_service = "Managed Virtual Patch"
 	max_agent_value = 1
-	mail_address = "%s"
+	mail_address = "hoge@example.com"
 	dsm_lang = "ja"
 	time_zone = "Asia/Tokyo"
 }
-`,
-	OS_TENANT_ID,
-	OS_MAIL_ADDRESS,
-)
+`, OS_TENANT_ID)
 
 var testAccSecurityV1HostBasedUpdateM2 = fmt.Sprintf(`
 resource "ecl_security_host_based_v1" "host_1" {
@@ -225,14 +219,11 @@ resource "ecl_security_host_based_v1" "host_1" {
 	locale = "ja"
 	service_order_service = "Managed Virtual Patch"
 	max_agent_value = 2
-	mail_address = "%s"
+	mail_address = "hoge@example.com"
 	dsm_lang = "ja"
 	time_zone = "Asia/Tokyo"
 }
-`,
-	OS_TENANT_ID,
-	OS_MAIL_ADDRESS,
-)
+`, OS_TENANT_ID)
 
 var testAccSecurityV1HostBasedUpdateM2Again = fmt.Sprintf(`
 resource "ecl_security_host_based_v1" "host_1" {
@@ -240,11 +231,8 @@ resource "ecl_security_host_based_v1" "host_1" {
 	locale = "ja"
 	service_order_service = "Managed Virtual Patch"
 	max_agent_value = 3
-	mail_address = "%s"
+	mail_address = "hoge@example.com"
 	dsm_lang = "ja"
 	time_zone = "Asia/Tokyo"
 }
-`,
-	OS_TENANT_ID,
-	OS_MAIL_ADDRESS,
-)
+`, OS_TENANT_ID)

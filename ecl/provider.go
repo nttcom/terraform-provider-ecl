@@ -103,14 +103,14 @@ func Provider() terraform.ResourceProvider {
 			"project_domain_id": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_PROJECT_DOMAIN_ID", ""),
+				DefaultFunc: schema.EnvDefaultFunc("OS_PROJECT_DOMAIN_ID", "default"),
 				Description: descriptions["project_domain_id"],
 			},
 
 			"domain_id": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_DOMAIN_ID", ""),
+				DefaultFunc: schema.EnvDefaultFunc("OS_DOMAIN_ID", "default"),
 				Description: descriptions["domain_id"],
 			},
 
