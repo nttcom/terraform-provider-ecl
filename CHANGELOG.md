@@ -1,9 +1,13 @@
-# CHANGELOG
+## 1.0.0 (Unreleased)
 
-## 0.0.0
+NOTES:
 
-FEATURES
+* 
 
-IMPROVEMENTS
+ENHANCEMENTS:
 
-BUG FIXES
+* 
+
+BUG FIXES:
+
+* 
