@@ -217,6 +217,66 @@ func resourceBaremetalServerV2() *schema.Resource {
 					},
 				},
 			},
+			"nic_physical_ports": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"mac_addr": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"network_physical_port_id": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"plane": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"hardware_id": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"attached_ports": &schema.Schema{
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"port_id": &schema.Schema{
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"network_id": &schema.Schema{
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"fixed_ips": &schema.Schema{
+										Type:     schema.TypeList,
+										Computed: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"subnet_id": &schema.Schema{
+													Type:     schema.TypeString,
+													Computed: true,
+												},
+												"ip_address": &schema.Schema{
+													Type:     schema.TypeString,
+													Computed: true,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"personality": &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
@@ -340,6 +400,58 @@ func resourceBaremetalServerV2Create(d *schema.ResourceData, meta interface{}) e
 	return resourceBaremetalServerV2Read(d, meta)
 }
 
+func getFixedIPsForState(r *servers.AttachedPort) []map[string]interface{} {
+	var result []map[string]interface{}
+	for _, f := range r.FixedIPs {
+		subnetID := f.SubnetID
+		ipAddress := f.IPAddress
+		m := map[string]interface{}{
+			"subnet_id":  subnetID,
+			"ip_address": ipAddress,
+		}
+		result = append(result, m)
+	}
+	return result
+}
+
+func getAttachedPortsForState(r *servers.NICPhysicalPort) []map[string]interface{} {
+	var result []map[string]interface{}
+	for _, a := range r.AttachedPorts {
+		portID := a.PortID
+		networkID := a.NetworkID
+		fixedIPs := getFixedIPsForState(&a)
+		m := map[string]interface{}{
+			"port_id":    portID,
+			"network_id": networkID,
+			"fixed_ips":  fixedIPs,
+		}
+		result = append(result, m)
+	}
+	return result
+}
+
+func getNICPhysicalPortsForState(r *servers.Server) []map[string]interface{} {
+	var result []map[string]interface{}
+	for _, n := range r.NICPhysicalPorts {
+		id := n.ID
+		macAddr := n.MacAddr
+		networkPhysicalPortID := n.NetworkPhysicalPortID
+		plane := n.Plane
+		hardwareID := n.HardwareID
+		attachedPorts := getAttachedPortsForState(&n)
+		m := map[string]interface{}{
+			"id":                       id,
+			"mac_addr":                 macAddr,
+			"network_physical_port_id": networkPhysicalPortID,
+			"plane":                    plane,
+			"hardware_id":              hardwareID,
+			"attached_ports":           attachedPorts,
+		}
+		result = append(result, m)
+	}
+	return result
+}
+
 func resourceBaremetalServerV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	baremetalClient, err := config.baremetalV2Client(GetRegion(d, config))
@@ -353,6 +465,8 @@ func resourceBaremetalServerV2Read(d *schema.ResourceData, meta interface{}) err
 	}
 
 	log.Printf("[DEBUG] Retrieved Server %s: %+v", d.Id(), server)
+
+	d.Set("nic_physical_ports", getNICPhysicalPortsForState(server))
 
 	return nil
 }

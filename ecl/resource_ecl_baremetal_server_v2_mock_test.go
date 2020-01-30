@@ -44,6 +44,24 @@ func TestMockedBaremetalV2Server_basic(t *testing.T) {
 					testAccCheckBaremetalV2ServerExists("ecl_baremetal_server_v2.server_1", &server),
 					resource.TestCheckResourceAttr(
 						"ecl_baremetal_server_v2.server_1", "name", "server1"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.id", "39285bf9-12fb-4064-b98b-a552efc51cfc"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.mac_addr", "0a:31:c1:d5:6d:9c"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.network_physical_port_id", "38268d94-584a-4f14-96ff-732a68aa7301"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.plane", "data"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.hardware_id", "c1e1546d-3063-46d0-8895-c6350eb691ff"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.attached_ports.0.port_id", "61b7da1e-9571-4d63-b779-e003a56b8105"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.attached_ports.0.network_id", "9aa93722-1ec4-4912-b813-b975c21460a5"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.attached_ports.0.fixed_ips.0.subnet_id", "0419bbde-2b82-4107-9d8a-6bba76e364af"),
+					resource.TestCheckResourceAttr(
+						"ecl_baremetal_server_v2.server_1", "nic_physical_ports.0.attached_ports.0.fixed_ips.0.ip_address", "192.168.10.2"),
 				),
 			},
 		},
