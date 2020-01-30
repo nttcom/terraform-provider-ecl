@@ -107,7 +107,7 @@ resource "ecl_baremetal_server_v2" "server_1" {
             lvm = true
             partition_label = "secondary-part1"
         }
-        laid_level = 10
+        raid_level = 10
     }
     lvm_volume_groups {
         vg_label = "VG_root"

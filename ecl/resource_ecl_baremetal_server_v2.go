@@ -155,7 +155,7 @@ func resourceBaremetalServerV2() *schema.Resource {
 							Optional: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
-						"laid_level": &schema.Schema{
+						"raid_level": &schema.Schema{
 							Type:     schema.TypeInt,
 							Optional: true,
 						},
