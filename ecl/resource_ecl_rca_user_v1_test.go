@@ -8,6 +8,7 @@ import (
 
 	"github.com/nttcom/eclcloud/ecl/rca/v1/users"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -15,7 +16,7 @@ import (
 func TestAccRCAV1User_basic(t *testing.T) {
 	var user users.User
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRCAV1UserDestroy,
@@ -23,20 +24,20 @@ func TestAccRCAV1User_basic(t *testing.T) {
 			{
 				Config: testAccRCAV1UserBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRCAV1UserExists("ecl_rca_user_v1.user_1", &user),
-					resource.TestCheckResourceAttr("ecl_rca_user_v1.user_1", "password", "dummy_passw@rd"),
-					resource.TestCheckResourceAttrSet("ecl_rca_user_v1.user_1", "name"),
-					resource.TestCheckResourceAttrSet("ecl_rca_user_v1.user_1", "vpn_endpoints.0.endpoint"),
-					resource.TestCheckResourceAttrSet("ecl_rca_user_v1.user_1", "vpn_endpoints.0.type"),
+					testAccCheckRCAV1UserExists(testAccRCAV1UserResourcePath, &user),
+					resource.TestCheckResourceAttr(testAccRCAV1UserResourcePath, "password", "dummy_passw@rd"),
+					resource.TestCheckResourceAttrSet(testAccRCAV1UserResourcePath, "name"),
+					resource.TestCheckResourceAttrSet(testAccRCAV1UserResourcePath, "vpn_endpoints.0.endpoint"),
+					resource.TestCheckResourceAttrSet(testAccRCAV1UserResourcePath, "vpn_endpoints.0.type"),
 				),
 			},
 			{
 				Config: testAccRCAV1UserUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("ecl_rca_user_v1.user_1", "password", "dummy_passw@rd_updated"),
-					resource.TestCheckResourceAttrSet("ecl_rca_user_v1.user_1", "name"),
-					resource.TestCheckResourceAttrSet("ecl_rca_user_v1.user_1", "vpn_endpoints.0.endpoint"),
-					resource.TestCheckResourceAttrSet("ecl_rca_user_v1.user_1", "vpn_endpoints.0.type"),
+					resource.TestCheckResourceAttr(testAccRCAV1UserResourcePath, "password", "dummy_passw@rd_updated"),
+					resource.TestCheckResourceAttrSet(testAccRCAV1UserResourcePath, "name"),
+					resource.TestCheckResourceAttrSet(testAccRCAV1UserResourcePath, "vpn_endpoints.0.endpoint"),
+					resource.TestCheckResourceAttrSet(testAccRCAV1UserResourcePath, "vpn_endpoints.0.type"),
 				),
 			},
 		},
@@ -101,14 +102,17 @@ func testAccCheckRCAV1UserExists(n string, user *users.User) resource.TestCheckF
 	}
 }
 
-const testAccRCAV1UserBasic = `
-resource "ecl_rca_user_v1" "user_1" {
+var testAccRCAV1UserRandomName = acctest.RandStringFromCharSet(16, acctest.CharSetAlphaNum)
+var testAccRCAV1UserResourcePath = fmt.Sprintf("ecl_rca_user_v1.%s", testAccRCAV1UserRandomName)
+
+var testAccRCAV1UserBasic = fmt.Sprintf(`
+resource "ecl_rca_user_v1" "%s" {
     password = "dummy_passw@rd"
 }
-`
+`, testAccRCAV1UserRandomName)
 
-const testAccRCAV1UserUpdate = `
-resource "ecl_rca_user_v1" "user_1" {
+var testAccRCAV1UserUpdate = fmt.Sprintf(`
+resource "ecl_rca_user_v1" "%s" {
     password = "dummy_passw@rd_updated"
 }
-`
+`, testAccRCAV1UserRandomName)
