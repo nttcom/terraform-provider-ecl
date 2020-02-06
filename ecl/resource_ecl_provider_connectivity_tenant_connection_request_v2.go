@@ -158,32 +158,38 @@ func resourceProviderConnectivityTenantConnectionRequestV2Update(d *schema.Resou
 
 	if d.HasChange("name") {
 		hasChange = true
-		updateOpts.Name = d.Get("name").(string)
+		name := d.Get("name").(string)
+		updateOpts.Name = &name
 	}
 
 	if d.HasChange("description") {
 		hasChange = true
-		updateOpts.Description = d.Get("description").(string)
+		description := d.Get("description").(string)
+		updateOpts.Description = &description
 	}
 
 	if d.HasChange("tags") {
 		hasChange = true
-		updateOpts.Tags = getTags(d, "tags")
+		tags := getTags(d, "tags")
+		updateOpts.Tags = &tags
 	}
 
 	if d.HasChange("name_other") {
 		hasChange = true
-		updateOpts.NameOther = d.Get("name_other").(string)
+		nameOther := d.Get("name_other").(string)
+		updateOpts.NameOther = &nameOther
 	}
 
 	if d.HasChange("description_other") {
 		hasChange = true
-		updateOpts.DescriptionOther = d.Get("description_other").(string)
+		descriptionOther := d.Get("description_other").(string)
+		updateOpts.DescriptionOther = &descriptionOther
 	}
 
 	if d.HasChange("tags_other") {
 		hasChange = true
-		updateOpts.TagsOther = getTags(d, "tags_other")
+		tagsOther := getTags(d, "tags_other")
+		updateOpts.TagsOther = &tagsOther
 	}
 
 	if hasChange {

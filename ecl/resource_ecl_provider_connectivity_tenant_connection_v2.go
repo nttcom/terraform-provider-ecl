@@ -181,7 +181,7 @@ func resourceProviderConnectivityTenantConnectionV2Create(d *schema.ResourceData
 		}
 		attachmentOpts = vSRXAttachmentOpts
 	} else {
-		serverAttachmentOpts, err := getServerAttachmentOpts(d)
+		serverAttachmentOpts, err := getServerAttachmentOpts(d, deviceType)
 		if err != nil {
 			return err
 		}
@@ -283,32 +283,38 @@ func resourceProviderConnectivityTenantConnectionV2Update(d *schema.ResourceData
 
 	if d.HasChange("name") {
 		hasChange = true
-		updateOpts.Name = d.Get("name").(string)
+		name := d.Get("name").(string)
+		updateOpts.Name = &name
 	}
 
 	if d.HasChange("description") {
 		hasChange = true
-		updateOpts.Description = d.Get("description").(string)
+		description := d.Get("description").(string)
+		updateOpts.Description = &description
 	}
 
 	if d.HasChange("tags") {
 		hasChange = true
-		updateOpts.Tags = getTags(d, "tags")
+		tags := getTags(d, "tags")
+		updateOpts.Tags = &tags
 	}
 
 	if d.HasChange("name_other") {
 		hasChange = true
-		updateOpts.NameOther = d.Get("name_other").(string)
+		nameOther := d.Get("name_other").(string)
+		updateOpts.NameOther = &nameOther
 	}
 
 	if d.HasChange("description_other") {
 		hasChange = true
-		updateOpts.DescriptionOther = d.Get("description_other").(string)
+		descriptionOther := d.Get("description_other").(string)
+		updateOpts.DescriptionOther = &descriptionOther
 	}
 
 	if d.HasChange("tags_other") {
 		hasChange = true
-		updateOpts.TagsOther = getTags(d, "tags_other")
+		tagsOther := getTags(d, "tags_other")
+		updateOpts.TagsOther = &tagsOther
 	}
 
 	if hasChange {
@@ -363,14 +369,15 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 	return nil
 }
 
-func getServerAttachmentOpts(d *schema.ResourceData) (tenant_connections.Server, error) {
-	var attachmentServers tenant_connections.Server
+func getServerAttachmentOpts(d *schema.ResourceData, deviceType string) (interface{}, error) {
+	var attachmentServers interface{}
 	servers := d.Get("attachment_opts_server").([]interface{})
 
 	for _, s := range servers {
 		server := s.(map[string]interface{})
-		segmentationType := server["segmentation_type"].(string)
-		segmentationId := server["segmentation_id"].(int)
+
+		var segmentationType string
+		var segmentationId int
 
 		var serverFixedips []tenant_connections.ServerFixedIPs
 
@@ -399,11 +406,21 @@ func getServerAttachmentOpts(d *schema.ResourceData) (tenant_connections.Server,
 			serverAaps = append(serverAaps, serverAap)
 		}
 
-		attachmentServers = tenant_connections.Server{
-			SegmentationType:    segmentationType,
-			SegmentationID:      segmentationId,
-			FixedIPs:            serverFixedips,
-			AllowedAddressPairs: serverAaps,
+		if deviceType == "ECL::Baremetal::Server" {
+			segmentationType = server["segmentation_type"].(string)
+			segmentationId = server["segmentation_id"].(int)
+
+			attachmentServers = tenant_connections.BaremetalServer{
+				SegmentationType:    segmentationType,
+				SegmentationID:      &segmentationId,
+				FixedIPs:            serverFixedips,
+				AllowedAddressPairs: serverAaps,
+			}
+		} else if deviceType == "ECL::Compute::Server" {
+			attachmentServers = tenant_connections.ComputeServer{
+				FixedIPs:            serverFixedips,
+				AllowedAddressPairs: serverAaps,
+			}
 		}
 	}
 
