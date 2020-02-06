@@ -177,18 +177,11 @@ The `attachment_opts_vna` block supports:
 The following attributes are exported:
 
 * `id` - tenant_connection unique ID.
-* `tenant_connection_request_id` - Name of tenant_connection_request.
-* `name` - Name of tenant_connection.
-* `description` - Description of tenant_connection.
-* `tags` - Tags of tenant_connection.
 * `tenant_id` - Tenant ID of the owner.
 * `name_other` - Name for the owner of network.
 * `description_other` - Description for the owner of network.
 * `tags_other` - Tags for the owner of network.
 * `tenant_id_other` - The owner tenant of network.
 * `network_id` - Network unique id.
-* `device_type` - The type of device to attach.
-* `device_id` - device unique id.
-* `device_interface_id` - Interface ID of the device to attach.
 * `port_id` - Port unique id.
 * `status` - Status of tenant_connection.

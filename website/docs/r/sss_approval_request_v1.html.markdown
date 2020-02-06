@@ -41,8 +41,6 @@ The following arguments are supported:
 
 The following attributes are exported:
 
-* `request_id` - Approval Request ID.
-
 * `external_request_id` - External reqeust ID. (internal use)
 
 * `approver_type` - Type of appover id. (tenant/tenant_owner/contract/contract_owner/user)
@@ -75,5 +73,3 @@ The following attributes are exported:
 * `registered_time` - Registered time of approval request.
 
 * `updated_time` - Updated time of approval request’s status.
-
-* `status` - Status of approval request. (registered/cancelled/approved/deined/expired/approval_expired)

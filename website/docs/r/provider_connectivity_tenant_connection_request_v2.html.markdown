@@ -43,14 +43,9 @@ The following arguments are supported:
 The following attributes are exported:
 
 * `id` - tenant_connection_request unique ID.
-* `name` - Name of tenant_connection_request.
-* `description` - Description of tenant_connection_request.
-* `tags` - Tags of tenant_connection_request.
 * `tenant_id` - Tenant ID of the owner.
 * `name_other` - Name for the owner of network.
 * `description_other` - Description for the owner of network.
 * `tags_other` - Tags for the owner of network.
-* `tenant_id_other` - The owner tenant of network.
-* `network_id` - Network unique id.
 * `status` - Status of tenant_connection_request.
 * `approval_request_id` - SSS approval_request ID.
