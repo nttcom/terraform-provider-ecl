@@ -1,6 +1,7 @@
 package ecl
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 
@@ -45,7 +46,7 @@ func testAccCheckProviderConnectivityV2TenantConnectionRequestDestroy(s *terrafo
 	config := testAccProvider.Meta().(*Config)
 	client, err := config.providerConnectivityV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -54,11 +55,12 @@ func testAccCheckProviderConnectivityV2TenantConnectionRequestDestroy(s *terrafo
 		}
 
 		if _, err := tenant_connection_requests.Get(client, rs.Primary.ID).Extract(); err != nil {
-			if _, ok := err.(eclcloud.ErrDefault404); ok {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
 				continue
 			}
 
-			return fmt.Errorf("error getting Tenent Connection Request: %s", err)
+			return fmt.Errorf("error getting Tenent Connection Request: %w", err)
 		}
 
 		return fmt.Errorf("tenent connection request still exists")
@@ -81,7 +83,7 @@ func testAccCheckProviderConnectivityV2TenantConnectionRequestExists(n string, r
 		config := testAccProvider.Meta().(*Config)
 		client, err := config.providerConnectivityV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+			return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 		}
 
 		found, err := tenant_connection_requests.Get(client, rs.Primary.ID).Extract()
@@ -90,7 +92,7 @@ func testAccCheckProviderConnectivityV2TenantConnectionRequestExists(n string, r
 		}
 
 		if found.ID != rs.Primary.ID {
-			return fmt.Errorf("Tenent Connection Request not found")
+			return fmt.Errorf("tenent connection request not found")
 		}
 
 		*request = *found

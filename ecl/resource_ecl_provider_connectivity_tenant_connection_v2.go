@@ -1,6 +1,7 @@
 package ecl
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -63,10 +64,15 @@ func resourceProviderConnectivityTenantConnectionV2() *schema.Resource {
 						"segmentation_type": &schema.Schema{
 							Type:     schema.TypeString,
 							Optional: true,
+							ValidateFunc: validation.StringInSlice([]string{
+								"flat",
+								"vlan",
+							}, false),
 						},
 						"segmentation_id": &schema.Schema{
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							ValidateFunc: validation.IntBetween(1, 65535),
 						},
 						"fixed_ips": &schema.Schema{
 							Type:     schema.TypeList,
@@ -170,8 +176,8 @@ func resourceProviderConnectivityTenantConnectionV2Create(d *schema.ResourceData
 	var attachmentOpts interface{}
 
 	if deviceType != "ECL::Compute::Server" && deviceInterfaceId == "" {
-		return fmt.Errorf("device_type is For ECL::Baremetal::Server or ECL::VirtualNetworkAppliance::VSRX," +
-			" device_interface_id is required")
+		return fmt.Errorf("device_interface_id is required " +
+			"if device_type is ECL::Baremetal::Server or ECL::VirtualNetworkAppliance::VSRX")
 	}
 
 	if deviceType == "ECL::VirtualNetworkAppliance::VSRX" {
@@ -191,13 +197,18 @@ func resourceProviderConnectivityTenantConnectionV2Create(d *schema.ResourceData
 	config := meta.(*Config)
 	client, err := config.providerConnectivityV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
+	}
+
+	tags, err := getTags(d, "tags")
+	if err != nil {
+		return fmt.Errorf("error creating ECL Provider Connectivity Tenant Connection: %w", err)
 	}
 
 	opts := tenant_connections.CreateOpts{
 		Name:                      d.Get("name").(string),
 		Description:               d.Get("description").(string),
-		Tags:                      getTags(d, "tags"),
+		Tags:                      tags,
 		TenantConnectionRequestID: d.Get("tenant_connection_request_id").(string),
 		DeviceType:                deviceType,
 		DeviceID:                  d.Get("device_id").(string),
@@ -208,7 +219,7 @@ func resourceProviderConnectivityTenantConnectionV2Create(d *schema.ResourceData
 
 	tenantConnection, err := tenant_connections.Create(client, opts).Extract()
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity Tenant Connection: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity Tenant Connection: %w", err)
 	}
 
 	d.SetId(tenantConnection.ID)
@@ -231,7 +242,7 @@ func resourceProviderConnectivityTenantConnectionV2Create(d *schema.ResourceData
 	_, err = stateConf.WaitForState()
 	if err != nil {
 		return fmt.Errorf(
-			"Error waiting for Tenant Connection (%s) to become active: %s",
+			"error waiting for Tenant Connection (%s) to become active: %w",
 			tenantConnection.ID, err)
 	}
 
@@ -242,7 +253,7 @@ func resourceProviderConnectivityTenantConnectionV2Read(d *schema.ResourceData, 
 	config := meta.(*Config)
 	client, err := config.providerConnectivityV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 	}
 
 	tenantConnection, err := tenant_connections.Get(client, d.Id()).Extract()
@@ -275,7 +286,7 @@ func resourceProviderConnectivityTenantConnectionV2Update(d *schema.ResourceData
 	config := meta.(*Config)
 	client, err := config.providerConnectivityV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 	}
 
 	var hasChange bool
@@ -295,7 +306,10 @@ func resourceProviderConnectivityTenantConnectionV2Update(d *schema.ResourceData
 
 	if d.HasChange("tags") {
 		hasChange = true
-		tags := getTags(d, "tags")
+		tags, err := getTags(d, "tags")
+		if err != nil {
+			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection: %w", err)
+		}
 		updateOpts.Tags = &tags
 	}
 
@@ -313,14 +327,17 @@ func resourceProviderConnectivityTenantConnectionV2Update(d *schema.ResourceData
 
 	if d.HasChange("tags_other") {
 		hasChange = true
-		tagsOther := getTags(d, "tags_other")
+		tagsOther, err := getTags(d, "tags_other")
+		if err != nil {
+			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection: %w", err)
+		}
 		updateOpts.TagsOther = &tagsOther
 	}
 
 	if hasChange {
 		r := tenant_connections.Update(client, d.Id(), updateOpts)
 		if r.Err != nil {
-			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection: %s", r.Err)
+			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection: %w", r.Err)
 		}
 		log.Printf("[DEBUG] Tenant Connection has successfully updated.")
 	}
@@ -332,7 +349,7 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 	config := meta.(*Config)
 	client, err := config.providerConnectivityV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 	}
 
 	tenantConnection, err := tenant_connections.Get(client, d.Id()).Extract()
@@ -343,12 +360,12 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 	deviceType := tenantConnection.DeviceType
 
 	if err := tenant_connections.Delete(client, d.Id()).ExtractErr(); err != nil {
-		return fmt.Errorf("error deleting ECL Provider Connectivity Tenant Connection: %s", err)
+		return fmt.Errorf("error deleting ECL Provider Connectivity Tenant Connection: %w", err)
 	}
 
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"deleting"},
-		Target:     []string{"DELETED"},
+		Target:     []string{"deleted"},
 		Refresh:    waitForTenantConnectionStateDelete(client, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
 		Delay:      5 * time.Second,
@@ -361,7 +378,7 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting ECL Tenant Connection: %s", err)
+		return fmt.Errorf("error deleting ECL Tenant Connection: %w", err)
 	}
 
 	d.SetId("")
@@ -466,9 +483,10 @@ func waitForTenantConnectionStateDelete(client *eclcloud.ServiceClient, id strin
 		log.Printf("[DEBUG] Attempting to delete ECL tenant connection %s.\n", id)
 		tenantConnection, err := tenant_connections.Get(client, id).Extract()
 		if err != nil {
-			if _, ok := err.(eclcloud.ErrDefault404); ok {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
 				log.Printf("[DEBUG] Successfully deleted ECL tenant connection %s", id)
-				return tenantConnection, "DELETED", nil
+				return tenantConnection, "deleted", nil
 			}
 			return nil, "", err
 		}

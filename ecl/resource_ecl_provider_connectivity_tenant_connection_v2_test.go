@@ -1,6 +1,7 @@
 package ecl
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"testing"
@@ -162,7 +163,7 @@ func testAccCheckProviderConnectivityV2TenantConnectionDestroy(s *terraform.Stat
 	config := testAccProvider.Meta().(*Config)
 	client, err := config.providerConnectivityV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -171,11 +172,12 @@ func testAccCheckProviderConnectivityV2TenantConnectionDestroy(s *terraform.Stat
 		}
 
 		if _, err := tenant_connections.Get(client, rs.Primary.ID).Extract(); err != nil {
-			if _, ok := err.(eclcloud.ErrDefault404); ok {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
 				continue
 			}
 
-			return fmt.Errorf("error getting Tenent Connection: %s", err)
+			return fmt.Errorf("error getting Tenent Connection: %w", err)
 		}
 
 		return fmt.Errorf("tenent connection still exists")
@@ -198,7 +200,7 @@ func testAccCheckProviderConnectivityV2TenantConnectionExists(n string, request 
 		config := testAccProvider.Meta().(*Config)
 		client, err := config.providerConnectivityV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+			return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 		}
 
 		found, err := tenant_connections.Get(client, rs.Primary.ID).Extract()
@@ -207,7 +209,7 @@ func testAccCheckProviderConnectivityV2TenantConnectionExists(n string, request 
 		}
 
 		if found.ID != rs.Primary.ID {
-			return fmt.Errorf("Tenent Connection not found")
+			return fmt.Errorf("tenent connection not found")
 		}
 
 		*request = *found
@@ -255,8 +257,8 @@ resource "ecl_network_subnet_v2" "subnet_2" {
 const attachmentComputeServer = `
 resource "ecl_compute_instance_v2" "instance_1" {
   name = "i"
-  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
-  flavor_id = "1CPU-2GB"
+  image_name = "CentOS-7.3-1611_64_virtual-server_02"
+  flavor_id = "1CPU-4GB"
   metadata = {
     foo = "bar"
   }
@@ -350,7 +352,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.2.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "zone1_groupb"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_2"]
@@ -496,7 +498,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
 	device_type = "ECL::Baremetal::Server"
 	device_id = "${ecl_baremetal_server_v2.server_1.id}"
-	device_interface_id = "${ecl_baremetal_server_v2.server_1.nic_physical_ports.0.network_physical_port_id}"
+	device_interface_id = "${ecl_baremetal_server_v2.server_1.nic_physical_ports.1.network_physical_port_id}"
 	attachment_opts_server {
 		segmentation_type = "flat"
 		segmentation_id = 10

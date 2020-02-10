@@ -86,7 +86,7 @@ func testAccSSSV1ApprovalRequestExists(n string, approval *approval_requests.App
 		config := testAccProvider.Meta().(*Config)
 		client, err := config.sssV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating ECL sss client: %s", err)
+			return fmt.Errorf("error creating ECL sss client: %w", err)
 		}
 
 		found, err := approval_requests.Get(client, rs.Primary.ID).Extract()
@@ -95,7 +95,7 @@ func testAccSSSV1ApprovalRequestExists(n string, approval *approval_requests.App
 		}
 
 		if found.RequestID != rs.Primary.ID {
-			return fmt.Errorf("Approval Request not found")
+			return fmt.Errorf("approval request not found")
 		}
 
 		*approval = *found

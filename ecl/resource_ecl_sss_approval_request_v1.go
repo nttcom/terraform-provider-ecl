@@ -124,7 +124,7 @@ func resourceSSSApprovalRequestV1Create(d *schema.ResourceData, meta interface{}
 	config := meta.(*Config)
 	client, err := config.sssV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating ECL sss client: %s", err)
+		return fmt.Errorf("Error creating ECL sss client: %w", err)
 	}
 
 	opts := approval_requests.UpdateOpts{Status: d.Get("status").(string)}
@@ -132,7 +132,7 @@ func resourceSSSApprovalRequestV1Create(d *schema.ResourceData, meta interface{}
 
 	approval, err := approval_requests.Update(client, d.Get("request_id").(string), opts).Extract()
 	if err != nil {
-		return fmt.Errorf("error updating ECL approval request: %s", err)
+		return fmt.Errorf("error updating ECL approval request: %w", err)
 	}
 
 	d.SetId(d.Get("request_id").(string))
@@ -145,7 +145,7 @@ func resourceSSSApprovalRequestV1Read(d *schema.ResourceData, meta interface{}) 
 	config := meta.(*Config)
 	client, err := config.sssV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL sss client: %s", err)
+		return fmt.Errorf("error creating ECL sss client: %w", err)
 	}
 
 	approval, err := approval_requests.Get(client, d.Id()).Extract()

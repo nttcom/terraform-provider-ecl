@@ -1,6 +1,7 @@
 package ecl
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -77,11 +78,16 @@ func resourceProviderConnectivityTenantConnectionRequestV2Create(d *schema.Resou
 	config := meta.(*Config)
 	connClient, err := config.providerConnectivityV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity connClient: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity connClient: %w", err)
 	}
 	sssClient, err := config.sssV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL sss connClient: %s", err)
+		return fmt.Errorf("error creating ECL sss connClient: %w", err)
+	}
+
+	tags, err := getTags(d, "tags")
+	if err != nil {
+		return fmt.Errorf("error creating ECL Provider Connectivity Tenant Connection Request: %w", err)
 	}
 
 	opts := tenant_connection_requests.CreateOpts{
@@ -89,13 +95,13 @@ func resourceProviderConnectivityTenantConnectionRequestV2Create(d *schema.Resou
 		NetworkID:     d.Get("network_id").(string),
 		Name:          d.Get("name").(string),
 		Description:   d.Get("description").(string),
-		Tags:          getTags(d, "tags"),
+		Tags:          tags,
 	}
 	log.Printf("[DEBUG] Create Options: %#v", opts)
 
 	request, err := tenant_connection_requests.Create(connClient, opts).Extract()
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity Tenant Connection Request: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity Tenant Connection Request: %w", err)
 	}
 
 	d.SetId(request.ID)
@@ -110,7 +116,7 @@ func resourceProviderConnectivityTenantConnectionRequestV2Create(d *schema.Resou
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error createing ECL tenant connection request (%s): %s", d.Id(), err)
+		return fmt.Errorf("error createing ECL tenant connection request (%s): %w", d.Id(), err)
 	}
 
 	log.Printf("[DEBUG] Created ECL Provider Connectivity Tenant Connection Request %s: %#v", request.ID, request)
@@ -121,7 +127,7 @@ func resourceProviderConnectivityTenantConnectionRequestV2Read(d *schema.Resourc
 	config := meta.(*Config)
 	client, err := config.providerConnectivityV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 	}
 
 	request, err := tenant_connection_requests.Get(client, d.Id()).Extract()
@@ -150,7 +156,7 @@ func resourceProviderConnectivityTenantConnectionRequestV2Update(d *schema.Resou
 	config := meta.(*Config)
 	client, err := config.providerConnectivityV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 	}
 
 	var hasChange bool
@@ -170,7 +176,10 @@ func resourceProviderConnectivityTenantConnectionRequestV2Update(d *schema.Resou
 
 	if d.HasChange("tags") {
 		hasChange = true
-		tags := getTags(d, "tags")
+		tags, err := getTags(d, "tags")
+		if err != nil {
+			return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
+		}
 		updateOpts.Tags = &tags
 	}
 
@@ -188,14 +197,17 @@ func resourceProviderConnectivityTenantConnectionRequestV2Update(d *schema.Resou
 
 	if d.HasChange("tags_other") {
 		hasChange = true
-		tagsOther := getTags(d, "tags_other")
+		tagsOther, err := getTags(d, "tags_other")
+		if err != nil {
+			return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
+		}
 		updateOpts.TagsOther = &tagsOther
 	}
 
 	if hasChange {
 		r := tenant_connection_requests.Update(client, d.Id(), updateOpts)
 		if r.Err != nil {
-			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection Request: %s", r.Err)
+			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection Request: %w", r.Err)
 		}
 		log.Printf("[DEBUG] Tenant Connection Request has successfully updated.")
 	}
@@ -207,15 +219,15 @@ func resourceProviderConnectivityTenantConnectionRequestV2Delete(d *schema.Resou
 	config := meta.(*Config)
 	client, err := config.providerConnectivityV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL Provider Connectivity client: %s", err)
+		return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 	}
 
 	if err := tenant_connection_requests.Delete(client, d.Id()).ExtractErr(); err != nil {
-		return fmt.Errorf("error deleting ECL Provider Connectivity Tenant Connection Request: %s", err)
+		return fmt.Errorf("error deleting ECL Provider Connectivity Tenant Connection Request: %w", err)
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Target:     []string{"DELETED"},
+		Target:     []string{"deleted"},
 		Refresh:    waitForTenantConnectionRequestStateDelete(client, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
 		Delay:      5 * time.Second,
@@ -224,7 +236,7 @@ func resourceProviderConnectivityTenantConnectionRequestV2Delete(d *schema.Resou
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting ECL tenant connection request (%s): %s", d.Id(), err)
+		return fmt.Errorf("error deleting ECL tenant connection request (%s): %w", d.Id(), err)
 	}
 
 	d.SetId("")
@@ -232,22 +244,14 @@ func resourceProviderConnectivityTenantConnectionRequestV2Delete(d *schema.Resou
 	return nil
 }
 
-func getTags(d *schema.ResourceData, tagName string) map[string]string {
-	rawTags := d.Get(tagName).(map[string]interface{})
-	tags := map[string]string{}
-	for key, value := range rawTags {
-		if v, ok := value.(string); ok {
-			tags[key] = v
-		}
-	}
-	return tags
-}
-
 func waitForTenantConnectionRequestCreate(connClient *eclcloud.ServiceClient, sssClient *eclcloud.ServiceClient, id string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		request, err := tenant_connection_requests.Get(connClient, id).Extract()
+		if err != nil {
+			return nil, "", err
+		}
 
-		if err == nil && approvalRequestExists(sssClient, request.ApprovalRequestID) {
+		if approvalRequestExists(sssClient, request.ApprovalRequestID) {
 			return request, request.Status, nil
 		}
 
@@ -256,8 +260,7 @@ func waitForTenantConnectionRequestCreate(connClient *eclcloud.ServiceClient, ss
 }
 
 func approvalRequestExists(sssClient *eclcloud.ServiceClient, approvalRequestID string) bool {
-	_, err := approval_requests.Get(sssClient, approvalRequestID).Extract()
-	if err != nil {
+	if _, err := approval_requests.Get(sssClient, approvalRequestID).Extract(); err != nil {
 		return false
 	}
 	return true
@@ -268,9 +271,10 @@ func waitForTenantConnectionRequestStateDelete(client *eclcloud.ServiceClient, i
 		log.Printf("[DEBUG] Attempting to delete ECL tenant connection request %s.\n", id)
 		request, err := tenant_connection_requests.Get(client, id).Extract()
 		if err != nil {
-			if _, ok := err.(eclcloud.ErrDefault404); ok {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
 				log.Printf("[DEBUG] Successfully deleted ECL tenant connection request %s", id)
-				return request, "DELETED", nil
+				return request, "deleted", nil
 			}
 			return nil, "", err
 		}
