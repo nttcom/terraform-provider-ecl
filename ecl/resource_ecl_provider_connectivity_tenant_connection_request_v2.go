@@ -24,10 +24,12 @@ func resourceProviderConnectivityTenantConnectionRequestV2() *schema.Resource {
 			"tenant_id_other": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"network_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
@@ -43,10 +45,6 @@ func resourceProviderConnectivityTenantConnectionRequestV2() *schema.Resource {
 				Optional: true,
 			},
 			"status": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"keystone_user_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},

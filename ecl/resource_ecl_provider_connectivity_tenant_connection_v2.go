@@ -36,10 +36,12 @@ func resourceProviderConnectivityTenantConnectionV2() *schema.Resource {
 			"tenant_connection_request_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"device_type": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"ECL::Compute::Server",
 					"ECL::Baremetal::Server",
@@ -49,14 +51,17 @@ func resourceProviderConnectivityTenantConnectionV2() *schema.Resource {
 			"device_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"device_interface_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"attachment_opts_server": &schema.Schema{
 				Type:          schema.TypeList,
 				Optional:      true,
+				ForceNew:      true,
 				MaxItems:      1,
 				ConflictsWith: []string{"attachment_opts_vna"},
 				Elem: &schema.Resource{
@@ -114,6 +119,7 @@ func resourceProviderConnectivityTenantConnectionV2() *schema.Resource {
 			"attachment_opts_vna": &schema.Schema{
 				Type:          schema.TypeList,
 				Optional:      true,
+				ForceNew:      true,
 				MaxItems:      1,
 				ConflictsWith: []string{"attachment_opts_server"},
 				Elem: &schema.Resource{
