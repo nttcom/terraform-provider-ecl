@@ -134,18 +134,6 @@ func resourceProviderConnectivityTenantConnectionV2() *schema.Resource {
 					},
 				},
 			},
-			"name_other": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"description_other": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"tags_other": &schema.Schema{
-				Type:     schema.TypeMap,
-				Optional: true,
-			},
 			"tenant_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
@@ -181,16 +169,10 @@ func resourceProviderConnectivityTenantConnectionV2Create(d *schema.ResourceData
 	}
 
 	if deviceType == "ECL::VirtualNetworkAppliance::VSRX" {
-		vSRXAttachmentOpts, err := getVnaAttachmentOpts(d)
-		if err != nil {
-			return err
-		}
+		vSRXAttachmentOpts := getVnaAttachmentOpts(d)
 		attachmentOpts = vSRXAttachmentOpts
 	} else {
-		serverAttachmentOpts, err := getServerAttachmentOpts(d, deviceType)
-		if err != nil {
-			return err
-		}
+		serverAttachmentOpts := getServerAttachmentOpts(d, deviceType)
 		attachmentOpts = serverAttachmentOpts
 	}
 
@@ -268,9 +250,6 @@ func resourceProviderConnectivityTenantConnectionV2Read(d *schema.ResourceData, 
 	d.Set("description", tenantConnection.Description)
 	d.Set("tags", tenantConnection.Tags)
 	d.Set("tenant_id", tenantConnection.TenantID)
-	d.Set("name_other", tenantConnection.NameOther)
-	d.Set("description_other", tenantConnection.DescriptionOther)
-	d.Set("tags_other", tenantConnection.TagsOther)
 	d.Set("tenant_id_other", tenantConnection.TenantIDOther)
 	d.Set("network_id", tenantConnection.NetworkID)
 	d.Set("device_type", tenantConnection.DeviceType)
@@ -313,27 +292,6 @@ func resourceProviderConnectivityTenantConnectionV2Update(d *schema.ResourceData
 		updateOpts.Tags = &tags
 	}
 
-	if d.HasChange("name_other") {
-		hasChange = true
-		nameOther := d.Get("name_other").(string)
-		updateOpts.NameOther = &nameOther
-	}
-
-	if d.HasChange("description_other") {
-		hasChange = true
-		descriptionOther := d.Get("description_other").(string)
-		updateOpts.DescriptionOther = &descriptionOther
-	}
-
-	if d.HasChange("tags_other") {
-		hasChange = true
-		tagsOther, err := getTags(d, "tags_other")
-		if err != nil {
-			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection: %w", err)
-		}
-		updateOpts.TagsOther = &tagsOther
-	}
-
 	if hasChange {
 		r := tenant_connections.Update(client, d.Id(), updateOpts)
 		if r.Err != nil {
@@ -357,8 +315,6 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 		return CheckDeleted(d, err, "Provider Connectivity Tenant Connection")
 	}
 
-	deviceType := tenantConnection.DeviceType
-
 	if err := tenant_connections.Delete(client, d.Id()).ExtractErr(); err != nil {
 		return fmt.Errorf("error deleting ECL Provider Connectivity Tenant Connection: %w", err)
 	}
@@ -372,7 +328,7 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 		MinTimeout: 3 * time.Second,
 	}
 
-	if deviceType == "ECL::VirtualNetworkAppliance::VSRX" {
+	if tenantConnection.DeviceType == "ECL::VirtualNetworkAppliance::VSRX" {
 		stateConf.PollInterval = vnaUpdatePollInterval
 	}
 
@@ -386,7 +342,7 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 	return nil
 }
 
-func getServerAttachmentOpts(d *schema.ResourceData, deviceType string) (interface{}, error) {
+func getServerAttachmentOpts(d *schema.ResourceData, deviceType string) interface{} {
 	var attachmentServers interface{}
 	servers := d.Get("attachment_opts_server").([]interface{})
 
@@ -429,7 +385,7 @@ func getServerAttachmentOpts(d *schema.ResourceData, deviceType string) (interfa
 
 			attachmentServers = tenant_connections.BaremetalServer{
 				SegmentationType:    segmentationType,
-				SegmentationID:      &segmentationId,
+				SegmentationID:      segmentationId,
 				FixedIPs:            serverFixedips,
 				AllowedAddressPairs: serverAaps,
 			}
@@ -442,10 +398,10 @@ func getServerAttachmentOpts(d *schema.ResourceData, deviceType string) (interfa
 	}
 
 	log.Printf("[DEBUG] getServerAttachmentOpts: %#v", attachmentServers)
-	return attachmentServers, nil
+	return attachmentServers
 }
 
-func getVnaAttachmentOpts(d *schema.ResourceData) (tenant_connections.Vna, error) {
+func getVnaAttachmentOpts(d *schema.ResourceData) tenant_connections.Vna {
 	var attachmentVnas tenant_connections.Vna
 	vnas := d.Get("attachment_opts_vna").([]interface{})
 
@@ -464,7 +420,7 @@ func getVnaAttachmentOpts(d *schema.ResourceData) (tenant_connections.Vna, error
 	}
 
 	log.Printf("[DEBUG] getVnaAttachmentOpts: %#v", attachmentVnas)
-	return attachmentVnas, nil
+	return attachmentVnas
 }
 
 func waitForTenantConnectionActive(vnaClient *eclcloud.ServiceClient, id string) resource.StateRefreshFunc {

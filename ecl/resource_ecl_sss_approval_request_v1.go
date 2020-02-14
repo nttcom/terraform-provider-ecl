@@ -14,12 +14,12 @@ func resourceSSSApprovalRequestV1() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceSSSApprovalRequestV1Create,
 		Read:   resourceSSSApprovalRequestV1Read,
-		Update: resourceSSSApprovalRequestV1Update,
 		Delete: resourceSSSApprovalRequestV1Delete,
 		Schema: map[string]*schema.Schema{
 			"request_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"external_request_id": &schema.Schema{
 				Type:     schema.TypeString,
@@ -112,6 +112,7 @@ func resourceSSSApprovalRequestV1() *schema.Resource {
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"approved", "denied", "cancelled",
 				}, false),
@@ -170,10 +171,6 @@ func resourceSSSApprovalRequestV1Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("updated_time", approval.UpdatedTime)
 	d.Set("status", approval.Status)
 
-	return nil
-}
-
-func resourceSSSApprovalRequestV1Update(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 

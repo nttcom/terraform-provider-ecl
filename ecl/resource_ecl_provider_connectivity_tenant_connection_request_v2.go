@@ -54,18 +54,6 @@ func resourceProviderConnectivityTenantConnectionRequestV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"name_other": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"description_other": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"tags_other": &schema.Schema{
-				Type:     schema.TypeMap,
-				Optional: true,
-			},
 			"approval_request_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
@@ -142,9 +130,6 @@ func resourceProviderConnectivityTenantConnectionRequestV2Read(d *schema.Resourc
 	d.Set("description", request.Description)
 	d.Set("tags", request.Tags)
 	d.Set("tenant_id", request.TenantID)
-	d.Set("name_other", request.NameOther)
-	d.Set("description_other", request.DescriptionOther)
-	d.Set("tags_other", request.TagsOther)
 	d.Set("tenant_id_other", request.TenantIDOther)
 	d.Set("network_id", request.NetworkID)
 	d.Set("approval_request_id", request.ApprovalRequestID)
@@ -181,27 +166,6 @@ func resourceProviderConnectivityTenantConnectionRequestV2Update(d *schema.Resou
 			return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
 		}
 		updateOpts.Tags = &tags
-	}
-
-	if d.HasChange("name_other") {
-		hasChange = true
-		nameOther := d.Get("name_other").(string)
-		updateOpts.NameOther = &nameOther
-	}
-
-	if d.HasChange("description_other") {
-		hasChange = true
-		descriptionOther := d.Get("description_other").(string)
-		updateOpts.DescriptionOther = &descriptionOther
-	}
-
-	if d.HasChange("tags_other") {
-		hasChange = true
-		tagsOther, err := getTags(d, "tags_other")
-		if err != nil {
-			return fmt.Errorf("error creating ECL Provider Connectivity client: %w", err)
-		}
-		updateOpts.TagsOther = &tagsOther
 	}
 
 	if hasChange {
