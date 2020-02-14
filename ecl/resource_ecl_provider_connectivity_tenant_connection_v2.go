@@ -164,7 +164,7 @@ func resourceProviderConnectivityTenantConnectionV2Create(d *schema.ResourceData
 	var attachmentOpts interface{}
 
 	if deviceType != "ECL::Compute::Server" && deviceInterfaceId == "" {
-		return fmt.Errorf("device_interface_id is required " +
+		return errors.New("device_interface_id is required " +
 			"if device_type is ECL::Baremetal::Server or ECL::VirtualNetworkAppliance::VSRX")
 	}
 
@@ -221,8 +221,7 @@ func resourceProviderConnectivityTenantConnectionV2Create(d *schema.ResourceData
 		stateConf.PollInterval = vnaCreatePollInterval
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err = stateConf.WaitForState(); err != nil {
 		return fmt.Errorf(
 			"error waiting for Tenant Connection (%s) to become active: %w",
 			tenantConnection.ID, err)
@@ -293,8 +292,7 @@ func resourceProviderConnectivityTenantConnectionV2Update(d *schema.ResourceData
 	}
 
 	if hasChange {
-		r := tenant_connections.Update(client, d.Id(), updateOpts)
-		if r.Err != nil {
+		if r := tenant_connections.Update(client, d.Id(), updateOpts); r.Err != nil {
 			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection: %w", r.Err)
 		}
 		log.Printf("[DEBUG] Tenant Connection has successfully updated.")
@@ -332,8 +330,7 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 		stateConf.PollInterval = vnaUpdatePollInterval
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err = stateConf.WaitForState(); err != nil {
 		return fmt.Errorf("error deleting ECL Tenant Connection: %w", err)
 	}
 

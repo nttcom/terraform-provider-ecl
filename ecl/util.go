@@ -238,9 +238,9 @@ func getTags(d *schema.ResourceData, tagName string) (map[string]string, error) 
 	for key, value := range rawTags {
 		if v, ok := value.(string); ok {
 			tags[key] = v
-		} else {
-			return nil, fmt.Errorf("%s.%s value should be string", tagName, key)
+			continue
 		}
+		return nil, fmt.Errorf("%s.%s value should be string", tagName, key)
 	}
 	return tags, nil
 }

@@ -102,8 +102,7 @@ func resourceProviderConnectivityTenantConnectionRequestV2Create(d *schema.Resou
 		MinTimeout: 3 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err = stateConf.WaitForState(); err != nil {
 		return fmt.Errorf("error createing ECL tenant connection request (%s): %w", d.Id(), err)
 	}
 
@@ -169,8 +168,7 @@ func resourceProviderConnectivityTenantConnectionRequestV2Update(d *schema.Resou
 	}
 
 	if hasChange {
-		r := tenant_connection_requests.Update(client, d.Id(), updateOpts)
-		if r.Err != nil {
+		if r := tenant_connection_requests.Update(client, d.Id(), updateOpts); r.Err != nil {
 			return fmt.Errorf("error updating ECL Provider Connectivity Tenant Connection Request: %w", r.Err)
 		}
 		log.Printf("[DEBUG] Tenant Connection Request has successfully updated.")
@@ -198,8 +196,7 @@ func resourceProviderConnectivityTenantConnectionRequestV2Delete(d *schema.Resou
 		MinTimeout: 3 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err = stateConf.WaitForState(); err != nil {
 		return fmt.Errorf("error deleting ECL tenant connection request (%s): %w", d.Id(), err)
 	}
 
