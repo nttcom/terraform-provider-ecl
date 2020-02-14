@@ -42,7 +42,7 @@ func resourceSSSApprovalRequestV1() *schema.Resource {
 				Computed: true,
 			},
 			"actions": &schema.Schema{
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -70,7 +70,7 @@ func resourceSSSApprovalRequestV1() *schema.Resource {
 				},
 			},
 			"descriptions": &schema.Schema{
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -161,8 +161,30 @@ func resourceSSSApprovalRequestV1Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("approver_id", approval.ApproverID)
 	d.Set("request_user_id", approval.RequestUserID)
 	d.Set("service", approval.Service)
-	d.Set("actions", approval.Actions)
-	d.Set("descriptions", approval.Descriptions)
+
+	var actions []map[string]string
+	for _, v := range approval.Actions {
+		action := map[string]string{
+			"service":  v.Service,
+			"region":   v.Region,
+			"api_path": v.APIPath,
+			"method":   v.Method,
+			"body":     v.Body,
+		}
+		actions = append(actions, action)
+	}
+	d.Set("actions", actions)
+
+	var descriptions []map[string]string
+	for _, v := range approval.Descriptions {
+		description := map[string]string{
+			"lang": v.Lang,
+			"text": v.Text,
+		}
+		descriptions = append(descriptions, description)
+	}
+	d.Set("descriptions", descriptions)
+
 	d.Set("request_user", approval.RequestUser)
 	d.Set("approver", approval.Approver)
 	d.Set("approval_deadline", approval.ApprovalDeadLine)
