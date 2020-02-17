@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -58,12 +59,57 @@ func resourceProviderConnectivityTenantConnectionV2() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-			"attachment_opts_server": &schema.Schema{
+			"attachment_opts_compute": &schema.Schema{
 				Type:          schema.TypeList,
 				Optional:      true,
 				ForceNew:      true,
 				MaxItems:      1,
-				ConflictsWith: []string{"attachment_opts_vna"},
+				ConflictsWith: []string{"attachment_opts_baremetal", "attachment_opts_vna"},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"fixed_ips": &schema.Schema{
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ip_address": &schema.Schema{
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: validation.SingleIP(),
+									},
+									"subnet_id": &schema.Schema{
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+								},
+							},
+						},
+						"allowed_address_pairs": &schema.Schema{
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ip_address": &schema.Schema{
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: validation.SingleIP(),
+									},
+									"mac_address": &schema.Schema{
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"attachment_opts_baremetal": &schema.Schema{
+				Type:          schema.TypeList,
+				Optional:      true,
+				ForceNew:      true,
+				MaxItems:      1,
+				ConflictsWith: []string{"attachment_opts_compute", "attachment_opts_vna"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"segmentation_type": &schema.Schema{
@@ -121,7 +167,7 @@ func resourceProviderConnectivityTenantConnectionV2() *schema.Resource {
 				Optional:      true,
 				ForceNew:      true,
 				MaxItems:      1,
-				ConflictsWith: []string{"attachment_opts_server"},
+				ConflictsWith: []string{"attachment_opts_compute", "attachment_opts_baremetal"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"fixed_ips": &schema.Schema{
@@ -347,7 +393,9 @@ func resourceProviderConnectivityTenantConnectionV2Delete(d *schema.ResourceData
 
 func getServerAttachmentOpts(d *schema.ResourceData, deviceType string) interface{} {
 	var attachmentServers interface{}
-	servers := d.Get("attachment_opts_server").([]interface{})
+
+	serverType := strings.ToLower(strings.Split(deviceType, "::")[1])
+	servers := d.Get("attachment_opts_" + serverType).([]interface{})
 
 	for _, s := range servers {
 		server := s.(map[string]interface{})

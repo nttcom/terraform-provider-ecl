@@ -96,12 +96,44 @@ func TestAccProviderConnectivityV2TenantConnection_conflictAttachmentOpts(t *tes
 		CheckDestroy: testAccCheckProviderConnectivityV2TenantConnectionDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config:      testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts,
-				ExpectError: regexp.MustCompile("\"attachment_opts_server\": conflicts with attachment_opts_vna"),
+				Config:      testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts1,
+				ExpectError: regexp.MustCompile("\"attachment_opts_compute\": conflicts with attachment_opts_baremetal"),
 			},
 			resource.TestStep{
-				Config:      testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts,
-				ExpectError: regexp.MustCompile("\"attachment_opts_vna\": conflicts with attachment_opts_server"),
+				Config:      testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts1,
+				ExpectError: regexp.MustCompile("\"attachment_opts_baremetal\": conflicts with attachment_opts_compute"),
+			},
+		},
+	})
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckTenantConnection(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckProviderConnectivityV2TenantConnectionDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config:      testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts2,
+				ExpectError: regexp.MustCompile("\"attachment_opts_baremetal\": conflicts with attachment_opts_vna"),
+			},
+			resource.TestStep{
+				Config:      testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts2,
+				ExpectError: regexp.MustCompile("\"attachment_opts_vna\": conflicts with attachment_opts_baremetal"),
+			},
+		},
+	})
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckTenantConnection(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckProviderConnectivityV2TenantConnectionDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config:      testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts3,
+				ExpectError: regexp.MustCompile("\"attachment_opts_compute\": conflicts with attachment_opts_vna"),
+			},
+			resource.TestStep{
+				Config:      testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts3,
+				ExpectError: regexp.MustCompile("\"attachment_opts_vna\": conflicts with attachment_opts_compute"),
 			},
 		},
 	})
@@ -118,8 +150,12 @@ func TestAccProviderConnectivityV2TenantConnection_multipleListAttachmentOpts(t 
 		CheckDestroy: testAccCheckProviderConnectivityV2TenantConnectionDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config:      testAccProviderConnectivityV2TenantConnectionAttachmentOptsServerMultipleList,
-				ExpectError: regexp.MustCompile("Too many attachment_opts_server blocks: No more than 1 \"attachment_opts_server\" blocks are allowed"),
+				Config:      testAccProviderConnectivityV2TenantConnectionAttachmentOptsComputeMultipleList,
+				ExpectError: regexp.MustCompile("Too many attachment_opts_compute blocks: No more than 1 \"attachment_opts_compute\" blocks are allowed"),
+			},
+			resource.TestStep{
+				Config:      testAccProviderConnectivityV2TenantConnectionAttachmentOptsBaremetalMultipleList,
+				ExpectError: regexp.MustCompile("Too many attachment_opts_baremetal blocks: No more than 1 \"attachment_opts_barematal\" blocks are allowed"),
 			},
 			resource.TestStep{
 				Config:      testAccProviderConnectivityV2TenantConnectionAttachmentOptsVnaMultipleList,
@@ -405,7 +441,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
 	device_type = "ECL::Compute::Server"
 	device_id = "${ecl_compute_instance_v2.instance_1.id}"
-	attachment_opts_server {
+	attachment_opts_compute {
 		fixed_ips {
 			ip_address = "192.168.1.1"
 		}
@@ -499,7 +535,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	device_type = "ECL::Baremetal::Server"
 	device_id = "${ecl_baremetal_server_v2.server_1.id}"
 	device_interface_id = "${ecl_baremetal_server_v2.server_1.nic_physical_ports.1.network_physical_port_id}"
-	attachment_opts_server {
+	attachment_opts_baremetal {
 		segmentation_type = "flat"
 		segmentation_id = 10
 		fixed_ips {
@@ -563,7 +599,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	attachmentVna,
 	OS_ACCEPTER_TENANT_ID)
 
-var testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts = fmt.Sprintf(`
+var testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts1 = fmt.Sprintf(`
 %s
 
 %s
@@ -600,7 +636,65 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
 	device_type = "ECL::Compute::Server"
 	device_id = "${ecl_compute_instance_v2.instance_1.id}"
-	attachment_opts_server {
+	attachment_opts_compute {
+		fixed_ips {
+			ip_address = "192.168.1.1"
+		}
+	}
+	attachment_opts_baremetal {
+		segmentation_type = "flat"
+		segmentation_id = 10
+		fixed_ips {
+			ip_address = "192.168.1.1"
+		}
+	}
+}
+`,
+	oppositeTenantNetwork,
+	tenantNetwork,
+	attachmentComputeServer,
+	OS_ACCEPTER_TENANT_ID)
+
+var testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts2 = fmt.Sprintf(`
+%s
+
+%s
+
+%s
+
+resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+	tenant_id_other = "%s"
+	network_id = "${ecl_network_network_v2.network_1.id}"
+	name = "test_name1"
+	description = "test_desc1"
+	tags = {
+		"test_tags1" = "test1"
+	}
+}
+
+resource "ecl_sss_approval_request_v1" "approval_1" {
+	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
+	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
+	status = "approved"
+}
+
+resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
+	depends_on = [
+		"ecl_compute_instance_v2.instance_1",
+		"ecl_sss_approval_request_v1.approval_1"
+	]
+	name = "test_name1"
+	description = "test_desc1"
+	tags = {
+		"test_tags1" = "test1"
+	}
+	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
+	device_type = "ECL::Compute::Server"
+	device_id = "${ecl_compute_instance_v2.instance_1.id}"
+	attachment_opts_baremetal {
+		segmentation_type = "flat"
+		segmentation_id = 10
 		fixed_ips {
 			ip_address = "192.168.1.1"
 		}
@@ -617,7 +711,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	attachmentComputeServer,
 	OS_ACCEPTER_TENANT_ID)
 
-var testAccProviderConnectivityV2TenantConnectionAttachmentOptsServerMultipleList = fmt.Sprintf(`
+var testAccProviderConnectivityV2TenantConnectionConflictAttachmentOpts3 = fmt.Sprintf(`
 %s
 
 %s
@@ -654,12 +748,66 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
 	device_type = "ECL::Compute::Server"
 	device_id = "${ecl_compute_instance_v2.instance_1.id}"
-	attachment_opts_server {
+	attachment_opts_compute {
 		fixed_ips {
 			ip_address = "192.168.1.1"
 		}
 	}
-	attachment_opts_server {
+	attachment_opts_vna {
+		fixed_ips {
+			ip_address = "192.168.1.2"
+		}
+	}
+}
+`,
+	oppositeTenantNetwork,
+	tenantNetwork,
+	attachmentComputeServer,
+	OS_ACCEPTER_TENANT_ID)
+
+var testAccProviderConnectivityV2TenantConnectionAttachmentOptsComputeMultipleList = fmt.Sprintf(`
+%s
+
+%s
+
+%s
+
+resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+	tenant_id_other = "%s"
+	network_id = "${ecl_network_network_v2.network_1.id}"
+	name = "test_name1"
+	description = "test_desc1"
+	tags = {
+		"test_tags1" = "test1"
+	}
+}
+
+resource "ecl_sss_approval_request_v1" "approval_1" {
+	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
+	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
+	status = "approved"
+}
+
+resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
+	depends_on = [
+		"ecl_compute_instance_v2.instance_1",
+		"ecl_sss_approval_request_v1.approval_1"
+	]
+	name = "test_name1"
+	description = "test_desc1"
+	tags = {
+		"test_tags1" = "test1"
+	}
+	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
+	device_type = "ECL::Compute::Server"
+	device_id = "${ecl_compute_instance_v2.instance_1.id}"
+	attachment_opts_compute {
+		fixed_ips {
+			ip_address = "192.168.1.1"
+		}
+	}
+	attachment_opts_compute {
 		fixed_ips {
 			ip_address = "192.168.1.2"
 		}
@@ -670,6 +818,65 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	oppositeTenantNetwork,
 	tenantNetwork,
 	attachmentComputeServer,
+	OS_ACCEPTER_TENANT_ID)
+
+var testAccProviderConnectivityV2TenantConnectionAttachmentOptsBaremetalMultipleList = fmt.Sprintf(`
+%s
+
+%s
+
+%s
+
+resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+	tenant_id_other = "%s"
+	network_id = "${ecl_network_network_v2.network_1.id}"
+	name = "test_name1"
+	description = "test_desc1"
+	tags = {
+		"test_tags1" = "test1"
+	}
+}
+
+resource "ecl_sss_approval_request_v1" "approval_1" {
+	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
+	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
+	status = "approved"
+}
+
+resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
+	depends_on = [
+		"ecl_baremetal_server_v2.server_1",
+		"ecl_sss_approval_request_v1.approval_1"
+	]
+	name = "test_name1"
+	description = "test_desc1"
+	tags = {
+		"test_tags1" = "test1"
+	}
+	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
+	device_type = "ECL::Baremetal::Server"
+	device_id = "${ecl_baremetal_server_v2.server_1.id}"
+	device_interface_id = "${ecl_baremetal_server_v2.server_1.nic_physical_ports.1.network_physical_port_id}"
+	attachment_opts_baremetal {
+		segmentation_type = "flat"
+		segmentation_id = 10
+		fixed_ips {
+			ip_address = "192.168.1.1"
+		}
+	}
+	attachment_opts_baremetal {
+		segmentation_type = "vlan"
+		segmentation_id = 20
+		fixed_ips {
+			ip_address = "192.168.1.2"
+		}
+	}
+}
+`,
+	oppositeTenantNetwork,
+	tenantNetwork,
+	attachmentBaremetalServer,
 	OS_ACCEPTER_TENANT_ID)
 
 var testAccProviderConnectivityV2TenantConnectionAttachmentOptsVnaMultipleList = fmt.Sprintf(`

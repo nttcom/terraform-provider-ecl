@@ -44,8 +44,5 @@ The following attributes are exported:
 
 * `id` - tenant_connection_request unique ID.
 * `tenant_id` - Tenant ID of the owner.
-* `name_other` - Name for the owner of network.
-* `description_other` - Description for the owner of network.
-* `tags_other` - Tags for the owner of network.
 * `status` - Status of tenant_connection_request.
 * `approval_request_id` - SSS approval_request ID.

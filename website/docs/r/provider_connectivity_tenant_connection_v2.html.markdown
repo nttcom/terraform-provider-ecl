@@ -39,7 +39,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
     tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
     device_type = "ECL::Compute::Server"
     device_id = "8c235a3b-8dee-41a1-b81a-64e06edc0986"
-    attachment_opts_server {
+    attachment_opts_compute {
         fixed_ips {
             ip_address = "192.168.1.1"
         }
@@ -75,7 +75,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
     device_type = "ECL::Baremetal::Server"
     device_id = "6032fa92-0150-46f9-8c10-ef7180c88a32"
     device_interface_id = "55ac2850-e280-47a3-a6b3-b9b3c0e8493e"
-    attachment_opts_server {
+    attachment_opts_baremetal {
         segmentation_type = "flat"
         segmentation_id = "10"
         fixed_ips {
@@ -143,15 +143,29 @@ The following arguments are supported:
     For device_type: ECL::Baremetal::Server, network_physical_port_id should be used.
     For ECL::VirtualNetworkAppliance::VSRX, interfaces.interface_<slot_number> should be used.
 
-* `attachment_opts_server` - (Optional) 	Additional options for tenant_connection.
-    The `attachment_opts_server` object structure is documented below.
-    It is proxied to create a connection for the Server resource.
+* `attachment_opts_compute` - (Optional) 	Additional options for tenant_connection.
+    The `attachment_opts_compute` object structure is documented below.
+    It is proxied to create a connection for the Compute Server resource.
+    
+* `attachment_opts_baremetal` - (Optional) 	Additional options for tenant_connection.
+    The `attachment_opts_baremetal` object structure is documented below.
+    It is proxied to create a connection for the Baremetal Server resource.
 
 * `attachment_opts_vna` - (Optional) 	Additional options for tenant_connection.
     The `attachment_opts_vna` object structure is documented below.
     It is proxied to create a connection for the Virtual Network Appliance resource.
 
-The `attachment_opts_server` block supports:
+The `attachment_opts_compute` block supports:
+    
+* `fixed_ips` - (Optional) Array of IP address assignment objects, attached to port.
+    * `ip_address` - (Optional) IP address assigned to port.
+    * `subnet_id` - (Optional) The ID of subnet from which IP address is allocated.
+    
+* `allowed_address_pairs` - (Optional) Array of Allowed address pairs.
+    * `ip_address` - (Optional) IP address assigned to port for Allowed address pairs.
+    * `mac_address` - (Optional) MAC address assigned to port for Allowed address pairs.
+
+The `attachment_opts_baremetal` block supports:
 
 * `segmentation_type` - (Optional) Segmentation type used for port.
     Only valid for device_type = ECL::Baremetal::Server. (flat/vlan)
@@ -178,9 +192,6 @@ The following attributes are exported:
 
 * `id` - tenant_connection unique ID.
 * `tenant_id` - Tenant ID of the owner.
-* `name_other` - Name for the owner of network.
-* `description_other` - Description for the owner of network.
-* `tags_other` - Tags for the owner of network.
 * `tenant_id_other` - The owner tenant of network.
 * `network_id` - Network unique id.
 * `port_id` - Port unique id.
