@@ -1,13 +1,33 @@
 TEST?=$$(go list ./... |grep -v 'vendor')
-GOFMT_FILES?=$$(find . -not -iwholename './.git/*' -name '*.go' |grep -v vendor)
+GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=ecl
 
 default: build
 
+tools:
+	GO111MODULE=on go install github.com/client9/misspell/cmd/misspell
+	GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint
+	GO111MODULE=on go install github.com/bflad/tfproviderlint/cmd/tfproviderlint
+
 build: fmtcheck
 	go install
 
+errcheck:
+	@sh -c "'$(CURDIR)/scripts/errcheck.sh'"
+
+fmt:
+	@echo "==> Fixing source code with gofmt..."
+	gofmt -w $(GOFMT_FILES)
+
+fmtcheck:
+	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
+
+lint:
+	@echo "==> Checking source code against linters..."
+	golangci-lint run ./...
+	tfproviderlint ./...
+	
 test: fmtcheck
 	go test -i $(TEST) || exit 1
 	echo $(TEST) | \
@@ -22,24 +42,6 @@ testacc-all: fmtcheck
 testacc-short: fmtcheck
 	TF_ACC=1 go test ./ecl -v -short -count=1 -timeout 120m -parallel 4
 
-vet:
-	@echo "go vet ."
-	@go vet $$(go list ./... | grep -v vendor/) ; if [ $$? -eq 1 ]; then \
-		echo ""; \
-		echo "Vet found suspicious constructs. Please check the reported constructs"; \
-		echo "and fix them if necessary before submitting the code for review."; \
-		exit 1; \
-	fi
-
-fmt:
-	gofmt -w $(GOFMT_FILES)
-
-fmtcheck:
-	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
-
-errcheck:
-	@sh -c "'$(CURDIR)/scripts/errcheck.sh'"
-
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
 		echo "ERROR: Set TEST to a specific package. For example,"; \
@@ -48,10 +50,25 @@ test-compile:
 	fi
 	go test -c $(TEST) $(TESTARGS)
 
-lint:
-	tfproviderlint ./...
+website:
+ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
+	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
+	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
+endif
+	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
+
+website-lint:
+	@echo "==> Checking website against linters..."
+	@misspell -error -source=text website/
+
+website-test:
+ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
+	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
+	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
+endif
+	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 vendor:
 	go mod vendor
 
-.PHONY: build test testacc testacc-all testacc-short vet fmt fmtcheck errcheck test-compile lint vendor
+.PHONY: build test testacc testacc-all testacc-short vet fmt fmtcheck errcheck lint tools test-compile website website-lint website-test vendor
