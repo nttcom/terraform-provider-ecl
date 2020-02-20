@@ -71,4 +71,4 @@ endif
 vendor:
 	go mod vendor
 
-.PHONY: build test testacc testacc-all testacc-short vet fmt fmtcheck errcheck lint tools test-compile website website-lint website-test vendor
+.PHONY: build test testacc testacc-all testacc-short fmt fmtcheck errcheck lint tools test-compile website website-lint website-test vendor
