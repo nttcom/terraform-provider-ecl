@@ -24,10 +24,15 @@ func TestAccProviderConnectivityV2TenantConnectionRequest_basic(t *testing.T) {
 				Config: testAccProviderConnectivityV2TenantConnectionRequestBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckProviderConnectivityV2TenantConnectionRequestExists("ecl_provider_connectivity_tenant_connection_request_v2.request_1", &request),
+					resource.TestCheckResourceAttrSet("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "id"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "status", "registered"),
 					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "name", "test_name1"),
 					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "description", "test_desc1"),
 					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "tags.test_tags1", "test1"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "tenant_id", OS_TENANT_ID),
 					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "tenant_id_other", OS_ACCEPTER_TENANT_ID),
+					resource.TestCheckResourceAttrSet("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "network_id"),
+					resource.TestCheckResourceAttrSet("ecl_provider_connectivity_tenant_connection_request_v2.request_1", "approval_request_id"),
 				),
 			},
 			{
