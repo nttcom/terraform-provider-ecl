@@ -1,6 +1,7 @@
 package ecl
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -162,24 +163,33 @@ func resourceSSSApprovalRequestV1Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("request_user_id", approval.RequestUserID)
 	d.Set("service", approval.Service)
 
-	var actions []map[string]string
-	for _, v := range approval.Actions {
-		action := map[string]string{
-			"service":  v.Service,
-			"region":   v.Region,
-			"api_path": v.APIPath,
-			"method":   v.Method,
-			"body":     v.Body,
+	// actions.body is a json object,
+	// but since the schema changes dynamically depending on the resource, convert it to a string and store it.
+	// If service is "provider-connectivity", body's type is JSON.
+	// If service is "network", body's type is String.
+	var actions []map[string]interface{}
+	for i, a := range approval.Actions {
+		jsonBody, err := json.Marshal(&a.Body)
+		if err != nil {
+			return fmt.Errorf("error reading ECL approval request's actions.[%d].body: %w", i, err)
+		}
+
+		action := map[string]interface{}{
+			"service":  a.Service,
+			"region":   a.Region,
+			"api_path": a.APIPath,
+			"method":   a.Method,
+			"body":     string(jsonBody),
 		}
 		actions = append(actions, action)
 	}
 	d.Set("actions", actions)
 
 	var descriptions []map[string]string
-	for _, v := range approval.Descriptions {
+	for _, d := range approval.Descriptions {
 		description := map[string]string{
-			"lang": v.Lang,
-			"text": v.Text,
+			"lang": d.Lang,
+			"text": d.Text,
 		}
 		descriptions = append(descriptions, description)
 	}
