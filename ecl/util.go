@@ -231,3 +231,16 @@ func testAccCheckNetworkingV2Tags(name string, tags []string) resource.TestCheck
 func repeatedString(baseString string, repeatCount int) string {
 	return strings.Repeat(baseString, repeatCount)
 }
+
+func getTags(d *schema.ResourceData, tagName string) (map[string]string, error) {
+	rawTags := d.Get(tagName).(map[string]interface{})
+	tags := map[string]string{}
+	for key, value := range rawTags {
+		if v, ok := value.(string); ok {
+			tags[key] = v
+			continue
+		}
+		return nil, fmt.Errorf("%s.%s value should be string", tagName, key)
+	}
+	return tags, nil
+}

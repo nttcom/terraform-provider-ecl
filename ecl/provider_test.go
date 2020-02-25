@@ -209,6 +209,8 @@ func accepter() terraform.ResourceProvider {
 
 		ResourcesMap: map[string]*schema.Resource{
 			"ecl_imagestorages_member_accepter_v2": resourceImageStoragesMemberAccepterV2(),
+			"ecl_network_network_v2":               resourceNetworkNetworkV2(),
+			"ecl_network_subnet_v2":                resourceNetworkSubnetV2(),
 		},
 
 		ConfigureFunc: configureProvider,
@@ -328,6 +330,30 @@ func testAccPreCheckImageMemberAccepter(t *testing.T) {
 
 	if OS_TENANT_ID == "" {
 		t.Fatal("OS_TENANT_ID must be set for acceptance tests of image member accepter")
+	}
+}
+
+func testAccPreCheckTenantConnectionRequest(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_ACCEPTER_TENANT_ID == "" {
+		t.Fatal("OS_ACCEPTER_TENANT_ID must be set for acceptance tests of tenant connection request")
+	}
+}
+
+func testAccPreCheckTenantConnection(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_ACCEPTER_TENANT_ID == "" && OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID == "" {
+		t.Fatal("OS_ACCEPTER_TENANT_ID and OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID must be set for acceptance tests of tenant connection")
+	}
+}
+
+func testAccPreCheckApprovalRequest(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_ACCEPTER_TENANT_ID == "" {
+		t.Fatal("OS_ACCEPTER_TENANT_ID must be set for acceptance tests of approval request")
 	}
 }
 

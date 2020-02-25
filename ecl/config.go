@@ -314,6 +314,13 @@ func (c *Config) rcaV1Client(region string) (*eclcloud.ServiceClient, error) {
 	})
 }
 
+func (c *Config) providerConnectivityV2Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewProviderConnectivityV2(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
+}
+
 // StorageRetryMaxCount is a integer value that means
 // retry maximum count for request against storage SDP
 const StorageRetryMaxCount int = 30
