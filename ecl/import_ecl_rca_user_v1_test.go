@@ -7,7 +7,6 @@ import (
 )
 
 func TestAccRCAV1UserImport_basic(t *testing.T) {
-	resourceName := "ecl_rca_user_v1.user_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -15,10 +14,10 @@ func TestAccRCAV1UserImport_basic(t *testing.T) {
 		CheckDestroy: testAccCheckRCAV1UserDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRCAV1UserBasic,
+				Config: testAccRCAV1UserBasic(testAccRCAV1UserRandomName),
 			},
 			{
-				ResourceName:      resourceName,
+				ResourceName:      testAccRCAV1UserResourcePath,
 				ImportState:       true,
 				ImportStateVerify: false,
 			},

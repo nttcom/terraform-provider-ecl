@@ -13,6 +13,9 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
+var testAccRCAV1UserRandomName = "a" + acctest.RandStringFromCharSet(15, acctest.CharSetAlphaNum)
+var testAccRCAV1UserResourcePath = fmt.Sprintf("ecl_rca_user_v1.%s", testAccRCAV1UserRandomName)
+
 func TestAccRCAV1User_basic(t *testing.T) {
 	var user users.User
 
@@ -22,7 +25,7 @@ func TestAccRCAV1User_basic(t *testing.T) {
 		CheckDestroy: testAccCheckRCAV1UserDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRCAV1UserBasic,
+				Config: testAccRCAV1UserBasic(testAccRCAV1UserRandomName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRCAV1UserExists(testAccRCAV1UserResourcePath, &user),
 					resource.TestCheckResourceAttr(testAccRCAV1UserResourcePath, "password", "dummy_passw@rd"),
@@ -102,14 +105,12 @@ func testAccCheckRCAV1UserExists(n string, user *users.User) resource.TestCheckF
 	}
 }
 
-var testAccRCAV1UserRandomName = acctest.RandStringFromCharSet(16, acctest.CharSetAlphaNum)
-var testAccRCAV1UserResourcePath = fmt.Sprintf("ecl_rca_user_v1.%s", testAccRCAV1UserRandomName)
-
-var testAccRCAV1UserBasic = fmt.Sprintf(`
-resource "ecl_rca_user_v1" "%s" {
-    password = "dummy_passw@rd"
+func testAccRCAV1UserBasic(resourceName string) string {
+	return fmt.Sprintf(`
+	resource "ecl_rca_user_v1" "%s" {
+		password = "dummy_passw@rd"
+	}`, resourceName)
 }
-`, testAccRCAV1UserRandomName)
 
 var testAccRCAV1UserUpdate = fmt.Sprintf(`
 resource "ecl_rca_user_v1" "%s" {
