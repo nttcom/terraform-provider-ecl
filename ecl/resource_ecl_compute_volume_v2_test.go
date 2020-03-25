@@ -75,7 +75,7 @@ func TestAccComputeVolumeV2Volume_basic(t *testing.T) {
 	})
 }
 
-func TestAccComputeVolumeV2Volume_fromImage(t *testing.T) {
+func TestAccComputeVolumeV2Volume_fromImageByName(t *testing.T) {
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{
@@ -84,7 +84,46 @@ func TestAccComputeVolumeV2Volume_fromImage(t *testing.T) {
 		CheckDestroy: testAccCheckComputeVolumeV2VolumeDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccComputeVolumeV2VolumeFromImage,
+				Config: testAccComputeVolumeV2VolumeFromImageByName,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckBlockStorageV2VolumeExists("ecl_compute_volume_v2.volume_1", &volume),
+					resource.TestCheckResourceAttr(
+						"ecl_compute_volume_v2.volume_1", "name", "volume_1"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccComputeVolumeV2Volume_fromImageByID(t *testing.T) {
+	var volume volumes.Volume
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeVolumeV2VolumeDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccComputeVolumeV2VolumeFromImageByID,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckBlockStorageV2VolumeExists("ecl_compute_volume_v2.volume_1", &volume),
+					resource.TestCheckResourceAttr(
+						"ecl_compute_volume_v2.volume_1", "name", "volume_1"),
+				),
+			},
+		},
+	})
+}
+func TestAccComputeVolumeV2Volume_fromImageByNameAndID(t *testing.T) {
+	var volume volumes.Volume
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeVolumeV2VolumeDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccComputeVolumeV2VolumeFromImageByNameAndID,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckBlockStorageV2VolumeExists("ecl_compute_volume_v2.volume_1", &volume),
 					resource.TestCheckResourceAttr(
@@ -257,10 +296,27 @@ resource "ecl_compute_volume_v2" "volume_1" {
 }
 `
 
-const testAccComputeVolumeV2VolumeFromImage = `
+const testAccComputeVolumeV2VolumeFromImageByName = `
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   size = 15
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
+}
+`
+
+const testAccComputeVolumeV2VolumeFromImageByID = `
+resource "ecl_compute_volume_v2" "volume_1" {
+  name = "volume_1"
+  size = 15
+  image_id = "e74134b7-f20a-40ee-918b-66503b2f13be"
+}
+`
+
+const testAccComputeVolumeV2VolumeFromImageByNameAndID = `
+resource "ecl_compute_volume_v2" "volume_1" {
+  name = "volume_1"
+  size = 15
+  image_id = "e74134b7-f20a-40ee-918b-66503b2f13be"
   image_name = "Ubuntu-18.04.1_64_virtual-server_02"
 }
 `
