@@ -45,9 +45,12 @@ func TestAccImageStoragesV2ImageDataSource_basic(t *testing.T) {
 	})
 }
 
-func TestAccImagesV2ImageDataSource_queries(t *testing.T) {
+func TestAccImageStoragesV2ImageDataSource_queries(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			createTemporalImage(localFileForDataSourceTest)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
