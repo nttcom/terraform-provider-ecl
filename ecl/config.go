@@ -254,13 +254,6 @@ func (c *Config) dnsV2Client(region string) (*eclcloud.ServiceClient, error) {
 	})
 }
 
-func (c *Config) identityV3Client(region string) (*eclcloud.ServiceClient, error) {
-	return ecl.NewIdentityV3(c.OsClient, eclcloud.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
-	})
-}
-
 func (c *Config) imageV2Client(region string) (*eclcloud.ServiceClient, error) {
 	return ecl.NewImageServiceV2(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
