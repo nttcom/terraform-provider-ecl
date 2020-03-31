@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/volumeattach"
+	"github.com/nttcom/eclcloud/ecl/compute/v2/images"
 	"github.com/nttcom/eclcloud/ecl/computevolume/v2/volumes"
 )
 
@@ -70,6 +71,11 @@ func resourceComputeVolumeV2() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"image_name": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+			},
 			"volume_type": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -114,6 +120,21 @@ func resourceContainerMetadataV2(d *schema.ResourceData) map[string]string {
 	return m
 }
 
+func getVolumeImageID(client *eclcloud.ServiceClient, d *schema.ResourceData) (string, error) {
+	// If image_id is specified(regardless of image_name), return the image_id
+	if imageID := d.Get("image_id").(string); imageID != "" {
+		return imageID, nil
+	}
+
+	// if image_id is not specified and image_name is specified, return image_id which is found by image_name
+	if imageName := d.Get("image_name").(string); imageName != "" {
+		return images.IDFromName(client, imageName)
+	}
+
+	// in case both are not specified, return blank string
+	return "", nil
+}
+
 func resourceComputeVolumeV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	computeVolumeClient, err := config.computeVolumeV2Client(GetRegion(d, config))
@@ -121,10 +142,20 @@ func resourceComputeVolumeV2Create(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error creating ECL compute volume client: %s", err)
 	}
 
+	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating ECL compute client: %s", err)
+	}
+
+	imageID, err := getVolumeImageID(computeClient, d)
+	if err != nil {
+		return err
+	}
+
 	createOpts := &volumes.CreateOpts{
 		AvailabilityZone: d.Get("availability_zone").(string),
 		Description:      d.Get("description").(string),
-		ImageID:          d.Get("image_id").(string),
+		ImageID:          imageID,
 		Metadata:         resourceContainerMetadataV2(d),
 		Name:             d.Get("name").(string),
 		Size:             d.Get("size").(int),
