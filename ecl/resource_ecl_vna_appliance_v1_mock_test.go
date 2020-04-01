@@ -279,7 +279,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
     interface_1_info  {
@@ -298,6 +298,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
+	OS_NOVA_AVAILABLE_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -306,7 +307,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
     interface_1_info  {
@@ -339,6 +340,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
+	OS_NOVA_AVAILABLE_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -347,7 +349,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1-update"
 	description = "appliance_1_description-update"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
     tags = {
@@ -375,6 +377,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
+	OS_NOVA_AVAILABLE_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -383,7 +386,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1-update"
 	description = "appliance_1_description-update"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
     interface_1_info  {
@@ -402,6 +405,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
+	OS_NOVA_AVAILABLE_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -410,7 +414,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
     interface_1_info  {
@@ -451,6 +455,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
+	OS_NOVA_AVAILABLE_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -467,7 +472,7 @@ expectedStatus:
 newStatus: Deleted
 `
 
-var testMockVNAV1ApplianceMetaPatch1 = `
+var testMockVNAV1ApplianceMetaPatch1 = fmt.Sprintf(`
 request:
     method: PATCH
 response:
@@ -476,7 +481,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -572,16 +577,19 @@ response:
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
 expectedStatus:
     - Created
 newStatus: Updated1
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceMetaPatch2 = `
+var testMockVNAV1ApplianceMetaPatch2 = fmt.Sprintf(`
 request:
     method: PATCH
 response:
@@ -590,7 +598,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -680,16 +688,19 @@ response:
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
 expectedStatus:
     - Updated1
 newStatus: Updated2
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceFixedIPPatch = `
+var testMockVNAV1ApplianceFixedIPPatch = fmt.Sprintf(`
 request:
     method: PATCH
 response:
@@ -702,9 +713,9 @@ response:
         		"description": "appliance_1_description",
         		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-        		"availability_zone": "zone1-groupb",
+        		"availability_zone": "%s",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-        		"virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+        		"virtual_network_appliance_plan_id": "%s",
         		"os_monitoring_status": "ACTIVE",
         		"os_login_status": "ACTIVE",
         		"vm_status": "ACTIVE",
@@ -797,9 +808,11 @@ response:
 expectedStatus:
     - Created
 newStatus: Updated
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID)
 
-var testMockVNAV1ApplianceAllowedAddressPairPatch = `
+var testMockVNAV1ApplianceAllowedAddressPairPatch = fmt.Sprintf(`
 request:
     method: PATCH
 response:
@@ -812,9 +825,9 @@ response:
         		"description": "appliance_1_description",
         		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-        		"availability_zone": "zone1-groupb",
+        		"availability_zone": "%s",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-        		"virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+        		"virtual_network_appliance_plan_id": "%s",
         		"os_monitoring_status": "ACTIVE",
         		"os_login_status": "ACTIVE",
         		"vm_status": "ACTIVE",
@@ -913,9 +926,12 @@ response:
 expectedStatus:
 - Created
 newStatus: Updated
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1AppliancePost = `
+var testMockVNAV1AppliancePost = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -924,7 +940,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -1015,14 +1031,17 @@ response:
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
         }
 newStatus: Created
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceProcessingAfterCreate = `
+var testMockVNAV1ApplianceProcessingAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1031,7 +1050,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -1122,7 +1141,7 @@ response:
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
         }
@@ -1130,9 +1149,12 @@ expectedStatus:
     - Created
 counter:
     max: 3
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceGetActiveAfterCreate = `
+var testMockVNAV1ApplianceGetActiveAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1141,7 +1163,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -1232,7 +1254,7 @@ response:
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
@@ -1240,7 +1262,10 @@ expectedStatus:
     - Created
 counter:
     min: 4
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
 var testMockVNAV1ApplianceGetDeleteComplete = `
 request:
@@ -1253,7 +1278,7 @@ counter:
     min: 4
 `
 
-var testMockVNAV1ApplianceProcessingAfterDelete = `
+var testMockVNAV1ApplianceProcessingAfterDelete = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1262,7 +1287,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -1355,7 +1380,7 @@ response:
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
@@ -1363,9 +1388,12 @@ expectedStatus:
     - Deleted
 counter:
     max: 3
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceProcessingAfterMetaUpdate1 = `
+var testMockVNAV1ApplianceProcessingAfterMetaUpdate1 = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1374,7 +1402,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -1470,7 +1498,7 @@ response:
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
@@ -1478,9 +1506,12 @@ expectedStatus:
     - Updated1
 counter:
     max: 3
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceGetActiveAfterMetaUpdate1 = `
+var testMockVNAV1ApplianceGetActiveAfterMetaUpdate1 = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1489,7 +1520,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -1585,7 +1616,7 @@ response:
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
@@ -1593,8 +1624,12 @@ expectedStatus:
     - Updated1
 counter:
     min: 4
-`
-var testMockVNAV1ApplianceProcessingAfterMetaUpdate2 = `
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterMetaUpdate2 = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1603,7 +1638,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -1693,7 +1728,7 @@ response:
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
@@ -1701,9 +1736,12 @@ expectedStatus:
     - Updated2
 counter:
     max: 3
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceGetActiveAfterMetaUpdate2 = `
+var testMockVNAV1ApplianceGetActiveAfterMetaUpdate2 = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1712,7 +1750,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -1802,7 +1840,7 @@ response:
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
@@ -1810,9 +1848,12 @@ expectedStatus:
     - Updated2
 counter:
     min: 4
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceProcessingAfterFixedIPUpdate = `
+var testMockVNAV1ApplianceProcessingAfterFixedIPUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1825,9 +1866,9 @@ response:
         		"description": "appliance_1_description",
         		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-        		"availability_zone": "zone1-groupb",
+        		"availability_zone": "%s",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-        		"virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+        		"virtual_network_appliance_plan_id": "%s",
         		"os_monitoring_status": "ACTIVE",
         		"os_login_status": "ACTIVE",
         		"vm_status": "ACTIVE",
@@ -1921,9 +1962,12 @@ expectedStatus:
     - Updated
 counter:
     max: 3
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceGetActiveAfterFixedIPUpdate = `
+var testMockVNAV1ApplianceGetActiveAfterFixedIPUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1936,9 +1980,9 @@ response:
         		"description": "appliance_1_description",
         		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-        		"availability_zone": "zone1-groupb",
+        		"availability_zone": "%s",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-        		"virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+        		"virtual_network_appliance_plan_id": "%s",
         		"os_monitoring_status": "ACTIVE",
         		"os_login_status": "ACTIVE",
         		"vm_status": "ACTIVE",
@@ -2035,9 +2079,12 @@ expectedStatus:
     - Updated
 counter:
     min: 4
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceProcessingAfterAllowedAddressPairUpdate = `
+var testMockVNAV1ApplianceProcessingAfterAllowedAddressPairUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -2050,9 +2097,9 @@ response:
         		"description": "appliance_1_description",
         		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-        		"availability_zone": "zone1-groupb",
+        		"availability_zone": "%s",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-        		"virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+        		"virtual_network_appliance_plan_id": "%s",
         		"os_monitoring_status": "ACTIVE",
         		"os_login_status": "ACTIVE",
         		"vm_status": "ACTIVE",
@@ -2153,9 +2200,12 @@ expectedStatus:
     - Updated
 counter:
     max: 3
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceGetActiveAfterAllowedAddressPairUpdate = `
+var testMockVNAV1ApplianceGetActiveAfterAllowedAddressPairUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -2168,9 +2218,9 @@ response:
         		"description": "appliance_1_description",
         		"tags": {},
         		"appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-        		"availability_zone": "zone1-groupb",
+        		"availability_zone": "%s",
         		"tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-        		"virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+        		"virtual_network_appliance_plan_id": "%s",
         		"os_monitoring_status": "ACTIVE",
         		"os_login_status": "ACTIVE",
         		"vm_status": "ACTIVE",
@@ -2271,14 +2321,17 @@ expectedStatus:
     - Updated
 counter:
     min: 4
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
 var testMockedAccVNAV1ApplianceSimpleBasic = fmt.Sprintf(`
 resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	interface_1_info  {
@@ -2297,10 +2350,11 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
+	OS_NOVA_AVAILABLE_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
-var testMockVNAV1ApplianceSimplePost = `
+var testMockVNAV1ApplianceSimplePost = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -2309,7 +2363,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
@@ -2400,14 +2454,17 @@ response:
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
                 "username": "root",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
         }
 newStatus: Created
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceProcessingAfterSimpleCreate = `
+var testMockVNAV1ApplianceProcessingAfterSimpleCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -2416,7 +2473,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -2504,7 +2561,7 @@ response:
                 "os_monitoring_status": "initial",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
         }
@@ -2512,9 +2569,12 @@ expectedStatus:
     - Created
 counter:
     max: 3
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
-var testMockVNAV1ApplianceGetActiveAfterSimpleCreate = `
+var testMockVNAV1ApplianceGetActiveAfterSimpleCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -2523,7 +2583,7 @@ response:
         {
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
-                "availability_zone": "zone1-groupb",
+                "availability_zone": "%s",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -2611,7 +2671,7 @@ response:
                 "os_monitoring_status": "ACTIVE",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "virtual_network_appliance_plan_id": "6589b37a-cf82-4918-96fe-255683f78e76",
+                "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
         }
@@ -2619,4 +2679,7 @@ expectedStatus:
     - Created
 counter:
     min: 4
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
