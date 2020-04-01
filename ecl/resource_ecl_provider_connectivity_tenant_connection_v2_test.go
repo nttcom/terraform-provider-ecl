@@ -312,7 +312,7 @@ resource "ecl_compute_instance_v2" "instance_1" {
 }
 `
 
-const attachmentBaremetalServer = `
+var attachmentBaremetalServer = fmt.Sprintf(`
 data "ecl_imagestorages_image_v2" "centos" {
     name = "CentOS-7.3-1611_64_baremetal-server_01"
 }
@@ -322,7 +322,7 @@ data "ecl_baremetal_flavor_v2" "gp2" {
 }
 
 data "ecl_baremetal_availability_zone_v2" "groupa" {
-    zone_name = "groupa"
+    zone_name = "%s"
 }
 
 resource "ecl_baremetal_server_v2" "server_1" {
@@ -388,14 +388,16 @@ resource "ecl_baremetal_server_v2" "server_1" {
         contents = "ZWNobyAiS3VtYSBQZXJzb25hbGl0eSIgPj4gL2hvbWUvYmlnL3BlcnNvbmFsaXR5"
     }
 }
-`
+`,
+	OS_BAREMETAL_AVAILABLE_ZONE,
+)
 
 var attachmentVna = fmt.Sprintf(`
 resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.2.1"
-	availability_zone = "zone1_groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_2"]
@@ -409,7 +411,9 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }
 `,
-	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID)
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
 
 var testAccProviderConnectivityV2TenantConnectionAttachmentComputeServer = fmt.Sprintf(`
 %s
