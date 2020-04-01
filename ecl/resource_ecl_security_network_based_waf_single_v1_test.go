@@ -36,7 +36,7 @@ func TestAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", "zone1-groupb"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", OS_NOVA_AVAILABLE_ZONE),
 				),
 			},
 			resource.TestStep{
@@ -51,7 +51,7 @@ func TestAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", "zone1-groupb"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", OS_NOVA_AVAILABLE_ZONE),
 				),
 			},
 		},
@@ -184,10 +184,11 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 }
 `,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
 var testAccSecurityV1NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
@@ -195,10 +196,11 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "%s"
 	locale = "en"
 	license_kind = "08"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 }
 `,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
 const testAccSecurityV1NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1 = `
@@ -242,7 +244,7 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 
     port {
         enable = "true"
@@ -258,6 +260,7 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	testAccSecurityV1NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1,
 	testAccSecurityV1NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
 var testAccSecurityV1NetworkBasedWAFSingleUpdateInterface2 = fmt.Sprintf(`
@@ -268,7 +271,7 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
     tenant_id = "%s"
     locale = "ja"
     license_kind = "02"
-    az_group = "zone1-groupb"
+    az_group = "%s"
 
     port {
         enable = "false"
@@ -278,4 +281,5 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	testAccSecurityV1NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1,
 	testAccSecurityV1NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )

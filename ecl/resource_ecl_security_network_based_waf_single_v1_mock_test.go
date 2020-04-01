@@ -11,14 +11,8 @@ import (
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-const SoIDOfWAFCreate = "FGWAF_809F858574E94699952D0D7E7C58C81B"
 const SoIDOfWAFUpdate = "FGWAF_809F858574E94699952D0D7E7C58C81C"
 const SoIDOfWAFDelete = "FGWAF_F2349100C7D24EF3ACD6B9A9F91FD220"
-
-// const ProcessIDOfUpdateInterface = 85385
-
-// const expectedNewSingleDeviceHostName = "CES11811"
-// const expectedNewSingleDeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
 func TestMockedAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 	if OS_REGION_NAME != "RegionOne" {
@@ -71,7 +65,7 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", "zone1-groupb"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", OS_NOVA_AVAILABLE_ZONE),
 				),
 			},
 			resource.TestStep{
@@ -86,7 +80,7 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", "zone1-groupb"),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", OS_NOVA_AVAILABLE_ZONE),
 				),
 			},
 		},
@@ -178,10 +172,11 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 }
 `,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
 var testMockedAccSecurityV1NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
@@ -189,10 +184,11 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "%s"
 	locale = "en"
 	license_kind = "08"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 }
 `,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
 var testMockedAccSecurityV1NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
@@ -201,7 +197,7 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 
   port {
       enable = "true"
@@ -215,9 +211,10 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 }
 `,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
-var testMockSecurityV1NetworkBasedWAFSingleListBeforeCreate = `
+var testMockSecurityV1NetworkBasedWAFSingleListBeforeCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -230,15 +227,17 @@ response:
             "records": 1,
             "rows": [{
             	"id": 1,
-            	"cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
+            	"cell": ["false", "1", "CES11810", "WAF", "02", "%s", "jp4_zone1"]
             }]
         }
 expectedStatus:
     - ""
 newStatus: PreCreate
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+)
 
-var testMockSecurityV1NetworkBasedWAFSingleListAfterCreate = `
+var testMockSecurityV1NetworkBasedWAFSingleListAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -252,20 +251,23 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "WAF", "02", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "WAF", "02", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "WAF", "02", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - Created
     - Updating
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_NOVA_AVAILABLE_ZONE,
+)
 
-var testMockSecurityV1NetworkBasedWAFSingleListDevicesAfterCreate = `
+var testMockSecurityV1NetworkBasedWAFSingleListDevicesAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -277,7 +279,7 @@ response:
               "msa_device_id": "CES11810",
               "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
               "os_server_name": "WAF-CES11878",
-              "os_availability_zone": "zone1-groupb",
+              "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
               "msa_device_type": "WAF",
               "os_server_status": "ACTIVE"
@@ -286,7 +288,7 @@ response:
               "msa_device_id": "CES11811",
               "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
               "os_server_name": "WAF-CES11816",
-              "os_availability_zone": "zone1-groupb",
+              "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
               "msa_device_type": "WAF",
               "os_server_status": "ACTIVE"
@@ -296,9 +298,12 @@ response:
 expectedStatus:
     - Updated
     - Created
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_NOVA_AVAILABLE_ZONE,
+)
 
-var testMockSecurityV1NetworkBasedWAFSingleListDevicesAfterUpdate = `
+var testMockSecurityV1NetworkBasedWAFSingleListDevicesAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -310,7 +315,7 @@ response:
               "msa_device_id": "CES11810",
               "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
               "os_server_name": "WAF-CES11878",
-              "os_availability_zone": "zone1-groupb",
+              "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
               "msa_device_type": "WAF",
               "os_server_status": "ACTIVE"
@@ -319,7 +324,7 @@ response:
               "msa_device_id": "CES11811",
               "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
               "os_server_name": "WAF-CES11816",
-              "os_availability_zone": "zone1-groupb",
+              "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
               "msa_device_type": "WAF",
               "os_server_status": "ACTIVE"
@@ -328,7 +333,10 @@ response:
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_NOVA_AVAILABLE_ZONE,
+)
 
 var testMockSecurityV1NetworkBasedWAFSingleListDeviceInterfacesAfterCreate = `
 request:
@@ -369,7 +377,7 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV1NetworkBasedWAFSingleListAfterDelete = `
+var testMockSecurityV1NetworkBasedWAFSingleListAfterDelete = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -382,12 +390,14 @@ response:
             "records": 1,
             "rows": [{
             	"id": 1,
-            	"cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
+            	"cell": ["false", "1", "CES11810", "WAF", "02", "%s", "jp4_zone1"]
             }]
         }
 expectedStatus:
     - Deleted
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+)
 
 var testMockSecurityV1NetworkBasedWAFSingleCreate = fmt.Sprintf(`
 request:
@@ -558,7 +568,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedWAFSingleListAfterUpdate = `
+var testMockSecurityV1NetworkBasedWAFSingleListAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -572,19 +582,22 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "WAF", "02", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "WAF", "08", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "WAF", "08", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - Updated
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_NOVA_AVAILABLE_ZONE,
+)
 
-var testMockSecurityV1NetworkBasedWAFSingleListAfterInterfaceUpdate = `
+var testMockSecurityV1NetworkBasedWAFSingleListAfterInterfaceUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -598,17 +611,20 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "WAF", "02", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "WAF", "02", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "WAF", "02", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_NOVA_AVAILABLE_ZONE,
+)
 
 var testMockSecurityV1NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
 request:
@@ -994,7 +1010,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedWAFSingleListAfterUpdateInterface = `
+var testMockSecurityV1NetworkBasedWAFSingleListAfterUpdateInterface = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1008,14 +1024,17 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "WAF", "02", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "WAF", "02", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "WAF", "08", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "WAF", "08", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_NOVA_AVAILABLE_ZONE,
+	OS_NOVA_AVAILABLE_ZONE,
+)
