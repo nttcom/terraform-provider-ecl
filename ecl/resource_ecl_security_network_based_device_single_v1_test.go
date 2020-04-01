@@ -40,7 +40,7 @@ func TestAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", "zone1-groupb"),
+						"az_group", OS_NOVA_AVAILABLE_ZONE),
 				),
 			},
 			resource.TestStep{
@@ -59,7 +59,7 @@ func TestAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", "zone1-groupb"),
+						"az_group", OS_NOVA_AVAILABLE_ZONE),
 				),
 			},
 		},
@@ -245,10 +245,11 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	locale = "ja"
 	operating_mode = "FW"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 }
 `,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
 var testAccSecurityV1NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
@@ -257,10 +258,11 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	locale = "en"
 	operating_mode = "UTM"
 	license_kind = "08"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 }
 `,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
 const testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet1 = `
@@ -305,7 +307,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	locale = "ja"
 	operating_mode = "FW"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 
   port {
       enable = "true"
@@ -350,6 +352,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
 
 var testAccSecurityV1NetworkBasedDeviceSingleUpdateInterface2 = fmt.Sprintf(`
@@ -361,7 +364,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	locale = "ja"
 	operating_mode = "FW"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 
   port {
     enable = "false"
@@ -394,4 +397,5 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
+	OS_NOVA_AVAILABLE_ZONE,
 )
