@@ -32,7 +32,7 @@ func TestMockedDedicatedHypervisorV1Server_basic(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDedicatedHypervisor(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDedicatedHypervisorV1ServerDestroy,
 		Steps: []resource.TestStep{
@@ -53,7 +53,7 @@ func TestMockedDedicatedHypervisorV1Server_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "admin_pass", "aabbccddeeff"),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "image_ref", "dfd25820-b368-4012-997b-29a6d0cf8518"),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "flavor_ref", "a830b61c-3155-4a61-b7ed-c450862845e6"),
-					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "availability_zone", "groupb"),
+					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "availability_zone", OS_BAREMETAL_AVAILABLE_ZONE),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "metadata.k1", "v1"),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "metadata.k2", "v2"),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "baremetal_server_id", "24ebe7b8-ecfb-4d9f-a66b-c0120534fc90"),
@@ -63,7 +63,7 @@ func TestMockedDedicatedHypervisorV1Server_basic(t *testing.T) {
 	})
 }
 
-const testMockDedicatedHypervisorV1ServerBasic = `
+var testMockDedicatedHypervisorV1ServerBasic = fmt.Sprintf(`
 resource "ecl_dedicated_hypervisor_server_v1" "server_1" {
     name = "server1"
     description = "ESXi Dedicated Hypervisor"
@@ -82,13 +82,14 @@ resource "ecl_dedicated_hypervisor_server_v1" "server_1" {
     admin_pass = "aabbccddeeff"
     image_ref = "dfd25820-b368-4012-997b-29a6d0cf8518"
     flavor_ref = "a830b61c-3155-4a61-b7ed-c450862845e6"
-    availability_zone = "groupb"
+    availability_zone = "%s"
     metadata = {
         k1 = "v1"
         k2 = "v2"
     }
 }
-`
+`,
+	OS_BAREMETAL_AVAILABLE_ZONE)
 
 var testMockDedicatedHypervisorV1ServerCreate = `
 request:
@@ -115,7 +116,7 @@ response:
 newStatus: Created
 `
 
-var testMockDedicatedHypervisorV1ServerGetAfterCreate = `
+var testMockDedicatedHypervisorV1ServerGetAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -133,7 +134,7 @@ response:
                     "OS-EXT-STS:power_state": "RUNNING",
                     "OS-EXT-STS:task_state": "None",
                     "OS-EXT-STS:vm_state": "ACTIVE",
-                    "OS-EXT-AZ:availability_zone": "groupb",
+                    "OS-EXT-AZ:availability_zone": "%s",
                     "progress": 100,
                     "created": "2019-10-10T04:11:41Z",
                     "flavor": {
@@ -283,7 +284,9 @@ response:
         }
 expectedStatus:
     - Created
-`
+`,
+	OS_BAREMETAL_AVAILABLE_ZONE,
+)
 
 var testMockDedicatedHypervisorV1ServerDelete = `
 request:

@@ -109,7 +109,7 @@ func testAccCheckDedicatedHypervisorV1ServerExists(n string, server *servers.Ser
 	}
 }
 
-const testAccDedicatedHypervisorV1ServerBasic = `
+var testAccDedicatedHypervisorV1ServerBasic = fmt.Sprintf(`
 data "ecl_baremetal_flavor_v2" "gp1" {
     name = "General Purpose 1 v2"
 }
@@ -119,7 +119,7 @@ data "ecl_imagestorages_image_v2" "esxi" {
 }
 
 data "ecl_baremetal_availability_zone_v2" "groupa" {
-    zone_name = "zone1-groupa"
+    zone_name = "%s"
 }
 
 resource "ecl_network_network_v2" "network_1" {
@@ -166,4 +166,6 @@ resource "ecl_dedicated_hypervisor_server_v1" "server_1" {
         k2 = "v2"
     }
 }
-`
+`,
+	OS_BAREMETAL_AVAILABLE_ZONE,
+)
