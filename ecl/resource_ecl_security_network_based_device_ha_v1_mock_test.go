@@ -78,10 +78,10 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", OS_NOVA_AVAILABLE_ZONE),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", OS_NOVA_AVAILABLE_ZONE_HA),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 			resource.TestStep{
@@ -100,10 +100,10 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", OS_NOVA_AVAILABLE_ZONE),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", OS_NOVA_AVAILABLE_ZONE_HA),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 		},
@@ -234,8 +234,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockedAccSecurityV1NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
@@ -263,8 +263,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	}
 }`,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockedAccSecurityV1NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
@@ -357,8 +357,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfaces = `
@@ -401,8 +401,8 @@ expectedStatus:
     - ""
 newStatus: PreCreate
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHAListAfterCreate = fmt.Sprintf(`
@@ -439,10 +439,10 @@ expectedStatus:
     - Created
     - Updating
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate = fmt.Sprintf(`
@@ -477,8 +477,8 @@ expectedStatus:
     - Updated
     - Created
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterUpdate = fmt.Sprintf(`
@@ -512,8 +512,8 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE_HA,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_COMPUTE_ZONE_HA,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesAfterCreate = `
@@ -664,8 +664,8 @@ response:
 expectedStatus:
     - Deleted
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHACreate = fmt.Sprintf(`
@@ -870,10 +870,10 @@ response:
 expectedStatus:
     - Updated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHAListAfterInterfaceUpdate = fmt.Sprintf(`
@@ -909,10 +909,10 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
@@ -1324,6 +1324,6 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE_HA,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_COMPUTE_ZONE_HA,
+	OS_COMPUTE_ZONE_HA,
 )

@@ -41,10 +41,10 @@ func TestAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", OS_NOVA_AVAILABLE_ZONE),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", OS_NOVA_AVAILABLE_ZONE_HA),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 			resource.TestStep{
@@ -63,10 +63,10 @@ func TestAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", OS_NOVA_AVAILABLE_ZONE),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", OS_NOVA_AVAILABLE_ZONE_HA),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 		},
@@ -110,10 +110,10 @@ func TestAccSecurityV1NetworkBasedDeviceHA_updateInterface(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", OS_NOVA_AVAILABLE_ZONE),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", OS_NOVA_AVAILABLE_ZONE_HA),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 
 					resource.TestCheckResourceAttrPtr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
@@ -408,8 +408,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet2,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testAccSecurityV1NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
@@ -444,8 +444,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet2,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testAccSecurityV1NetworkBasedDeviceHAIntrfaceUpdate = fmt.Sprintf(`
@@ -545,8 +545,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	testAccSecurityV1NetworkBasedDeviceUserNetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceUserNetworkSubnet2,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testAccSecurityV1NetworkBasedDeviceHAIntrfaceDisconnect = fmt.Sprintf(`
@@ -612,6 +612,6 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	testAccSecurityV1NetworkBasedDeviceUserNetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceUserNetworkSubnet2,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
