@@ -40,7 +40,7 @@ func TestAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", OS_NOVA_AVAILABLE_ZONE),
+						"az_group", OS_DEFAULT_ZONE),
 				),
 			},
 			resource.TestStep{
@@ -59,7 +59,7 @@ func TestAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", OS_NOVA_AVAILABLE_ZONE),
+						"az_group", OS_DEFAULT_ZONE),
 				),
 			},
 		},
@@ -249,7 +249,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testAccSecurityV1NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
@@ -262,7 +262,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 const testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet1 = `
@@ -352,7 +352,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testAccSecurityV1NetworkBasedDeviceSingleUpdateInterface2 = fmt.Sprintf(`
@@ -397,5 +397,5 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceSingleUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )

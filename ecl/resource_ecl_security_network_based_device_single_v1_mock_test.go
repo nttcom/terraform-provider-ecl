@@ -75,7 +75,7 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", OS_NOVA_AVAILABLE_ZONE),
+						"az_group", OS_DEFAULT_ZONE),
 				),
 			},
 			resource.TestStep{
@@ -94,7 +94,7 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", OS_NOVA_AVAILABLE_ZONE),
+						"az_group", OS_DEFAULT_ZONE),
 				),
 			},
 		},
@@ -191,7 +191,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockedAccSecurityV1NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
@@ -204,7 +204,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockedAccSecurityV1NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
@@ -257,7 +257,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedDeviceSingleListBeforeCreate = fmt.Sprintf(`
@@ -280,7 +280,7 @@ expectedStatus:
     - ""
 newStatus: PreCreate
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedDeviceSingleListAfterCreate = fmt.Sprintf(`
@@ -309,8 +309,8 @@ expectedStatus:
     - Created
     - Updating
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfaces = `
@@ -359,8 +359,8 @@ expectedStatus:
     - Updated
     - Created
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterUpdate = fmt.Sprintf(`
@@ -394,8 +394,8 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfacesAfterCreate = `
@@ -466,7 +466,7 @@ response:
 expectedStatus:
     - Deleted
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedDeviceSingleCreate = fmt.Sprintf(`
@@ -663,8 +663,8 @@ response:
 expectedStatus:
     - Updated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedDeviceSingleListAfterInterfaceUpdate = fmt.Sprintf(`
@@ -692,8 +692,8 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
@@ -1105,6 +1105,6 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
