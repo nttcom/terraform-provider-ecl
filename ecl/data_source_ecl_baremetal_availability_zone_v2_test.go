@@ -18,7 +18,7 @@ func TestAccBaremetalV2AvailabilityZoneDataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckBaremetalV2AvailabilityZoneDataSourceID("data.ecl_baremetal_availability_zone_v2.zone_groupa"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_baremetal_availability_zone_v2.zone_groupa", "zone_name", OS_BAREMETAL_AVAILABLE_ZONE),
+						"data.ecl_baremetal_availability_zone_v2.zone_groupa", "zone_name", OS_BAREMETAL_ZONE),
 				),
 			},
 		},
@@ -45,5 +45,5 @@ data "ecl_baremetal_availability_zone_v2" "zone_groupa" {
   zone_name = "%s"
 }
 `,
-	OS_BAREMETAL_AVAILABLE_ZONE,
+	OS_BAREMETAL_ZONE,
 )

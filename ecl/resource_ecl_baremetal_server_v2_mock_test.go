@@ -141,7 +141,7 @@ resource "ecl_baremetal_server_v2" "server_1" {
     }
 }
 `,
-	OS_BAREMETAL_AVAILABLE_ZONE,
+	OS_BAREMETAL_ZONE,
 )
 
 var testMockBaremetalV2ServerCreate = `
@@ -339,7 +339,7 @@ response:
 expectedStatus:
     - Created
 `,
-	OS_BAREMETAL_AVAILABLE_ZONE,
+	OS_BAREMETAL_ZONE,
 )
 
 var testMockBaremetalV2ServerDelete = `
