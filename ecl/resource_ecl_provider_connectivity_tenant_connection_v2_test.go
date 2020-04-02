@@ -389,7 +389,7 @@ resource "ecl_baremetal_server_v2" "server_1" {
     }
 }
 `,
-	OS_BAREMETAL_AVAILABLE_ZONE,
+	OS_BAREMETAL_ZONE,
 )
 
 var attachmentVna = fmt.Sprintf(`
@@ -411,7 +411,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
