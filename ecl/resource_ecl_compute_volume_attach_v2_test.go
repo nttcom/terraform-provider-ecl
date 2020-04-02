@@ -196,8 +196,8 @@ resource "ecl_compute_volume_attach_v2" "va_1" {
 }
 `,
 	testCreateNetworkForAttachTargetInstance,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testAccComputeVolumeV2AttachTimeout = fmt.Sprintf(`
@@ -231,6 +231,6 @@ resource "ecl_compute_volume_attach_v2" "va_1" {
 }
 `,
 	testCreateNetworkForAttachTargetInstance,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
