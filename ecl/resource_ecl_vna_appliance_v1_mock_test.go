@@ -298,7 +298,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -340,7 +340,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -377,7 +377,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -405,7 +405,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -455,7 +455,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -585,7 +585,7 @@ expectedStatus:
     - Created
 newStatus: Updated1
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -696,7 +696,7 @@ expectedStatus:
     - Updated1
 newStatus: Updated2
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -809,7 +809,7 @@ expectedStatus:
     - Created
 newStatus: Updated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID)
 
 var testMockVNAV1ApplianceAllowedAddressPairPatch = fmt.Sprintf(`
@@ -927,7 +927,7 @@ expectedStatus:
 - Created
 newStatus: Updated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1037,7 +1037,7 @@ response:
         }
 newStatus: Created
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1150,7 +1150,7 @@ expectedStatus:
 counter:
     max: 3
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1263,7 +1263,7 @@ expectedStatus:
 counter:
     min: 4
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1389,7 +1389,7 @@ expectedStatus:
 counter:
     max: 3
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1507,7 +1507,7 @@ expectedStatus:
 counter:
     max: 3
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1625,7 +1625,7 @@ expectedStatus:
 counter:
     min: 4
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1737,7 +1737,7 @@ expectedStatus:
 counter:
     max: 3
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1849,7 +1849,7 @@ expectedStatus:
 counter:
     min: 4
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1963,7 +1963,7 @@ expectedStatus:
 counter:
     max: 3
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -2080,7 +2080,7 @@ expectedStatus:
 counter:
     min: 4
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -2201,7 +2201,7 @@ expectedStatus:
 counter:
     max: 3
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -2322,7 +2322,7 @@ expectedStatus:
 counter:
     min: 4
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -2350,7 +2350,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		]
 	}
 }`,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -2460,7 +2460,7 @@ response:
         }
 newStatus: Created
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -2570,7 +2570,7 @@ expectedStatus:
 counter:
     max: 3
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -2680,6 +2680,6 @@ expectedStatus:
 counter:
     min: 4
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )

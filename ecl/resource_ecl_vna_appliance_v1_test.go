@@ -617,7 +617,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -683,7 +683,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair3,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair4,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 var testAccVNAV1ApplianceRemoveFixedIP = fmt.Sprintf(`
@@ -748,7 +748,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair3,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair4,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -791,7 +791,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 	MaxLengthString,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testAccVNAV1ApplianceUpdateMetaBasic2 = fmt.Sprintf(`
@@ -823,7 +823,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -861,7 +861,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 	MaxLengthString,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testAccVNAV1ApplianceUpdateAllowedAddressPairVRRP = fmt.Sprintf(`
@@ -903,7 +903,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -946,7 +946,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -984,7 +984,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1030,7 +1030,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1076,6 +1076,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
