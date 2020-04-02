@@ -167,5 +167,5 @@ resource "ecl_dedicated_hypervisor_server_v1" "server_1" {
     }
 }
 `,
-	OS_BAREMETAL_AVAILABLE_ZONE,
+	OS_BAREMETAL_ZONE,
 )

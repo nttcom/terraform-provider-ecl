@@ -53,7 +53,7 @@ func TestMockedDedicatedHypervisorV1Server_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "admin_pass", "aabbccddeeff"),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "image_ref", "dfd25820-b368-4012-997b-29a6d0cf8518"),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "flavor_ref", "a830b61c-3155-4a61-b7ed-c450862845e6"),
-					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "availability_zone", OS_BAREMETAL_AVAILABLE_ZONE),
+					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "availability_zone", OS_BAREMETAL_ZONE),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "metadata.k1", "v1"),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "metadata.k2", "v2"),
 					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "baremetal_server_id", "24ebe7b8-ecfb-4d9f-a66b-c0120534fc90"),
@@ -89,7 +89,7 @@ resource "ecl_dedicated_hypervisor_server_v1" "server_1" {
     }
 }
 `,
-	OS_BAREMETAL_AVAILABLE_ZONE)
+	OS_BAREMETAL_ZONE)
 
 var testMockDedicatedHypervisorV1ServerCreate = `
 request:
@@ -285,7 +285,7 @@ response:
 expectedStatus:
     - Created
 `,
-	OS_BAREMETAL_AVAILABLE_ZONE,
+	OS_BAREMETAL_ZONE,
 )
 
 var testMockDedicatedHypervisorV1ServerDelete = `
