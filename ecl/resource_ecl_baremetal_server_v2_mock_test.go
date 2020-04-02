@@ -68,7 +68,7 @@ func TestMockedBaremetalV2Server_basic(t *testing.T) {
 	})
 }
 
-const testMockBaremetalV2ServerBasic = `
+var testMockBaremetalV2ServerBasic = fmt.Sprintf(`
 resource "ecl_baremetal_server_v2" "server_1" {
     name = "server1"
     image_id = "image_id"
@@ -76,7 +76,7 @@ resource "ecl_baremetal_server_v2" "server_1" {
     image_name = "image_name"
     flavor_name = "flavor_name"
     user_data = "user_data"
-    availability_zone = "zone1"
+    availability_zone = "%s"
     key_pair = "key_pair"
     admin_pass = "aabbccddeeff"
     metadata = {
@@ -140,7 +140,9 @@ resource "ecl_baremetal_server_v2" "server_1" {
         contents = "ZWNobyAiS3VtYSBQZXJzb25hbGl0eSIgPj4gL2hvbWUvYmlnL3BlcnNvbmFsaXR5"
     }
 }
-`
+`,
+	OS_BAREMETAL_AVAILABLE_ZONE,
+)
 
 var testMockBaremetalV2ServerCreate = `
 request:
