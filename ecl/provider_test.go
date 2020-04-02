@@ -20,9 +20,8 @@ var (
 	OS_COMMON_FUNCTION_POOL_ID               = os.Getenv("OS_COMMON_FUNCTION_POOL_ID")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
-	OS_BAREMETAL_AVAILABLE_ZONE              = os.Getenv("OS_BAREMETAL_AVAILABLE_ZONE")
-	OS_NOVA_AVAILABLE_ZONE                   = os.Getenv("OS_NOVA_AVAILABLE_ZONE")
-	OS_NOVA_AVAILABLE_ZONE_HA                = os.Getenv("OS_NOVA_AVAILABLE_ZONE_HA")
+	OS_BAREMETAL_ZONE                        = os.Getenv("OS_BAREMETAL_ZONE")
+	OS_COMPUTE_ZONE_HA                       = os.Getenv("OS_COMPUTE_ZONE_HA")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
 	OS_QOS_OPTION_ID_100M                    = os.Getenv("OS_QOS_OPTION_ID_100M")
 	OS_QOS_OPTION_ID_10M                     = os.Getenv("OS_QOS_OPTION_ID_10M")
@@ -275,16 +274,16 @@ func testAccPreCheckVNA(t *testing.T) {
 	if OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID == "" {
 		t.Fatal("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID must be set for acceptance tests of virtual network appliance")
 	}
-	if OS_NOVA_AVAILABLE_ZONE == "" {
-		t.Skip("OS_NOVA_AVAILABLE_ZONE must be set for acceptance tests of virtual network appliance")
+	if OS_DEFAULT_ZONE == "" {
+		t.Skip("OS_DEFAULT_ZONE must be set for acceptance tests of virtual network appliance")
 	}
 }
 
 func testAccPreCheckCompute(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 
-	if OS_NOVA_AVAILABLE_ZONE == "" {
-		t.Skip("OS_NOVA_AVAILABLE_ZONE must be set for acceptance tests of compute")
+	if OS_DEFAULT_ZONE == "" {
+		t.Skip("OS_DEFAULT_ZONE must be set for acceptance tests of compute")
 	}
 }
 
@@ -361,11 +360,11 @@ func testAccPreCheckTenantConnection(t *testing.T) {
 	if OS_ACCEPTER_TENANT_ID == "" && OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID == "" {
 		t.Fatal("OS_ACCEPTER_TENANT_ID and OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID must be set for acceptance tests of tenant connection")
 	}
-	if OS_BAREMETAL_AVAILABLE_ZONE == "" {
-		t.Skip("OS_BAREMETAL_AVAILABLE_ZONE must be set for acceptance tests of tenant connection")
+	if OS_BAREMETAL_ZONE == "" {
+		t.Skip("OS_BAREMETAL_ZONE must be set for acceptance tests of tenant connection")
 	}
-	if OS_NOVA_AVAILABLE_ZONE == "" {
-		t.Skip("OS_NOVA_AVAILABLE_ZONE must be set for acceptance tests of tenant connection")
+	if OS_DEFAULT_ZONE == "" {
+		t.Skip("OS_DEFAULT_ZONE must be set for acceptance tests of tenant connection")
 	}
 }
 
@@ -383,8 +382,8 @@ func testAccPreCheckSecurity(t *testing.T) {
 	if OS_TENANT_ID == "" {
 		t.Fatal("OS_TENANT_ID must be set for acceptance tests of security")
 	}
-	if OS_NOVA_AVAILABLE_ZONE == "" || OS_NOVA_AVAILABLE_ZONE_HA == "" {
-		t.Skip("OS_NOVA_AVAILABLE_ZONE and OS_NOVA_AVAILABLE_ZONE_HA must be set for acceptance tests of security")
+	if OS_DEFAULT_ZONE == "" || OS_COMPUTE_ZONE_HA == "" {
+		t.Skip("OS_DEFAULT_ZONE and OS_COMPUTE_ZONE_HA must be set for acceptance tests of security")
 	}
 }
 
@@ -394,16 +393,16 @@ func testAccPreCheckDedicatedHypervisor(t *testing.T) {
 	if OS_DEDICATED_HYPERVISOR_ENVIRONMENT == "" {
 		t.Skip("This environment does not support Dedicated Hypervisor tests. Set OS_DEDICATED_HYPERVISOR_ENVIRONMENT if you want to run Dedicated Hypervisor test")
 	}
-	if OS_BAREMETAL_AVAILABLE_ZONE == "" {
-		t.Skip("OS_BAREMETAL_AVAILABLE_ZONE must be set for acceptance tests of Dedicated Hypervisor")
+	if OS_BAREMETAL_ZONE == "" {
+		t.Skip("OS_BAREMETAL_ZONE must be set for acceptance tests of Dedicated Hypervisor")
 	}
 }
 
 func testAccPreCheckBaremetal(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 
-	if OS_BAREMETAL_AVAILABLE_ZONE == "" {
-		t.Skip("OS_BAREMETAL_AVAILABLE_ZONE must be set for acceptance tests of baremetal")
+	if OS_BAREMETAL_ZONE == "" {
+		t.Skip("OS_BAREMETAL_ZONE must be set for acceptance tests of baremetal")
 	}
 }
 
