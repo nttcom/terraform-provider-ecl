@@ -65,7 +65,7 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", OS_NOVA_AVAILABLE_ZONE),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", OS_DEFAULT_ZONE),
 				),
 			},
 			resource.TestStep{
@@ -80,7 +80,7 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_waf_single_v1.waf_1", "license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", OS_NOVA_AVAILABLE_ZONE),
+						"ecl_security_network_based_waf_single_v1.waf_1", "az_group", OS_DEFAULT_ZONE),
 				),
 			},
 		},
@@ -176,7 +176,7 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockedAccSecurityV1NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
@@ -188,7 +188,7 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockedAccSecurityV1NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
@@ -211,7 +211,7 @@ resource "ecl_security_network_based_waf_single_v1" "waf_1" {
 }
 `,
 	OS_TENANT_ID,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedWAFSingleListBeforeCreate = fmt.Sprintf(`
@@ -234,7 +234,7 @@ expectedStatus:
     - ""
 newStatus: PreCreate
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedWAFSingleListAfterCreate = fmt.Sprintf(`
@@ -263,8 +263,8 @@ expectedStatus:
     - Created
     - Updating
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedWAFSingleListDevicesAfterCreate = fmt.Sprintf(`
@@ -299,8 +299,8 @@ expectedStatus:
     - Updated
     - Created
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedWAFSingleListDevicesAfterUpdate = fmt.Sprintf(`
@@ -334,8 +334,8 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedWAFSingleListDeviceInterfacesAfterCreate = `
@@ -396,7 +396,7 @@ response:
 expectedStatus:
     - Deleted
 `,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedWAFSingleCreate = fmt.Sprintf(`
@@ -593,8 +593,8 @@ response:
 expectedStatus:
     - Updated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedWAFSingleListAfterInterfaceUpdate = fmt.Sprintf(`
@@ -622,8 +622,8 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockSecurityV1NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
@@ -1035,6 +1035,6 @@ response:
 expectedStatus:
     - InterfaceIsUpdated
 `,
-	OS_NOVA_AVAILABLE_ZONE,
-	OS_NOVA_AVAILABLE_ZONE,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
 )
