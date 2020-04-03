@@ -10,7 +10,7 @@ import (
 
 func TestAccBaremetalV2AvailabilityZoneDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckBaremetal(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
@@ -18,7 +18,7 @@ func TestAccBaremetalV2AvailabilityZoneDataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckBaremetalV2AvailabilityZoneDataSourceID("data.ecl_baremetal_availability_zone_v2.zone_groupa"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_baremetal_availability_zone_v2.zone_groupa", "zone_name", "groupa"),
+						"data.ecl_baremetal_availability_zone_v2.zone_groupa", "zone_name", OS_BAREMETAL_ZONE),
 				),
 			},
 		},
@@ -40,8 +40,10 @@ func testAccCheckBaremetalV2AvailabilityZoneDataSourceID(n string) resource.Test
 	}
 }
 
-const testAccBaremetalV2AvailabilityZoneDataSourceBasic = `
+var testAccBaremetalV2AvailabilityZoneDataSourceBasic = fmt.Sprintf(`
 data "ecl_baremetal_availability_zone_v2" "zone_groupa" {
-  zone_name = "groupa"
+  zone_name = "%s"
 }
-`
+`,
+	OS_BAREMETAL_ZONE,
+)

@@ -17,7 +17,7 @@ func TestAccComputeVolumeV2Attach_basic(t *testing.T) {
 	var va volumes.Attachment
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCompute(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckComputeVolumeV2AttachDestroy,
 		Steps: []resource.TestStep{
@@ -35,7 +35,7 @@ func TestAccComputeVolumeV2Attach_timeout(t *testing.T) {
 	var va volumes.Attachment
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCompute(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckComputeVolumeV2AttachDestroy,
 		Steps: []resource.TestStep{
@@ -180,13 +180,13 @@ resource "ecl_compute_instance_v2" "instance_1" {
     uuid = "${ecl_network_network_v2.network_1.id}"
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
-  availability_zone = "zone1-groupb"
+  availability_zone = "%s"
 }
 
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   size = 15
-  availability_zone = "zone1-groupb"
+  availability_zone = "%s"
 }
 
 resource "ecl_compute_volume_attach_v2" "va_1" {
@@ -194,7 +194,11 @@ resource "ecl_compute_volume_attach_v2" "va_1" {
   server_id = "${ecl_compute_instance_v2.instance_1.id}"
   device = "/dev/vdb"
 }
-`, testCreateNetworkForAttachTargetInstance)
+`,
+	testCreateNetworkForAttachTargetInstance,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+)
 
 var testAccComputeVolumeV2AttachTimeout = fmt.Sprintf(`
 %s
@@ -207,13 +211,13 @@ resource "ecl_compute_instance_v2" "instance_1" {
     uuid = "${ecl_network_network_v2.network_1.id}"
   }
   depends_on = ["ecl_network_subnet_v2.subnet_1"]
-  availability_zone = "zone1-groupb"
+  availability_zone = "%s"
 }
 
 resource "ecl_compute_volume_v2" "volume_1" {
   name = "volume_1"
   size = 15
-  availability_zone = "zone1-groupb"
+  availability_zone = "%s"
 }
 
 resource "ecl_compute_volume_attach_v2" "va_1" {
@@ -225,4 +229,8 @@ resource "ecl_compute_volume_attach_v2" "va_1" {
     create = "5m"
   }
 }
-`, testCreateNetworkForAttachTargetInstance)
+`,
+	testCreateNetworkForAttachTargetInstance,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+)

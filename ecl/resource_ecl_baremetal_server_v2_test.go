@@ -17,7 +17,7 @@ func TestAccBaremetalV2Server_basic(t *testing.T) {
 	var server servers.Server
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckBaremetal(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckBaremetalV2ServerDestroy,
 		Steps: []resource.TestStep{
@@ -84,7 +84,7 @@ func testAccCheckBaremetalV2ServerExists(n string, server *servers.Server) resou
 	}
 }
 
-const testAccBaremetalV2ServerBasic = `
+var testAccBaremetalV2ServerBasic = fmt.Sprintf(`
 data "ecl_imagestorages_image_v2" "centos" {
     name = "CentOS-7.3-1611_64_baremetal-server_01"
 }
@@ -94,7 +94,7 @@ data "ecl_baremetal_flavor_v2" "gp2" {
 }
 
 data "ecl_baremetal_availability_zone_v2" "groupa" {
-    zone_name = "groupa"
+    zone_name = "%s"
 }
 
 resource "ecl_network_network_v2" "network_1" {
@@ -181,4 +181,6 @@ resource "ecl_baremetal_server_v2" "server_1" {
         contents = "ZWNobyAiS3VtYSBQZXJzb25hbGl0eSIgPj4gL2hvbWUvYmlnL3BlcnNvbmFsaXR5"
     }
 }
-`
+`,
+	OS_BAREMETAL_ZONE,
+)

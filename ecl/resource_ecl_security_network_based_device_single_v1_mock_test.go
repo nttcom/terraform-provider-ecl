@@ -75,7 +75,7 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", "zone1-groupb"),
+						"az_group", OS_DEFAULT_ZONE),
 				),
 			},
 			resource.TestStep{
@@ -94,7 +94,7 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_single_v1.device_1",
-						"az_group", "zone1-groupb"),
+						"az_group", OS_DEFAULT_ZONE),
 				),
 			},
 		},
@@ -187,10 +187,11 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	locale = "ja"
 	operating_mode = "FW"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 }
 `,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockedAccSecurityV1NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
@@ -199,10 +200,11 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	locale = "en"
 	operating_mode = "UTM"
 	license_kind = "08"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 }
 `,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
 )
 
 var testMockedAccSecurityV1NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
@@ -212,7 +214,7 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 	locale = "ja"
 	operating_mode = "FW"
 	license_kind = "02"
-	az_group = "zone1-groupb"
+	az_group = "%s"
 
   port {
       enable = "true"
@@ -255,9 +257,10 @@ resource "ecl_security_network_based_device_single_v1" "device_1" {
 }
 `,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV1NetworkBasedDeviceSingleListBeforeCreate = `
+var testMockSecurityV1NetworkBasedDeviceSingleListBeforeCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -270,15 +273,17 @@ response:
             "records": 1,
             "rows": [{
             	"id": 1,
-            	"cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+            	"cell": ["false", "1", "CES11810", "FW", "02", "standalone", "%s", "jp4_zone1"]
             }]
         }
 expectedStatus:
     - ""
 newStatus: PreCreate
-`
+`,
+	OS_DEFAULT_ZONE,
+)
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceSingleListAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -292,18 +297,21 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "FW", "02", "standalone", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - Created
     - Updating
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+)
 
 var testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfaces = `
 request:
@@ -319,7 +327,7 @@ expectedStatus:
     - Created
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -331,7 +339,7 @@ response:
               "msa_device_id": "CES11810",
               "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
               "os_server_name": "UTM-CES11878",
-              "os_availability_zone": "zone1-groupb",
+              "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
               "msa_device_type": "FW",
               "os_server_status": "ACTIVE"
@@ -340,7 +348,7 @@ response:
               "msa_device_id": "CES11811",
               "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
               "os_server_name": "WAF-CES11816",
-              "os_availability_zone": "zone1-groupb",
+              "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
               "msa_device_type": "WAF",
               "os_server_status": "ACTIVE"
@@ -350,9 +358,12 @@ response:
 expectedStatus:
     - Updated
     - Created
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+)
 
-var testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -364,7 +375,7 @@ response:
                 "msa_device_id": "CES11810",
                 "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
                 "os_server_name": "UTM-CES11878",
-                "os_availability_zone": "zone1-groupb",
+                "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
                 "msa_device_type": "FW",
                 "os_server_status": "ACTIVE"
@@ -373,7 +384,7 @@ response:
                 "msa_device_id": "CES11811",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
                 "os_server_name": "WAF-CES11816",
-                "os_availability_zone": "zone1-groupb",
+                "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
                 "msa_device_type": "WAF",
                 "os_server_status": "ACTIVE"
@@ -382,7 +393,10 @@ response:
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+)
 
 var testMockSecurityV1NetworkBasedDeviceSingleListDeviceInterfacesAfterCreate = `
 request:
@@ -433,7 +447,7 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterDelete = `
+var testMockSecurityV1NetworkBasedDeviceSingleListAfterDelete = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -446,12 +460,14 @@ response:
             "records": 1,
             "rows": [{
                 "id": 1,
-                "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "%s", "jp4_zone1"]
             }]
         }
 expectedStatus:
     - Deleted
-`
+`,
+	OS_DEFAULT_ZONE,
+)
 
 var testMockSecurityV1NetworkBasedDeviceSingleCreate = fmt.Sprintf(`
 request:
@@ -622,7 +638,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceSingleListAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -636,19 +652,22 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "UTM", "08", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "UTM", "08", "standalone", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - Updated
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+)
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterInterfaceUpdate = `
+var testMockSecurityV1NetworkBasedDeviceSingleListAfterInterfaceUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -662,17 +681,20 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "FW", "02", "standalone", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+)
 
 var testMockSecurityV1NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
 request:
@@ -1058,7 +1080,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedDeviceSingleListAfterUpdateInterface = `
+var testMockSecurityV1NetworkBasedDeviceSingleListAfterUpdateInterface = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1072,14 +1094,17 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11810", "FW", "02", "standalone", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES11811", "UTM", "08", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES11811", "UTM", "08", "standalone", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_DEFAULT_ZONE,
+)

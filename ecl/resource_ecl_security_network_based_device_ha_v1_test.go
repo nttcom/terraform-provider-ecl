@@ -41,10 +41,10 @@ func TestAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", "zone1-groupa"),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", "zone1-groupb"),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 			resource.TestStep{
@@ -63,10 +63,10 @@ func TestAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", "zone1-groupa"),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", "zone1-groupb"),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 		},
@@ -110,10 +110,10 @@ func TestAccSecurityV1NetworkBasedDeviceHA_updateInterface(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", "zone1-groupa"),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", "zone1-groupb"),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 
 					resource.TestCheckResourceAttrPtr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
@@ -386,8 +386,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	operating_mode = "FW_HA"
 	license_kind = "02"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
+	host_1_az_group = "%s"
+	host_2_az_group = "%s"
   
 	ha_link_1 {
 		network_id = "${ecl_network_network_v2.network_1.id}"
@@ -408,6 +408,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet2,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testAccSecurityV1NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
@@ -420,8 +422,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	operating_mode = "UTM_HA"
 	license_kind = "08"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
+	host_1_az_group = "%s"
+	host_2_az_group = "%s"
   
 	ha_link_1 {
 		network_id = "${ecl_network_network_v2.network_1.id}"
@@ -442,6 +444,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceHANetworkSubnet2,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testAccSecurityV1NetworkBasedDeviceHAIntrfaceUpdate = fmt.Sprintf(`
@@ -456,8 +460,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	operating_mode = "FW_HA"
 	license_kind = "02"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
+	host_1_az_group = "%s"
+	host_2_az_group = "%s"
   
 	ha_link_1 {
 		network_id = "${ecl_network_network_v2.network_1.id}"
@@ -541,6 +545,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	testAccSecurityV1NetworkBasedDeviceUserNetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceUserNetworkSubnet2,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testAccSecurityV1NetworkBasedDeviceHAIntrfaceDisconnect = fmt.Sprintf(`
@@ -555,8 +561,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	operating_mode = "FW_HA"
 	license_kind = "02"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
+	host_1_az_group = "%s"
+	host_2_az_group = "%s"
   
 	ha_link_1 {
 		network_id = "${ecl_network_network_v2.network_1.id}"
@@ -606,4 +612,6 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	testAccSecurityV1NetworkBasedDeviceUserNetworkSubnet1,
 	testAccSecurityV1NetworkBasedDeviceUserNetworkSubnet2,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )

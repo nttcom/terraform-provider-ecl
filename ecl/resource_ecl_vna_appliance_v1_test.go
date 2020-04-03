@@ -592,7 +592,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
@@ -617,6 +617,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -630,7 +631,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = [
@@ -682,6 +683,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair3,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair4,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 var testAccVNAV1ApplianceRemoveFixedIP = fmt.Sprintf(`
@@ -694,7 +696,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = [
@@ -746,6 +748,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair3,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair4,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -756,7 +759,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "%[3]s"
 	description = "%[3]s"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%[4]s"
 	virtual_network_appliance_plan_id = "%[2]s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
@@ -788,6 +791,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 	MaxLengthString,
+	OS_DEFAULT_ZONE,
 )
 
 var testAccVNAV1ApplianceUpdateMetaBasic2 = fmt.Sprintf(`
@@ -797,7 +801,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = ""
 	description = ""
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
@@ -819,6 +823,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -829,7 +834,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "%[3]s"
 	description = "%[3]s"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%[4]s"
 	virtual_network_appliance_plan_id = "%[2]s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
@@ -856,6 +861,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 	MaxLengthString,
+	OS_DEFAULT_ZONE,
 )
 
 var testAccVNAV1ApplianceUpdateAllowedAddressPairVRRP = fmt.Sprintf(`
@@ -865,7 +871,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
@@ -897,6 +903,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -907,7 +914,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
@@ -939,6 +946,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -949,7 +957,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
@@ -976,6 +984,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -987,7 +996,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = [
@@ -1021,6 +1030,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
 
@@ -1032,7 +1042,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
 	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
+	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = [
@@ -1066,5 +1076,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
+	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )

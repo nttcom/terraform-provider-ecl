@@ -34,7 +34,7 @@ func TestMockedBaremetalV2Server_basic(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckBaremetal(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckBaremetalV2ServerDestroy,
 		Steps: []resource.TestStep{
@@ -68,7 +68,7 @@ func TestMockedBaremetalV2Server_basic(t *testing.T) {
 	})
 }
 
-const testMockBaremetalV2ServerBasic = `
+var testMockBaremetalV2ServerBasic = fmt.Sprintf(`
 resource "ecl_baremetal_server_v2" "server_1" {
     name = "server1"
     image_id = "image_id"
@@ -76,7 +76,7 @@ resource "ecl_baremetal_server_v2" "server_1" {
     image_name = "image_name"
     flavor_name = "flavor_name"
     user_data = "user_data"
-    availability_zone = "zone1"
+    availability_zone = "%s"
     key_pair = "key_pair"
     admin_pass = "aabbccddeeff"
     metadata = {
@@ -140,7 +140,9 @@ resource "ecl_baremetal_server_v2" "server_1" {
         contents = "ZWNobyAiS3VtYSBQZXJzb25hbGl0eSIgPj4gL2hvbWUvYmlnL3BlcnNvbmFsaXR5"
     }
 }
-`
+`,
+	OS_BAREMETAL_ZONE,
+)
 
 var testMockBaremetalV2ServerCreate = `
 request:
@@ -167,7 +169,7 @@ response:
 newStatus: Created
 `
 
-var testMockBaremetalV2ServerGetAfterCreate = `
+var testMockBaremetalV2ServerGetAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -178,7 +180,7 @@ response:
             "OS-EXT-STS:power_state": "RUNNING",
             "OS-EXT-STS:task_state": "None",
             "OS-EXT-STS:vm_state": "ACTIVE",
-            "OS-EXT-AZ:availability_zone": "zone1-groupa",
+            "OS-EXT-AZ:availability_zone": "%s",
             "created": "2012-09-07T16:56:37Z",
             "flavor": {
                 "id": "05184ba3-00ba-4fbc-b7a2-03b62b884931",
@@ -336,7 +338,9 @@ response:
         }
 expectedStatus:
     - Created
-`
+`,
+	OS_BAREMETAL_ZONE,
+)
 
 var testMockBaremetalV2ServerDelete = `
 request:

@@ -18,7 +18,6 @@ const SoIDOfDeleteHA = "FGHA_F2349100C7D24EF3ACD6B9A9F91FD220"
 const ProcessIDOfUpdateInterfaceHA = 85385
 
 const expectedNewHADeviceHostName1 = "CES12085"
-const expectedNewHADeviceHostName2 = "CES12086"
 const expectedNewHADeviceUUID1 = "12768064-e7c9-44d1-b01d-e66f138a278e"
 const expectedNewHADeviceUUID2 = "12768064-e7c9-44d1-b01d-e66f138a278f"
 
@@ -79,10 +78,10 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", "zone1-groupa"),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", "zone1-groupb"),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 			resource.TestStep{
@@ -101,10 +100,10 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_1_az_group", "zone1-groupa"),
+						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
 						"ecl_security_network_based_device_ha_v1.ha_1",
-						"host_2_az_group", "zone1-groupb"),
+						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 		},
@@ -216,8 +215,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	operating_mode = "FW_HA"
 	license_kind = "02"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
+	host_1_az_group = "%s"
+	host_2_az_group = "%s"
 
 	ha_link_1 {
 		network_id = "DummyNetwork1"
@@ -235,6 +234,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 }
 `,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockedAccSecurityV1NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
@@ -244,8 +245,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	operating_mode = "UTM_HA"
 	license_kind = "08"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
+	host_1_az_group = "%s"
+	host_2_az_group = "%s"
 
 	ha_link_1 {
 		network_id = "DummyNetwork1"
@@ -262,6 +263,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	}
 }`,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockedAccSecurityV1NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
@@ -272,8 +275,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 	operating_mode = "FW_HA"
 	license_kind = "02"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
+	host_1_az_group = "%s"
+	host_2_az_group = "%s"
 
 	ha_link_1 {
 		network_id = "DummyNetwork1"
@@ -354,6 +357,8 @@ resource "ecl_security_network_based_device_ha_v1" "ha_1" {
 }
 `,
 	OS_TENANT_ID,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
 )
 
 var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfaces = `
@@ -370,7 +375,7 @@ expectedStatus:
     - Created
 `
 
-var testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -383,11 +388,11 @@ response:
             "records": 1,
             "rows": [
                 {
-                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
                     "id": 1
                 }, 
                 {
-                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
                     "id": 2
                 }
             ]
@@ -395,9 +400,12 @@ response:
 expectedStatus:
     - ""
 newStatus: PreCreate
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+)
 
-var testMockSecurityV1NetworkBasedDeviceHAListAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -410,19 +418,19 @@ response:
             "records": 1,
             "rows": [
                 {
-                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
                     "id": 1
                 }, 
                 {
-                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
                     "id": 2
                 },
                 {
-                    "cell": ["false", "1", "1902F60E", "CES12085", "FW_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
+                    "cell": ["false", "1", "1902F60E", "CES12085", "FW_HA", "02", "ha", "%s", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
                     "id": 3
                 }, 
                 {
-                    "cell": ["false", "2", "1902F60E", "CES12086", "FW_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
+                    "cell": ["false", "2", "1902F60E", "CES12086", "FW_HA", "02", "ha", "%s", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
                     "id": 4
                 }
             ]
@@ -430,9 +438,14 @@ response:
 expectedStatus:
     - Created
     - Updating
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+)
 
-var testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate = `
+var testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -444,7 +457,7 @@ response:
                 "msa_device_id": "CES12085",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
                 "os_server_name": "UTM-CES11878",
-                "os_availability_zone": "zone1-groupb",
+                "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
                 "msa_device_type": "FW",
                 "os_server_status": "ACTIVE"
@@ -453,7 +466,7 @@ response:
                 "msa_device_id": "CES12086",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278f",
                 "os_server_name": "WAF-CES11816",
-                "os_availability_zone": "zone1-groupb",
+                "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
                 "msa_device_type": "WAF",
                 "os_server_status": "ACTIVE"
@@ -463,9 +476,12 @@ response:
 expectedStatus:
     - Updated
     - Created
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+)
 
-var testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAListDevicesAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -477,7 +493,7 @@ response:
                 "msa_device_id": "CES12085",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
                 "os_server_name": "UTM-CES11878",
-                "os_availability_zone": "zone1-groupb",
+                "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
                 "msa_device_type": "FW",
                 "os_server_status": "ACTIVE"
@@ -486,7 +502,7 @@ response:
                 "msa_device_id": "CES12086",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278f",
                 "os_server_name": "WAF-CES11816",
-                "os_availability_zone": "zone1-groupb",
+                "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
                 "msa_device_type": "WAF",
                 "os_server_status": "ACTIVE"
@@ -495,7 +511,10 @@ response:
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_COMPUTE_ZONE_HA,
+	OS_COMPUTE_ZONE_HA,
+)
 
 var testMockSecurityV1NetworkBasedDeviceHAListDeviceInterfacesAfterCreate = `
 request:
@@ -620,7 +639,7 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV1NetworkBasedDeviceHAListAfterDelete = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterDelete = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -633,18 +652,21 @@ response:
             "records": 1,
             "rows": [
                 {
-                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
                     "id": 1
                 }, 
                 {
-                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
                     "id": 2
                 }
             ]
         }
 expectedStatus:
     - Deleted
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+)
 
 var testMockSecurityV1NetworkBasedDeviceHACreate = fmt.Sprintf(`
 request:
@@ -815,7 +837,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedDeviceHAListAfterUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -828,28 +850,33 @@ response:
             "records": 4,
             "rows": [
                 {
-                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
                     "id": 1
                 }, 
                 {
-                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
                     "id": 2
                 },
                 {
-                    "cell": ["false", "1", "1902F60E", "CES12085", "UTM_HA", "08", "ha", "zone1-groupa", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
+                    "cell": ["false", "1", "1902F60E", "CES12085", "UTM_HA", "08", "ha", "%s", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
                     "id": 3
                 }, 
                 {
-                    "cell": ["false", "2", "1902F60E", "CES12086", "UTM_HA", "08", "ha", "zone1-groupb", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
+                    "cell": ["false", "2", "1902F60E", "CES12086", "UTM_HA", "08", "ha", "%s", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
                     "id": 4
                 }
             ]
         }
 expectedStatus:
     - Updated
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+)
 
-var testMockSecurityV1NetworkBasedDeviceHAListAfterInterfaceUpdate = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterInterfaceUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -862,26 +889,31 @@ response:
             "records": 2,
             "rows": [
                 {
-                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
+                    "cell": ["false", "1", "1902F60E", "CES12083", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.3", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.3"],
                     "id": 1
                 }, 
                 {
-                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
+                    "cell": ["false", "2", "1902F60E", "CES12084", "UTM_HA", "02", "ha", "%s", "jp4_zone1", "56a5f5b0-dceb-47d9-8e75-8e16dc08d83f", "6b3ee9c8-0f28-41ff-a443-a3122cf89f1f", "192.168.1.4", "bfb4dcb7-f8fd-4ae8-9023-9c648e56b455", "085ea95a-a04b-4eb4-bdfc-124445fb5cec", "192.168.2.4"],
                     "id": 2
                 },
                 {
-                    "cell": ["false", "1", "1902F60E", "CES12085", "FW_HA", "02", "ha", "zone1-groupa", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
+                    "cell": ["false", "1", "1902F60E", "CES12085", "FW_HA", "02", "ha", "%s", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.3", "dummyNetworkID2", "dummySubnetID2", "192.168.2.3"],
                     "id": 3
                 }, 
                 {
-                    "cell": ["false", "2", "1902F60E", "CES12086", "FW_HA", "02", "ha", "zone1-groupb", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
+                    "cell": ["false", "2", "1902F60E", "CES12086", "FW_HA", "02", "ha", "%s", "jp4_zone1", "dummyNetworkID1", "dummySubnetID1", "192.168.1.4", "dummyNetworkID2", "dummySubnetID2", "192.168.2.4"],
                     "id": 4
                 }
             ]
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+	OS_DEFAULT_ZONE,
+	OS_COMPUTE_ZONE_HA,
+)
 
 var testMockSecurityV1NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
 request:
@@ -1267,7 +1299,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV1NetworkBasedDeviceHAListAfterUpdateInterface = `
+var testMockSecurityV1NetworkBasedDeviceHAListAfterUpdateInterface = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -1281,14 +1313,17 @@ response:
             "rows": [
                 {
                     "id": 1,
-                    "cell": ["false", "1", "CES777", "FW", "02", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES777", "FW", "02", "standalone", "%s", "jp4_zone1"]
                 },
                 {
                     "id": 2,
-                    "cell": ["false", "1", "CES888", "UTM", "08", "standalone", "zone1-groupb", "jp4_zone1"]
+                    "cell": ["false", "1", "CES888", "UTM", "08", "standalone", "%s", "jp4_zone1"]
                 }
             ]
         }
 expectedStatus:
     - InterfaceIsUpdated
-`
+`,
+	OS_COMPUTE_ZONE_HA,
+	OS_COMPUTE_ZONE_HA,
+)
