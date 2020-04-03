@@ -162,7 +162,7 @@ func TestAccProviderConnectivityV2TenantConnection_multipleListAttachmentOpts(t 
 			},
 			resource.TestStep{
 				Config:      testAccProviderConnectivityV2TenantConnectionAttachmentOptsBaremetalMultipleList,
-				ExpectError: regexp.MustCompile("Too many attachment_opts_baremetal blocks: No more than 1 \"attachment_opts_barematal\" blocks are allowed"),
+				ExpectError: regexp.MustCompile("Too many attachment_opts_baremetal blocks: No more than 1 \"attachment_opts_baremetal\" blocks are allowed"),
 			},
 			resource.TestStep{
 				Config:      testAccProviderConnectivityV2TenantConnectionAttachmentOptsVnaMultipleList,
