@@ -183,8 +183,9 @@ func TestAccProviderConnectivityV2TenantConnection_NotSpecifyDeviceInterfaceID(t
 		Steps: []resource.TestStep{
 			resource.TestStep{
 				Config: testAccProviderConnectivityV2TenantConnectionAttachmentBaremetalNotSpecifyDeviceInterfaceID,
-				ExpectError: regexp.MustCompile("device_type is For ECL::Baremetal::Server or ECL::VirtualNetworkAppliance::VSRX, " +
-					"device_interface_id is required"),
+				ExpectError: regexp.MustCompile(
+					"device_interface_id is required if device_type is ECL::Baremetal::Server or ECL::VirtualNetworkAppliance::VSRX",
+				),
 			},
 		},
 	})
@@ -195,8 +196,9 @@ func TestAccProviderConnectivityV2TenantConnection_NotSpecifyDeviceInterfaceID(t
 		Steps: []resource.TestStep{
 			resource.TestStep{
 				Config: testAccProviderConnectivityV2TenantConnectionAttachmentVnaNotSpecifyDeviceInterfaceID,
-				ExpectError: regexp.MustCompile("device_type is For ECL::Baremetal::Server or ECL::VirtualNetworkAppliance::VSRX, " +
-					"device_interface_id is required"),
+				ExpectError: regexp.MustCompile(
+					"device_interface_id is required if device_type is ECL::Baremetal::Server or ECL::VirtualNetworkAppliance::VSRX",
+				),
 			},
 		},
 	})
