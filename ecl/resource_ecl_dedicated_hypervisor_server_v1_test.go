@@ -42,8 +42,6 @@ func TestAccDedicatedHypervisorV1Server_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("ecl_dedicated_hypervisor_server_v1.server_1", "image_ref"),
 					resource.TestCheckResourceAttrSet("ecl_dedicated_hypervisor_server_v1.server_1", "flavor_ref"),
 					resource.TestCheckResourceAttrSet("ecl_dedicated_hypervisor_server_v1.server_1", "availability_zone"),
-					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "metadata.k1", "v1"),
-					resource.TestCheckResourceAttr("ecl_dedicated_hypervisor_server_v1.server_1", "metadata.k2", "v2"),
 					resource.TestCheckResourceAttrSet("ecl_dedicated_hypervisor_server_v1.server_1", "baremetal_server_id"),
 				),
 			},
@@ -71,7 +69,7 @@ func testAccCheckDedicatedHypervisorV1ServerDestroy(s *terraform.State) error {
 			return fmt.Errorf("error getting ECL Dedicated Hypervisor server: %s", err)
 		}
 
-		return fmt.Errorf("license still exists")
+		return fmt.Errorf("server still exists")
 	}
 
 	return nil
@@ -109,9 +107,12 @@ func testAccCheckDedicatedHypervisorV1ServerExists(n string, server *servers.Ser
 	}
 }
 
+// Metadata cannot be configured by Dedicated Hypervisor API bug.
+// So metadata field gets removed temporarily.
+// https://ecl.ntt.com/known-issues/dh-metadata-issue/
 var testAccDedicatedHypervisorV1ServerBasic = fmt.Sprintf(`
-data "ecl_baremetal_flavor_v2" "gp1" {
-    name = "General Purpose 1 v2"
+data "ecl_baremetal_flavor_v2" "gp2" {
+    name = "General Purpose 2 v1"
 }
 
 data "ecl_imagestorages_image_v2" "esxi" {
@@ -159,12 +160,8 @@ resource "ecl_dedicated_hypervisor_server_v1" "server_1" {
     }
     admin_pass = "aabbccddeeff"
     image_ref = "${data.ecl_imagestorages_image_v2.esxi.id}"
-    flavor_ref = "${data.ecl_baremetal_flavor_v2.gp1.id}"
+    flavor_ref = "${data.ecl_baremetal_flavor_v2.gp2.id}"
     availability_zone = "${data.ecl_baremetal_availability_zone_v2.groupa.zone_name}"
-    metadata = {
-        k1 = "v1"
-        k2 = "v2"
-    }
 }
 `,
 	OS_BAREMETAL_ZONE,
