@@ -85,6 +85,12 @@ func resourceComputeInstanceV2() *schema.Resource {
 					}
 				},
 			},
+			"config_drive": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+				Default:  false,
+			},
 			"availability_zone": &schema.Schema{
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -271,6 +277,8 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 	// Build a []servers.Network to pass into the create options.
 	networks := expandInstanceNetworks(allInstanceNetworks)
 
+	configDrive := d.Get("config_drive").(bool)
+
 	createOpts = &servers.CreateOpts{
 		Name:             d.Get("name").(string),
 		ImageRef:         imageID,
@@ -279,6 +287,7 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 		Networks:         networks,
 		Metadata:         resourceInstanceMetadataV2(d),
 		UserData:         []byte(d.Get("user_data").(string)),
+		ConfigDrive:      &configDrive,
 	}
 
 	if keyName, ok := d.Get("key_pair").(string); ok && keyName != "" {
