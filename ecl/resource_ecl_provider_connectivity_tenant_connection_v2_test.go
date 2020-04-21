@@ -398,7 +398,6 @@ var attachmentVna = fmt.Sprintf(`
 resource "ecl_vna_appliance_v1" "appliance_1" {
 	name = "appliance_1"
 	description = "appliance_1_description"
-	default_gateway = "192.168.2.1"
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
@@ -547,7 +546,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
 	device_type = "ECL::Baremetal::Server"
 	device_id = "${ecl_baremetal_server_v2.server_1.id}"
-	device_interface_id = "${ecl_baremetal_server_v2.server_1.nic_physical_ports.1.network_physical_port_id}"
+	device_interface_id = "${ecl_baremetal_server_v2.server_1.nic_physical_ports.3.network_physical_port_id}"
 	attachment_opts_baremetal {
 		segmentation_type = "flat"
 		segmentation_id = 10
@@ -570,7 +569,10 @@ var testAccProviderConnectivityV2TenantConnectionAttachmentVna = fmt.Sprintf(`
 %s
 
 resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
-	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+	depends_on = [
+		"ecl_network_subnet_v2.subnet_1",
+		"ecl_vna_appliance_v1.appliance_1"
+	]
 	tenant_id_other = "%s"
 	network_id = "${ecl_network_network_v2.network_1.id}"
 	name = "test_name1"
@@ -587,10 +589,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 }
 
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
-	depends_on = [
-			"ecl_vna_appliance_v1.appliance_1",
-			"ecl_sss_approval_request_v1.approval_1"
-		]
+	depends_on = ["ecl_sss_approval_request_v1.approval_1"]
 	name = "test_name1"
 	description = "test_desc1"
 	tags = {
