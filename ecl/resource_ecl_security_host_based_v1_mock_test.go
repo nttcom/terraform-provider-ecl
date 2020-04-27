@@ -240,7 +240,7 @@ response:
             "service_order_service": "Managed Anti-Virus",
             "max_agent_value": 1,
             "time_zone": "Asia/Tokyo",
-            "mailaddress": "terraform@ntt.com",
+            "mailaddress": "hoge@example.com",
             "dsm_lang": "ja",
             "tenant_flg": true
         }
@@ -265,7 +265,7 @@ response:
             "service_order_service": "Managed Virtual Patch",
             "max_agent_value": 1,
             "time_zone": "Asia/Tokyo",
-            "mailaddress": "terraform@ntt.com",
+            "mailaddress": "hoge@example.com",
             "dsm_lang": "ja",
             "tenant_flg": true
         }
@@ -290,7 +290,7 @@ response:
             "service_order_service": "Managed Virtual Patch",
             "max_agent_value": 2,
             "time_zone": "Asia/Tokyo",
-            "mailaddress": "terraform@ntt.com",
+            "mailaddress": "hoge@example.com",
             "dsm_lang": "ja",
             "tenant_flg": true
         }
