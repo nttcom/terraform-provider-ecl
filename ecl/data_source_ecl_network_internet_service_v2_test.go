@@ -9,6 +9,10 @@ import (
 )
 
 func TestAccNetworkV2InternetServiceDataSource_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckInternetService(t) },
 		Providers: testAccProviders,
@@ -26,6 +30,10 @@ func TestAccNetworkV2InternetServiceDataSource_basic(t *testing.T) {
 }
 
 func TestAccNetworkV2InternetServiceDataSource_queries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckInternetService(t) },
 		Providers: testAccProviders,

@@ -22,16 +22,12 @@ const expectedNewHADeviceUUID1 = "12768064-e7c9-44d1-b01d-e66f138a278e"
 const expectedNewHADeviceUUID2 = "12768064-e7c9-44d1-b01d-e66f138a278f"
 
 func TestMockedAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var hd1, hd2 security.HADevice
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	// TODO
@@ -111,16 +107,12 @@ func TestMockedAccSecurityV1NetworkBasedDeviceHA_basic(t *testing.T) {
 }
 
 func TestMockedAccSecurityV1NetworkBasedDeviceHAUpdateInterface(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var hd1, hd2 security.HADevice
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV1NetworkBasedDeviceHAListBeforeCreate)

@@ -9,14 +9,10 @@ import (
 )
 
 func TestMockedAccNetworkV2InternetServiceDataSource_basic(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
 	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
 
@@ -39,14 +35,10 @@ func TestMockedAccNetworkV2InternetServiceDataSource_basic(t *testing.T) {
 }
 
 func TestMockedAccNetworkV2InternetServiceDataSource_queries(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
 	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
 	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListIDQuery)

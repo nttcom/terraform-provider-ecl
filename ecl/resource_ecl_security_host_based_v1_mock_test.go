@@ -17,16 +17,12 @@ const SoIDOfUpdateM2HostBased = "FGHA_809F858574E94699952D0D7E7C58C81C"
 const SoIDOfDeleteHostBased = "FGHA_F2349100C7D24EF3ACD6B9A9F91FD220"
 
 func TestMockedAccSecurityV1HostBased_basic(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var hs security.HostBasedSecurity
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	mc.Register(t, "host_based", "/API/SoEntryHBS", testMockSecurityV1HostBasedCreate)
@@ -244,7 +240,7 @@ response:
             "service_order_service": "Managed Anti-Virus",
             "max_agent_value": 1,
             "time_zone": "Asia/Tokyo",
-            "mailaddress": "terraform@ntt.com",
+            "mailaddress": "hoge@example.com",
             "dsm_lang": "ja",
             "tenant_flg": true
         }
@@ -269,7 +265,7 @@ response:
             "service_order_service": "Managed Virtual Patch",
             "max_agent_value": 1,
             "time_zone": "Asia/Tokyo",
-            "mailaddress": "terraform@ntt.com",
+            "mailaddress": "hoge@example.com",
             "dsm_lang": "ja",
             "tenant_flg": true
         }
@@ -294,7 +290,7 @@ response:
             "service_order_service": "Managed Virtual Patch",
             "max_agent_value": 2,
             "time_zone": "Asia/Tokyo",
-            "mailaddress": "terraform@ntt.com",
+            "mailaddress": "hoge@example.com",
             "dsm_lang": "ja",
             "tenant_flg": true
         }

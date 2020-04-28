@@ -15,16 +15,12 @@ const SoIDOfWAFUpdate = "FGWAF_809F858574E94699952D0D7E7C58C81C"
 const SoIDOfWAFDelete = "FGWAF_F2349100C7D24EF3ACD6B9A9F91FD220"
 
 func TestMockedAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	mc.Register(t, "waf", "/ecl-api/devices", testMockSecurityV1NetworkBasedWAFSingleListDevicesAfterCreate)
@@ -88,16 +84,12 @@ func TestMockedAccSecurityV1NetworkBasedWAFSingle_basic(t *testing.T) {
 }
 
 func TestMockedAccSecurityV1NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV1NetworkBasedWAFSingleListBeforeCreate)

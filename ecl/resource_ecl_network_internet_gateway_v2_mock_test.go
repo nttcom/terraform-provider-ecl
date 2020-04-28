@@ -11,16 +11,12 @@ import (
 )
 
 func TestMockedAccNetworkV2InternetGateway_basic(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var internetGateway internet_gateways.InternetGateway
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
 	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayPost)
