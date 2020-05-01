@@ -1,4 +1,4 @@
-module github.com/nttcom/terraform-provider-ecl
+module github.com/terraform-providers/terraform-provider-ecl
 
 require (
 	github.com/hashicorp/terraform v0.12.6
