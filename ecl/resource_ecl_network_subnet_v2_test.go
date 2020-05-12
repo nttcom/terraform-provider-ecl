@@ -114,6 +114,10 @@ func TestAccNetworkV2Subnet_basic(t *testing.T) {
 }
 
 func TestAccNetworkV2Subnet_forceNewByCIDR(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var sn1 subnets.Subnet
 	var sn2 subnets.Subnet
 
@@ -140,6 +144,10 @@ func TestAccNetworkV2Subnet_forceNewByCIDR(t *testing.T) {
 }
 
 func TestAccNetworkV2Subnet_tag(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -177,6 +185,10 @@ func TestAccNetworkV2Subnet_tag(t *testing.T) {
 	})
 }
 func TestAccNetworkV2Subnet_enableDHCP(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -197,6 +209,10 @@ func TestAccNetworkV2Subnet_enableDHCP(t *testing.T) {
 }
 
 func TestAccNetworkV2Subnet_disableDHCP(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -217,6 +233,10 @@ func TestAccNetworkV2Subnet_disableDHCP(t *testing.T) {
 }
 
 func TestAccNetworkV2Subnet_noGateway(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -237,6 +257,10 @@ func TestAccNetworkV2Subnet_noGateway(t *testing.T) {
 }
 
 func TestAccNetworkV2Subnet_impliedGateway(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -257,6 +281,10 @@ func TestAccNetworkV2Subnet_impliedGateway(t *testing.T) {
 }
 
 func TestAccNetworkV2Subnet_conflictsGateway(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	pattern1 := "\"no_gateway\": conflicts with gateway_ip"
 	pattern2 := "\"gateway_ip\": conflicts with no_gateway"
 	resource.Test(t, resource.TestCase{
@@ -276,6 +304,10 @@ func TestAccNetworkV2Subnet_conflictsGateway(t *testing.T) {
 }
 
 func TestAccNetworkV2Subnet_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{
@@ -294,6 +326,10 @@ func TestAccNetworkV2Subnet_timeout(t *testing.T) {
 }
 
 func TestAccNetworkV2Subnet_ntp(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var subnet subnets.Subnet
 
 	resource.Test(t, resource.TestCase{

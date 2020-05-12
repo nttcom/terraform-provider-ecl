@@ -46,6 +46,10 @@ func TestAccImageStoragesV2ImageDataSource_basic(t *testing.T) {
 }
 
 func TestAccImageStoragesV2ImageDataSource_queries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

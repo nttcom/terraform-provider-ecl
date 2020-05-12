@@ -48,6 +48,10 @@ func TestAccSSSV1ApprovalRequest_basic(t *testing.T) {
 }
 
 func TestAccSSSV1ApprovalRequest_denied(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var approval approval_requests.ApprovalRequest
 
 	resource.Test(t, resource.TestCase{
@@ -67,6 +71,10 @@ func TestAccSSSV1ApprovalRequest_denied(t *testing.T) {
 }
 
 func TestAccSSSV1ApprovalRequest_cancelled(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var approval approval_requests.ApprovalRequest
 
 	resource.Test(t, resource.TestCase{

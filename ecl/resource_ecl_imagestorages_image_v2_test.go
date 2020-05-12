@@ -47,6 +47,10 @@ func TestAccImageStoragesV2Image_basic(t *testing.T) {
 }
 
 func TestAccImageStoragesV2Image_name(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var image images.Image
 
 	resource.Test(t, resource.TestCase{
@@ -86,6 +90,10 @@ func TestAccImageStoragesV2Image_name(t *testing.T) {
 }
 
 func TestAccImageStoragesV2Image_tags(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var image images.Image
 
 	resource.Test(t, resource.TestCase{
@@ -136,6 +144,10 @@ func TestAccImageStoragesV2Image_tags(t *testing.T) {
 }
 
 func TestAccImageStoragesV2Image_licenseSwitch(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var image images.Image
 
 	resource.Test(t, resource.TestCase{
@@ -167,6 +179,10 @@ func TestAccImageStoragesV2Image_licenseSwitch(t *testing.T) {
 }
 
 func TestAccImageStoragesV2Image_properties(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var image1 images.Image
 	var image2 images.Image
 	var image3 images.Image

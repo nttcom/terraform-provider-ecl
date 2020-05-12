@@ -9,6 +9,10 @@ import (
 )
 
 func TestAccDNSV2ZoneImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))
 	resourceName := "ecl_dns_zone_v2.zone_1"
 

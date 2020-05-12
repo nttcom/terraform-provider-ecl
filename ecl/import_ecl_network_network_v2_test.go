@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccNetworkV2NetworkImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_network_network_v2.network_1"
 
 	resource.Test(t, resource.TestCase{

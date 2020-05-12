@@ -36,6 +36,10 @@ func TestAccComputeV2FlavorDataSource_basic(t *testing.T) {
 }
 
 func TestAccComputeV2FlavorDataSource_queries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

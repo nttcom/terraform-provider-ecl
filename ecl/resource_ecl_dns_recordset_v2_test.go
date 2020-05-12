@@ -100,6 +100,10 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 }
 
 func TestAccDNSV2RecordSet_ipv6(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
 

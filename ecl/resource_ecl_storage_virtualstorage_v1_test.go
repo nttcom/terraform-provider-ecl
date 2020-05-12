@@ -81,6 +81,10 @@ func TestAccStorageV1VirtualStorage_basic(t *testing.T) {
 
 // TestAccStorageV1VirtualStorage_timeout just check Timeout section is correctly worked or not
 func TestAccStorageV1VirtualStorage_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -106,6 +110,10 @@ func TestAccStorageV1VirtualStorage_timeout(t *testing.T) {
 // Test items are almost same as TestAccStorageV1VirtualStorageBasic
 // Create -> Parameter Confirmation -> Update -> Parameter Confirmation(All parameters are correctly updated or not)
 func TestAccStorageV1VirtualStorage_volumeTypeNameBlock(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -176,6 +184,10 @@ func TestAccStorageV1VirtualStorage_volumeTypeNameBlock(t *testing.T) {
 // Test items are almost same as TestAccStorageV1VirtualStorageBasic
 // Create -> Parameter Confirmation -> Update -> Parameter Confirmation(All parameters are correctly updated or not)
 func TestAccStorageV1VirtualStorage_volumeTypeNameFilePremium(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -240,6 +252,10 @@ func TestAccStorageV1VirtualStorage_volumeTypeNameFilePremium(t *testing.T) {
 // Test items are almost same as TestAccStorageV1VirtualStorageBasic
 // Create -> Parameter Confirmation -> Update -> Parameter Confirmation(All parameters are correctly updated or not)
 func TestAccStorageV1VirtualStorage_volumeTypeNameFileStandard(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -316,6 +332,10 @@ func testCheckVirtualStorageIDIsChanged(vs1, vs2 *virtualstorages.VirtualStorage
 // Each ID is inserted into virtualStorageIDs slice by beggining of each TestStep by using "testCheckIDIsChanged"
 // and also be compared in same function
 func TestAccStorageV1VirtualStorage_forceNewByNetwork(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var vs1, vs2 virtualstorages.VirtualStorage
 
 	resource.Test(t, resource.TestCase{

@@ -69,6 +69,10 @@ func TestAccNetworkV2NetworkDataSource_queries(t *testing.T) {
 }
 
 func TestAccNetworkV2NetworkDataSource_createResource(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var port ports.Port
 	var networkName = fmt.Sprintf("ACPTTEST%s-network", acctest.RandString(5))
 	var networkDescription = fmt.Sprintf("ACPTTEST%s-network-description", acctest.RandString(5))

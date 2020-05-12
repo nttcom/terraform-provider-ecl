@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccDNSV2RecordSetImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	zoneName := randomZoneName()
 	resourceName := "ecl_dns_recordset_v2.recordset_1"
 
