@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccNetworkV2PortImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_network_port_v2.port_1"
 
 	resource.Test(t, resource.TestCase{
@@ -31,6 +35,10 @@ func TestAccNetworkV2PortImport_basic(t *testing.T) {
 }
 
 func TestAccNetworkV2PortImport_allowedAddressPairs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_network_port_v2.instance_port"
 
 	resource.Test(t, resource.TestCase{
@@ -55,6 +63,10 @@ func TestAccNetworkV2PortImport_allowedAddressPairs(t *testing.T) {
 }
 
 func TestAccNetworkV2PortImport_allowedAddressPairsNoMAC(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_network_port_v2.instance_port"
 
 	resource.Test(t, resource.TestCase{

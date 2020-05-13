@@ -9,6 +9,10 @@ import (
 )
 
 func TestAccSSSV1UserImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_sss_user_v1.user_1"
 	var loginID = fmt.Sprintf("ACCPTTEST-%s", acctest.RandString(15))
 

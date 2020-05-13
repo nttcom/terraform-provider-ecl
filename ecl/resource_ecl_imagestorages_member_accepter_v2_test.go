@@ -37,6 +37,10 @@ func TestAccImageStoragesV2MemberAccepter_basic(t *testing.T) {
 }
 
 func TestAccImageStoragesV2MemberAccepter_invalidStatus(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheckImageMemberAccepter(t)

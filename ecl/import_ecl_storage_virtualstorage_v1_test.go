@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccStorageV1VirtualStorageImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_storage_virtualstorage_v1.virtualstorage_1"
 
 	resource.Test(t, resource.TestCase{

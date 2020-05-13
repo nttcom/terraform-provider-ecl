@@ -9,6 +9,10 @@ import (
 )
 
 func TestAccSSSV1TenantImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_sss_tenant_v1.tenant_1"
 	var projectName = fmt.Sprintf("ACCPTTEST-%s", acctest.RandString(15))
 

@@ -32,6 +32,10 @@ func TestAccComputeVolumeV2Attach_basic(t *testing.T) {
 }
 
 func TestAccComputeVolumeV2Attach_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var va volumes.Attachment
 
 	resource.Test(t, resource.TestCase{

@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccBaremetalV2KeypairImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_baremetal_keypair_v2.kp_1"
 
 	resource.Test(t, resource.TestCase{

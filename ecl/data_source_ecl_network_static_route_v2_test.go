@@ -29,6 +29,10 @@ func TestAccNetworkV2StaticRouteDataSource_basic(t *testing.T) {
 }
 
 func TestAccNetworkV2StaticRouteDataSource_queries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckStaticRoute(t) },
 		Providers: testAccProviders,

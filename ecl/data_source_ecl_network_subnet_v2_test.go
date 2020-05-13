@@ -35,6 +35,10 @@ func TestAccNetworkV2SubnetDataSource_basic(t *testing.T) {
 }
 
 func TestAccNetworkV2SubnetDataSource_queries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
 
 	resource.Test(t, resource.TestCase{
@@ -85,6 +89,10 @@ func TestAccNetworkV2SubnetDataSource_queries(t *testing.T) {
 }
 
 func TestAccNetworkV2SubnetDataSource_networkIDAttribute(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	name, description, cidr, gatewayIP := generateNetworkSubnetQueryParams()
 
 	resource.Test(t, resource.TestCase{

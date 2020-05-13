@@ -76,6 +76,10 @@ func TestAccComputeVolumeV2Volume_basic(t *testing.T) {
 }
 
 func TestAccComputeVolumeV2Volume_fromImageByName(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{
@@ -96,6 +100,10 @@ func TestAccComputeVolumeV2Volume_fromImageByName(t *testing.T) {
 }
 
 func TestAccComputeVolumeV2Volume_fromImageByID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{
@@ -115,6 +123,10 @@ func TestAccComputeVolumeV2Volume_fromImageByID(t *testing.T) {
 	})
 }
 func TestAccComputeVolumeV2Volume_fromImageByNameAndID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{
@@ -135,6 +147,10 @@ func TestAccComputeVolumeV2Volume_fromImageByNameAndID(t *testing.T) {
 }
 
 func TestAccComputeVolumeV2Volume_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var volume volumes.Volume
 
 	resource.Test(t, resource.TestCase{
