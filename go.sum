@@ -242,6 +242,8 @@ github.com/nttcom/eclcloud v1.8.1 h1:oY8mwE/Nn9i2TGYSpBe1Dbdf0FjHCpxn2zDPGO1DnbI
 github.com/nttcom/eclcloud v1.8.1/go.mod h1:PQHlN54VwpkUJ0Ep4p3Hd+S9wahseU7HxT5t2iAzr24=
 github.com/nttcom/eclcloud v1.9.0 h1:ers7lm/zAKo/vDoOG1XK5Cjz/c6yoZJfV2g8k5LI050=
 github.com/nttcom/eclcloud v1.9.0/go.mod h1:PQHlN54VwpkUJ0Ep4p3Hd+S9wahseU7HxT5t2iAzr24=
+github.com/nttcom/eclcloud v1.9.1 h1:da5J0nEOcs0B8E1znPM8bzNweUdKV+kC/8o4RwgaDCM=
+github.com/nttcom/eclcloud v1.9.1/go.mod h1:PQHlN54VwpkUJ0Ep4p3Hd+S9wahseU7HxT5t2iAzr24=
 github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d/go.mod h1:YUTz3bUH2ZwIWBy3CJBeOBEugqcmXREj14T+iG/4k4U=
 github.com/oklog/run v1.0.0 h1:Ru7dDtJNOyC66gQ5dQmaCa0qIsAUFY3sFpK1Xk8igrw=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
