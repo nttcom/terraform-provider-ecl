@@ -53,6 +53,7 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 		},
 	})
 }
+
 func TestAccComputeV2Instance_resize(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
@@ -84,6 +85,7 @@ func TestAccComputeV2Instance_resize(t *testing.T) {
 		},
 	})
 }
+
 func TestAccComputeV2Instance_userData(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
@@ -102,6 +104,58 @@ func TestAccComputeV2Instance_userData(t *testing.T) {
 					testAccCheckComputeV2InstanceExists("ecl_compute_instance_v2.instance_1", &instance),
 					resource.TestCheckResourceAttr(
 						"ecl_compute_instance_v2.instance_1", "user_data", encodedUserData()),
+				),
+			},
+		},
+	})
+}
+
+func TestAccComputeV2Instance_configDrive(t *testing.T) {
+	var instance servers.Server
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccComputeV2InstanceEnabledConfigDrive,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeV2InstanceExists("ecl_compute_instance_v2.instance_1", &instance),
+					resource.TestCheckResourceAttr(
+						"ecl_compute_instance_v2.instance_1", "config_drive", "true"),
+				),
+			},
+		},
+	})
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccComputeV2InstanceDisabledConfigDrive,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeV2InstanceExists("ecl_compute_instance_v2.instance_1", &instance),
+					resource.TestCheckResourceAttr(
+						"ecl_compute_instance_v2.instance_1", "config_drive", "false"),
+				),
+			},
+		},
+	})
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccComputeV2InstanceNoSetConfigDrive,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeV2InstanceExists("ecl_compute_instance_v2.instance_1", &instance),
+					resource.TestCheckResourceAttr(
+						"ecl_compute_instance_v2.instance_1", "config_drive", "false"),
 				),
 			},
 		},
@@ -247,6 +301,7 @@ func TestAccComputeV2Instance_blockDeviceExistingVolume(t *testing.T) {
 		},
 	})
 }
+
 func TestAccComputeV2Instance_keyPairForceNew(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
@@ -839,6 +894,50 @@ resource "ecl_compute_instance_v2" "instance_1" {
   image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   user_data = "#!/bin/sh\necho 'HOGE'"
+  network {
+    uuid = "${ecl_network_network_v2.network_1.id}"
+  }
+  depends_on = ["ecl_network_subnet_v2.subnet_1"]
+}
+`, testCreateNetworkForInstance)
+
+var testAccComputeV2InstanceEnabledConfigDrive = fmt.Sprintf(`
+%s
+
+resource "ecl_compute_instance_v2" "instance_1" {
+  name = "instance_1"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
+  config_drive = true
+  network {
+    uuid = "${ecl_network_network_v2.network_1.id}"
+  }
+  depends_on = ["ecl_network_subnet_v2.subnet_1"]
+}
+`, testCreateNetworkForInstance)
+
+var testAccComputeV2InstanceDisabledConfigDrive = fmt.Sprintf(`
+%s
+
+resource "ecl_compute_instance_v2" "instance_1" {
+  name = "instance_1"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
+  config_drive = false
+  network {
+    uuid = "${ecl_network_network_v2.network_1.id}"
+  }
+  depends_on = ["ecl_network_subnet_v2.subnet_1"]
+}
+`, testCreateNetworkForInstance)
+
+var testAccComputeV2InstanceNoSetConfigDrive = fmt.Sprintf(`
+%s
+
+resource "ecl_compute_instance_v2" "instance_1" {
+  name = "instance_1"
+  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
+  flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
   }
