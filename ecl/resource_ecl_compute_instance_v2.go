@@ -466,7 +466,11 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Invalid power_state for instance %s: %s", d.Id(), server.Status)
 	}
 
-	d.Set("config_drive", server.ConfigDrive)
+	if server.ConfigDrive == "True" {
+		d.Set("config_drive", true)
+	} else {
+		d.Set("config_drive", false)
+	}
 
 	return nil
 }
