@@ -14,6 +14,10 @@ import (
 )
 
 func TestAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var connection tenant_connections.TenantConnection
 
 	resource.Test(t, resource.TestCase{
@@ -53,6 +57,10 @@ func TestAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 }
 
 func TestAccProviderConnectivityV2TenantConnection_baremetal(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var connection tenant_connections.TenantConnection
 
 	resource.Test(t, resource.TestCase{
@@ -77,6 +85,10 @@ func TestAccProviderConnectivityV2TenantConnection_baremetal(t *testing.T) {
 }
 
 func TestAccProviderConnectivityV2TenantConnection_vna(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var connection tenant_connections.TenantConnection
 
 	resource.Test(t, resource.TestCase{
