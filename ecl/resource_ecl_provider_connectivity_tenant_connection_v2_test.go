@@ -50,6 +50,10 @@ func TestAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func TestAccProviderConnectivityV2TenantConnection_baremetal(t *testing.T) {
+	var connection tenant_connections.TenantConnection
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckTenantConnection(t) },
@@ -70,6 +74,10 @@ func TestAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func TestAccProviderConnectivityV2TenantConnection_vna(t *testing.T) {
+	var connection tenant_connections.TenantConnection
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckTenantConnection(t) },
