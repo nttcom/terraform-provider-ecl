@@ -111,6 +111,10 @@ func TestAccComputeV2Instance_userData(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_configDrive(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
