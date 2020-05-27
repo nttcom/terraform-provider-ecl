@@ -369,3 +369,128 @@ response:
 expectedStatus:
     - Created
 `
+
+func TestMockedAccProviderConnectivityV2TenantConnection_vna(t *testing.T) {
+	var connection tenant_connections.TenantConnection
+
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections", testMockProviderConnectivityV2TenantConnectionCreateVna)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/a27e1006-a00a-11ea-9e55-525403060300", testMockProviderConnectivityV2TenantConnectionGetAfterCreateVna)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/a27e1006-a00a-11ea-9e55-525403060300", testMockProviderConnectivityV2TenantConnectionDelete)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/a27e1006-a00a-11ea-9e55-525403060300", testMockProviderConnectivityV2TenantConnectionGetAfterDelete)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckTenantConnection(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckProviderConnectivityV2TenantConnectionDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testMockAccProviderConnectivityV2TenantConnectionVnaConfig,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckProviderConnectivityV2TenantConnectionExists("ecl_provider_connectivity_tenant_connection_v2.connection_1", &connection),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "id", "a27e1006-a00a-11ea-9e55-525403060300"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "tenant_connection_request_id", "94e0f9cc-a00a-11ea-9ada-525403060500"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "name", "test_name1"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "description", "test_desc1"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "tags.test_tags1", "test1"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "tenant_id", "2c76532f048849aab41c1bff2ec8b996"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "tenant_id_other", "7af0c902bd51424f8b2c85f5320ab181"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "network_id", "045d234e-203f-4e35-affb-a1d3ba0380e0"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "device_type", "ECL::VirtualNetworkAppliance::VSRX"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "device_id", "baab608e-7f3c-4b67-82b9-1e6fa7befc95"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "device_interface_id", "interface_2"),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "port_id", ""),
+					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "status", "active"),
+				),
+			},
+		},
+	})
+}
+
+var testMockAccProviderConnectivityV2TenantConnectionVnaConfig = `
+resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
+	name = "test_name1"
+	description = "test_desc1"
+	tags = {
+		"test_tags1" = "test1"
+	}
+	tenant_connection_request_id = "94e0f9cc-a00a-11ea-9ada-525403060500"
+	device_type = "ECL::VirtualNetworkAppliance::VSRX"
+	device_id = "baab608e-7f3c-4b67-82b9-1e6fa7befc95"
+ 	device_interface_id = "interface_2"
+	attachment_opts_vna {
+		fixed_ips {
+			ip_address = "192.168.1.1"
+		}
+	}
+}
+`
+
+var testMockProviderConnectivityV2TenantConnectionCreateVna = `
+request:
+    method: POST
+response:
+    code: 200
+    body: >
+        {
+            "tenant_connection": {
+                "description": "test_desc1",
+                "description_other": "",
+                "device_id": "baab608e-7f3c-4b67-82b9-1e6fa7befc95",
+                "device_interface_id": "interface_2",
+                "device_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "id": "a27e1006-a00a-11ea-9e55-525403060300",
+                "name": "test_name1",
+                "name_other": "",
+                "network_id": "045d234e-203f-4e35-affb-a1d3ba0380e0",
+                "port_id": "",
+                "status": "creating",
+                "tags": {
+                    "test_tags1": "test1"
+                },
+                "tags_other": "{}",
+                "tenant_connection_request_id": "94e0f9cc-a00a-11ea-9ada-525403060500",
+                "tenant_id": "2c76532f048849aab41c1bff2ec8b996",
+                "tenant_id_other": "7af0c902bd51424f8b2c85f5320ab181"
+            }
+        }
+newStatus: Created
+`
+
+var testMockProviderConnectivityV2TenantConnectionGetAfterCreateVna = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "tenant_connection": {
+                "description": "test_desc1",
+                "description_other": "",
+                "device_id": "baab608e-7f3c-4b67-82b9-1e6fa7befc95",
+                "device_interface_id": "interface_2",
+                "device_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "id": "a27e1006-a00a-11ea-9e55-525403060300",
+                "name": "test_name1",
+                "name_other": "",
+                "network_id": "045d234e-203f-4e35-affb-a1d3ba0380e0",
+                "port_id": "",
+                "status": "active",
+                "tags": {
+                    "test_tags1": "test1"
+                },
+                "tags_other": {},
+                "tenant_connection_request_id": "94e0f9cc-a00a-11ea-9ada-525403060500",
+                "tenant_id": "2c76532f048849aab41c1bff2ec8b996",
+                "tenant_id_other": "7af0c902bd51424f8b2c85f5320ab181"
+            }
+        }
+expectedStatus:
+    - Created
+`
