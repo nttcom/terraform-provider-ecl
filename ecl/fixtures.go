@@ -291,6 +291,34 @@ response:
                         "id": "7c69821f-3246-4381-ba44-a91e4160cac6",
                         "name": "dedicated-hypervisor",
                         "type": "dedicated-hypervisor"
+                    },
+                    {
+                        "endpoints": [
+                            {
+                                "id": "df7ca430-9fe3-11ea-b509-525403060400",
+                                "interface": "internal",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "df7ca430-9fe3-11ea-b509-525403060400",
+                                "interface": "public",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "df7ca430-9fe3-11ea-b509-525403060400",
+                                "interface": "admin",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            }
+                        ],
+                        "id": "df7ca430-9fe3-11ea-b509-525403060400",
+                        "name": "provider-connectivity",
+                        "type": "provider-connectivity"
                     }
                 ],
                 "expires_at": "2018-11-28T02:48:52.111201Z",
