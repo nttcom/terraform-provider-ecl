@@ -37,6 +37,8 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 					testAccCheckComputeV2InstanceMetadata(&instance, "foo", "bar"),
 					resource.TestCheckResourceAttr(
 						"ecl_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
+					resource.TestCheckResourceAttr(
+						"ecl_compute_instance_v2.instance_1", "config_drive", "false"),
 				),
 			},
 			resource.TestStep{
@@ -140,22 +142,6 @@ func TestAccComputeV2Instance_configDrive(t *testing.T) {
 		Steps: []resource.TestStep{
 			resource.TestStep{
 				Config: testAccComputeV2InstanceDisabledConfigDrive,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("ecl_compute_instance_v2.instance_1", &instance),
-					resource.TestCheckResourceAttr(
-						"ecl_compute_instance_v2.instance_1", "config_drive", "false"),
-				),
-			},
-		},
-	})
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
-		Steps: []resource.TestStep{
-			resource.TestStep{
-				Config: testAccComputeV2InstanceNoSetConfigDrive,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists("ecl_compute_instance_v2.instance_1", &instance),
 					resource.TestCheckResourceAttr(
@@ -928,20 +914,6 @@ resource "ecl_compute_instance_v2" "instance_1" {
   image_name = "Ubuntu-18.04.1_64_virtual-server_02"
   flavor_id = "1CPU-2GB"
   config_drive = false
-  network {
-    uuid = "${ecl_network_network_v2.network_1.id}"
-  }
-  depends_on = ["ecl_network_subnet_v2.subnet_1"]
-}
-`, testCreateNetworkForInstance)
-
-var testAccComputeV2InstanceNoSetConfigDrive = fmt.Sprintf(`
-%s
-
-resource "ecl_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  image_name = "Ubuntu-18.04.1_64_virtual-server_02"
-  flavor_id = "1CPU-2GB"
   network {
     uuid = "${ecl_network_network_v2.network_1.id}"
   }
