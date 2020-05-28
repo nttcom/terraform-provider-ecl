@@ -19,10 +19,10 @@ func TestMockedAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 
 	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
-	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections", testMockProviderConnectivityV2TenantConnectionCreateServer)
-	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/06969a7c-9fc0-11ea-b509-525403060400", testMockProviderConnectivityV2TenantConnectionGetAfterCreateServer)
-	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/06969a7c-9fc0-11ea-b509-525403060400", testMockProviderConnectivityV2TenantConnectionUpdate)
-	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/06969a7c-9fc0-11ea-b509-525403060400", testMockProviderConnectivityV2TenantConnectionGetAfterUpdate)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections", testMockProviderConnectivityV2TenantConnectionCreateComputeServer)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/06969a7c-9fc0-11ea-b509-525403060400", testMockProviderConnectivityV2TenantConnectionGetAfterCreateComputeServer)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/06969a7c-9fc0-11ea-b509-525403060400", testMockProviderConnectivityV2TenantConnectionUpdateComputeServer)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/06969a7c-9fc0-11ea-b509-525403060400", testMockProviderConnectivityV2TenantConnectionGetAfterUpdateComputeServer)
 	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/06969a7c-9fc0-11ea-b509-525403060400", testMockProviderConnectivityV2TenantConnectionDelete)
 	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/06969a7c-9fc0-11ea-b509-525403060400", testMockProviderConnectivityV2TenantConnectionGetAfterDelete)
 
@@ -34,7 +34,7 @@ func TestMockedAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 		CheckDestroy: testAccCheckProviderConnectivityV2TenantConnectionDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testMockAccProviderConnectivityV2TenantConnectionServerConfig,
+				Config: testMockAccProviderConnectivityV2TenantConnectionComputeServerConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckProviderConnectivityV2TenantConnectionExists("ecl_provider_connectivity_tenant_connection_v2.connection_1", &connection),
 					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "id", "06969a7c-9fc0-11ea-b509-525403060400"),
@@ -53,7 +53,7 @@ func TestMockedAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testMockAccProviderConnectivityV2TenantConnectionSeverUpdateConfig,
+				Config: testMockAccProviderConnectivityV2TenantConnectionComputeSeverUpdateConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "name", "updated_name"),
 					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "description", "updated_desc"),
@@ -64,7 +64,7 @@ func TestMockedAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 	})
 }
 
-var testMockAccProviderConnectivityV2TenantConnectionServerConfig = `
+var testMockAccProviderConnectivityV2TenantConnectionComputeServerConfig = `
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	name = "test_name1"
 	description = "test_desc1"
@@ -82,7 +82,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 }
 `
 
-var testMockAccProviderConnectivityV2TenantConnectionSeverUpdateConfig = `
+var testMockAccProviderConnectivityV2TenantConnectionComputeSeverUpdateConfig = `
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	name = "updated_name"
 	description = "updated_desc"
@@ -100,7 +100,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 }
 `
 
-var testMockProviderConnectivityV2TenantConnectionCreateServer = `
+var testMockProviderConnectivityV2TenantConnectionCreateComputeServer = `
 request:
     method: POST
 response:
@@ -131,7 +131,7 @@ response:
 newStatus: Created
 `
 
-var testMockProviderConnectivityV2TenantConnectionGetAfterCreateServer = `
+var testMockProviderConnectivityV2TenantConnectionGetAfterCreateComputeServer = `
 request:
     method: GET
 response:
@@ -163,7 +163,7 @@ expectedStatus:
     - Created
 `
 
-var testMockProviderConnectivityV2TenantConnectionUpdate = `
+var testMockProviderConnectivityV2TenantConnectionUpdateComputeServer = `
 request:
     method: PUT
 response:
@@ -194,7 +194,7 @@ response:
 newStatus: Updated
 `
 
-var testMockProviderConnectivityV2TenantConnectionGetAfterUpdate = `
+var testMockProviderConnectivityV2TenantConnectionGetAfterUpdateComputeServer = `
 request:
     method: GET
 response:
@@ -251,8 +251,8 @@ func TestMockedAccProviderConnectivityV2TenantConnection_baremetal(t *testing.T)
 
 	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
-	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections", testMockProviderConnectivityV2TenantConnectionCreateBaremetal)
-	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/76ea7594-9ff9-11ea-9e55-525403060300", testMockProviderConnectivityV2TenantConnectionGetAfterCreateBaremetal)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections", testMockProviderConnectivityV2TenantConnectionCreateBaremetalServer)
+	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/76ea7594-9ff9-11ea-9e55-525403060300", testMockProviderConnectivityV2TenantConnectionGetAfterCreateBaremetalServer)
 	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/76ea7594-9ff9-11ea-9e55-525403060300", testMockProviderConnectivityV2TenantConnectionDelete)
 	mc.Register(t, "provider-connectivity", "/v2.0/tenant_connections/76ea7594-9ff9-11ea-9e55-525403060300", testMockProviderConnectivityV2TenantConnectionGetAfterDelete)
 
@@ -264,7 +264,7 @@ func TestMockedAccProviderConnectivityV2TenantConnection_baremetal(t *testing.T)
 		CheckDestroy: testAccCheckProviderConnectivityV2TenantConnectionDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testMockAccProviderConnectivityV2TenantConnectionBaremetalConfig,
+				Config: testMockAccProviderConnectivityV2TenantConnectionBaremetalServerConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckProviderConnectivityV2TenantConnectionExists("ecl_provider_connectivity_tenant_connection_v2.connection_1", &connection),
 					resource.TestCheckResourceAttr("ecl_provider_connectivity_tenant_connection_v2.connection_1", "id", "76ea7594-9ff9-11ea-9e55-525403060300"),
@@ -286,7 +286,7 @@ func TestMockedAccProviderConnectivityV2TenantConnection_baremetal(t *testing.T)
 	})
 }
 
-var testMockAccProviderConnectivityV2TenantConnectionBaremetalConfig = `
+var testMockAccProviderConnectivityV2TenantConnectionBaremetalServerConfig = `
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	name = "test_name1"
 	description = "test_desc1"
@@ -307,7 +307,7 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 }
 `
 
-var testMockProviderConnectivityV2TenantConnectionCreateBaremetal = `
+var testMockProviderConnectivityV2TenantConnectionCreateBaremetalServer = `
 request:
     method: POST
 response:
@@ -338,7 +338,7 @@ response:
 newStatus: Created
 `
 
-var testMockProviderConnectivityV2TenantConnectionGetAfterCreateBaremetal = `
+var testMockProviderConnectivityV2TenantConnectionGetAfterCreateBaremetalServer = `
 request:
     method: GET
 response:
