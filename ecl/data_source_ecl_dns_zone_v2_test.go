@@ -31,6 +31,10 @@ func TestAccDNSV2ZoneDataSource_basic(t *testing.T) {
 	})
 }
 func TestAccDNSV2ZoneDataSource_queryDomainName(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccImageStoragesV2ImageImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_imagestorages_image_v2.image_1"
 
 	resource.Test(t, resource.TestCase{

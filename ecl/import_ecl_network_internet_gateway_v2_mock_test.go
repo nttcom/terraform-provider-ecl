@@ -5,12 +5,12 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
+	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
 func TestMockedAccNetworkV2InternetGatewayImport_basic(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
 	}
 
 	resourceName := "ecl_network_internet_gateway_v2.internet_gateway_1"
@@ -18,7 +18,7 @@ func TestMockedAccNetworkV2InternetGatewayImport_basic(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
 	mc.Register(t, "internet_service", "/v2.0/internet_services", testMockNetworkV2InternetServiceListNameQuery)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayPost)

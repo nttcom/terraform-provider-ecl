@@ -34,6 +34,10 @@ func TestAccNetworkV2PortDataSource_basic(t *testing.T) {
 }
 
 func TestAccNetworkV2PortDataSource_queries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	name, description, segmentationID := generateNetworkPortQueryParams()
 
 	resource.Test(t, resource.TestCase{
@@ -78,6 +82,10 @@ func TestAccNetworkV2PortDataSource_queries(t *testing.T) {
 }
 
 func TestAccNetworkV2PortDataSource_queriesDeviceID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	name, description, segmentationID := generateNetworkPortQueryParams()
 
 	resource.Test(t, resource.TestCase{
@@ -97,6 +105,10 @@ func TestAccNetworkV2PortDataSource_queriesDeviceID(t *testing.T) {
 	})
 }
 func TestAccNetworkV2PortDataSource_networkIDAttribute(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	name, description, segmentationID := generateNetworkPortQueryParams()
 
 	resource.Test(t, resource.TestCase{

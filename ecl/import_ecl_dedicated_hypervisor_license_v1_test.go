@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccDedicatedHypervisorV1LicenseImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_dedicated_hypervisor_license_v1.license_1"
 
 	resource.Test(t, resource.TestCase{

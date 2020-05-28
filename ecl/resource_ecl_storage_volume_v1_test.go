@@ -20,6 +20,10 @@ const IQN02 string = "iqn.2003-01.org.sample-iscsi.node1.x8664:sn.2613f8620d99"
 
 // TestAccStorageV1Volume_timeout just check Timeout section is correctly worked or not
 func TestAccStorageV1Volume_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var v volumes.Volume
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -281,6 +285,10 @@ func testCheckVolumeIDIsChanged(v1, v2 *volumes.Volume) resource.TestCheckFunc {
 // This test changes iops_per_gb parameter by using 2 configs
 // and check if resource is deleted and re-created
 func TestAccStorageV1Volume_forceNewByIOPSPerGB(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var v1, v2 volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -332,6 +340,10 @@ func TestAccStorageV1Volume_forceNewByIOPSPerGB(t *testing.T) {
 // This test changes size parameter by using 2 configs
 // and check if resource is deleted and re-created
 func TestAccStorageV1Volume_forceNewBySize(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var v1, v2 volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -384,6 +396,10 @@ func TestAccStorageV1Volume_forceNewBySize(t *testing.T) {
 // and check if resource is deleted and re-created
 // [Note] This test CRUD all of resources, different from above two ForceNew test
 func TestAccStorageV1Volume_forceNewByThroughput(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var v1, v2 volumes.Volume
 	var vs virtualstorages.VirtualStorage
 
@@ -437,6 +453,10 @@ func TestAccStorageV1Volume_forceNewByThroughput(t *testing.T) {
 // TestValidateStorageV1Volume_checkConflictsIOPSPerGBAndThroughput checks "ConflictsWith" parameter
 // correctly works or not between iops_per_gb and throuthput
 func TestValidateStorageV1Volume_checkConflictsIOPSPerGBAndThroughput(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	pattern1 := "\"iops_per_gb\": conflicts with throughput"
 	pattern2 := "\"throughput\": conflicts with iops_per_gb"
 	resource.Test(t, resource.TestCase{
@@ -458,6 +478,10 @@ func TestValidateStorageV1Volume_checkConflictsIOPSPerGBAndThroughput(t *testing
 // TestValidateStorageV1Volume_checkConflictsInitiatorIQNsAndThroughput checks "ConflictsWith" parameter
 // correctly works or not between initiator_iqns and throuthput
 func TestValidateStorageV1Volume_checkConflictsInitiatorIQNsAndThroughput(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	pattern1 := "\"initiator_iqns\": conflicts with throughput"
 	pattern2 := "\"throughput\": conflicts with initiator_iqns"
 	resource.Test(t, resource.TestCase{

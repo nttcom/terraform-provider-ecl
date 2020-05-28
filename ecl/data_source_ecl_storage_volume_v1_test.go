@@ -43,6 +43,10 @@ func TestAccStorageV1VolumeDataSource_basic(t *testing.T) {
 // 		1. Create volume under pre created virtual storage
 // 		2. Refer that volume as datasource by using volume ID to find it
 func TestAccStorageV1VolumeDataSource_id(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -72,6 +76,10 @@ func TestAccStorageV1VolumeDataSource_id(t *testing.T) {
 // 		1. Create network virtual storage, volume prior to data source
 // 		2. Refer that volume as datasource by using volume ID to find it
 func TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -101,6 +109,10 @@ func TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock(t *testing.T) {
 // 		1. Create network virtual storage, volume prior to data source
 // 		2. Refer that volume as datasource by using volume ID to find it
 func TestAccStorageV1VolumeDataSource_createAllResourcesAsFilePremium(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -127,6 +139,10 @@ func TestAccStorageV1VolumeDataSource_createAllResourcesAsFilePremium(t *testing
 	})
 }
 func TestAccStorageV1VolumeDataSource_createAllResourcesAsFileStandard(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

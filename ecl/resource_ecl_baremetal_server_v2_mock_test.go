@@ -6,22 +6,18 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
+	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
 
 	"github.com/nttcom/eclcloud/ecl/baremetal/v2/servers"
 )
 
 func TestMockedBaremetalV2Server_basic(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var server servers.Server
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	mc.Register(t, "image", "/v2/01234567890123456789abcdefabcdef/images/detail", testMockImageV2ImageList)

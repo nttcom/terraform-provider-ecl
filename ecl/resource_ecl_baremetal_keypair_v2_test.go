@@ -34,6 +34,10 @@ func TestAccBaremetalV2Keypair_basic(t *testing.T) {
 }
 
 func TestAccBaremetalV2Keypair_generatePrivate(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var keypair keypairs.KeyPair
 
 	fingerprintRe := regexp.MustCompile(`[a-f0-9:]+`)

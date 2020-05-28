@@ -54,6 +54,10 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 	})
 }
 func TestAccComputeV2Instance_resize(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -81,6 +85,10 @@ func TestAccComputeV2Instance_resize(t *testing.T) {
 	})
 }
 func TestAccComputeV2Instance_userData(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -101,6 +109,10 @@ func TestAccComputeV2Instance_userData(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_initialStateActive(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -140,6 +152,10 @@ func TestAccComputeV2Instance_initialStateActive(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_initialStateShutoff(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -179,6 +195,10 @@ func TestAccComputeV2Instance_initialStateShutoff(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_bootFromVolumeWhichHasImageSource(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -201,6 +221,10 @@ func TestAccComputeV2Instance_bootFromVolumeWhichHasImageSource(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_blockDeviceExistingVolume(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 	var volume volumes.Volume
 
@@ -224,6 +248,10 @@ func TestAccComputeV2Instance_blockDeviceExistingVolume(t *testing.T) {
 	})
 }
 func TestAccComputeV2Instance_keyPairForceNew(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance1 servers.Server
 	var instance2 servers.Server
 
@@ -256,6 +284,10 @@ func TestAccComputeV2Instance_keyPairForceNew(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_bootFromVolumeForceNew(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance1 servers.Server
 	var instance2 servers.Server
 
@@ -287,6 +319,10 @@ func TestAccComputeV2Instance_bootFromVolumeForceNew(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_blockDeviceNewVolume(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -308,6 +344,10 @@ func TestAccComputeV2Instance_blockDeviceNewVolume(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_accessIPv4(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -328,6 +368,10 @@ func TestAccComputeV2Instance_accessIPv4(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_changeFixedIP(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance1 servers.Server
 	var instance2 servers.Server
 
@@ -360,6 +404,10 @@ func TestAccComputeV2Instance_changeFixedIP(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_stopBeforeDestroy(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -377,6 +425,10 @@ func TestAccComputeV2Instance_stopBeforeDestroy(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_metadataRemove(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -421,6 +473,10 @@ func TestAccComputeV2Instance_metadataRemove(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -438,6 +494,10 @@ func TestAccComputeV2Instance_timeout(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_networkNameToID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 	var network networks.Network
 	resource.Test(t, resource.TestCase{
@@ -459,6 +519,10 @@ func TestAccComputeV2Instance_networkNameToID(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_multipleNICs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{
@@ -477,6 +541,10 @@ func TestAccComputeV2Instance_multipleNICs(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_connectToCreatedPort(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 	var port ports.Port
 
@@ -501,6 +569,10 @@ func TestAccComputeV2Instance_connectToCreatedPort(t *testing.T) {
 }
 
 func TestAccComputeV2Instance_connectToNetworkByName(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 
 	resource.Test(t, resource.TestCase{

@@ -7,6 +7,10 @@ import (
 )
 
 func TestAccStorageV1VolumeImport_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resourceName := "ecl_storage_volume_v1.volume_1"
 
 	resource.Test(t, resource.TestCase{

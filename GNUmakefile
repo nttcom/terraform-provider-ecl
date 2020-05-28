@@ -34,13 +34,14 @@ test: fmtcheck
 		xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4
 
 testacc: fmtcheck
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
+	# TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
+	make testacc-short
 
 testacc-all: fmtcheck
 	TF_ACC=1 go test ./ecl -v -count=1 -timeout 24h -parallel 4
 
 testacc-short: fmtcheck
-	TF_ACC=1 go test ./ecl -v -short -count=1 -timeout 120m -parallel 4
+	TF_ACC=1 go test ./ecl -v -short -count=1 -timeout 5h -parallel 4
 
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \

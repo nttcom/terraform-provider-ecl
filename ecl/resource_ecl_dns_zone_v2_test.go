@@ -49,6 +49,10 @@ func TestAccDNSV2Zone_basic(t *testing.T) {
 }
 
 func TestAccDNSV2Zone_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var zone zones.Zone
 	var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))
 

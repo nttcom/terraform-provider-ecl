@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
+	"github.com/terraform-providers/terraform-provider-ecl/ecl/clientconfig"
 
 	th "github.com/nttcom/eclcloud/testhelper"
 )

@@ -73,6 +73,10 @@ func TestAccNetworkV2Network_basic(t *testing.T) {
 }
 
 func TestAccNetworkV2Network_planeForceNew(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var n1 networks.Network
 	var n2 networks.Network
 
@@ -98,6 +102,10 @@ func TestAccNetworkV2Network_planeForceNew(t *testing.T) {
 	})
 }
 func TestAccNetworkV2Network_netstack(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 	var subnet subnets.Subnet
 
@@ -119,6 +127,10 @@ func TestAccNetworkV2Network_netstack(t *testing.T) {
 }
 
 func TestAccNetworkV2Network_fullstack(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var instance servers.Server
 	var network networks.Network
 	var port ports.Port
@@ -143,6 +155,10 @@ func TestAccNetworkV2Network_fullstack(t *testing.T) {
 }
 
 func TestAccNetworkV2Network_withTag(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 
 	resource.Test(t, resource.TestCase{
@@ -162,6 +178,10 @@ func TestAccNetworkV2Network_withTag(t *testing.T) {
 }
 
 func TestAccNetworkV2Network_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 
 	resource.Test(t, resource.TestCase{

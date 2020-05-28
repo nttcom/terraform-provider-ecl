@@ -29,6 +29,10 @@ func TestAccStorageV1VolumeTypeDataSourceBlockStorage_basic(t *testing.T) {
 }
 
 func TestAccStorageV1VolumeTypeDataSourceBlockStorage_id(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -46,6 +50,10 @@ func TestAccStorageV1VolumeTypeDataSourceBlockStorage_id(t *testing.T) {
 }
 
 func TestAccStorageV1VolumeTypeDataSourceFileStoragePremium_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFileStorageServiceType(t, true, false) },
 		Providers: testAccProviders,

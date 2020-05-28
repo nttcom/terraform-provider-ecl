@@ -79,6 +79,10 @@ func TestAccNetworkV2Port_basic(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_conflictsNoFixedIPAndFixedIPs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	pattern1 := "\"no_fixed_ip\": conflicts with fixed_ip"
 	pattern2 := "\"fixed_ip\": conflicts with no_fixed_ip"
 	resource.Test(t, resource.TestCase{
@@ -98,6 +102,10 @@ func TestAccNetworkV2Port_conflictsNoFixedIPAndFixedIPs(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_FixedIPBasic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -133,6 +141,10 @@ func TestAccNetworkV2Port_FixedIPBasic(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_noIP(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -156,6 +168,10 @@ func TestAccNetworkV2Port_noIP(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_multipleNoIP(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -179,6 +195,10 @@ func TestAccNetworkV2Port_multipleNoIP(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_allowedAddressPairs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 	var subnet subnets.Subnet
 	var vrrpPort1, vrrpPort2, instancePort ports.Port
@@ -204,6 +224,10 @@ func TestAccNetworkV2Port_allowedAddressPairs(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_allowedAddressPairsNoMAC(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 	var subnet subnets.Subnet
 	var vrrpPort1, vrrpPort2, instancePort ports.Port
@@ -229,6 +253,10 @@ func TestAccNetworkV2Port_allowedAddressPairsNoMAC(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_multipleFixedIPs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -252,6 +280,10 @@ func TestAccNetworkV2Port_multipleFixedIPs(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_timeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var network networks.Network
 	var port ports.Port
 	var subnet subnets.Subnet
@@ -274,6 +306,10 @@ func TestAccNetworkV2Port_timeout(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_fixedIPs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -293,6 +329,10 @@ func TestAccNetworkV2Port_fixedIPs(t *testing.T) {
 }
 
 func TestAccNetworkV2Port_noFixedIP(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var port ports.Port
 
 	resource.Test(t, resource.TestCase{

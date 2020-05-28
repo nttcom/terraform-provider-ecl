@@ -8,7 +8,7 @@ import (
 
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_single"
 
-	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
+	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
 const SoIDOfCreate = "FGS_809F858574E94699952D0D7E7C58C81B"
@@ -21,16 +21,12 @@ const expectedNewSingleDeviceHostName = "CES11811"
 const expectedNewSingleDeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
 func TestMockedAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV1NetworkBasedDeviceSingleListDevicesAfterCreate)
@@ -102,16 +98,12 @@ func TestMockedAccSecurityV1NetworkBasedDeviceSingle_basic(t *testing.T) {
 }
 
 func TestMockedAccSecurityV1NetworkBasedDeviceSingleUpdateInterface(t *testing.T) {
-	if OS_REGION_NAME != "RegionOne" {
-		t.Skipf("skip this test in %s region", OS_REGION_NAME)
-	}
-
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
-	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint())
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV1NetworkBasedDeviceSingleListBeforeCreate)
