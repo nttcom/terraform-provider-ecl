@@ -41,7 +41,7 @@ testacc-all: fmtcheck
 	TF_ACC=1 go test ./ecl -v -count=1 -timeout 24h -parallel 4
 
 testacc-short: fmtcheck
-	TF_ACC=1 go test ./ecl -v -short -count=1 -timeout 5h -parallel 4
+	TF_ACC=1 go test ./ecl -v -short -count=1 -timeout 180m -parallel 4
 
 testacc-args: fmtcheck
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
