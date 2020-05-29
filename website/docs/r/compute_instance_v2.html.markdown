@@ -147,7 +147,8 @@ The following arguments are supported:
 * `user_data` - (Optional) The user data to provide when launching the instance.
     Changing this creates a new server.
     
-* `config_drive` - (Optional) "true" is specified, the ephemeral drive can be used.
+* `config_drive` - (Optional) true is specified, can set to write metadata
+    to the ephemeral drive. Defaults to false.
 
 * `availability_zone` - (Optional) The availability zone in which to create
     the server. Changing this creates a new server.
