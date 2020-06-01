@@ -41,7 +41,10 @@ testacc-all: fmtcheck
 	TF_ACC=1 go test ./ecl -v -count=1 -timeout 24h -parallel 4
 
 testacc-short: fmtcheck
-	TF_ACC=1 go test ./ecl -v -short -count=1 -timeout 5h -parallel 4
+	TF_ACC=1 go test ./ecl -v -short -count=1 -timeout 180m -parallel 4
+
+testacc-args: fmtcheck
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
@@ -72,4 +75,4 @@ endif
 vendor:
 	go mod vendor
 
-.PHONY: build test testacc testacc-all testacc-short fmt fmtcheck errcheck lint tools test-compile website website-lint website-test vendor
+.PHONY: build test testacc testacc-all testacc-short testacc-args fmt fmtcheck errcheck lint tools test-compile website website-lint website-test vendor

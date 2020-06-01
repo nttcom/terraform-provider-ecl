@@ -14,6 +14,10 @@ import (
 )
 
 func TestAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
 	var connection tenant_connections.TenantConnection
 
 	resource.Test(t, resource.TestCase{
@@ -50,6 +54,14 @@ func TestAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func TestAccProviderConnectivityV2TenantConnection_baremetal(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	var connection tenant_connections.TenantConnection
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckTenantConnection(t) },
@@ -70,6 +82,14 @@ func TestAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func TestAccProviderConnectivityV2TenantConnection_vna(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	var connection tenant_connections.TenantConnection
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckTenantConnection(t) },
@@ -502,6 +522,11 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.id}"
 	device_type = "ECL::Compute::Server"
 	device_id = "${ecl_compute_instance_v2.instance_1.id}"
+	attachment_opts_compute {
+		fixed_ips {
+			ip_address = "192.168.1.1"
+		}
+	}
 }
 `,
 	oppositeTenantNetwork,
