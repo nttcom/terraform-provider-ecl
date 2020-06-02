@@ -80,7 +80,7 @@ type CreateOpts struct {
 	TTL int `json:"ttl,omitempty"`
 
 	// Type is the record type of the RecordSet.
-	Type string `json:"type,required"`
+	Type string `json:"type" required:"true"`
 }
 
 // ToRecordSetCreateMap formats an CreateOpts structure into a request body.

@@ -203,7 +203,7 @@ github.com/mitchellh/hashstructure
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.0
 github.com/mitchellh/reflectwalk
-# github.com/nttcom/eclcloud v1.8.1
+# github.com/nttcom/eclcloud v1.9.1
 github.com/nttcom/eclcloud
 github.com/nttcom/eclcloud/ecl
 github.com/nttcom/eclcloud/ecl/baremetal/v2/availabilityzones
@@ -223,8 +223,6 @@ github.com/nttcom/eclcloud/ecl/dedicated_hypervisor/v1/licenses
 github.com/nttcom/eclcloud/ecl/dedicated_hypervisor/v1/servers
 github.com/nttcom/eclcloud/ecl/dns/v2/recordsets
 github.com/nttcom/eclcloud/ecl/dns/v2/zones
-github.com/nttcom/eclcloud/ecl/identity/v3/endpoints
-github.com/nttcom/eclcloud/ecl/identity/v3/services
 github.com/nttcom/eclcloud/ecl/identity/v3/tokens
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/imagedata
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/images
@@ -238,6 +236,8 @@ github.com/nttcom/eclcloud/ecl/network/v2/ports
 github.com/nttcom/eclcloud/ecl/network/v2/public_ips
 github.com/nttcom/eclcloud/ecl/network/v2/static_routes
 github.com/nttcom/eclcloud/ecl/network/v2/subnets
+github.com/nttcom/eclcloud/ecl/provider_connectivity/v2/tenant_connection_requests
+github.com/nttcom/eclcloud/ecl/provider_connectivity/v2/tenant_connections
 github.com/nttcom/eclcloud/ecl/rca/v1/users
 github.com/nttcom/eclcloud/ecl/security_order/v1/host_based
 github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha
@@ -248,6 +248,7 @@ github.com/nttcom/eclcloud/ecl/security_portal/v1/devices
 github.com/nttcom/eclcloud/ecl/security_portal/v1/ha_ports
 github.com/nttcom/eclcloud/ecl/security_portal/v1/ports
 github.com/nttcom/eclcloud/ecl/security_portal/v1/processes
+github.com/nttcom/eclcloud/ecl/sss/v1/approval_requests
 github.com/nttcom/eclcloud/ecl/sss/v1/tenants
 github.com/nttcom/eclcloud/ecl/sss/v1/users
 github.com/nttcom/eclcloud/ecl/storage/v1/virtualstorages

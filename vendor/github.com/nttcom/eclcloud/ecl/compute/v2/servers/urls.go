@@ -37,15 +37,3 @@ func metadatumURL(client *eclcloud.ServiceClient, id, key string) string {
 func metadataURL(client *eclcloud.ServiceClient, id string) string {
 	return client.ServiceURL("servers", id, "metadata")
 }
-
-func listAddressesURL(client *eclcloud.ServiceClient, id string) string {
-	return client.ServiceURL("servers", id, "ips")
-}
-
-func listAddressesByNetworkURL(client *eclcloud.ServiceClient, id, network string) string {
-	return client.ServiceURL("servers", id, "ips", network)
-}
-
-func passwordURL(client *eclcloud.ServiceClient, id string) string {
-	return client.ServiceURL("servers", id, "os-server-password")
-}
