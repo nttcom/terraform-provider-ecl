@@ -20,9 +20,6 @@ data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Network client.
-    If omitted, the `region` argument of the provider is used.
-
 * `description` - (Optional) Description of the FIC Gateway resource.
 
 * `fic_service_id` - (Optional) FIC Service ID of the FIC Gateway resource.
@@ -43,7 +40,6 @@ data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
 The following attributes are exported:
 `id` is set to the ID of the found fic gateway. In addition, the following attributes are exported:
 
-* `region` - See Argument Reference above.
 * `description` - See Argument Reference above.
 * `fic_service_id` - See Argument Reference above.
 * `fic_gateway_id` - See Argument Reference above.

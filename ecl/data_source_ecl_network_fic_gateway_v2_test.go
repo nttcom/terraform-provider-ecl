@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccNetworkV2FICGatewayDataSource_basic(t *testing.T) {
@@ -13,26 +12,26 @@ func TestAccNetworkV2FICGatewayDataSource_basic(t *testing.T) {
 		t.Skip("skip this test in short mode")
 	}
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2FICGatewayDataSourceBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_1"),
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", ""),
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", OS_FIC_GW_DESCRIPTION),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_service_id", "66a63898-32a5-4b9d-8925-f52be1d84764"),
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_service_id", OS_FIC_SERVICE_ID),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "id", "fc546cf7-1956-436b-a9b4-edc917e397cf"),
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_gateway_id", OS_FIC_GW_ID),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "name", "F032000001492"),
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "name", OS_FIC_GW_NAME),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "qos_option_id", "d384d7f5-22aa-46e5-8cf5-759e87c7b2fd"),
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "qos_option_id", OS_FIC_GW_QOS_OPTION_ID),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", "ACTIVE"),
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", OS_FIC_GW_STATUS),
 					resource.TestCheckResourceAttr(
 						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "tenant_id", OS_TENANT_ID),
 				),
@@ -50,127 +49,164 @@ func TestAccNetworkV2FICGatewayDataSource_queries(t *testing.T) {
 		PreCheck:  func() { testAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2FICGatewayDataSourceDescription,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_1"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2FICGatewayDataSourceFICServiceID,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_1"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2FICGatewayDataSourceID,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_2"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2FICGatewayDataSourceID2,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_2"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2FICGatewayDataSourceName,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_1"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2FICGatewayDataSourceQoSOptionID,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_1"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2FICGatewayDataSourceStatus,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_1"),
-				),
-			},
-			resource.TestStep{
-				Config: testAccNetworkV2FICGatewayDataSourceTenantID,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2FICGatewayDataSourceID("data.ecl_network_fic_gateway_v2.fic_gateway_1"),
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
 				),
 			},
 		},
 	})
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2FICGatewayDataSourceFICServiceID,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+				),
+			},
+		},
+	})
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2FICGatewayDataSourceID,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+				),
+			},
+		},
+	})
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2FICGatewayDataSourceID2,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+				),
+			},
+		},
+	})
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2FICGatewayDataSourceName,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+				),
+			},
+		},
+	})
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2FICGatewayDataSourceQoSOptionID,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+				),
+			},
+		},
+	})
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2FICGatewayDataSourceStatus,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+				),
+			},
+		},
+	})
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2FICGatewayDataSourceTenantID,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+				),
+			},
+		},
+	})
+
 }
 
-func testAccCheckNetworkV2FICGatewayDataSourceID(n string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[n]
-		if !ok {
-			return fmt.Errorf("Can't find fic gateway data source: %s", n)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("FIC gateway data source ID not set")
-		}
-
-		return nil
-	}
-}
-
-var testAccNetworkV2FICGatewayDataSourceBasic = `
+var testAccNetworkV2FICGatewayDataSourceBasic = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	name = "F032000001492"
+	name = %q
 }
-`
+`,
+	OS_FIC_GW_NAME)
 
-var testAccNetworkV2FICGatewayDataSourceDescription = `
+var testAccNetworkV2FICGatewayDataSourceDescription = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	description = " "
+	description = %q
 }
-`
+`,
+	OS_FIC_GW_DESCRIPTION)
 
-var testAccNetworkV2FICGatewayDataSourceFICServiceID = `
+var testAccNetworkV2FICGatewayDataSourceFICServiceID = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	fic_service_id = "66a63898-32a5-4b9d-8925-f52be1d84764"
+	fic_service_id = %q
 }
-`
-var testAccNetworkV2FICGatewayDataSourceID = `
-data "ecl_network_fic_gateway_v2" "fic_gateway_2" {
-	fic_gateway_id = "fc546cf7-1956-436b-a9b4-edc917e397cf"
-}
-`
+`,
+	OS_FIC_SERVICE_ID)
 
-var testAccNetworkV2FICGatewayDataSourceID2 = `
+var testAccNetworkV2FICGatewayDataSourceID = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	name = "F032000001492"
+	fic_gateway_id = %q
+}
+`,
+	OS_FIC_GW_ID)
+
+var testAccNetworkV2FICGatewayDataSourceID2 = fmt.Sprintf(`
+data "ecl_network_fic_gateway_v2" "fic_gateway_0" {
+	name = %q
 }
 
-data "ecl_network_fic_gateway_v2" "fic_gateway_2" {
-	fic_gateway_id = "${data.ecl_network_fic_gateway_v2.fic_gateway_1.id}"
-}
-`
-
-var testAccNetworkV2FICGatewayDataSourceName = `
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	name = "F032000001492"
+	fic_gateway_id = "${data.ecl_network_fic_gateway_v2.fic_gateway_0.id}"
 }
-`
+`,
+	OS_FIC_GW_NAME)
 
-var testAccNetworkV2FICGatewayDataSourceQoSOptionID = `
+var testAccNetworkV2FICGatewayDataSourceName = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	qos_option_id = "d384d7f5-22aa-46e5-8cf5-759e87c7b2fd"
+	name = %q
 }
-`
+`,
+	OS_FIC_GW_NAME)
 
-var testAccNetworkV2FICGatewayDataSourceStatus = `
+var testAccNetworkV2FICGatewayDataSourceQoSOptionID = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	status = "ACTIVE"
+	qos_option_id = %q
 }
-`
+`,
+	OS_FIC_GW_QOS_OPTION_ID)
+
+var testAccNetworkV2FICGatewayDataSourceStatus = fmt.Sprintf(`
+data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
+	status = %q
+}
+`,
+	OS_FIC_GW_STATUS)
 
 var testAccNetworkV2FICGatewayDataSourceTenantID = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	tenant_id = "%s"
+	tenant_id = %q
 }
 `,
 	OS_TENANT_ID)
