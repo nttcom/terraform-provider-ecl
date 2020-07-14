@@ -15,18 +15,18 @@ import (
 	"github.com/nttcom/eclcloud/ecl/network/v2/gateway_interfaces"
 )
 
-func TestAccNetworkV2GatewayInterface_basic(t *testing.T) {
+func TestAccNetworkV2GatewayInterface_internet(t *testing.T) {
 	var gatewayInterface gateway_interfaces.GatewayInterface
 	rName := acctest.RandomWithPrefix("tf-acc-test")
 	resourceName := "ecl_network_gateway_interface_v2.test"
 
 	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckGatewayInterface(t) },
+		PreCheck:     func() { testAccPreCheckGatewayInterfaceInternet(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkV2GatewayInterfaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkV2GatewayInterfaceConfig(rName, "create", "created"),
+				Config: testAccNetworkV2GatewayInterfaceInternetConfig(rName, "create", "created"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2GatewayInterfaceExists(resourceName, &gatewayInterface),
 					resource.TestCheckResourceAttr(resourceName, "name", rName+"-create"),
@@ -52,7 +52,7 @@ func TestAccNetworkV2GatewayInterface_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccNetworkV2GatewayInterfaceConfig(rName, "update", "name and description are updated"),
+				Config: testAccNetworkV2GatewayInterfaceInternetConfig(rName, "update", "name and description are updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2GatewayInterfaceExists(resourceName, &gatewayInterface),
 					resource.TestCheckResourceAttr(resourceName, "name", rName+"-update"),
@@ -71,6 +71,81 @@ func TestAccNetworkV2GatewayInterface_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", ""),
 					resource.TestCheckResourceAttr(resourceName, "gcp_gw_id", ""),
 					resource.TestCheckResourceAttr(resourceName, "interdc_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "vpn_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "gw_vipv6", ""),
+					resource.TestCheckResourceAttr(resourceName, "primary_ipv6", ""),
+					resource.TestCheckResourceAttr(resourceName, "secondary_ipv6", ""),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccNetworkV2GatewayInterface_fic(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	var gatewayInterface gateway_interfaces.GatewayInterface
+	rName := acctest.RandomWithPrefix("tf-acc-test")
+	resourceName := "ecl_network_gateway_interface_v2.test"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckGatewayInterfaceFIC(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckNetworkV2GatewayInterfaceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2GatewayInterfaceFICConfig(rName, "create", "created"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2GatewayInterfaceExists(resourceName, &gatewayInterface),
+					resource.TestCheckResourceAttr(resourceName, "name", rName+"-create"),
+					resource.TestCheckResourceAttr(resourceName, "description", "created"),
+					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GATEWAY_ID),
+					resource.TestCheckResourceAttr(resourceName, "gw_vipv4", "192.168.200.1"),
+					resource.TestCheckResourceAttr(resourceName, "netmask", "29"),
+					resource.TestCheckResourceAttrSet(resourceName, "network_id"),
+					resource.TestCheckResourceAttr(resourceName, "primary_ipv4", "192.168.200.2"),
+					resource.TestCheckResourceAttr(resourceName, "secondary_ipv4", "192.168.200.3"),
+					resource.TestCheckResourceAttr(resourceName, "service_type", "fic"),
+					resource.TestCheckResourceAttrSet(resourceName, "tenant_id"),
+					resource.TestCheckResourceAttr(resourceName, "vrid", "1"),
+					resource.TestCheckResourceAttr(resourceName, "aws_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "azure_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "gcp_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "interdc_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "internet_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "vpn_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "gw_vipv6", ""),
+					resource.TestCheckResourceAttr(resourceName, "primary_ipv6", ""),
+					resource.TestCheckResourceAttr(resourceName, "secondary_ipv6", ""),
+				),
+			},
+			{
+				Config: testAccNetworkV2GatewayInterfaceFICConfig(rName, "update", "name and description are updated"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2GatewayInterfaceExists(resourceName, &gatewayInterface),
+					resource.TestCheckResourceAttr(resourceName, "name", rName+"-update"),
+					resource.TestCheckResourceAttr(resourceName, "description", "name and description are updated"),
+					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GATEWAY_ID),
+					resource.TestCheckResourceAttr(resourceName, "gw_vipv4", "192.168.200.1"),
+					resource.TestCheckResourceAttr(resourceName, "netmask", "29"),
+					resource.TestCheckResourceAttrSet(resourceName, "network_id"),
+					resource.TestCheckResourceAttr(resourceName, "primary_ipv4", "192.168.200.2"),
+					resource.TestCheckResourceAttr(resourceName, "secondary_ipv4", "192.168.200.3"),
+					resource.TestCheckResourceAttr(resourceName, "service_type", "fic"),
+					resource.TestCheckResourceAttrSet(resourceName, "tenant_id"),
+					resource.TestCheckResourceAttr(resourceName, "vrid", "1"),
+					resource.TestCheckResourceAttr(resourceName, "aws_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "azure_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "gcp_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "interdc_gw_id", ""),
+					resource.TestCheckResourceAttr(resourceName, "internet_gw_id", ""),
 					resource.TestCheckResourceAttr(resourceName, "vpn_gw_id", ""),
 					resource.TestCheckResourceAttr(resourceName, "gw_vipv6", ""),
 					resource.TestCheckResourceAttr(resourceName, "primary_ipv6", ""),
@@ -140,7 +215,7 @@ func testAccCheckNetworkV2GatewayInterfaceExists(n string, gatewayInterface *gat
 	}
 }
 
-func testAccNetworkV2GatewayInterfaceConfig(rName, nameSuffix, description string) string {
+func testAccNetworkV2GatewayInterfaceInternetConfig(rName, nameSuffix, description string) string {
 	return fmt.Sprintf(`
 resource "ecl_network_network_v2" "test" {
     name = %[1]q
@@ -179,4 +254,34 @@ resource "ecl_network_gateway_interface_v2" "test" {
     depends_on = ["ecl_network_subnet_v2.test"]
 }
 `, rName, nameSuffix, description, OS_QOS_OPTION_ID_10M)
+}
+
+func testAccNetworkV2GatewayInterfaceFICConfig(rName, nameSuffix, description string) string {
+	return fmt.Sprintf(`
+resource "ecl_network_network_v2" "test" {
+    name = %[1]q
+}
+
+resource "ecl_network_subnet_v2" "test" {
+    name = %[1]q
+    cidr = "192.168.200.0/29"
+    enable_dhcp = false
+    no_gateway = true
+    network_id = ecl_network_network_v2.test.id
+}
+
+resource "ecl_network_gateway_interface_v2" "test" {
+    description =  %[3]q
+    gw_vipv4 = "192.168.200.1"
+    fic_gw_id = %[4]q
+    name = "%[1]s-%[2]s"
+    netmask = 29
+    network_id = ecl_network_network_v2.test.id
+    primary_ipv4 = "192.168.200.2"
+    secondary_ipv4 = "192.168.200.3"
+    service_type = "fic"
+    vrid = 1
+    depends_on = ["ecl_network_subnet_v2.test"]
+}
+`, rName, nameSuffix, description, OS_FIC_GATEWAY_ID)
 }
