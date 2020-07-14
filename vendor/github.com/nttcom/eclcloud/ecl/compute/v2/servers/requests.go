@@ -293,13 +293,6 @@ func Delete(client *eclcloud.ServiceClient, id string) (r DeleteResult) {
 	return
 }
 
-// ForceDelete forces the deletion of a server.
-// Disabled this, because ECL2.0 does not have forceDelete function.
-// func ForceDelete(client *eclcloud.ServiceClient, id string) (r ActionResult) {
-// 	_, r.Err = client.Post(actionURL(client, id), map[string]interface{}{"forceDelete": ""}, nil, nil)
-// 	return
-// }
-
 // Get requests details on a single server, by ID.
 func Get(client *eclcloud.ServiceClient, id string) (r GetResult) {
 	_, r.Err = client.Get(getURL(client, id), &r.Body, &eclcloud.RequestOpts{
@@ -347,151 +340,6 @@ func Update(client *eclcloud.ServiceClient, id string, opts UpdateOptsBuilder) (
 	return
 }
 
-// // ChangeAdminPassword alters the administrator or root password for a specified
-// // server.
-// func ChangeAdminPassword(client *eclcloud.ServiceClient, id, newPassword string) (r ActionResult) {
-// 	b := map[string]interface{}{
-// 		"changePassword": map[string]string{
-// 			"adminPass": newPassword,
-// 		},
-// 	}
-// 	_, r.Err = client.Post(actionURL(client, id), b, nil, nil)
-// 	return
-// }
-
-// RebootMethod describes the mechanisms by which a server reboot can be requested.
-type RebootMethod string
-
-// These constants determine how a server should be rebooted.
-// See the Reboot() function for further details.
-const (
-	SoftReboot RebootMethod = "SOFT"
-	HardReboot RebootMethod = "HARD"
-	OSReboot                = SoftReboot
-	PowerCycle              = HardReboot
-)
-
-// RebootOptsBuilder allows extensions to add additional parameters to the
-// reboot request.
-type RebootOptsBuilder interface {
-	ToServerRebootMap() (map[string]interface{}, error)
-}
-
-// RebootOpts provides options to the reboot request.
-type RebootOpts struct {
-	// Type is the type of reboot to perform on the server.
-	Type RebootMethod `json:"type" required:"true"`
-}
-
-// ToServerRebootMap builds a body for the reboot request.
-func (opts RebootOpts) ToServerRebootMap() (map[string]interface{}, error) {
-	return eclcloud.BuildRequestBody(opts, "reboot")
-}
-
-/*
-	Reboot requests that a given server reboot.
-
-	Two methods exist for rebooting a server:
-
-	HardReboot (aka PowerCycle) starts the server instance by physically cutting
-	power to the machine, or if a VM, terminating it at the hypervisor level.
-	It's done. Caput. Full stop.
-	Then, after a brief while, power is rtored or the VM instance restarted.
-
-	SoftReboot (aka OSReboot) simply tells the OS to restart under its own
-	procedure.
-	E.g., in Linux, asking it to enter runlevel 6, or executing
-	"sudo shutdown -r now", or by asking Windows to rtart the machine.
-*/
-func Reboot(client *eclcloud.ServiceClient, id string, opts RebootOptsBuilder) (r ActionResult) {
-	b, err := opts.ToServerRebootMap()
-	if err != nil {
-		r.Err = err
-		return
-	}
-	_, r.Err = client.Post(actionURL(client, id), b, nil, nil)
-	return
-}
-
-// RebuildOptsBuilder allows extensions to provide additional parameters to the
-// rebuild request.
-type RebuildOptsBuilder interface {
-	ToServerRebuildMap() (map[string]interface{}, error)
-}
-
-// RebuildOpts represents the configuration options used in a server rebuild
-// operation.
-type RebuildOpts struct {
-	// AdminPass is the server's admin password
-	AdminPass string `json:"adminPass,omitempty"`
-
-	// ImageID is the ID of the image you want your server to be provisioned on.
-	ImageID string `json:"imageRef"`
-
-	// ImageName is readable name of an image.
-	ImageName string `json:"-"`
-
-	// Name to set the server to
-	Name string `json:"name,omitempty"`
-
-	// AccessIPv4 [optional] provides a new IPv4 address for the instance.
-	AccessIPv4 string `json:"accessIPv4,omitempty"`
-
-	// AccessIPv6 [optional] provides a new IPv6 address for the instance.
-	// AccessIPv6 string `json:"accessIPv6,omitempty"`
-
-	// Metadata [optional] contains key-value pairs (up to 255 bytes each)
-	// to attach to the server.
-	Metadata map[string]string `json:"metadata,omitempty"`
-
-	// Personality [optional] includes files to inject into the server at launch.
-	// Rebuild will base64-encode file contents for you.
-	// Personality Personality `json:"personality,omitempty"`
-
-	// ServiceClient will allow calls to be made to retrieve an image or
-	// flavor ID by name.
-	ServiceClient *eclcloud.ServiceClient `json:"-"`
-}
-
-// ToServerRebuildMap formats a RebuildOpts struct into a map for use in JSON
-func (opts RebuildOpts) ToServerRebuildMap() (map[string]interface{}, error) {
-	b, err := eclcloud.BuildRequestBody(opts, "")
-	if err != nil {
-		return nil, err
-	}
-
-	// If ImageRef isn't provided, check if ImageName was provided to ascertain
-	// the image ID.
-	if opts.ImageID == "" {
-		if opts.ImageName != "" {
-			if opts.ServiceClient == nil {
-				err := ErrNoClientProvidedForIDByName{}
-				err.Argument = "ServiceClient"
-				return nil, err
-			}
-			imageID, err := images.IDFromName(opts.ServiceClient, opts.ImageName)
-			if err != nil {
-				return nil, err
-			}
-			b["imageRef"] = imageID
-		}
-	}
-
-	return map[string]interface{}{"rebuild": b}, nil
-}
-
-// Rebuild will reprovision the server according to the configuration options
-// provided in the RebuildOpts struct.
-func Rebuild(client *eclcloud.ServiceClient, id string, opts RebuildOptsBuilder) (r RebuildResult) {
-	b, err := opts.ToServerRebuildMap()
-	if err != nil {
-		r.Err = err
-		return
-	}
-	_, r.Err = client.Post(actionURL(client, id), b, &r.Body, nil)
-	return
-}
-
 // ResizeOptsBuilder allows extensions to add additional parameters to the
 // resize request.
 type ResizeOptsBuilder interface {
@@ -527,22 +375,6 @@ func Resize(client *eclcloud.ServiceClient, id string, opts ResizeOptsBuilder) (
 		return
 	}
 	_, r.Err = client.Post(actionURL(client, id), b, nil, nil)
-	return
-}
-
-// ConfirmResize confirms a previous resize operation on a server.
-// See Resize() for more details.
-func ConfirmResize(client *eclcloud.ServiceClient, id string) (r ActionResult) {
-	_, r.Err = client.Post(actionURL(client, id), map[string]interface{}{"confirmResize": nil}, nil, &eclcloud.RequestOpts{
-		OkCodes: []int{201, 202, 204},
-	})
-	return
-}
-
-// RevertResize cancels a previous resize operation on a server.
-// See Resize() for more details.
-func RevertResize(client *eclcloud.ServiceClient, id string) (r ActionResult) {
-	_, r.Err = client.Post(actionURL(client, id), map[string]interface{}{"revertResize": nil}, nil, nil)
 	return
 }
 
@@ -665,22 +497,6 @@ func DeleteMetadatum(client *eclcloud.ServiceClient, id, key string) (r DeleteMe
 	return
 }
 
-// ListAddresses makes a request against the API to list the servers IP
-// addresses.
-func ListAddresses(client *eclcloud.ServiceClient, id string) pagination.Pager {
-	return pagination.NewPager(client, listAddressesURL(client, id), func(r pagination.PageResult) pagination.Page {
-		return AddressPage{pagination.SinglePageBase(r)}
-	})
-}
-
-// ListAddressesByNetwork makes a request against the API to list the servers IP
-// addresses for the given network.
-func ListAddressesByNetwork(client *eclcloud.ServiceClient, id, network string) pagination.Pager {
-	return pagination.NewPager(client, listAddressesByNetworkURL(client, id, network), func(r pagination.PageResult) pagination.Page {
-		return NetworkAddressPage{pagination.SinglePageBase(r)}
-	})
-}
-
 // CreateImageOptsBuilder allows extensions to add additional parameters to the
 // CreateImage request.
 type CreateImageOptsBuilder interface {
@@ -754,42 +570,4 @@ func IDFromName(client *eclcloud.ServiceClient, name string) (string, error) {
 	default:
 		return "", eclcloud.ErrMultipleResourcesFound{Name: name, Count: count, ResourceType: "server"}
 	}
-}
-
-// GetPassword makes a request against the nova API to get the encrypted
-// administrative password.
-func GetPassword(client *eclcloud.ServiceClient, serverId string) (r GetPasswordResult) {
-	_, r.Err = client.Get(passwordURL(client, serverId), &r.Body, nil)
-	return
-}
-
-// ShowConsoleOutputOptsBuilder is the interface types must satisfy in order to be
-// used as ShowConsoleOutput options
-type ShowConsoleOutputOptsBuilder interface {
-	ToServerShowConsoleOutputMap() (map[string]interface{}, error)
-}
-
-// ShowConsoleOutputOpts satisfies the ShowConsoleOutputOptsBuilder
-type ShowConsoleOutputOpts struct {
-	// The number of lines to fetch from the end of console log.
-	// All lines will be returned if this is not specified.
-	Length int `json:"length,omitempty"`
-}
-
-// ToServerShowConsoleOutputMap formats a ShowConsoleOutputOpts structure into a request body.
-func (opts ShowConsoleOutputOpts) ToServerShowConsoleOutputMap() (map[string]interface{}, error) {
-	return eclcloud.BuildRequestBody(opts, "os-getConsoleOutput")
-}
-
-// ShowConsoleOutput makes a request against the nova API to get console log from the server
-func ShowConsoleOutput(client *eclcloud.ServiceClient, id string, opts ShowConsoleOutputOptsBuilder) (r ShowConsoleOutputResult) {
-	b, err := opts.ToServerShowConsoleOutputMap()
-	if err != nil {
-		r.Err = err
-		return
-	}
-	_, r.Err = client.Post(actionURL(client, id), b, &r.Body, &eclcloud.RequestOpts{
-		OkCodes: []int{200},
-	})
-	return
 }

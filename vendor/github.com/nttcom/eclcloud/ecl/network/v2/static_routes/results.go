@@ -40,6 +40,7 @@ type StaticRoute struct {
 	AzureGwID    string `json:"azure_gw_id"`
 	Description  string `json:"description"`
 	Destination  string `json:"destination"`
+	FICGatewayID string `json:"fic_gw_id"`
 	GcpGwID      string `json:"gcp_gw_id"`
 	ID           string `json:"id"`
 	InterdcGwID  string `json:"interdc_gw_id"`

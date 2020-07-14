@@ -1,8 +1,6 @@
 package servers
 
 import (
-	"crypto/rsa"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -56,12 +54,6 @@ type DeleteResult struct {
 	eclcloud.ErrResult
 }
 
-// RebuildResult is the response from a Rebuild operation. Call its Extract
-// method to interpret it as a Server.
-type RebuildResult struct {
-	serverResult
-}
-
 // ActionResult represents the result of server action operations, like reboot.
 // Call its ExtractErr method to determine if the action succeeded or failed.
 type ActionResult struct {
@@ -72,58 +64,6 @@ type ActionResult struct {
 // ExtractImageID method to retrieve the ID of the newly created image.
 type CreateImageResult struct {
 	eclcloud.Result
-}
-
-// ShowConsoleOutputResult represents the result of console output from a server
-type ShowConsoleOutputResult struct {
-	eclcloud.Result
-}
-
-// Extract will return the console output from a ShowConsoleOutput request.
-func (r ShowConsoleOutputResult) Extract() (string, error) {
-	var s struct {
-		Output string `json:"output"`
-	}
-
-	err := r.ExtractInto(&s)
-	return s.Output, err
-}
-
-// GetPasswordResult represent the result of a get os-server-password operation.
-// Call its ExtractPassword method to retrieve the password.
-type GetPasswordResult struct {
-	eclcloud.Result
-}
-
-// ExtractPassword gets the encrypted password.
-// If privateKey != nil the password is decrypted with the private key.
-// If privateKey == nil the encrypted password is returned and can be decrypted
-// with:
-//   echo '<pwd>' | base64 -D | openssl rsautl -decrypt -inkey <private_key>
-func (r GetPasswordResult) ExtractPassword(privateKey *rsa.PrivateKey) (string, error) {
-	var s struct {
-		Password string `json:"password"`
-	}
-	err := r.ExtractInto(&s)
-	if err == nil && privateKey != nil && s.Password != "" {
-		return decryptPassword(s.Password, privateKey)
-	}
-	return s.Password, err
-}
-
-func decryptPassword(encryptedPassword string, privateKey *rsa.PrivateKey) (string, error) {
-	b64EncryptedPassword := make([]byte, base64.StdEncoding.DecodedLen(len(encryptedPassword)))
-
-	n, err := base64.StdEncoding.Decode(b64EncryptedPassword, []byte(encryptedPassword))
-	if err != nil {
-		return "", fmt.Errorf("failed to base64 decode encrypted password: %s", err)
-	}
-	password, err := rsa.DecryptPKCS1v15(nil, privateKey, b64EncryptedPassword[0:n])
-	if err != nil {
-		return "", fmt.Errorf("failed to decrypt password: %s", err)
-	}
-
-	return string(password), nil
 }
 
 // ExtractImageID gets the ID of the newly created server image from the header.
@@ -214,6 +154,9 @@ type Server struct {
 
 	// Fault contains failure information about a server.
 	Fault Fault `json:"fault"`
+
+	// ConfigDrive is the name of the server's config drive.
+	ConfigDrive string `json:"config_drive"`
 }
 
 type Fault struct {
@@ -349,67 +292,4 @@ func (r MetadatumResult) Extract() (map[string]string, error) {
 	}
 	err := r.ExtractInto(&s)
 	return s.Metadatum, err
-}
-
-// Address represents an IP address.
-type Address struct {
-	Version int    `json:"version"`
-	Address string `json:"addr"`
-}
-
-// AddressPage abstracts the raw results of making a ListAddresses() request
-// against the API.
-// As Enterprise Cloud extensions may freely alter the response bodies
-// of structures returned to the client, you may only safely access the data
-// provided through the ExtractAddresses call.
-type AddressPage struct {
-	pagination.SinglePageBase
-}
-
-// IsEmpty returns true if an AddressPage contains no networks.
-func (r AddressPage) IsEmpty() (bool, error) {
-	addresses, err := ExtractAddresses(r)
-	return len(addresses) == 0, err
-}
-
-// ExtractAddresses interprets the results of a single page from a
-// ListAddresses() call, producing a map of addresses.
-func ExtractAddresses(r pagination.Page) (map[string][]Address, error) {
-	var s struct {
-		Addresses map[string][]Address `json:"addresses"`
-	}
-	err := (r.(AddressPage)).ExtractInto(&s)
-	return s.Addresses, err
-}
-
-// NetworkAddressPage abstracts the raw results of making a
-// ListAddressesByNetwork() request against the API.
-// As Enterprise Cloud extensions may freely alter the response bodies of structures
-// returned to the client, you may only safely access the data provided through
-// the ExtractAddresses call.
-type NetworkAddressPage struct {
-	pagination.SinglePageBase
-}
-
-// IsEmpty returns true if a NetworkAddressPage contains no addresses.
-func (r NetworkAddressPage) IsEmpty() (bool, error) {
-	addresses, err := ExtractNetworkAddresses(r)
-	return len(addresses) == 0, err
-}
-
-// ExtractNetworkAddresses interprets the results of a single page from a
-// ListAddressesByNetwork() call, producing a slice of addresses.
-func ExtractNetworkAddresses(r pagination.Page) ([]Address, error) {
-	var s map[string][]Address
-	err := (r.(NetworkAddressPage)).ExtractInto(&s)
-	if err != nil {
-		return nil, err
-	}
-
-	var key string
-	for k := range s {
-		key = k
-	}
-
-	return s[key], err
 }

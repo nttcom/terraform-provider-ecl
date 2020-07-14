@@ -14,6 +14,7 @@ type ListOpts struct {
 	AzureGwID    string `q:"azure_gw_id"`
 	Description  string `q:"description"`
 	Destination  string `q:"destination"`
+	FICGatewayID string `q:"fic_gw_id"`
 	GcpGwID      string `q:"gcp_gw_id"`
 	ID           string `q:"id"`
 	InterdcGwID  string `q:"inter_dc_id"`
@@ -59,6 +60,7 @@ type CreateOpts struct {
 	AzureGwID    string `json:"azure_gw_id,omitempty"`
 	Description  string `json:"description"`
 	Destination  string `json:"destination" required:"true"`
+	FICGatewayID string `json:"fic_gw_id"`
 	GcpGwID      string `json:"gcp_gw_id,omitempty"`
 	InterdcGwID  string `json:"inter_dc_id,omitempty"`
 	InternetGwID string `json:"internet_gw_id,omitempty"`
