@@ -95,9 +95,10 @@ func dataSourceNetworkPortV2() *schema.Resource {
 				Optional: true,
 			},
 			"region": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
+				Type:       schema.TypeString,
+				Computed:   true,
+				Optional:   true,
+				Deprecated: "This region field is deprecated and will be removed from a future version.",
 			},
 			"segmentation_id": {
 				Type:     schema.TypeInt,

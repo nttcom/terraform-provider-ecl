@@ -100,9 +100,10 @@ func dataSourceNetworkSubnetV2() *schema.Resource {
 				},
 			},
 			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "This region field is deprecated and will be removed from a future version.",
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,

@@ -20,7 +20,7 @@ data "ecl_network_public_ip_v2" "public_ip_1" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Network client.
+* `region` - (Deprecated) The region in which to obtain the V2 Network client.
     If omitted, the `region` argument of the provider is used.
 
 * `cidr` - (Optional) The IP address of the block (assigned automatically).

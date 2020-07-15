@@ -20,7 +20,7 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Network client.
+* `region` - (Deprecated) The region in which to obtain the V2 Network client.
     If omitted, the `region` argument of the provider is used.
 
 * `description` - (Optional) Description of the Internet Service resource.

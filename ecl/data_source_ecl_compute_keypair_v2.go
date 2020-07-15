@@ -13,9 +13,10 @@ func dataSourceComputeKeypairV2() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "This region field is deprecated and will be removed from a future version.",
 			},
 
 			"name": &schema.Schema{

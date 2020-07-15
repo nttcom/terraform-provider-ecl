@@ -30,10 +30,11 @@ func resourceNetworkInternetGatewayV2() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Computed:   true,
+				Deprecated: "This region field is deprecated and will be removed from a future version.",
 			},
 			"description": &schema.Schema{
 				Type:     schema.TypeString,

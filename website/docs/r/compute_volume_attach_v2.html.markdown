@@ -27,7 +27,7 @@ resource "ecl_compute_volume_attach_v2" "volume_attach_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Compute client.
+* `region` - (Deprecated) The region in which to obtain the V2 Compute client.
     A Compute client is needed to create a volume attachment. If omitted, the
     `region` argument of the provider is used. Changing this creates a
     new volume attachment.

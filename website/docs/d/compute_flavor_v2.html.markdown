@@ -21,7 +21,7 @@ data "ecl_compute_flavor_v2" "flavor_1cpu_4gb" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Compute client.
+* `region` - (Deprecated) The region in which to obtain the V2 Compute client.
     If omitted, the `region` argument of the provider is used.
 
 * `name` - (Optional) The name of the flavor.
