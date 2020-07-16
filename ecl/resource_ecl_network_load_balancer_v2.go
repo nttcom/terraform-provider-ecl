@@ -619,9 +619,6 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 				var networkID interface{}
 				networkID = nil
 				updateInterfaceOpts.NetworkID = &networkID
-				var IPAddress interface{}
-				IPAddress = nil
-				updateInterfaceOpts.IPAddress = &IPAddress
 
 				newAvailableInterfaceIds = append(newAvailableInterfaceIds, om["id"].(string))
 			}
@@ -1192,11 +1189,7 @@ func getLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig map[string]interf
 
 	if elem, ok := interfaceConfig["ip_address"]; ok {
 		s := elem.(string)
-		if s != "" {
-			var ipAddress interface{}
-			ipAddress = s
-			updateInterfaceOpts.IPAddress = &ipAddress
-		}
+		updateInterfaceOpts.IPAddress = s
 	}
 
 	if elem, ok := interfaceConfig["name"]; ok {
@@ -1205,12 +1198,9 @@ func getLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig map[string]interf
 	}
 
 	if elem, ok := interfaceConfig["network_id"]; ok {
-		s := elem.(string)
-		if s != "" {
-			var networkID interface{}
-			networkID = s
-			updateInterfaceOpts.NetworkID = &networkID
-		}
+		var networkID interface{}
+		networkID = elem
+		updateInterfaceOpts.NetworkID = &networkID
 	}
 
 	if elem, ok := interfaceConfig["virtual_ip_address"]; ok {
@@ -1252,21 +1242,9 @@ func getLoadBalancerInterfaceChanges(om map[string]interface{}, nm map[string]in
 		om["network_id"] != nm["network_id"] {
 		isUpdated = true
 		// Both ip_address and network properties must be provided to API.
-		s := nm["ip_address"]
-		var ipAddress interface{}
-		if s == "" {
-			ipAddress = nil
-		} else {
-			ipAddress = s
-		}
-		updateOpts.IPAddress = &ipAddress
-		s = nm["network_id"]
+		updateOpts.IPAddress = nm["ip_address"].(string)
 		var networkID interface{}
-		if s == "" {
-			networkID = nil
-		} else {
-			networkID = s
-		}
+		networkID = nm["network_id"]
 		updateOpts.NetworkID = &networkID
 	}
 
