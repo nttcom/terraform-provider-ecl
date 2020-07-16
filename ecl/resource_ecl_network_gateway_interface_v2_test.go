@@ -106,7 +106,7 @@ func TestAccNetworkV2GatewayInterface_fic(t *testing.T) {
 					testAccCheckNetworkV2GatewayInterfaceExists(resourceName, &gatewayInterface),
 					resource.TestCheckResourceAttr(resourceName, "name", rName+"-create"),
 					resource.TestCheckResourceAttr(resourceName, "description", "created"),
-					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GATEWAY_ID),
+					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GW_ID),
 					resource.TestCheckResourceAttr(resourceName, "gw_vipv4", "192.168.200.1"),
 					resource.TestCheckResourceAttr(resourceName, "netmask", "29"),
 					resource.TestCheckResourceAttrSet(resourceName, "network_id"),
@@ -132,7 +132,7 @@ func TestAccNetworkV2GatewayInterface_fic(t *testing.T) {
 					testAccCheckNetworkV2GatewayInterfaceExists(resourceName, &gatewayInterface),
 					resource.TestCheckResourceAttr(resourceName, "name", rName+"-update"),
 					resource.TestCheckResourceAttr(resourceName, "description", "name and description are updated"),
-					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GATEWAY_ID),
+					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GW_ID),
 					resource.TestCheckResourceAttr(resourceName, "gw_vipv4", "192.168.200.1"),
 					resource.TestCheckResourceAttr(resourceName, "netmask", "29"),
 					resource.TestCheckResourceAttrSet(resourceName, "network_id"),
@@ -283,5 +283,5 @@ resource "ecl_network_gateway_interface_v2" "test" {
     vrid = 1
     depends_on = ["ecl_network_subnet_v2.test"]
 }
-`, rName, nameSuffix, description, OS_FIC_GATEWAY_ID)
+`, rName, nameSuffix, description, OS_FIC_GW_ID)
 }

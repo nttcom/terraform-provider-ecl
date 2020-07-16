@@ -22,7 +22,7 @@ var (
 	OS_COMPUTE_ZONE_HA                       = os.Getenv("OS_COMPUTE_ZONE_HA")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
-	OS_FIC_GATEWAY_ID                        = os.Getenv("OS_FIC_GATEWAY_ID")
+	OS_FIC_GW_ID                             = os.Getenv("OS_FIC_GW_ID")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
 	OS_QOS_OPTION_ID_100M                    = os.Getenv("OS_QOS_OPTION_ID_100M")
 	OS_QOS_OPTION_ID_10M                     = os.Getenv("OS_QOS_OPTION_ID_10M")
@@ -306,8 +306,8 @@ func testAccPreCheckGatewayInterfaceInternet(t *testing.T) {
 func testAccPreCheckGatewayInterfaceFIC(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 
-	if OS_FIC_GATEWAY_ID == "" {
-		t.Fatal("OS_FIC_GATEWAY_ID must be set for acceptance tests")
+	if OS_FIC_GW_ID == "" {
+		t.Fatal("OS_FIC_GW_ID must be set for acceptance tests")
 	}
 }
 
