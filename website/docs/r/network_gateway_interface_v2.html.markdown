@@ -10,8 +10,6 @@ description: |-
 
 Manages a V2 gateway interface resource within Enterprise Cloud.
 
-~> **Notice** We only support Gateway interface with service_type "internet" for now.
-
 ## Example Usage
 
 ### Basic Gateway Interface (with service_type "internet")
@@ -43,25 +41,26 @@ The following arguments are supported:
     Changing this creates a new gateway interface.
 
 * `aws_gw_id` - (Optional) AWS Gateway to which this port is connected.
-    Conflicts with "azure_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
+    Conflicts with "azure_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
 
 * `azure_gw_id` - (Optional) Azure Gateway to which this port is connected.
-    Conflicts with "aws_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
+    Conflicts with "aws_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
 
 * `description` - (Optional) Description of the Gateway Interface resource.
 
+* `fic_gw_id` - (Optional) FIC Gateway to which this port is connected.
+    Conflicts with "aws_gw_id", "azure_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
+
 * `gcp_gw_id` - (Optional) GCP Gateway to which this port is connected.
-    Conflicts with "aws_gw_id", "azure_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
+    Conflicts with "aws_gw_id", "azure_gw_id", "fic_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
 
 * `gw_vipv4` - (Required) IP version 4 address to be assigned virtual router on VRRP.
 
-* `gw_vipv6` - (Optional) IP version 6 address to be assigned virtual router on VRRP.
-
 * `interdc_gw_id` - (Optional) Inter DC Gateway to which this port is connected.
-    Conflicts with "aws_gw_id", "azure_gw_id", "gcp_gw_id", "internet_gw_id" and "vpn_gw_id".
+    Conflicts with "aws_gw_id", "azure_gw_id", "fic_gw_id", "gcp_gw_id", "internet_gw_id" and "vpn_gw_id".
 
 * `internet_gw_id` - (Optional) Internet GW to which this port is connected.
-    Conflicts with "aws_gw_id", "azure_gw_id", "gcp_gw_id", "interdc_gw_id" and "vpn_gw_id".
+    Conflicts with "aws_gw_id", "azure_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id" and "vpn_gw_id".
 
 * `name` - (Optional) Name of the Gateway Interface resource.
 
@@ -71,19 +70,15 @@ The following arguments are supported:
 
 * `primary_ipv4` - (Required) IP version 4 address to be assigned to primary device on VRRP.
 
-* `primary_ipv6` - (Optional) IP version 6 address to be assigned to primary device on VRRP.
-
 * `secondary_ipv4` - (Required) IP version 4 address to be assigned to secondary device on VRRP.
 
-* `secondary_ipv6` - (Optional) IP version 6 address to be assigned to secondary device on VRRP.
-
 * `service_type` - (Required) Service type for this interface.
-    Must be one of "aws", "azure", "gcp", "interdc", "internet" and "vpn".
+    Must be one of "aws", "azure", "fic", "gcp", "interdc", "internet" and "vpn".
 
 * `tenant_id` - (Optional) Tenant ID of the owner (UUID).
 
 * `vpn_gw_id` - (Optional) VPN Gateway to which this port is connected.
-    Conflicts with "aws_gw_id", "azure_gw_id", "gcp_gw_id", "interdc_gw_id" and "internet_gw_id".
+    Conflicts with "aws_gw_id", "azure_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id" and "internet_gw_id".
 
 * `vrid` - (Required) VRRP Group ID for this GW Interface.
 
@@ -94,11 +89,14 @@ The following attributes are exported:
 
 * `region` - See Argument Reference above.
 * `tenant_id` - See Argument Reference above.
+* `gw_vipv6` - IP version 6 address to be assigned virtual router on VRRP.
+* `primary_ipv6` - IP version 6 address to be assigned to primary device on VRRP.
+* `secondary_ipv6` - IP version 6 address to be assigned to secondary device on VRRP.
 
 ## Import
 
-Gateway interfaces can be imported using the `name`, e.g.
+Gateway interfaces can be imported using the `id`, e.g.
 
 ```
-$ terraform import ecl_network_gateway_interface_v2.gateway_interface_1 Terraform_Test_Gateway_Interface_01
+$ terraform import ecl_network_gateway_interface_v2.gateway_interface_1 12610e1b-f675-437b-8b1a-f4d19f92421e
 ```
