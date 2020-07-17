@@ -34,7 +34,7 @@ func resourceNetworkPublicIPV2() *schema.Resource {
 				Optional:   true,
 				ForceNew:   true,
 				Computed:   true,
-				Deprecated: "This region field is deprecated and will be removed from a future version.",
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 			"cidr": &schema.Schema{
 				Type:     schema.TypeString,

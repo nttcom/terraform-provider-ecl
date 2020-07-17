@@ -20,7 +20,7 @@ data "ecl_compute_keypair_v2" "kp" {
 
 ## Argument Reference
 
-* `region` - (Deprecated) The region in which to obtain the V2 Compute client.
+* `region` - (Optional, Deprecated) The region in which to obtain the V2 Compute client.
     If omitted, the `region` argument of the provider is used.
 
 * `name` - (Required) The unique name of the keypair.

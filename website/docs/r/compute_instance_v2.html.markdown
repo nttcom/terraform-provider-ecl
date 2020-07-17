@@ -124,7 +124,7 @@ resource "ecl_compute_instance_v2" "instance_1" {
 
 The following arguments are supported:
 
-* `region` - (Deprecated) The region in which to create the server instance. If
+* `region` - (Optional, Deprecated) The region in which to create the server instance. If
     omitted, the `region` argument of the provider is used. Changing this
     creates a new server.
 

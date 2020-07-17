@@ -33,7 +33,7 @@ func resourceImageStoragesMemberV2() *schema.Resource {
 				Optional:   true,
 				Computed:   true,
 				ForceNew:   true,
-				Deprecated: "This region field is deprecated and will be removed from a future version.",
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 
 			"member_id": &schema.Schema{

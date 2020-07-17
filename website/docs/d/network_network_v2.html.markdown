@@ -31,7 +31,7 @@ data "ecl_network_network_v2" "network" {
 * `plane` - (Optional) The plane of the network.
     Allowed values are "data" and "storage".
 
-* `region` - (Deprecated) The region in which to obtain the V2 Neutron client.
+* `region` - (Optional, Deprecated) The region in which to obtain the V2 Neutron client.
   A Neutron client is needed to retrieve networks ids. If omitted, the
   `region` argument of the provider is used.
 

@@ -49,7 +49,7 @@ func dataSourceNetworkNetworkV2() *schema.Resource {
 				Type:       schema.TypeString,
 				Optional:   true,
 				Computed:   true,
-				Deprecated: "This region field is deprecated and will be removed from a future version.",
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
