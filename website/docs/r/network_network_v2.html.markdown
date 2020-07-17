@@ -36,7 +36,7 @@ The following arguments are supported:
     Allowed values are "data" and "storage".
     Changing this creates a new network.
 
-* `region` - (Optional, Deprecated) The region in which to obtain the V2 Networking client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Networking client.
     A Networking client is needed to create a Neutron network. If omitted, the
     `region` argument of the provider is used. Changing this creates a new
     network.

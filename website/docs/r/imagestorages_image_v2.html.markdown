@@ -27,7 +27,7 @@ resource "ecl_imagestorages_image_v2" "image_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional, Deprecated) The region in which to obtain the V2 Imagestorage client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Imagestorage client.
     Images are associated with accounts, but a Imagestroage client is needed to
     create one. If omitted, the `region` argument of the provider is used.
     Changing this creates a new image.

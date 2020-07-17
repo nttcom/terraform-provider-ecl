@@ -21,7 +21,7 @@ data "ecl_dns_zone_v2" "zone_1" {
 
 ## Argument Reference
 
-* `region` - (Optional, Deprecated) The region of the zone.
+* `region` - (Optional, **DEPRECATED**) The region of the zone.
 
 * `domain_name` - (Optional) Domain name of the zone.
 

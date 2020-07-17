@@ -57,7 +57,7 @@ The following arguments are supported:
     gateway of `.1` to be used. Changing this updates the gateway IP of the
     existing subnet.
 
-* `region` - (Optional, Deprecated) The region in which to obtain the V2 Networking client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Networking client.
     A Networking client is needed to create a Neutron subnet. If omitted, the
     `region` argument of the provider is used. Changing this creates a new
     subnet.

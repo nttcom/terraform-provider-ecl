@@ -20,7 +20,7 @@ data "ecl_network_gateway_interface_v2" "gateway_interface_1" {
 
 ## Argument Reference
 
-* `region` - (Optional, Deprecated) The region in which to obtain the V2 Network client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Network client.
     If omitted, the `region` argument of the provider is used.
 
 * `aws_gw_id` - (Optional) AWS Gateway to which this port is connected.

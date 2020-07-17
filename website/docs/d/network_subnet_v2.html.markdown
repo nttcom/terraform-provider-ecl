@@ -39,7 +39,7 @@ The following arguments are supported:
 * `network_id` - (Required) The UUID of the parent network. Changing this
     creates a new subnet.
 
-* `region` - (Optional, Deprecated) The region in which to obtain the V2 Network client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Network client.
     A Network client is needed to retrieve subnet ids. If omitted, the
     `region` argument of the provider is used.
 
