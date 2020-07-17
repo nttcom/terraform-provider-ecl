@@ -35,10 +35,7 @@ Must set "ecl_network_subnet_v2" resources in "depends_on" schema to declare dep
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Network client.
-    Gateway interfaces are associated with accounts, but a Network client is needed to
-    create one. If omitted, the `region` argument of the provider is used.
-    Changing this creates a new gateway interface.
+* `region` - (Deprecated) The region in which to obtain the V2 Network client.
 
 * `aws_gw_id` - (Optional) AWS Gateway to which this port is connected.
     Conflicts with "azure_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
