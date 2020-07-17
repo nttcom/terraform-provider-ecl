@@ -17,11 +17,11 @@ func TestAccNetworkV2FICGatewayDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkV2FICGatewayDataSourceBasic,
+				Config: testAccNetworkV2FICGatewayDataSourceName,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", OS_FIC_GW_DESCRIPTION),
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", ""),
 					resource.TestCheckResourceAttr(
 						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_service_id", OS_FIC_SERVICE_ID),
 					resource.TestCheckResourceAttr(
@@ -31,7 +31,7 @@ func TestAccNetworkV2FICGatewayDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "qos_option_id", OS_FIC_GW_QOS_OPTION_ID),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", OS_FIC_GW_STATUS),
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", "ACTIVE"),
 					resource.TestCheckResourceAttr(
 						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "tenant_id", OS_TENANT_ID),
 				),
@@ -40,24 +40,12 @@ func TestAccNetworkV2FICGatewayDataSource_basic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2FICGatewayDataSource_queries(t *testing.T) {
+func TestAccNetworkV2FICGatewayDataSource_querieFICServiceID(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
 
-	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
-		Providers: testAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkV2FICGatewayDataSourceDescription,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
-				),
-			},
-		},
-	})
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -65,11 +53,31 @@ func TestAccNetworkV2FICGatewayDataSource_queries(t *testing.T) {
 				Config: testAccNetworkV2FICGatewayDataSourceFICServiceID,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", ""),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_service_id", OS_FIC_SERVICE_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_gateway_id", OS_FIC_GW_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "name", OS_FIC_GW_NAME),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "qos_option_id", OS_FIC_GW_QOS_OPTION_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", "ACTIVE"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "tenant_id", OS_TENANT_ID),
 				),
 			},
 		},
 	})
-	resource.Test(t, resource.TestCase{
+}
+func TestAccNetworkV2FICGatewayDataSource_querieID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -77,35 +85,32 @@ func TestAccNetworkV2FICGatewayDataSource_queries(t *testing.T) {
 				Config: testAccNetworkV2FICGatewayDataSourceID,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", ""),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_service_id", OS_FIC_SERVICE_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_gateway_id", OS_FIC_GW_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "name", OS_FIC_GW_NAME),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "qos_option_id", OS_FIC_GW_QOS_OPTION_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", "ACTIVE"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "tenant_id", OS_TENANT_ID),
 				),
 			},
 		},
 	})
-	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
-		Providers: testAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkV2FICGatewayDataSourceID2,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
-				),
-			},
-		},
-	})
-	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
-		Providers: testAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkV2FICGatewayDataSourceName,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
-				),
-			},
-		},
-	})
-	resource.Test(t, resource.TestCase{
+}
+
+func TestAccNetworkV2FICGatewayDataSource_querieQoSOptionID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -113,11 +118,32 @@ func TestAccNetworkV2FICGatewayDataSource_queries(t *testing.T) {
 				Config: testAccNetworkV2FICGatewayDataSourceQoSOptionID,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", ""),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_service_id", OS_FIC_SERVICE_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_gateway_id", OS_FIC_GW_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "name", OS_FIC_GW_NAME),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "qos_option_id", OS_FIC_GW_QOS_OPTION_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", "ACTIVE"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "tenant_id", OS_TENANT_ID),
 				),
 			},
 		},
 	})
-	resource.Test(t, resource.TestCase{
+}
+
+func TestAccNetworkV2FICGatewayDataSource_querieStatus(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -125,11 +151,32 @@ func TestAccNetworkV2FICGatewayDataSource_queries(t *testing.T) {
 				Config: testAccNetworkV2FICGatewayDataSourceStatus,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", ""),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_service_id", OS_FIC_SERVICE_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_gateway_id", OS_FIC_GW_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "name", OS_FIC_GW_NAME),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "qos_option_id", OS_FIC_GW_QOS_OPTION_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", "ACTIVE"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "tenant_id", OS_TENANT_ID),
 				),
 			},
 		},
 	})
-	resource.Test(t, resource.TestCase{
+}
+
+func TestAccNetworkV2FICGatewayDataSource_querieTenantID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -137,19 +184,25 @@ func TestAccNetworkV2FICGatewayDataSource_queries(t *testing.T) {
 				Config: testAccNetworkV2FICGatewayDataSourceTenantID,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "description", ""),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_service_id", OS_FIC_SERVICE_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "fic_gateway_id", OS_FIC_GW_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "name", OS_FIC_GW_NAME),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "qos_option_id", OS_FIC_GW_QOS_OPTION_ID),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "status", "ACTIVE"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_network_fic_gateway_v2.fic_gateway_1", "tenant_id", OS_TENANT_ID),
 				),
 			},
 		},
 	})
-
 }
-
-var testAccNetworkV2FICGatewayDataSourceBasic = fmt.Sprintf(`
-data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	name = %q
-}
-`,
-	OS_FIC_GW_NAME)
 
 var testAccNetworkV2FICGatewayDataSourceDescription = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
@@ -172,17 +225,6 @@ data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
 `,
 	OS_FIC_GW_ID)
 
-var testAccNetworkV2FICGatewayDataSourceID2 = fmt.Sprintf(`
-data "ecl_network_fic_gateway_v2" "fic_gateway_0" {
-	name = %q
-}
-
-data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	fic_gateway_id = "${data.ecl_network_fic_gateway_v2.fic_gateway_0.id}"
-}
-`,
-	OS_FIC_GW_NAME)
-
 var testAccNetworkV2FICGatewayDataSourceName = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
 	name = %q
@@ -197,12 +239,11 @@ data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
 `,
 	OS_FIC_GW_QOS_OPTION_ID)
 
-var testAccNetworkV2FICGatewayDataSourceStatus = fmt.Sprintf(`
+var testAccNetworkV2FICGatewayDataSourceStatus = `
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	status = %q
+	status = "ACTIVE"
 }
-`,
-	OS_FIC_GW_STATUS)
+`
 
 var testAccNetworkV2FICGatewayDataSourceTenantID = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {

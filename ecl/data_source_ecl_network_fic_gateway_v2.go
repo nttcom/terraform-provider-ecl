@@ -54,73 +54,73 @@ func dataSourceNetworkFICGatewayV2() *schema.Resource {
 
 func dataSourceNetworkFICGatewayV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkClient, err := config.networkV2Client(GetRegion(d, config))
+	client, err := config.networkV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("error creating ECL network client: %w", err)
 	}
 
-	listOpts := fic_gateways.ListOpts{}
+	var opts fic_gateways.ListOpts
 
 	if v, ok := d.GetOk("description"); ok {
-		listOpts.Description = v.(string)
+		opts.Description = v.(string)
 	}
 
 	if v, ok := d.GetOk("fic_service_id"); ok {
-		listOpts.FICServiceID = v.(string)
+		opts.FICServiceID = v.(string)
 	}
 
 	if v, ok := d.GetOk("fic_gateway_id"); ok {
-		listOpts.ID = v.(string)
+		opts.ID = v.(string)
 	}
 
 	if v, ok := d.GetOk("name"); ok {
-		listOpts.Name = v.(string)
+		opts.Name = v.(string)
 	}
 
 	if v, ok := d.GetOk("qos_option_id"); ok {
-		listOpts.QoSOptionID = v.(string)
+		opts.QoSOptionID = v.(string)
 	}
 
 	if v, ok := d.GetOk("status"); ok {
-		listOpts.Status = v.(string)
+		opts.Status = v.(string)
 	}
 
 	if v, ok := d.GetOk("tenant_id"); ok {
-		listOpts.TenantID = v.(string)
+		opts.TenantID = v.(string)
 	}
 
-	pages, err := fic_gateways.List(networkClient, listOpts).AllPages()
+	pages, err := fic_gateways.List(client, opts).AllPages()
 	if err != nil {
 		return fmt.Errorf("unable to retrieve fic_gateways: %w", err)
 	}
 
-	allFICGateways, err := fic_gateways.ExtractFICGateways(pages)
+	gws, err := fic_gateways.ExtractFICGateways(pages)
 	if err != nil {
 		return fmt.Errorf("unable to extract fic_gateways: %w", err)
 	}
 
-	if len(allFICGateways) < 1 {
-		return fmt.Errorf("Your query returned no results." +
+	if len(gws) < 1 {
+		return fmt.Errorf("your query returned no results." +
 			" Please change your search criteria and try again.")
 	}
 
-	if len(allFICGateways) > 1 {
-		return fmt.Errorf("Your query returned more than one result." +
+	if len(gws) > 1 {
+		return fmt.Errorf("your query returned more than one result." +
 			" Please try a more specific search criteria")
 	}
 
-	FICGateway := allFICGateways[0]
+	gw := gws[0]
 
-	log.Printf("[DEBUG] Retrieved FICGateway %s: %+v", FICGateway.ID, FICGateway)
-	d.SetId(FICGateway.ID)
+	log.Printf("[DEBUG] Retrieved FICGateway %s: %+v", gw.ID, gw)
+	d.SetId(gw.ID)
 
-	d.Set("description", FICGateway.Description)
-	d.Set("fic_service_id", FICGateway.FICServiceID)
-	d.Set("fic_gateway_id", FICGateway.ID)
-	d.Set("name", FICGateway.Name)
-	d.Set("qos_option_id", FICGateway.QoSOptionID)
-	d.Set("status", FICGateway.Status)
-	d.Set("tenant_id", FICGateway.TenantID)
+	d.Set("description", gw.Description)
+	d.Set("fic_service_id", gw.FICServiceID)
+	d.Set("fic_gateway_id", gw.ID)
+	d.Set("name", gw.Name)
+	d.Set("qos_option_id", gw.QoSOptionID)
+	d.Set("status", gw.Status)
+	d.Set("tenant_id", gw.TenantID)
 
 	return nil
 }

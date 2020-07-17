@@ -36,7 +36,6 @@ var (
 	OS_FIC_GW_ID                             = os.Getenv("OS_FIC_GW_ID")
 	OS_FIC_GW_NAME                           = os.Getenv("OS_FIC_GW_NAME")
 	OS_FIC_GW_QOS_OPTION_ID                  = os.Getenv("OS_FIC_GW_QOS_OPTION_ID")
-	OS_FIC_GW_STATUS                         = os.Getenv("OS_FIC_GW_STATUS")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -430,6 +429,9 @@ func testAccPreCheckFICGateway(t *testing.T) {
 	if OS_TENANT_ID == "" {
 		t.Fatal("OS_TENANT_ID must be set for acceptance tests of fic gateway")
 	}
+	if OS_FIC_GW_DESCRIPTION == "" {
+		t.Fatal("OS_FIC_GW_DESPRICTION must be set for acceptance tests of fic gateway")
+	}
 	if OS_FIC_SERVICE_ID == "" {
 		t.Fatal("OS_FIC_SERVICE_ID must be set for acceptance tests of fic gateway")
 	}
@@ -441,9 +443,6 @@ func testAccPreCheckFICGateway(t *testing.T) {
 	}
 	if OS_FIC_GW_QOS_OPTION_ID == "" {
 		t.Fatal("OS_FIC_GW_QOS_OPTION_ID must be set for acceptance tests of fic gateway")
-	}
-	if OS_FIC_GW_STATUS == "" {
-		t.Fatal("OS_FIC_GW_STATUS must be set for acceptance tests of fic gateway")
 	}
 }
 
