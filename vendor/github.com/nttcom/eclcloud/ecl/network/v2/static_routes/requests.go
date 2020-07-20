@@ -60,7 +60,7 @@ type CreateOpts struct {
 	AzureGwID    string `json:"azure_gw_id,omitempty"`
 	Description  string `json:"description"`
 	Destination  string `json:"destination" required:"true"`
-	FICGatewayID string `json:"fic_gw_id"`
+	FICGatewayID string `json:"fic_gw_id,omitempty"`
 	GcpGwID      string `json:"gcp_gw_id,omitempty"`
 	InterdcGwID  string `json:"inter_dc_id,omitempty"`
 	InternetGwID string `json:"internet_gw_id,omitempty"`
