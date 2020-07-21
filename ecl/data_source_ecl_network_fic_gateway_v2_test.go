@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccNetworkV2FICGatewayDataSource_basic(t *testing.T) {
+func TestAccNetworkV2FICGatewayDataSource_name(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
