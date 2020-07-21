@@ -30,10 +30,11 @@ func resourceNetworkPublicIPV2() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Computed:   true,
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 			"cidr": &schema.Schema{
 				Type:     schema.TypeString,

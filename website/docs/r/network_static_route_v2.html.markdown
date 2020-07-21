@@ -32,7 +32,7 @@ resource "ecl_network_static_route_v2" "static_route_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Network client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Network client.
     Public ips are associated with accounts, but a Network client is needed to
     create one. If omitted, the `region` argument of the provider is used.
     Changing this creates a new public ip.

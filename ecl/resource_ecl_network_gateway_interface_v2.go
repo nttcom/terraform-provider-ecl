@@ -36,7 +36,7 @@ func resourceNetworkGatewayInterfaceV2() *schema.Resource {
 				Optional:   true,
 				ForceNew:   true,
 				Computed:   true,
-				Deprecated: "This attribute is not used to set up the resource",
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 			"aws_gw_id": {
 				Type:          schema.TypeString,

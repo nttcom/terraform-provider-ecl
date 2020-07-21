@@ -95,9 +95,10 @@ func dataSourceNetworkPortV2() *schema.Resource {
 				Optional: true,
 			},
 			"region": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
+				Type:       schema.TypeString,
+				Computed:   true,
+				Optional:   true,
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 			"segmentation_id": {
 				Type:     schema.TypeInt,

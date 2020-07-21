@@ -15,9 +15,10 @@ func dataSourceNetworkInternetServiceV2() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 			"description": &schema.Schema{
 				Type:     schema.TypeString,
