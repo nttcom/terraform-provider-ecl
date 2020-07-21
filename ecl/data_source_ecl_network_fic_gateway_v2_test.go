@@ -204,13 +204,6 @@ func TestAccNetworkV2FICGatewayDataSource_tenantID(t *testing.T) {
 	})
 }
 
-var testAccNetworkV2FICGatewayDataSourceDescription = fmt.Sprintf(`
-data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	description = %q
-}
-`,
-	OS_FIC_GW_DESCRIPTION)
-
 var testAccNetworkV2FICGatewayDataSourceFICServiceID = fmt.Sprintf(`
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
 	fic_service_id = %q

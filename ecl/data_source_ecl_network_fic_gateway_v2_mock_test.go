@@ -19,11 +19,11 @@ func TestMockedAccNetworkV2FICGatewayDataSource_name(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		PreCheck:  func() { testMockedAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkV2FICGatewayDataSourceName,
+				Config: testMockedAccNetworkV2FICGatewayDataSourceName,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
 					resource.TestCheckResourceAttr(
@@ -57,11 +57,11 @@ func TestMockedAccNetworkV2FICGatewayDataSource_description(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		PreCheck:  func() { testMockedAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkV2FICGatewayDataSourceDescription,
+				Config: testMockedAccNetworkV2FICGatewayDataSourceDescription,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
 					resource.TestCheckResourceAttr(
@@ -95,11 +95,11 @@ func TestMockedAccNetworkV2FICGatewayDataSource_ficServiceID(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		PreCheck:  func() { testMockedAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkV2FICGatewayDataSourceFICServiceID,
+				Config: testMockedAccNetworkV2FICGatewayDataSourceFICServiceID,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
 					resource.TestCheckResourceAttr(
@@ -133,11 +133,11 @@ func TestMockedAccNetworkV2FICGatewayDataSource_ficGatewayID(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		PreCheck:  func() { testMockedAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkV2FICGatewayDataSourceID,
+				Config: testMockedAccNetworkV2FICGatewayDataSourceID,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
 					resource.TestCheckResourceAttr(
@@ -171,11 +171,11 @@ func TestMockedAccNetworkV2FICGatewayDataSource_qosOptionID(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		PreCheck:  func() { testMockedAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkV2FICGatewayDataSourceQoSOptionID,
+				Config: testMockedAccNetworkV2FICGatewayDataSourceQoSOptionID,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ecl_network_fic_gateway_v2.fic_gateway_1", "id"),
 					resource.TestCheckResourceAttr(
@@ -209,7 +209,7 @@ func TestMockedAccNetworkV2FICGatewayDataSource_status(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		PreCheck:  func() { testMockedAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -247,7 +247,7 @@ func TestMockedAccNetworkV2FICGatewayDataSource_tenantID(t *testing.T) {
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckFICGateway(t) },
+		PreCheck:  func() { testMockedAccPreCheckFICGateway(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -448,3 +448,33 @@ response:
         }
 `,
 	OS_TENANT_ID)
+
+var testMockedAccNetworkV2FICGatewayDataSourceDescription = `
+data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
+	description = "test FIC Gateway"
+}
+`
+
+var testMockedAccNetworkV2FICGatewayDataSourceFICServiceID = `
+data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
+	fic_service_id = "66a63898-32a5-4b9d-8925-f52be1d84764"
+}
+`
+
+var testMockedAccNetworkV2FICGatewayDataSourceID = `
+data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
+	fic_gateway_id = "fc546cf7-1956-436b-a9b4-edc917e397cf"
+}
+`
+
+var testMockedAccNetworkV2FICGatewayDataSourceName = `
+data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
+	name = "F032000001492"
+}
+`
+
+var testMockedAccNetworkV2FICGatewayDataSourceQoSOptionID = `
+data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
+	qos_option_id = "d384d7f5-22aa-46e5-8cf5-759e87c7b2fd"
+}
+`
