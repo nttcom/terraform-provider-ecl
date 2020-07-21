@@ -430,7 +430,7 @@ func testAccPreCheckFICGateway(t *testing.T) {
 		t.Fatal("OS_TENANT_ID must be set for acceptance tests of fic gateway")
 	}
 	if OS_FIC_GW_DESCRIPTION == "" {
-		t.Fatal("OS_FIC_GW_DESPRICTION must be set for acceptance tests of fic gateway")
+		t.Fatal("OS_FIC_GW_DESCRIPTION must be set for acceptance tests of fic gateway")
 	}
 	if OS_FIC_SERVICE_ID == "" {
 		t.Fatal("OS_FIC_SERVICE_ID must be set for acceptance tests of fic gateway")
