@@ -8,13 +8,13 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccNetworkV2GatewayInterfaceDataSource_basic(t *testing.T) {
+func TestAccDataSourceNetworkV2GatewayInterface_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckGatewayInterface(t) },
+		PreCheck:  func() { testAccPreCheckGatewayInterfaceInternet(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
@@ -32,13 +32,13 @@ func TestAccNetworkV2GatewayInterfaceDataSource_basic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2GatewayInterfaceDataSource_queries(t *testing.T) {
+func TestAccDataSourceNetworkV2GatewayInterface_queries(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckGatewayInterface(t) },
+		PreCheck:  func() { testAccPreCheckGatewayInterfaceInternet(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{

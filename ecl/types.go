@@ -14,7 +14,6 @@ import (
 	"github.com/nttcom/eclcloud/ecl/dns/v2/recordsets"
 	"github.com/nttcom/eclcloud/ecl/dns/v2/zones"
 	"github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways"
-	"github.com/nttcom/eclcloud/ecl/network/v2/gateway_interfaces"
 	"github.com/nttcom/eclcloud/ecl/network/v2/internet_gateways"
 	"github.com/nttcom/eclcloud/ecl/network/v2/networks"
 	"github.com/nttcom/eclcloud/ecl/network/v2/ports"
@@ -158,11 +157,6 @@ For ECL specific resources definition
 type CommonFunctionGatewayCreateOpts struct {
 	common_function_gateways.CreateOpts
 	// ValueSpecs map[string]string `json:"value_specs,omitempty"`
-}
-
-// GatewayInterfaceCreateOpts represents the attributes used when creating a new gateway interface.
-type GatewayInterfaceCreateOpts struct {
-	gateway_interfaces.CreateOpts
 }
 
 // InternetGatewayCreateOpts represents the attributes used when creating a new Internet Gateway.

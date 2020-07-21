@@ -39,6 +39,7 @@ type GatewayInterface struct {
 	AwsGwID       string `json:"aws_gw_id"`
 	AzureGwID     string `json:"azure_gw_id"`
 	Description   string `json:"description"`
+	FICGatewayID  string `json:"fic_gw_id"`
 	GcpGwID       string `json:"gcp_gw_id"`
 	GwVipv4       string `json:"gw_vipv4"`
 	GwVipv6       string `json:"gw_vipv6"`

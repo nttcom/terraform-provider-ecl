@@ -17,11 +17,12 @@ import (
 
 var (
 	OS_ACCEPTER_TENANT_ID                    = os.Getenv("OS_ACCEPTER_TENANT_ID")
+	OS_BAREMETAL_ZONE                        = os.Getenv("OS_BAREMETAL_ZONE")
 	OS_COMMON_FUNCTION_POOL_ID               = os.Getenv("OS_COMMON_FUNCTION_POOL_ID")
+	OS_COMPUTE_ZONE_HA                       = os.Getenv("OS_COMPUTE_ZONE_HA")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
-	OS_BAREMETAL_ZONE                        = os.Getenv("OS_BAREMETAL_ZONE")
-	OS_COMPUTE_ZONE_HA                       = os.Getenv("OS_COMPUTE_ZONE_HA")
+	OS_FIC_GW_ID                             = os.Getenv("OS_FIC_GW_ID")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
 	OS_QOS_OPTION_ID_100M                    = os.Getenv("OS_QOS_OPTION_ID_100M")
 	OS_QOS_OPTION_ID_10M                     = os.Getenv("OS_QOS_OPTION_ID_10M")
@@ -294,8 +295,20 @@ func testAccPreCheckAdminOnly(t *testing.T) {
 	}
 }
 
-func testAccPreCheckGatewayInterface(t *testing.T) {
-	testAccPreCheckInternetGateway(t)
+func testAccPreCheckGatewayInterfaceInternet(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_QOS_OPTION_ID_10M == "" {
+		t.Fatal("OS_QOS_OPTION_ID_10M must be set for acceptance tests")
+	}
+}
+
+func testAccPreCheckGatewayInterfaceFIC(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_FIC_GW_ID == "" {
+		t.Fatal("OS_FIC_GW_ID must be set for acceptance tests")
+	}
 }
 
 func testAccPreCheckInternetGateway(t *testing.T) {

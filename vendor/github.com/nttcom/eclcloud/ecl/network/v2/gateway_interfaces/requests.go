@@ -13,6 +13,7 @@ type ListOpts struct {
 	AwsGwID       string `q:"aws_gw_id"`
 	AzureGwID     string `q:"azure_gw_id"`
 	Description   string `q:"description"`
+	FICGatewayID  string `q:"fic_gw_id"`
 	GcpGwID       string `q:"gcp_gw_id"`
 	GwVipv4       string `q:"gw_vipv4"`
 	GwVipv6       string `q:"gw_vipv6"`
@@ -65,18 +66,16 @@ type CreateOpts struct {
 	AwsGwID       string `json:"aws_gw_id,omitempty"`
 	AzureGwID     string `json:"azure_gw_id,omitempty"`
 	Description   string `json:"description"`
+	FICGatewayID  string `json:"fic_gw_id,omitempty"`
 	GcpGwID       string `json:"gcp_gw_id,omitempty"`
 	GwVipv4       string `json:"gw_vipv4" required:"true"`
-	GwVipv6       string `json:"gw_vipv6,omitempty"`
 	InterdcGwID   string `json:"interdc_gw_id,omitempty"`
 	InternetGwID  string `json:"internet_gw_id,omitempty"`
 	Name          string `json:"name"`
 	Netmask       int    `json:"netmask" required:"true"`
 	NetworkID     string `json:"network_id" required:"true"`
 	PrimaryIpv4   string `json:"primary_ipv4" required:"true"`
-	PrimaryIpv6   string `json:"primary_ipv6,omitempty"`
 	SecondaryIpv4 string `json:"secondary_ipv4" required:"true"`
-	SecondaryIpv6 string `json:"secondary_ipv6,omitempty"`
 	ServiceType   string `json:"service_type" required:"true"`
 	TenantID      string `json:"tenant_id,omitempty"`
 	VpnGwID       string `json:"vpn_gw_id,omitempty"`
