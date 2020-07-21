@@ -8,7 +8,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-func TestMockedAccNetworkV2FICGatewayDataSource_basic(t *testing.T) {
+func TestMockedAccNetworkV2FICGatewayDataSource_name(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
@@ -46,7 +46,7 @@ func TestMockedAccNetworkV2FICGatewayDataSource_basic(t *testing.T) {
 	})
 }
 
-func TestMockedAccNetworkV2FICGatewayDataSource_querieDescription(t *testing.T) {
+func TestMockedAccNetworkV2FICGatewayDataSource_description(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
@@ -84,7 +84,7 @@ func TestMockedAccNetworkV2FICGatewayDataSource_querieDescription(t *testing.T) 
 	})
 }
 
-func TestMockedAccNetworkV2FICGatewayDataSource_querieFICServiceID(t *testing.T) {
+func TestMockedAccNetworkV2FICGatewayDataSource_ficServiceID(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
@@ -122,7 +122,7 @@ func TestMockedAccNetworkV2FICGatewayDataSource_querieFICServiceID(t *testing.T)
 	})
 }
 
-func TestMockedAccNetworkV2FICGatewayDataSource_querieID(t *testing.T) {
+func TestMockedAccNetworkV2FICGatewayDataSource_ficGatewayID(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
@@ -160,7 +160,7 @@ func TestMockedAccNetworkV2FICGatewayDataSource_querieID(t *testing.T) {
 	})
 }
 
-func TestMockedAccNetworkV2FICGatewayDataSource_querieQoSOptionID(t *testing.T) {
+func TestMockedAccNetworkV2FICGatewayDataSource_qosOptionID(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
@@ -198,7 +198,7 @@ func TestMockedAccNetworkV2FICGatewayDataSource_querieQoSOptionID(t *testing.T) 
 	})
 }
 
-func TestMockedAccNetworkV2FICGatewayDataSource_querieStatus(t *testing.T) {
+func TestMockedAccNetworkV2FICGatewayDataSource_status(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 
@@ -236,7 +236,7 @@ func TestMockedAccNetworkV2FICGatewayDataSource_querieStatus(t *testing.T) {
 	})
 }
 
-func TestMockedAccNetworkV2FICGatewayDataSource_querieTenantID(t *testing.T) {
+func TestMockedAccNetworkV2FICGatewayDataSource_tenantID(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
 

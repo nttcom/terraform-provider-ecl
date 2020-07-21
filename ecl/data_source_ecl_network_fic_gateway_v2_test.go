@@ -40,7 +40,7 @@ func TestAccNetworkV2FICGatewayDataSource_name(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2FICGatewayDataSource_querieFICServiceID(t *testing.T) {
+func TestAccNetworkV2FICGatewayDataSource_ficServiceID(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -72,7 +72,7 @@ func TestAccNetworkV2FICGatewayDataSource_querieFICServiceID(t *testing.T) {
 		},
 	})
 }
-func TestAccNetworkV2FICGatewayDataSource_querieID(t *testing.T) {
+func TestAccNetworkV2FICGatewayDataSource_ficGatewayID(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -105,7 +105,7 @@ func TestAccNetworkV2FICGatewayDataSource_querieID(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2FICGatewayDataSource_querieQoSOptionID(t *testing.T) {
+func TestAccNetworkV2FICGatewayDataSource_qosOptionID(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -138,7 +138,7 @@ func TestAccNetworkV2FICGatewayDataSource_querieQoSOptionID(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2FICGatewayDataSource_querieStatus(t *testing.T) {
+func TestAccNetworkV2FICGatewayDataSource_status(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -171,7 +171,7 @@ func TestAccNetworkV2FICGatewayDataSource_querieStatus(t *testing.T) {
 	})
 }
 
-func TestAccNetworkV2FICGatewayDataSource_querieTenantID(t *testing.T) {
+func TestAccNetworkV2FICGatewayDataSource_tenantID(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
