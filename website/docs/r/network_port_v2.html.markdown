@@ -51,7 +51,7 @@ The following arguments are supported:
 * `mac_address` - (Optional) Specify a specific MAC address for the port. Changing
     this creates a new port.
 
-* `region` - (Optional) The region in which to obtain the V2 network client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 network client.
     A network client is needed to create a port. If omitted, the
     `region` argument of the provider is used.
     Changing this creates a new port.

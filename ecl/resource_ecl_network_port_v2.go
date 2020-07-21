@@ -106,10 +106,11 @@ func resourceNetworkPortV2() *schema.Resource {
 				Computed: true,
 			},
 			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				ForceNew:   true,
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,

@@ -20,7 +20,7 @@ data "ecl_network_static_route_v2" "static_route_1" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Network client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Network client.
     If omitted, the `region` argument of the provider is used.
 
 * `aws_gw_id` - (Optional) AWS Gateway on which this static route will be set.
