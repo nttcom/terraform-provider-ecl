@@ -33,7 +33,6 @@ var (
 	OS_VOLUME_TYPE_FILE_STANDARD_ENVIRONMENT = os.Getenv("OS_VOLUME_TYPE_FILE_STANDARD_ENVIRONMENT")
 	OS_FIC_GW_DESCRIPTION                    = os.Getenv("OS_FIC_GW_DESCRIPTION")
 	OS_FIC_SERVICE_ID                        = os.Getenv("OS_FIC_SERVICE_ID")
-	OS_FIC_GW_ID                             = os.Getenv("OS_FIC_GW_ID")
 	OS_FIC_GW_NAME                           = os.Getenv("OS_FIC_GW_NAME")
 	OS_FIC_GW_QOS_OPTION_ID                  = os.Getenv("OS_FIC_GW_QOS_OPTION_ID")
 )
