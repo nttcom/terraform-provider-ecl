@@ -101,7 +101,7 @@ func dataSourceNetworkFICGatewayV2Read(d *schema.ResourceData, meta interface{})
 
 	if len(gws) < 1 {
 		return fmt.Errorf("your query returned no results." +
-			" please change your search criteria and try again.")
+			" please change your search criteria and try again")
 	}
 
 	if len(gws) > 1 {
