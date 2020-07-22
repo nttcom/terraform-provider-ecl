@@ -31,6 +31,10 @@ var (
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID     = os.Getenv("OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID")
 	OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT  = os.Getenv("OS_VOLUME_TYPE_FILE_PREMIUM_ENVIRONMENT")
 	OS_VOLUME_TYPE_FILE_STANDARD_ENVIRONMENT = os.Getenv("OS_VOLUME_TYPE_FILE_STANDARD_ENVIRONMENT")
+	OS_FIC_GW_DESCRIPTION                    = os.Getenv("OS_FIC_GW_DESCRIPTION")
+	OS_FIC_SERVICE_ID                        = os.Getenv("OS_FIC_SERVICE_ID")
+	OS_FIC_GW_NAME                           = os.Getenv("OS_FIC_GW_NAME")
+	OS_FIC_GW_QOS_OPTION_ID                  = os.Getenv("OS_FIC_GW_QOS_OPTION_ID")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -416,6 +420,35 @@ func testAccPreCheckBaremetal(t *testing.T) {
 
 	if OS_BAREMETAL_ZONE == "" {
 		t.Skip("OS_BAREMETAL_ZONE must be set for acceptance tests of baremetal")
+	}
+}
+
+func testAccPreCheckFICGateway(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_TENANT_ID == "" {
+		t.Fatal("OS_TENANT_ID must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_GW_DESCRIPTION == "" {
+		t.Fatal("OS_FIC_GW_DESCRIPTION must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_SERVICE_ID == "" {
+		t.Fatal("OS_FIC_SERVICE_ID must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_GW_ID == "" {
+		t.Fatal("OS_FIC_GW_ID must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_GW_NAME == "" {
+		t.Fatal("OS_FIC_GW_NAME must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_GW_QOS_OPTION_ID == "" {
+		t.Fatal("OS_FIC_GW_QOS_OPTION_ID must be set for acceptance tests of fic gateway")
+	}
+}
+
+func testMockedAccPreCheckFICGateway(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_TENANT_ID == "" {
+		t.Fatal("OS_TENANT_ID must be set for acceptance tests of fic gateway")
 	}
 }
 
