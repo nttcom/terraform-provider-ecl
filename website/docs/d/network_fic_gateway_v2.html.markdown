@@ -37,7 +37,6 @@ data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
 
 ## Attributes Reference
 
-The following attributes are exported:
 `id` is set to the ID of the found fic gateway. In addition, the following attributes are exported:
 
 * `description` - See Argument Reference above.
@@ -47,4 +46,3 @@ The following attributes are exported:
 * `qos_option_id` - See Argument Reference above.
 * `status` - See Argument Reference above.
 * `tenant_id` - See Argument Reference above.
-
