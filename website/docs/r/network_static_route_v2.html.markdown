@@ -37,19 +37,21 @@ The following arguments are supported:
     create one. If omitted, the `region` argument of the provider is used.
     Changing this creates a new public ip.
 
-* `aws_gw_id` - (Optional) AWS Gateway on which this static route will be set. Conflicts with "azure_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
+* `aws_gw_id` - (Optional) AWS Gateway on which this static route will be set. Conflicts with "azure_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
 
-* `azure_gw_id` - (Optional) Azure Gateway on which this static route will be set. Conflicts with "aws_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
+* `azure_gw_id` - (Optional) Azure Gateway on which this static route will be set. Conflicts with "aws_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
 
 * `description` - (Optional) Description of the Static Route resource.
 
 * `destination` - (Required) CIDR this static route points to.
 
-* `gcp_gw_id` - (Optional) GCP Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
+* `fic_gw_id` - (Optional) FIC Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
 
-* `interdc_gw_id` - (Optional) Inter DC Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "gcp_gw_id", "internet_gw_id" and "vpn_gw_id".
+* `gcp_gw_id` - (Optional) GCP Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "fic_gw_id", "interdc_gw_id", "internet_gw_id" and "vpn_gw_id".
 
-* `internet_gw_id` - (Required) Internet Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "gcp_gw_id", "interdc_gw_id" and "vpn_gw_id".
+* `interdc_gw_id` - (Optional) Inter DC Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "fic_gw_id", "gcp_gw_id", "internet_gw_id" and "vpn_gw_id".
+
+* `internet_gw_id` - (Optional) Internet Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id" and "vpn_gw_id".
 
 * `name` - (Optional) Name of the Static Route resource.
 
@@ -59,7 +61,7 @@ The following arguments are supported:
 
 * `tenant_id` - (Optional) Tenant ID of the owner (UUID).
 
-* `vpn_gw_id` - (Optional) VPN Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "gcp_gw_id", "interdc_gw_id" and "internet_gw_id".
+* `vpn_gw_id` - (Optional) VPN Gateway on which this static route will be set. Conflicts with "aws_gw_id", "azure_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id" and "internet_gw_id".
 
 
 ## Attributes Reference
