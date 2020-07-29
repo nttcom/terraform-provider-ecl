@@ -10,7 +10,7 @@ import (
 
 func TestAccNetworkV2StaticRouteDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStaticRouteInternet(t) },
+		PreCheck:  func() { testAccPreCheckGatewayInterfaceInternet(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -34,7 +34,7 @@ func TestAccNetworkV2StaticRouteDataSource_queries(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStaticRouteInternet(t) },
+		PreCheck:  func() { testAccPreCheckGatewayInterfaceInternet(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{

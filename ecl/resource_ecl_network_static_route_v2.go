@@ -55,9 +55,10 @@ func resourceNetworkStaticRouteV2() *schema.Resource {
 				Optional: true,
 			},
 			"destination": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.CIDRNetwork(1, 32),
 			},
 			"fic_gw_id": {
 				Type:          schema.TypeString,
@@ -88,9 +89,10 @@ func resourceNetworkStaticRouteV2() *schema.Resource {
 				Optional: true,
 			},
 			"nexthop": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.SingleIP(),
 			},
 			"service_type": {
 				Type:     schema.TypeString,
@@ -108,7 +110,6 @@ func resourceNetworkStaticRouteV2() *schema.Resource {
 			},
 			"vpn_gw_id": {
 				Type:          schema.TypeString,
-				Computed:      true,
 				Optional:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"aws_gw_id", "azure_gw_id", "fic_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id"},
@@ -159,11 +160,9 @@ func resourceNetworkStaticRouteV2Create(d *schema.ResourceData, meta interface{}
 
 	d.SetId(i.ID)
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err := stateConf.WaitForState(); err != nil {
 		return fmt.Errorf(
-			"error waiting for static_route (%s) to become ready: %w",
-			i.ID, err)
+			"error waiting for ECL Static route (%s) to become ready: %w", i.ID, err)
 	}
 
 	log.Printf("[DEBUG] Created Static route %s: %#v", i.ID, i)
@@ -179,7 +178,7 @@ func resourceNetworkStaticRouteV2Read(d *schema.ResourceData, meta interface{}) 
 
 	i, err := static_routes.Get(networkClient, d.Id()).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "static_route")
+		return CheckDeleted(d, err, "error getting ECL Static route")
 	}
 
 	d.Set("aws_gw_id", i.AwsGwID)
@@ -247,7 +246,7 @@ func resourceNetworkStaticRouteV2Delete(d *schema.ResourceData, meta interface{}
 	}
 
 	if err = static_routes.Delete(networkClient, d.Id()).ExtractErr(); err != nil {
-		return fmt.Errorf("error deleting ECL Static route: %w", err)
+		return CheckDeleted(d, err, "error deleting ECL Static route")
 	}
 
 	stateConf := &resource.StateChangeConf{

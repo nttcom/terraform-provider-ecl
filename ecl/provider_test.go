@@ -321,15 +321,6 @@ func testAccPreCheckPublicIP(t *testing.T) {
 	testAccPreCheckInternetGateway(t)
 }
 
-func testAccPreCheckStaticRouteInternet(t *testing.T) {
-	testAccPreCheckGatewayInterfaceInternet(t)
-}
-
-func testAccPreCheckStaticRouteFIC(t *testing.T) {
-	testAccPreCheckGatewayInterfaceInternet(t)
-	testAccPreCheckGatewayInterfaceFIC(t)
-}
-
 func testAccPreCheckImageMember(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 

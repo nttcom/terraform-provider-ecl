@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/nttcom/eclcloud"
 
+	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl/network/v2/static_routes"
 )
 
@@ -19,7 +19,7 @@ func TestAccNetworkV2StaticRoute_internet(t *testing.T) {
 	resourceName := "ecl_network_static_route_v2.test"
 
 	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStaticRouteInternet(t) },
+		PreCheck:     func() { testAccPreCheckGatewayInterfaceInternet(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkV2StaticRouteDestroy,
 		Steps: []resource.TestStep{
@@ -76,7 +76,7 @@ func TestAccNetworkV2StaticRoute_fic(t *testing.T) {
 	resourceName := "ecl_network_static_route_v2.test"
 
 	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckStaticRouteFIC(t) },
+		PreCheck:     func() { testAccPreCheckGatewayInterfaceInternet(t); testAccPreCheckGatewayInterfaceFIC(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkV2StaticRouteDestroy,
 		Steps: []resource.TestStep{
@@ -87,7 +87,7 @@ func TestAccNetworkV2StaticRoute_fic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", rName+"-create"),
 					resource.TestCheckResourceAttr(resourceName, "description", "created"),
 					resource.TestCheckResourceAttrSet(resourceName, "destination"),
-					resource.TestCheckResourceAttrSet(resourceName, "fic_gw_id"),
+					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GW_ID),
 					resource.TestCheckResourceAttr(resourceName, "nexthop", "192.168.200.1"),
 					resource.TestCheckResourceAttr(resourceName, "service_type", "fic"),
 					resource.TestCheckResourceAttrSet(resourceName, "tenant_id"),
@@ -106,7 +106,7 @@ func TestAccNetworkV2StaticRoute_fic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", rName+"-update"),
 					resource.TestCheckResourceAttr(resourceName, "description", "name and description are updated"),
 					resource.TestCheckResourceAttrSet(resourceName, "destination"),
-					resource.TestCheckResourceAttrSet(resourceName, "fic_gw_id"),
+					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GW_ID),
 					resource.TestCheckResourceAttr(resourceName, "nexthop", "192.168.200.1"),
 					resource.TestCheckResourceAttr(resourceName, "service_type", "fic"),
 					resource.TestCheckResourceAttrSet(resourceName, "tenant_id"),
@@ -230,7 +230,7 @@ resource "ecl_network_public_ip_v2" "test" {
 
 resource "ecl_network_static_route_v2" "test" {
     description = %[3]q
-    destination = "${ecl_network_public_ip_v2.test.cidr}"
+    destination = "${ecl_network_public_ip_v2.test.cidr}/${ecl_network_public_ip_v2.test.submask_length}"
     internet_gw_id = "${ecl_network_internet_gateway_v2.test.id}"
     name = "%[1]s-%[2]s"
     nexthop = "192.168.200.1"
@@ -290,7 +290,7 @@ resource "ecl_network_public_ip_v2" "test" {
 
 resource "ecl_network_static_route_v2" "test" {
     description = %[3]q
-    destination = "${ecl_network_public_ip_v2.test.cidr}"
+    destination = "${ecl_network_public_ip_v2.test.cidr}/${ecl_network_public_ip_v2.test.submask_length}"
     fic_gw_id = %[5]q
     name = "%[1]s-%[2]s"
     nexthop = "192.168.200.1"
