@@ -76,7 +76,7 @@ func TestAccNetworkV2StaticRoute_fic(t *testing.T) {
 	resourceName := "ecl_network_static_route_v2.test"
 
 	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckGatewayInterfaceInternet(t); testAccPreCheckGatewayInterfaceFIC(t) },
+		PreCheck:     func() { testAccPreCheckGatewayInterfaceFIC(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkV2StaticRouteDestroy,
 		Steps: []resource.TestStep{
@@ -86,9 +86,9 @@ func TestAccNetworkV2StaticRoute_fic(t *testing.T) {
 					testAccCheckNetworkV2StaticRouteExists(resourceName, &staticRoute),
 					resource.TestCheckResourceAttr(resourceName, "name", rName+"-create"),
 					resource.TestCheckResourceAttr(resourceName, "description", "created"),
-					resource.TestCheckResourceAttrSet(resourceName, "destination"),
+					resource.TestCheckResourceAttr(resourceName, "destination", "192.168.80.0/24"),
 					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GW_ID),
-					resource.TestCheckResourceAttr(resourceName, "nexthop", "192.168.200.1"),
+					resource.TestCheckResourceAttr(resourceName, "nexthop", "192.168.90.1"),
 					resource.TestCheckResourceAttr(resourceName, "service_type", "fic"),
 					resource.TestCheckResourceAttrSet(resourceName, "tenant_id"),
 					resource.TestCheckResourceAttr(resourceName, "aws_gw_id", ""),
@@ -105,9 +105,9 @@ func TestAccNetworkV2StaticRoute_fic(t *testing.T) {
 					testAccCheckNetworkV2StaticRouteExists(resourceName, &staticRoute),
 					resource.TestCheckResourceAttr(resourceName, "name", rName+"-update"),
 					resource.TestCheckResourceAttr(resourceName, "description", "name and description are updated"),
-					resource.TestCheckResourceAttrSet(resourceName, "destination"),
+					resource.TestCheckResourceAttr(resourceName, "destination", "192.168.80.0/24"),
 					resource.TestCheckResourceAttr(resourceName, "fic_gw_id", OS_FIC_GW_ID),
-					resource.TestCheckResourceAttr(resourceName, "nexthop", "192.168.200.1"),
+					resource.TestCheckResourceAttr(resourceName, "nexthop", "192.168.90.1"),
 					resource.TestCheckResourceAttr(resourceName, "service_type", "fic"),
 					resource.TestCheckResourceAttrSet(resourceName, "tenant_id"),
 					resource.TestCheckResourceAttr(resourceName, "aws_gw_id", ""),
@@ -255,21 +255,10 @@ resource "ecl_network_subnet_v2" "test" {
     network_id = "${ecl_network_network_v2.test.id}"
 }
 
-data "ecl_network_internet_service_v2" "test" {
-	name = "Internet-Service-01"
-}
-
-resource "ecl_network_internet_gateway_v2" "test" {
-    name = %[1]q
-    description = "test_internet_gateway"
-    internet_service_id = "${data.ecl_network_internet_service_v2.test.id}"
-    qos_option_id = %[4]q
-}
-
 resource "ecl_network_gateway_interface_v2" "test" {
     description = "test_gateway_interface"
     gw_vipv4 = "192.168.200.1"
-    fic_gw_id = %[5]q
+    fic_gw_id = %[4]q
     name = %[1]q
     netmask = 29
     network_id = "${ecl_network_network_v2.test.id}"
@@ -280,23 +269,14 @@ resource "ecl_network_gateway_interface_v2" "test" {
     depends_on = ["ecl_network_subnet_v2.test"]
 }
 
-resource "ecl_network_public_ip_v2" "test" {
-    name = %[1]q
-    description = "test_public_ip"
-    internet_gw_id = "${ecl_network_internet_gateway_v2.test.id}"
-    submask_length = 32
-    depends_on = ["ecl_network_gateway_interface_v2.test"]
-}
-
 resource "ecl_network_static_route_v2" "test" {
     description = %[3]q
-    destination = "${ecl_network_public_ip_v2.test.cidr}/${ecl_network_public_ip_v2.test.submask_length}"
-    fic_gw_id = %[5]q
+    destination = "192.168.80.0/24"
+    fic_gw_id = %[4]q
     name = "%[1]s-%[2]s"
-    nexthop = "192.168.200.1"
+    nexthop = "192.168.90.1"
     service_type = "fic"
-    depends_on = ["ecl_network_gateway_interface_v2.test",
-                  "ecl_network_public_ip_v2.test"]
+    depends_on = ["ecl_network_gateway_interface_v2.test"]
 }
-`, rName, nameSuffix, description, OS_QOS_OPTION_ID_10M, OS_FIC_GW_ID)
+`, rName, nameSuffix, description, OS_FIC_GW_ID)
 }
