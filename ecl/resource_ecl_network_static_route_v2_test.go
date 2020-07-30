@@ -243,32 +243,6 @@ resource "ecl_network_static_route_v2" "test" {
 
 func testAccNetworkV2StaticRouteFICConfig(rName, nameSuffix, description string) string {
 	return fmt.Sprintf(`
-resource "ecl_network_network_v2" "test" {
-    name = %[1]q
-}
-
-resource "ecl_network_subnet_v2" "test" {
-    name = %[1]q
-    cidr = "192.168.200.0/29"
-    enable_dhcp = false
-    no_gateway = true
-    network_id = "${ecl_network_network_v2.test.id}"
-}
-
-resource "ecl_network_gateway_interface_v2" "test" {
-    description = "test_gateway_interface"
-    gw_vipv4 = "192.168.200.1"
-    fic_gw_id = %[4]q
-    name = %[1]q
-    netmask = 29
-    network_id = "${ecl_network_network_v2.test.id}"
-    primary_ipv4 = "192.168.200.2"
-    secondary_ipv4 = "192.168.200.3"
-    service_type = "fic"
-    vrid = 1
-    depends_on = ["ecl_network_subnet_v2.test"]
-}
-
 resource "ecl_network_static_route_v2" "test" {
     description = %[3]q
     destination = "192.168.80.0/24"
@@ -276,7 +250,6 @@ resource "ecl_network_static_route_v2" "test" {
     name = "%[1]s-%[2]s"
     nexthop = "192.168.90.1"
     service_type = "fic"
-    depends_on = ["ecl_network_gateway_interface_v2.test"]
 }
 `, rName, nameSuffix, description, OS_FIC_GW_ID)
 }
