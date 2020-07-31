@@ -230,6 +230,7 @@ github.com/nttcom/eclcloud/ecl/imagestorage/v2/imagedata
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/images
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/members
 github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways
+github.com/nttcom/eclcloud/ecl/network/v2/fic_gateways
 github.com/nttcom/eclcloud/ecl/network/v2/gateway_interfaces
 github.com/nttcom/eclcloud/ecl/network/v2/internet_gateways
 github.com/nttcom/eclcloud/ecl/network/v2/internet_services

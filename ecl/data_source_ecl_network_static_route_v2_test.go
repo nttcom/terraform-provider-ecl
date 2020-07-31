@@ -10,13 +10,13 @@ import (
 
 func TestAccNetworkV2StaticRouteDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStaticRoute(t) },
+		PreCheck:  func() { testAccPreCheckGatewayInterfaceInternet(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceStaticRoute,
 			},
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2StaticRouteDataSourceID("data.ecl_network_static_route_v2.static_route_1"),
@@ -34,49 +34,49 @@ func TestAccNetworkV2StaticRouteDataSource_queries(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckStaticRoute(t) },
+		PreCheck:  func() { testAccPreCheckGatewayInterfaceInternet(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceStaticRoute,
 			},
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2StaticRouteDataSourceID("data.ecl_network_static_route_v2.static_route_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceDescription,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2StaticRouteDataSourceID("data.ecl_network_static_route_v2.static_route_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceDestination,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2StaticRouteDataSourceID("data.ecl_network_static_route_v2.static_route_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceInetGwID,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2StaticRouteDataSourceID("data.ecl_network_static_route_v2.static_route_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceNexthop,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2StaticRouteDataSourceID("data.ecl_network_static_route_v2.static_route_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceServiceType,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2StaticRouteDataSourceID("data.ecl_network_static_route_v2.static_route_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccNetworkV2StaticRouteDataSourceID,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2StaticRouteDataSourceID("data.ecl_network_static_route_v2.static_route_1"),
@@ -90,11 +90,11 @@ func testAccCheckNetworkV2StaticRouteDataSourceID(n string) resource.TestCheckFu
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("Can't find static route data source: %s", n)
+			return fmt.Errorf("can't find static route data source: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("Static route data source ID not set")
+			return fmt.Errorf("static route data source ID not set")
 		}
 
 		return nil
