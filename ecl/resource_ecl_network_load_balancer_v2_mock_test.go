@@ -1447,7 +1447,7 @@ expectedStatus:
 var testMockNetworkV2LoadBalancerSyslogServer1Post = fmt.Sprintf(`
 request:
     method: POST
-    body: '{"load_balancer_syslog_server":{"acl_logging":"ENABLED","appflow_logging":"ENABLED","date_format":"MMDDYYYY","description":"lb_test1_syslog1_description","ip_address":"192.168.151.21","load_balancer_id":"caa214f9-84f3-402b-b3e6-f0e2ebe28cf9","log_facility":"LOCAL0","log_level":"ALERT|CRITICAL|EMERGENCY","name":"lb_test1_syslog1","port_number":514,"priority":20,"tcp_logging":"ALL","time_zone":"LOCAL_TIME","transport_type":"UDP","user_configurable_log_messages":"NO"}}'
+    body: '{"load_balancer_syslog_server":{"acl_logging":"ENABLED","appflow_logging":"ENABLED","date_format":"MMDDYYYY","description":"lb_test1_syslog1_description","ip_address":"192.168.151.21","load_balancer_id":"caa214f9-84f3-402b-b3e6-f0e2ebe28cf9","log_facility":"LOCAL0","log_level":"ALERT|CRITICAL|EMERGENCY","name":"lb_test1_syslog1","port_number":514,"priority":20,"tcp_logging":"ALL","tenant_id":%[1]q,"time_zone":"LOCAL_TIME","transport_type":"UDP","user_configurable_log_messages":"NO"}}'
 response:
     code: 201
     body: >
@@ -1467,7 +1467,7 @@ response:
             "priority": 20,
             "status": "PENDING_CREATE",
             "tcp_logging": "ALL",
-            "tenant_id": "%s",
+            "tenant_id": %[1]q,
             "time_zone": "LOCAL_TIME",
             "transport_type": "UDP",
             "user_configurable_log_messages": "NO"
@@ -1588,7 +1588,7 @@ expectedStatus:
 var testMockNetworkV2LoadBalancerSyslogServer2Post = fmt.Sprintf(`
 request:
     method: POST
-    body: '{"load_balancer_syslog_server":{"acl_logging":"DISABLED","appflow_logging":"DISABLED","date_format":"YYYYMMDD","description":"lb_test1_syslog2_description","ip_address":"192.168.151.22","load_balancer_id":"caa214f9-84f3-402b-b3e6-f0e2ebe28cf9","log_facility":"LOCAL1","log_level":"DEBUG","name":"lb_test1_syslog2","port_number":514,"priority":0,"tcp_logging":"NONE","time_zone":"GMT_TIME","transport_type":"UDP","user_configurable_log_messages":"YES"}}'
+    body: '{"load_balancer_syslog_server":{"acl_logging":"DISABLED","appflow_logging":"DISABLED","date_format":"YYYYMMDD","description":"lb_test1_syslog2_description","ip_address":"192.168.151.22","load_balancer_id":"caa214f9-84f3-402b-b3e6-f0e2ebe28cf9","log_facility":"LOCAL1","log_level":"DEBUG","name":"lb_test1_syslog2","port_number":514,"priority":0,"tcp_logging":"NONE","tenant_id":%[1]q,"time_zone":"GMT_TIME","transport_type":"UDP","user_configurable_log_messages":"YES"}}'
 response:
     code: 201
     body: >
@@ -1608,7 +1608,7 @@ response:
         		"priority": 0,
         		"status": "PENDING_CREATE",
         		"tcp_logging": "NONE",
-        		"tenant_id": "%s",
+        		"tenant_id": %[1]q,
         		"time_zone": "GMT_TIME",
         		"transport_type": "UDP",
         		"user_configurable_log_messages": "YES"

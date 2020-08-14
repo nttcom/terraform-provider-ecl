@@ -3,7 +3,6 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"sort"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/validation"
@@ -159,7 +158,7 @@ func resourceNetworkLoadBalancerV2() *schema.Resource {
 			},
 
 			"syslog_servers": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -433,7 +432,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 	}
 
 	// If syslog server configs are specified, create syslog servers according to the configs.
-	syslogConfigs := d.Get("syslog_servers").([]interface{})
+	syslogConfigs := d.Get("syslog_servers").(*schema.Set).List()
 	for _, v := range syslogConfigs {
 		syslogConfig := v.(map[string]interface{})
 
@@ -489,8 +488,7 @@ func resourceNetworkLoadBalancerV2Read(d *schema.ResourceData, meta interface{})
 		}
 		loadBalancer.SyslogServers[i] = *syslogServer
 	}
-	syslogStates := d.Get("syslog_servers").([]interface{})
-	d.Set("syslog_servers", flattenLoadBalancerSyslogServers(loadBalancer.SyslogServers, syslogStates))
+	d.Set("syslog_servers", flattenLoadBalancerSyslogServers(loadBalancer.SyslogServers))
 
 	return nil
 }
@@ -517,9 +515,9 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 	interfaceHasChange := d.HasChange("interfaces")
 
 	syslogIPHasChange := false
-	o, _ = d.GetChange("syslog_servers.#")
-	oldSyslogServerNumber := o.(int)
-	for i := 0; i < oldSyslogServerNumber; i++ {
+	o, _ = d.GetChange("syslog_servers")
+	oldSyslogServers := o.(*schema.Set).List()
+	for i, _ := range oldSyslogServers {
 		if d.HasChange(fmt.Sprintf("syslog_servers.%d.ip_address", i)) {
 			syslogIPHasChange = true
 			break
@@ -665,7 +663,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 	// update syslog servers
 	if syslogInitialized {
-		syslogConfigs := d.Get("syslog_servers").([]interface{})
+		syslogConfigs := d.Get("syslog_servers").(*schema.Set).List()
 		for _, v := range syslogConfigs {
 			syslogConfig := v.(map[string]interface{})
 
@@ -679,11 +677,11 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 		o, n := d.GetChange("syslog_servers")
 
-		for _, ov := range o.([]interface{}) {
+		for _, ov := range o.(*schema.Set).List() {
 			om := ov.(map[string]interface{})
 			var found bool
 
-			for _, nv := range n.([]interface{}) {
+			for _, nv := range n.(*schema.Set).List() {
 				nm := nv.(map[string]interface{})
 				if om["ip_address"] == nm["ip_address"] &&
 					om["name"] == nm["name"] &&
@@ -713,11 +711,11 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 		}
 
 		// new config exists and old config not exists -> create syslog server
-		for _, nv := range n.([]interface{}) {
+		for _, nv := range n.(*schema.Set).List() {
 			nm := nv.(map[string]interface{})
 			var found bool
 
-			for _, ov := range o.([]interface{}) {
+			for _, ov := range o.(*schema.Set).List() {
 				om := ov.(map[string]interface{})
 
 				if om["ip_address"] == nm["ip_address"] &&
@@ -758,7 +756,7 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 	}
 
 	// delete syslog servers
-	syslogServers := d.Get("syslog_servers").([]interface{})
+	syslogServers := d.Get("syslog_servers").(*schema.Set).List()
 	for _, syslogServer := range syslogServers {
 		m := syslogServer.(map[string]interface{})
 		syslogServerID := m["id"].(string)
@@ -945,69 +943,31 @@ func flattenLoadBalancerInterfaces(in []load_balancer_interfaces.LoadBalancerInt
 	return out
 }
 
-func flattenLoadBalancerSyslogServers(in []load_balancer_syslog_servers.LoadBalancerSyslogServer, states []interface{}) []map[string]interface{} {
+func flattenLoadBalancerSyslogServers(in []load_balancer_syslog_servers.LoadBalancerSyslogServer) []map[string]interface{} {
 	var out = make([]map[string]interface{}, len(in), len(in))
 
-	if len(states) == len(in) {
-		// Put API response in configuration order.
-		for i, ov := range states {
-			state := ov.(map[string]interface{})
-
-			for _, v := range in {
-				if state["ip_address"] == v.IPAddress &&
-					state["name"] == v.Name {
-
-					m := make(map[string]interface{})
-					m["id"] = v.ID
-					m["acl_logging"] = v.AclLogging
-					m["appflow_logging"] = v.AppflowLogging
-					m["date_format"] = v.DateFormat
-					m["description"] = v.Description
-					m["ip_address"] = v.IPAddress
-					m["log_facility"] = v.LogFacility
-					m["log_level"] = v.LogLevel
-					m["name"] = v.Name
-					m["port_number"] = v.PortNumber
-					m["priority"] = v.Priority
-					m["status"] = v.Status
-					m["tcp_logging"] = v.TcpLogging
-					m["tenant_id"] = v.TenantID
-					m["time_zone"] = v.TimeZone
-					m["transport_type"] = v.TransportType
-					m["user_configurable_log_messages"] = v.UserConfigurableLogMessages
-					out[i] = m
-				}
-			}
-		}
-	} else {
-		// If the configuration is empty (only when processing "import"), return the API response sorted by IP+Port.
-		for i, v := range in {
-			m := make(map[string]interface{})
-			m["id"] = v.ID
-			m["acl_logging"] = v.AclLogging
-			m["appflow_logging"] = v.AppflowLogging
-			m["date_format"] = v.DateFormat
-			m["description"] = v.Description
-			m["ip_address"] = v.IPAddress
-			m["log_facility"] = v.LogFacility
-			m["log_level"] = v.LogLevel
-			m["name"] = v.Name
-			m["port_number"] = v.PortNumber
-			m["priority"] = v.Priority
-			m["status"] = v.Status
-			m["tcp_logging"] = v.TcpLogging
-			m["tenant_id"] = v.TenantID
-			m["time_zone"] = v.TimeZone
-			m["transport_type"] = v.TransportType
-			m["user_configurable_log_messages"] = v.UserConfigurableLogMessages
-			out[i] = m
-		}
-		sort.Slice(
-			out, func(i, j int) bool {
-				return fmt.Sprintf("%s%d", out[i]["ip_address"].(string), out[i]["port_number"].(int)) <
-					fmt.Sprintf("%s%d", out[j]["ip_address"].(string), out[j]["port_number"].(int))
-			})
+	for i, v := range in {
+		m := make(map[string]interface{})
+		m["id"] = v.ID
+		m["acl_logging"] = v.AclLogging
+		m["appflow_logging"] = v.AppflowLogging
+		m["date_format"] = v.DateFormat
+		m["description"] = v.Description
+		m["ip_address"] = v.IPAddress
+		m["log_facility"] = v.LogFacility
+		m["log_level"] = v.LogLevel
+		m["name"] = v.Name
+		m["port_number"] = v.PortNumber
+		m["priority"] = v.Priority
+		m["status"] = v.Status
+		m["tcp_logging"] = v.TcpLogging
+		m["tenant_id"] = v.TenantID
+		m["time_zone"] = v.TimeZone
+		m["transport_type"] = v.TransportType
+		m["user_configurable_log_messages"] = v.UserConfigurableLogMessages
+		out[i] = m
 	}
+
 
 	return out
 }
