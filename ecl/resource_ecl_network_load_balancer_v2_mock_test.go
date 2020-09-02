@@ -460,7 +460,7 @@ response:
               {
                 "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/3",
                 "network_id": "",
                 "slot_number": 3,
                 "status": "DOWN",
@@ -471,7 +471,7 @@ response:
               {
                 "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
                 "status": "DOWN",
@@ -533,7 +533,7 @@ response:
               {
                 "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/3",
                 "network_id": "",
                 "slot_number": 3,
                 "status": "DOWN",
@@ -544,7 +544,7 @@ response:
               {
                 "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
                 "status": "DOWN",
@@ -577,7 +577,7 @@ response:
             "id": "0439e533-3f67-47c0-919c-8c9b698257e9",
             "ip_address": "192.168.151.11",
             "load_balancer_id": "caa214f9-84f3-402b-b3e6-f0e2ebe28cf9",
-            "name": "Interface 1/2",
+            "name": "Interface 1/1",
             "network_id": null,
             "slot_number": 1,
             "status": "DOWN",
@@ -756,7 +756,7 @@ response:
               {
                 "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/3",
                 "network_id": "",
                 "slot_number": 3,
                 "status": "DOWN",
@@ -767,7 +767,7 @@ response:
               {
                 "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
                 "status": "DOWN",
@@ -879,7 +879,7 @@ response:
               {
                 "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/3",
                 "network_id": "",
                 "slot_number": 3,
                 "status": "DOWN",
@@ -890,7 +890,7 @@ response:
               {
                 "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
                 "status": "DOWN",
@@ -1000,7 +1000,7 @@ response:
               {
                 "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/3",
                 "network_id": "",
                 "slot_number": 3,
                 "status": "DOWN",
@@ -1011,7 +1011,7 @@ response:
               {
                 "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
                 "status": "DOWN",
@@ -1123,7 +1123,7 @@ response:
               {
                 "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/3",
                 "network_id": "",
                 "slot_number": 3,
                 "status": "DOWN",
@@ -1134,7 +1134,7 @@ response:
               {
                 "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
                 "status": "DOWN",
@@ -1244,7 +1244,7 @@ response:
               {
                 "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/3",
                 "network_id": "",
                 "slot_number": 3,
                 "status": "DOWN",
@@ -1255,7 +1255,7 @@ response:
               {
                 "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
                 "status": "DOWN",
@@ -1367,7 +1367,7 @@ response:
               {
                 "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/3",
                 "network_id": "",
                 "slot_number": 3,
                 "status": "DOWN",
@@ -1378,7 +1378,7 @@ response:
               {
                 "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
                 "ip_address": "",
-                "name": "Interface 1/2",
+                "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
                 "status": "DOWN",
@@ -1867,7 +1867,7 @@ response:
           "load_balancer_interface": {
             "id": "494dbd21-e182-46f5-8c57-42db2d756fb2",
             "ip_address": "",
-            "name": "Interface 1/2",
+            "name": "Interface 1/3",
             "network_id": "",
             "slot_number": 3,
             "status": "DOWN",
@@ -1888,7 +1888,7 @@ response:
           "load_balancer_interface": {
             "id": "dfe5e5f2-1f13-443e-9a9a-966501a8dd75",
             "ip_address": "",
-            "name": "Interface 1/2",
+            "name": "Interface 1/4",
             "network_id": "",
             "slot_number": 4,
             "status": "DOWN",

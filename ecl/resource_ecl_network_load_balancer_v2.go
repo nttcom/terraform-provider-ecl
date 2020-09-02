@@ -39,6 +39,8 @@ func resourceNetworkLoadBalancerV2() *schema.Resource {
 			Delete: schema.DefaultTimeout(10 * time.Minute),
 		},
 
+		CustomizeDiff: resourceNetworkLoadBalancerV2CustomizeDiff,
+
 		Schema: map[string]*schema.Schema{
 
 			"admin_password": {
@@ -82,6 +84,7 @@ func resourceNetworkLoadBalancerV2() *schema.Resource {
 			"interfaces": {
 				Type:     schema.TypeList,
 				Optional: true,
+				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"description": {
@@ -91,7 +94,7 @@ func resourceNetworkLoadBalancerV2() *schema.Resource {
 
 						"ip_address": {
 							Type:         schema.TypeString,
-							Required:     true,
+							Optional:     true,
 							ValidateFunc: validation.SingleIP(),
 						},
 
@@ -103,7 +106,7 @@ func resourceNetworkLoadBalancerV2() *schema.Resource {
 
 						"network_id": {
 							Type:     schema.TypeString,
-							Required: true,
+							Optional: true,
 						},
 
 						"virtual_ip_address": {
@@ -140,8 +143,9 @@ func resourceNetworkLoadBalancerV2() *schema.Resource {
 						},
 
 						"slot_number": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:         schema.TypeInt,
+							Required:     true,
+							ValidateFunc: validation.IntAtLeast(1),
 						},
 
 						"status": {
@@ -314,6 +318,44 @@ func resourceNetworkLoadBalancerV2() *schema.Resource {
 	}
 
 	return result
+}
+
+func resourceNetworkLoadBalancerV2CustomizeDiff(d *schema.ResourceDiff, meta interface{}) error {
+	if !d.HasChange("interfaces") {
+		return nil
+	}
+	o, n := d.GetChange("interfaces")
+
+	if len(o.([]interface{})) == 0 {
+		return nil
+	}
+
+	// In addition to the usual changes, we also check to see if the user has made any changes
+	// to the default interface that is DOWN.
+	for _, e := range o.([]interface{}) {
+		m := e.(map[string]interface{})
+		slotNumber := m["slot_number"].(int)
+		found := false
+		for _, e := range n.([]interface{}) {
+			nm := e.(map[string]interface{})
+			if slotNumber == nm["slot_number"].(int) {
+				if getLoadBalancerInterfaceChanges(m, nm) != nil {
+					return nil
+				}
+				found = true
+			}
+		}
+		if !found && !(m["status"].(string) == "DOWN" && m["name"].(string) == fmt.Sprintf("Interface 1/%d", slotNumber) && m["description"].(string) == "") {
+			return nil
+		}
+	}
+
+	err := d.Clear("interfaces")
+	if err != nil {
+		return fmt.Errorf("error while clearing diff of interfaces: %w", err)
+	}
+
+	return nil
 }
 
 func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{}) error {
@@ -552,7 +594,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 		}
 		if gatewayHasChange && (oldDefaultGateway != "") {
 			// When both default_gateway and interface have changes, we need to take steps below.
-			// 1. deattach default_gateway
+			// 1. detach default_gateway
 			// 2. (later) update interfaces
 			// 3. (later) attach new default_gateway
 			updateGatewayOpts := load_balancers.UpdateOpts{}
@@ -583,80 +625,68 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 		o, n := d.GetChange("interfaces")
 
-		// Check available interfaces.
-		var availableInterfaceIds []string
-		for _, e := range loadBalancer.Interfaces {
-			if e.Status == "DOWN" {
-				availableInterfaceIds = append(availableInterfaceIds, e.ID)
-			}
-		}
-
 		// Determine if any interface elements were removed from the configuration.
 		// Then request those elements to be disconnected,
 		// else update interfaces.
-		var newAvailableInterfaceIds []string
 		for _, ov := range o.([]interface{}) {
-			om := ov.(map[string]interface{})
+			m := ov.(map[string]interface{})
 
 			var updateInterfaceOpts *load_balancer_interfaces.UpdateOpts
 			found := false
+			slotNumber := m["slot_number"].(int)
 
 			for _, nv := range n.([]interface{}) {
 				nm := nv.(map[string]interface{})
-				if om["network_id"] == nm["network_id"] {
+				if slotNumber == nm["slot_number"] {
 					found = true
-					updateInterfaceOpts = getLoadBalancerInterfaceChanges(om, nm)
+					updateInterfaceOpts = getLoadBalancerInterfaceChanges(m, nm)
 				}
 			}
 
-			if !found {
+			if !found && !(m["status"].(string) == "DOWN" && m["name"].(string) == fmt.Sprintf("Interface 1/%d", slotNumber) && m["description"].(string) == "") {
 				updateInterfaceOpts = &load_balancer_interfaces.UpdateOpts{}
-				var virtualIPAddress interface{}
-				virtualIPAddress = nil
+				virtualIPAddress := interface{}(nil)
 				updateInterfaceOpts.VirtualIPAddress = &virtualIPAddress
-				var networkID interface{}
-				networkID = nil
+				networkID := interface{}(nil)
 				updateInterfaceOpts.NetworkID = &networkID
-
-				newAvailableInterfaceIds = append(newAvailableInterfaceIds, om["id"].(string))
+				name := fmt.Sprintf("Interface 1/%d", slotNumber)
+				updateInterfaceOpts.Name = &name
+				description := ""
+				updateInterfaceOpts.Description = &description
 			}
 
 			if updateInterfaceOpts != nil {
 				// .. update, call Show interface API and wait for active
-				err = updateLoadBalancerInterface(networkClient, d, om["id"].(string), *updateInterfaceOpts)
+				err = updateLoadBalancerInterface(networkClient, d, m["id"].(string), *updateInterfaceOpts)
 				if err != nil {
-					return err
+					return fmt.Errorf("error while updating Load Balancer Interface: %w", err)
 				}
 			}
 		}
-		availableInterfaceIds = append(newAvailableInterfaceIds, availableInterfaceIds...)
 
 		// Find new interface configs and connect them.
 		for _, nv := range n.([]interface{}) {
 			nm := nv.(map[string]interface{})
 
-			found := false
+			slotNumber := nm["slot_number"].(int)
 
-			for _, ov := range o.([]interface{}) {
-				om := ov.(map[string]interface{})
-
-				if om["network_id"] == nm["network_id"] {
-					found = true
-				}
+			if slotNumber <= len(o.([]interface{})) {
+				continue
 			}
 
-			if !found {
-				updateInterfaceOpts := getLoadBalancerInterfaceInitialUpdateOpts(nm)
-				// .. update, call Show interface API and wait for active
-				if len(availableInterfaceIds) < 1 {
-					return fmt.Errorf("exceeds max number of Load Balancer Interface")
+			updateInterfaceOpts := getLoadBalancerInterfaceInitialUpdateOpts(nm)
+			if len(loadBalancer.Interfaces) < slotNumber {
+				return fmt.Errorf("invalid slot number: %d", slotNumber)
+			}
+			for _, e := range loadBalancer.Interfaces {
+				if e.SlotNumber == slotNumber {
+					// .. update, call Show interface API and wait for active
+					err = updateLoadBalancerInterface(networkClient, d, e.ID, *updateInterfaceOpts)
+					if err != nil {
+						return fmt.Errorf("error while updating newly configured Load Balancer Interface: %w", err)
+					}
+					break
 				}
-				id := availableInterfaceIds[0]
-				err = updateLoadBalancerInterface(networkClient, d, id, *updateInterfaceOpts)
-				if err != nil {
-					return err
-				}
-				availableInterfaceIds = availableInterfaceIds[1:]
 			}
 		}
 	}
@@ -914,9 +944,6 @@ func flattenLoadBalancerInterfaces(in []load_balancer_interfaces.LoadBalancerInt
 	var out []map[string]interface{}
 
 	for _, v := range in {
-		if v.Status == "DOWN" {
-			continue
-		}
 
 		m := make(map[string]interface{})
 		m["id"] = v.ID
