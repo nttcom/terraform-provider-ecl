@@ -84,6 +84,9 @@ func dataSourceNetworkLoadBalancerPlanV2() *schema.Resource {
 func dataSourceNetworkLoadBalancerPlanV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	networkClient, err := config.networkV2Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("error creating ECL network client: %w", err)
+	}
 
 	listOpts := load_balancer_plans.ListOpts{}
 
@@ -113,7 +116,7 @@ func dataSourceNetworkLoadBalancerPlanV2Read(d *schema.ResourceData, meta interf
 
 	allPlans, err := getLoadBalancerPlans(networkClient, listOpts)
 	if err != nil {
-		return err
+		return fmt.Errorf("error getting Load Balancer Plans: %w", err)
 	}
 
 	var filteredPlans []load_balancer_plans.LoadBalancerPlan

@@ -1,6 +1,7 @@
 package ecl
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -359,7 +360,7 @@ func resourceNetworkLoadBalancerV2CustomizeDiff(d *schema.ResourceDiff, meta int
 
 	err := d.Clear("interfaces")
 	if err != nil {
-		return fmt.Errorf("error while clearing diff of interfaces: %w", err)
+		return fmt.Errorf("error clearing diff of Load Balancer Interfaces: %w", err)
 	}
 
 	return nil
@@ -380,7 +381,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 	}
 	plan, err := load_balancer_plans.Get(networkClient, i.(string)).Extract()
 	if err != nil {
-		return err
+		return fmt.Errorf("error getting Load Balancer Plan specified in config: %w", err)
 	}
 	if !plan.Enabled {
 		return fmt.Errorf("specified Load Balancer Plan is not enabled")
@@ -456,7 +457,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 			// .. update, call Show interface API and wait for active
 			err = updateLoadBalancerInterface(networkClient, d, loadBalancer.Interfaces[configIndex].ID, *updateInterfaceOpts)
 			if err != nil {
-				return err
+				return fmt.Errorf("error updating Load Balancer Interface in creating LB: %w", err)
 			}
 		}
 
@@ -475,7 +476,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 			// update, call Show load_balancer API and wait for active
 			err = updateLoadBalancer(networkClient, d, loadBalancer.ID, updateOpts)
 			if err != nil {
-				return err
+				return fmt.Errorf("error updating Load Balancer Default Gateway in creating LB: %w", err)
 			}
 		}
 	}
@@ -487,7 +488,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 
 		err := createLoadBalancerSyslogServer(syslogConfig, loadBalancer.ID, networkClient, d)
 		if err != nil {
-			return err
+			return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 		}
 
 	}
@@ -504,7 +505,7 @@ func resourceNetworkLoadBalancerV2Read(d *schema.ResourceData, meta interface{})
 
 	loadBalancer, err := load_balancers.Get(networkClient, d.Id()).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "load-balancer")
+		return CheckDeleted(d, err, "error getting ECL load balancer")
 	}
 
 	log.Printf("[DEBUG] Retrieved Load Balancer %s: %+v", d.Id(), loadBalancer)
@@ -523,7 +524,7 @@ func resourceNetworkLoadBalancerV2Read(d *schema.ResourceData, meta interface{})
 	for i, e := range loadBalancer.Interfaces {
 		lbInterface, err := load_balancer_interfaces.Get(networkClient, e.ID).Extract()
 		if err != nil {
-			return err
+			return fmt.Errorf("error getting Load Balancer Interface: %w", err)
 		}
 		loadBalancer.Interfaces[i] = *lbInterface
 	}
@@ -533,7 +534,7 @@ func resourceNetworkLoadBalancerV2Read(d *schema.ResourceData, meta interface{})
 	for i, e := range loadBalancer.SyslogServers {
 		syslogServer, err := load_balancer_syslog_servers.Get(networkClient, e.ID).Extract()
 		if err != nil {
-			return err
+			return fmt.Errorf("error getting Load Balancer Syslog Server: %w", err)
 		}
 		loadBalancer.SyslogServers[i] = *syslogServer
 	}
@@ -617,7 +618,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 				syslogServerID := e.(map[string]interface{})["id"].(string)
 				err = deleteLoadBalancerSyslogServer(d, networkClient, syslogServerID)
 				if err != nil {
-					return err
+					return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 				}
 			}
 			syslogInitialized = true
@@ -668,7 +669,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			// Retrieve Load Balancer Interface information (Interface IDs are required to update unused interfaces and plan)
 			loadBalancer, err := load_balancers.Get(networkClient, d.Id()).Extract()
 			if err != nil {
-				return CheckDeleted(d, err, "load-balancer")
+				return CheckDeleted(d, err, "error getting ECL load balancer")
 			}
 
 			// Find new interface slot configs and connect them.
@@ -707,7 +708,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 			err := createLoadBalancerSyslogServer(syslogConfig, d.Id(), networkClient, d)
 			if err != nil {
-				return err
+				return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 			}
 		}
 
@@ -733,7 +734,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 					if updateSyslogOpts != nil {
 						err = updateLoadBalancerSyslogServer(networkClient, d, om["id"].(string), *updateSyslogOpts)
 						if err != nil {
-							return err
+							return fmt.Errorf("error updating Load Balancer Syslog Server: %w", err)
 						}
 					}
 				}
@@ -743,7 +744,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 				// new config not exists -> delete syslog server
 				err = deleteLoadBalancerSyslogServer(d, networkClient, om["id"].(string))
 				if err != nil {
-					return err
+					return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 				}
 			}
 		}
@@ -768,7 +769,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			if !found {
 				err := createLoadBalancerSyslogServer(nm, d.Id(), networkClient, d)
 				if err != nil {
-					return err
+					return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 				}
 			}
 		}
@@ -800,7 +801,7 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 		syslogServerID := m["id"].(string)
 		err = deleteLoadBalancerSyslogServer(d, networkV2Client, syslogServerID)
 		if err != nil {
-			return err
+			return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 		}
 	}
 
@@ -829,6 +830,10 @@ func waitForLoadBalancerComplete(networkClient *eclcloud.ServiceClient, loadBala
 	return func() (interface{}, string, error) {
 		n, err := load_balancers.Get(networkClient, loadBalancerID).Extract()
 		if err != nil {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
+				return nil, "", nil
+			}
 			return nil, "", err
 		}
 
@@ -840,6 +845,10 @@ func waitForLoadBalancerInterfaceComplete(networkClient *eclcloud.ServiceClient,
 	return func() (interface{}, string, error) {
 		n, err := load_balancer_interfaces.Get(networkClient, loadBalancerInterfaceID).Extract()
 		if err != nil {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
+				return nil, "", nil
+			}
 			return nil, "", err
 		}
 
@@ -851,6 +860,10 @@ func waitForLoadBalancerSyslogServerComplete(networkClient *eclcloud.ServiceClie
 	return func() (interface{}, string, error) {
 		n, err := load_balancer_syslog_servers.Get(networkClient, loadBalancerSyslogServerID).Extract()
 		if err != nil {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
+				return nil, "", nil
+			}
 			return nil, "", err
 		}
 
@@ -864,7 +877,8 @@ func waitForLoadBalancerDelete(networkClient *eclcloud.ServiceClient, loadBalanc
 
 		n, err := load_balancers.Get(networkClient, loadBalancerID).Extract()
 		if err != nil {
-			if _, ok := err.(eclcloud.ErrDefault404); ok {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
 				log.Printf("[DEBUG] Successfully deleted ECL Load Balancer %s",
 					loadBalancerID)
 				return n, "DELETED", nil
@@ -883,7 +897,8 @@ func waitForLoadBalancerSyslogServerDelete(networkClient *eclcloud.ServiceClient
 
 		n, err := load_balancer_syslog_servers.Get(networkClient, loadBalancerSyslogServerID).Extract()
 		if err != nil {
-			if _, ok := err.(eclcloud.ErrDefault404); ok {
+			var e eclcloud.ErrDefault404
+			if errors.As(err, &e) {
 				log.Printf("[DEBUG] Successfully deleted ECL Load Balancer Syslog Server %s",
 					loadBalancerSyslogServerID)
 				return n, "DELETED", nil
@@ -1002,7 +1017,6 @@ func flattenLoadBalancerSyslogServers(in []load_balancer_syslog_servers.LoadBala
 		m["user_configurable_log_messages"] = v.UserConfigurableLogMessages
 		out[i] = m
 	}
-
 
 	return out
 }
