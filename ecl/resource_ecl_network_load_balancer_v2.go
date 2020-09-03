@@ -350,6 +350,13 @@ func resourceNetworkLoadBalancerV2CustomizeDiff(d *schema.ResourceDiff, meta int
 		}
 	}
 
+	for _, e := range n.([]interface{}) {
+		m := e.(map[string]interface{})
+		if len(o.([]interface{})) < m["slot_number"].(int) {
+			return nil
+		}
+	}
+
 	err := d.Clear("interfaces")
 	if err != nil {
 		return fmt.Errorf("error while clearing diff of interfaces: %w", err)
@@ -542,12 +549,6 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("error creating ECL network client: %s", err)
 	}
 
-	// Retrieve Load Balancer Interface information (Interface IDs are required to update unused interfaces and plan)
-	loadBalancer, err := load_balancers.Get(networkClient, d.Id()).Extract()
-	if err != nil {
-		return CheckDeleted(d, err, "load-balancer")
-	}
-
 	// detect network-related changes
 	o, _ := d.GetChange("default_gateway")
 	oldDefaultGateway := o.(string)
@@ -572,22 +573,20 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 	// update interfaces
 	if interfaceHasChange {
+		log.Printf("[DEBUG] Load Balancer Interface Config has change")
 		if planHasChange {
+			log.Printf("[DEBUG] Load Balancer Plan has change")
 			// When Load Balancer Plan has been changed and interfaces are increased,
 			// update Load Balancer Plan before connect new interfaces.
 			// Max number of Load Balancer Interface could be exceeded, so the new Load Balancer Plan is needed.
-			_, n := d.GetChange("interfaces")
-			if len(loadBalancer.Interfaces) < len(n.([]interface{})) {
-				log.Printf("[DEBUG] Start updating Load Balancer (core) ...")
+			o, n := d.GetChange("interfaces")
+			if len(o.([]interface{})) < len(n.([]interface{})) {
+				log.Printf("[DEBUG] Start updating Load Balancer Plan ...")
 				updatePlanOpts := load_balancers.UpdateOpts{}
 				updatePlanOpts.LoadBalancerPlanID = d.Get("load_balancer_plan_id").(string)
 				err = updateLoadBalancer(networkClient, d, d.Id(), updatePlanOpts)
 				if err != nil {
-					return fmt.Errorf("error in updating Load Balancer (core) : %s", err)
-				}
-				loadBalancer, err = load_balancers.Get(networkClient, d.Id()).Extract()
-				if err != nil {
-					return CheckDeleted(d, err, "load-balancer")
+					return fmt.Errorf("error in updating Load Balancer Plan : %s", err)
 				}
 				planUpdated = true
 			}
@@ -601,10 +600,10 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			var i interface{}
 			i = nil
 			updateGatewayOpts.DefaultGateway = &i
-			log.Printf("[DEBUG] Start updating Load Balancer (core) ...")
+			log.Printf("[DEBUG] Start updating Load Balancer Default Gateway ...")
 			err = updateLoadBalancer(networkClient, d, d.Id(), updateGatewayOpts)
 			if err != nil {
-				return fmt.Errorf("error in updating Load Balancer (core) : %s", err)
+				return fmt.Errorf("error in updating Load Balancer Default Gateway : %s", err)
 			}
 			gatewayInitialized = true
 		}
@@ -613,8 +612,9 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			// 1. delete syslog servers
 			// 2. (later) update interfaces
 			// 3. (later) create syslog servers
-			for _, syslogServer := range loadBalancer.SyslogServers {
-				syslogServerID := syslogServer.ID
+			o, _ := d.GetChange("syslog_servers")
+			for _, e := range o.([]interface{}) {
+				syslogServerID := e.(map[string]interface{})["id"].(string)
 				err = deleteLoadBalancerSyslogServer(d, networkClient, syslogServerID)
 				if err != nil {
 					return err
@@ -664,28 +664,36 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			}
 		}
 
-		// Find new interface configs and connect them.
-		for _, nv := range n.([]interface{}) {
-			nm := nv.(map[string]interface{})
-
-			slotNumber := nm["slot_number"].(int)
-
-			if slotNumber <= len(o.([]interface{})) {
-				continue
+		if planUpdated {
+			// Retrieve Load Balancer Interface information (Interface IDs are required to update unused interfaces and plan)
+			loadBalancer, err := load_balancers.Get(networkClient, d.Id()).Extract()
+			if err != nil {
+				return CheckDeleted(d, err, "load-balancer")
 			}
 
-			updateInterfaceOpts := getLoadBalancerInterfaceInitialUpdateOpts(nm)
-			if len(loadBalancer.Interfaces) < slotNumber {
-				return fmt.Errorf("invalid slot number: %d", slotNumber)
-			}
-			for _, e := range loadBalancer.Interfaces {
-				if e.SlotNumber == slotNumber {
-					// .. update, call Show interface API and wait for active
-					err = updateLoadBalancerInterface(networkClient, d, e.ID, *updateInterfaceOpts)
-					if err != nil {
-						return fmt.Errorf("error while updating newly configured Load Balancer Interface: %w", err)
+			// Find new interface slot configs and connect them.
+			for _, nv := range n.([]interface{}) {
+				nm := nv.(map[string]interface{})
+
+				slotNumber := nm["slot_number"].(int)
+
+				if slotNumber <= len(o.([]interface{})) {
+					continue
+				}
+
+				updateInterfaceOpts := getLoadBalancerInterfaceInitialUpdateOpts(nm)
+				if len(loadBalancer.Interfaces) < slotNumber {
+					return fmt.Errorf("invalid slot number: %d", slotNumber)
+				}
+				for _, e := range loadBalancer.Interfaces {
+					if e.SlotNumber == slotNumber {
+						// .. update, call Show interface API and wait for active
+						err = updateLoadBalancerInterface(networkClient, d, e.ID, *updateInterfaceOpts)
+						if err != nil {
+							return fmt.Errorf("error while updating newly configured Load Balancer Interface: %w", err)
+						}
+						break
 					}
-					break
 				}
 			}
 		}
@@ -697,7 +705,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 		for _, v := range syslogConfigs {
 			syslogConfig := v.(map[string]interface{})
 
-			err := createLoadBalancerSyslogServer(syslogConfig, loadBalancer.ID, networkClient, d)
+			err := createLoadBalancerSyslogServer(syslogConfig, d.Id(), networkClient, d)
 			if err != nil {
 				return err
 			}

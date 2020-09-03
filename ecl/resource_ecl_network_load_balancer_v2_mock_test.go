@@ -74,6 +74,10 @@ func TestMockedAccNetworkV2LoadBalancer_basic(t *testing.T) {
 	mc.Register(t, "load_balancer_interfaces2", "/v2.0/load_balancer_interfaces/c44889e9-89f6-413d-b186-307dde40d125", testMockNetworkV2LoadBalancerInterface2GetInit)
 	mc.Register(t, "load_balancer_interfaces3", "/v2.0/load_balancer_interfaces/494dbd21-e182-46f5-8c57-42db2d756fb2", testMockNetworkV2LoadBalancerInterface3GetInit)
 	mc.Register(t, "load_balancer_interfaces4", "/v2.0/load_balancer_interfaces/dfe5e5f2-1f13-443e-9a9a-966501a8dd75", testMockNetworkV2LoadBalancerInterface4GetInit)
+	mc.Register(t, "load_balancer_interfaces5", "/v2.0/load_balancer_interfaces/fb6e232f-2c47-4dce-b790-fb165486825a", testMockNetworkV2LoadBalancerInterface5GetInit)
+	mc.Register(t, "load_balancer_interfaces6", "/v2.0/load_balancer_interfaces/78f844f8-5d28-417b-9762-d49ab9600694", testMockNetworkV2LoadBalancerInterface6GetInit)
+	mc.Register(t, "load_balancer_interfaces7", "/v2.0/load_balancer_interfaces/74168dc1-847e-4ed9-a3fa-82f63b9644e0", testMockNetworkV2LoadBalancerInterface7GetInit)
+	mc.Register(t, "load_balancer_interfaces8", "/v2.0/load_balancer_interfaces/a17c5e8f-6d51-442f-a3ce-dfa230083cf5", testMockNetworkV2LoadBalancerInterface8GetInit)
 
 	// Mock registration: Load Balancer Syslog Server Step 0
 	mc.Register(t, "load_balancer_syslog_servers1", "/v2.0/load_balancer_syslog_servers", testMockNetworkV2LoadBalancerSyslogServer1Post)
@@ -1262,6 +1266,50 @@ response:
                 "type": "user",
                 "virtual_ip_address": null,
                 "virtual_ip_properties": null
+              },
+              {
+                "id": "fb6e232f-2c47-4dce-b790-fb165486825a",
+                "ip_address": "",
+                "name": "Interface 1/5",
+                "network_id": "",
+                "slot_number": 5,
+                "status": "DOWN",
+                "type": "user",
+                "virtual_ip_address": null,
+                "virtual_ip_properties": null
+              },
+              {
+                "id": "78f844f8-5d28-417b-9762-d49ab9600694",
+                "ip_address": "",
+                "name": "Interface 1/6",
+                "network_id": "",
+                "slot_number": 6,
+                "status": "DOWN",
+                "type": "user",
+                "virtual_ip_address": null,
+                "virtual_ip_properties": null
+              },
+              {
+                "id": "74168dc1-847e-4ed9-a3fa-82f63b9644e0",
+                "ip_address": "",
+                "name": "Interface 1/7",
+                "network_id": "",
+                "slot_number": 7,
+                "status": "DOWN",
+                "type": "user",
+                "virtual_ip_address": null,
+                "virtual_ip_properties": null
+              },
+              {
+                "id": "a17c5e8f-6d51-442f-a3ce-dfa230083cf5",
+                "ip_address": "",
+                "name": "Interface 1/8",
+                "network_id": "",
+                "slot_number": 8,
+                "status": "DOWN",
+                "type": "user",
+                "virtual_ip_address": null,
+                "virtual_ip_properties": null
               }
             ],
             "load_balancer_plan_id": "c17c4f48-8aad-4083-81d5-5a4f68a71ea0",
@@ -1381,6 +1429,50 @@ response:
                 "name": "Interface 1/4",
                 "network_id": "",
                 "slot_number": 4,
+                "status": "DOWN",
+                "type": "user",
+                "virtual_ip_address": null,
+                "virtual_ip_properties": null
+              },
+              {
+                "id": "fb6e232f-2c47-4dce-b790-fb165486825a",
+                "ip_address": "",
+                "name": "Interface 1/5",
+                "network_id": "",
+                "slot_number": 5,
+                "status": "DOWN",
+                "type": "user",
+                "virtual_ip_address": null,
+                "virtual_ip_properties": null
+              },
+              {
+                "id": "78f844f8-5d28-417b-9762-d49ab9600694",
+                "ip_address": "",
+                "name": "Interface 1/6",
+                "network_id": "",
+                "slot_number": 6,
+                "status": "DOWN",
+                "type": "user",
+                "virtual_ip_address": null,
+                "virtual_ip_properties": null
+              },
+              {
+                "id": "74168dc1-847e-4ed9-a3fa-82f63b9644e0",
+                "ip_address": "",
+                "name": "Interface 1/7",
+                "network_id": "",
+                "slot_number": 7,
+                "status": "DOWN",
+                "type": "user",
+                "virtual_ip_address": null,
+                "virtual_ip_properties": null
+              },
+              {
+                "id": "a17c5e8f-6d51-442f-a3ce-dfa230083cf5",
+                "ip_address": "",
+                "name": "Interface 1/8",
+                "network_id": "",
+                "slot_number": 8,
                 "status": "DOWN",
                 "type": "user",
                 "virtual_ip_address": null,
@@ -1891,6 +1983,90 @@ response:
             "name": "Interface 1/4",
             "network_id": "",
             "slot_number": 4,
+            "status": "DOWN",
+            "type": "user",
+            "virtual_ip_address": null,
+            "virtual_ip_properties": null
+          }
+        }
+`
+
+var testMockNetworkV2LoadBalancerInterface5GetInit = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+          "load_balancer_interface": {
+            "id": "fb6e232f-2c47-4dce-b790-fb165486825a",
+            "ip_address": "",
+            "name": "Interface 1/5",
+            "network_id": "",
+            "slot_number": 5,
+            "status": "DOWN",
+            "type": "user",
+            "virtual_ip_address": null,
+            "virtual_ip_properties": null
+          }
+        }
+`
+
+var testMockNetworkV2LoadBalancerInterface6GetInit = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+          "load_balancer_interface": {
+            "id": "78f844f8-5d28-417b-9762-d49ab9600694",
+            "ip_address": "",
+            "name": "Interface 1/6",
+            "network_id": "",
+            "slot_number": 6,
+            "status": "DOWN",
+            "type": "user",
+            "virtual_ip_address": null,
+            "virtual_ip_properties": null
+          }
+        }
+`
+
+var testMockNetworkV2LoadBalancerInterface7GetInit = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+          "load_balancer_interface": {
+            "id": "74168dc1-847e-4ed9-a3fa-82f63b9644e0",
+            "ip_address": "",
+            "name": "Interface 1/7",
+            "network_id": "",
+            "slot_number": 7,
+            "status": "DOWN",
+            "type": "user",
+            "virtual_ip_address": null,
+            "virtual_ip_properties": null
+          }
+        }
+`
+
+var testMockNetworkV2LoadBalancerInterface8GetInit = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+          "load_balancer_interface": {
+            "id": "a17c5e8f-6d51-442f-a3ce-dfa230083cf5",
+            "ip_address": "",
+            "name": "Interface 1/8",
+            "network_id": "",
+            "slot_number": 8,
             "status": "DOWN",
             "type": "user",
             "virtual_ip_address": null,
