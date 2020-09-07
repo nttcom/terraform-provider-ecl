@@ -64,6 +64,7 @@ resource "ecl_network_load_balancer_v2" "load_balancer_1" {
       name = "lb_test1_interface1"
       network_id = "${ecl_network_network_v2.network_1.id}"
       virtual_ip_address = "192.168.151.31"
+      slot_number = 1
       virtual_ip_properties {
           protocol = "vrrp"
           vrid = 20
@@ -74,6 +75,7 @@ resource "ecl_network_load_balancer_v2" "load_balancer_1" {
       ip_address = "192.168.152.11"
       name = "lb_test1_interface2"
       network_id = "${ecl_network_network_v2.network_2.id}"
+      slot_number = 2
   }
   syslog_servers {
       acl_logging = "ENABLED"
@@ -142,12 +144,14 @@ The `interfaces` block supports:
 
 * `description` - (Optional) Load Balancer Interface description.
 
-* `ip_address` - (Required)  The physical IP address associated with the interface.
+* `ip_address` - (Optional)  The physical IP address associated with the interface.
     The IP address must be in the network specified as the argument `network_id`.
 
 * `name` - (Optional) The name of the Load Balancer Interface.
 
-* `network_id` - (Required) The UUID of the network associated with the interface.
+* `network_id` - (Optional) The UUID of the network associated with the interface.
+
+* `slot_number` - (Required) The slot number of interface.
 
 * `virtual_ip_address` - (Optional; Required if `virtual_ip_properties` is not empty)
     The virtual IP address associated with the interface. The IP address must be in
@@ -237,7 +241,6 @@ The `interfaces` block supports:
 
 * `id` - Load Balancer Interface unique ID.
 * `name` - See Argument Reference above.
-* `slot_number` - The slot number of interface.
 * `status` - Status of Load Balancer Interface.
 
 The `syslog_servers` block supports:

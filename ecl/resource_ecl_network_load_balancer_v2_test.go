@@ -599,7 +599,7 @@ func TestAccNetworkV2LoadBalancer_updatePlanIncrease(t *testing.T) {
 }
 
 // TestAccNetworkV2LoadBalancer_forceNew tests that ForceNew attribute works functionally.
-// Step 0: Create Load Balancer.
+// Step 0: Create Load Balancer with 1 Interface.
 // Step 1: Update Load Balancer availability_zone to force destroying/recreating.
 func TestAccNetworkV2LoadBalancer_forceNew(t *testing.T) {
 	if testing.Short() {
@@ -1194,14 +1194,10 @@ func TestAccNetworkV2LoadBalancer_modifySyslogServers(t *testing.T) {
 }
 
 // TestAccNetworkV2LoadBalancer_modifyInterfacesWithIPs tests simultaneous updating interface and other IP addresses.
-// Step 0: Create Load Balancer without sub resources.
-//	-> network: [], default_gateway: null, syslog server IP: []
-// Step 1: Connect 1 new network to interface, set default_gateway and create 1 syslog server
+// Step 0: Connect 1 new network to interface, set default_gateway and create 1 syslog server
 //	-> network: [1], default_gateway: in network 1, syslog server IP: [in network 1]
-// Step 2: Replace network and update other IPs to new network
+// Step 1: Replace network and update other IPs to new network
 //	-> network: [2], default_gateway: in network 2, syslog server IP: [in network 2]
-// Step 3: Disconnect network and release other IPs
-//	-> network: [], default_gateway: null, syslog server IP: []
 func TestAccNetworkV2LoadBalancer_modifyInterfacesWithIPs(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
@@ -1221,17 +1217,6 @@ func TestAccNetworkV2LoadBalancer_modifyInterfacesWithIPs(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkV2LoadBalancerDestroy,
 		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkV2LoadBalancerMinimumInit,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2LoadBalancerExists(r, &lb),
-
-					resource.TestCheckResourceAttr(r, "default_gateway", ""),
-					resource.TestCheckResourceAttr(r, "status", "ACTIVE"),
-
-					resource.TestCheckResourceAttr(r, "interfaces.#", "4"),
-				),
-			},
 			{
 				Config: testAccNetworkV2LoadBalancerInterfaces1WithSyslogServer,
 				Check: resource.ComposeTestCheckFunc(
@@ -1321,17 +1306,6 @@ func TestAccNetworkV2LoadBalancer_modifyInterfacesWithIPs(t *testing.T) {
 					resource.TestCheckResourceAttr(r, fmt.Sprintf("syslog_servers.%s.user_configurable_log_messages", syslog1UpdateKey), "NO"),
 					resource.TestCheckResourceAttr(r, fmt.Sprintf("syslog_servers.%s.status", syslog1UpdateKey), "ACTIVE"),
 					resource.TestCheckResourceAttr(r, fmt.Sprintf("syslog_servers.%s.tenant_id", syslog1UpdateKey), OS_TENANT_ID),
-				),
-			},
-			{
-				Config: testAccNetworkV2LoadBalancerMinimumInit,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkV2LoadBalancerExists(r, &lb),
-
-					resource.TestCheckResourceAttr(r, "default_gateway", ""),
-					resource.TestCheckResourceAttr(r, "status", "ACTIVE"),
-
-					resource.TestCheckResourceAttr(r, "interfaces.#", "4"),
 				),
 			},
 		},
@@ -1640,20 +1614,25 @@ var testAccNetworkV2LoadBalancerMinimumInit = fmt.Sprintf(`
 
 %s
 
+%s
+
 resource "ecl_network_load_balancer_v2" "lb_test1" {
   name = "lb_test1"
   availability_zone = "%s"
   description = "load_balancer_test1_description"
   load_balancer_plan_id = data.ecl_network_load_balancer_plan_v2.lb_plan1.id
   %s
+  %s
 }
 `,
+	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair1,
 	testAccNetworkV2LoadBalancerPlan4IF,
 	OS_DEFAULT_ZONE,
 	"",
+	testAccNetworkV2LoadBalancerInterface1,
 )
 
-var testAccNetworkV2LoadBalancerMinimumUpdateAZ = fmt.Sprintf(`
+var testAccNetworkV2LoadBalancerMinimumWithDisconnectedIF = fmt.Sprintf(`
 
 %s
 
@@ -1663,11 +1642,35 @@ resource "ecl_network_load_balancer_v2" "lb_test1" {
   description = "load_balancer_test1_description"
   load_balancer_plan_id = data.ecl_network_load_balancer_plan_v2.lb_plan1.id
   %s
+  %s
 }
 `,
 	testAccNetworkV2LoadBalancerPlan4IF,
+	OS_DEFAULT_ZONE,
+	testAccNetworkV2LoadBalancerInterface1DefaultValue,
+	"",
+)
+
+var testAccNetworkV2LoadBalancerMinimumUpdateAZ = fmt.Sprintf(`
+
+%s
+
+%s
+
+resource "ecl_network_load_balancer_v2" "lb_test1" {
+  name = "lb_test1"
+  availability_zone = "%s"
+  description = "load_balancer_test1_description"
+  load_balancer_plan_id = data.ecl_network_load_balancer_plan_v2.lb_plan1.id
+  %s
+  %s
+}
+`,
+	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair1,
+	testAccNetworkV2LoadBalancerPlan4IF,
 	"zone1_groupb",
 	"",
+	testAccNetworkV2LoadBalancerInterface1,
 )
 
 var testAccNetworkV2LoadBalancerInterfaces1 = fmt.Sprintf(`
@@ -1704,6 +1707,7 @@ resource "ecl_network_load_balancer_v2" "lb_test1" {
   %s
   %s
   %s
+  depends_on = ["ecl_network_subnet_v2.subnet_1_1"]
 }
 `,
 	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair1,
@@ -1800,6 +1804,7 @@ resource "ecl_network_load_balancer_v2" "lb_test1" {
   %s
   %s
   %s
+  depends_on = ["ecl_network_subnet_v2.subnet_2_1"]
 }
 `,
 	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair2,
@@ -2129,6 +2134,13 @@ interfaces {
     ip_address = "192.168.151.11"
     name = "lb_test1_interface1"
     network_id = "${ecl_network_network_v2.network_1.id}"
+}
+`
+
+const testAccNetworkV2LoadBalancerInterface1DefaultValue = `
+interfaces {
+    slot_number = 1
+    name = "Interface 1/1"
 }
 `
 

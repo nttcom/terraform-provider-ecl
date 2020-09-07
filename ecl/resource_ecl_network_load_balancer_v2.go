@@ -322,10 +322,14 @@ func resourceNetworkLoadBalancerV2() *schema.Resource {
 }
 
 func resourceNetworkLoadBalancerV2CustomizeDiff(d *schema.ResourceDiff, meta interface{}) error {
+	o, n := d.GetChange("interfaces")
+	if len(n.([]interface{})) < 1 {
+		return fmt.Errorf("at least 1 interface must be set")
+	}
+
 	if !d.HasChange("interfaces") {
 		return nil
 	}
-	o, n := d.GetChange("interfaces")
 
 	if len(o.([]interface{})) == 0 {
 		return nil
@@ -358,8 +362,7 @@ func resourceNetworkLoadBalancerV2CustomizeDiff(d *schema.ResourceDiff, meta int
 		}
 	}
 
-	err := d.Clear("interfaces")
-	if err != nil {
+	if err := d.Clear("interfaces"); err != nil {
 		return fmt.Errorf("error clearing diff of Load Balancer Interfaces: %w", err)
 	}
 
@@ -1253,7 +1256,11 @@ func getLoadBalancerInterfaceChanges(om map[string]interface{}, nm map[string]in
 		// Both ip_address and network properties must be provided to API.
 		updateOpts.IPAddress = nm["ip_address"].(string)
 		var networkID interface{}
-		networkID = nm["network_id"]
+		if nm["network_id"] == "" {
+			networkID = nil
+		} else {
+			networkID = nm["network_id"]
+		}
 		updateOpts.NetworkID = &networkID
 	}
 
