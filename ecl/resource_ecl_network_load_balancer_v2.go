@@ -18,9 +18,7 @@ import (
 )
 
 const loadBalancerPollingSec = 30
-const loadBalancerCreatePollInterval = loadBalancerPollingSec * time.Second
-const loadBalancerUpdatePollInterval = loadBalancerPollingSec * time.Second
-const loadBalancerDeletePollInterval = loadBalancerPollingSec * time.Second
+const loadBalancerPollInterval = loadBalancerPollingSec * time.Second
 
 func resourceNetworkLoadBalancerV2() *schema.Resource {
 	var result *schema.Resource
@@ -417,7 +415,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 		Refresh:      waitForLoadBalancerComplete(networkClient, loadBalancer.ID),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: loadBalancerCreatePollInterval,
+		PollInterval: loadBalancerPollInterval,
 		MinTimeout:   10 * time.Second,
 	}
 
@@ -434,9 +432,9 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 			Pending:      []string{"MONITORING_UNAVAILABLE", "PENDING_UPDATE"},
 			Target:       []string{"ACTIVE", "DOWN"},
 			Refresh:      waitForLoadBalancerInterfaceComplete(networkClient, lbIF.ID),
-			Timeout:      d.Timeout(schema.TimeoutUpdate),
+			Timeout:      d.Timeout(schema.TimeoutCreate),
 			Delay:        5 * time.Second,
-			PollInterval: loadBalancerUpdatePollInterval,
+			PollInterval: loadBalancerPollInterval,
 			MinTimeout:   3 * time.Second,
 		}
 
@@ -816,7 +814,7 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 		Target:     []string{"DELETED"},
 		Refresh:    waitForLoadBalancerDelete(networkV2Client, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
-		Delay:      loadBalancerDeletePollInterval,
+		Delay:      loadBalancerPollInterval,
 		MinTimeout: 3 * time.Second,
 	}
 
@@ -953,7 +951,7 @@ func createLoadBalancerSyslogServer(syslogConfig map[string]interface{}, loadBal
 		Refresh:      waitForLoadBalancerSyslogServerComplete(networkClient, syslogServer.ID),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: loadBalancerCreatePollInterval,
+		PollInterval: loadBalancerPollInterval,
 		MinTimeout:   10 * time.Second,
 	}
 
@@ -1039,7 +1037,7 @@ func updateLoadBalancer(networkClient *eclcloud.ServiceClient, d *schema.Resourc
 		Refresh:      waitForLoadBalancerComplete(networkClient, id),
 		Timeout:      d.Timeout(schema.TimeoutUpdate),
 		Delay:        5 * time.Second,
-		PollInterval: loadBalancerUpdatePollInterval,
+		PollInterval: loadBalancerPollInterval,
 		MinTimeout:   3 * time.Second,
 	}
 
@@ -1058,7 +1056,7 @@ func updateLoadBalancer(networkClient *eclcloud.ServiceClient, d *schema.Resourc
 			Refresh:      waitForLoadBalancerInterfaceComplete(networkClient, lbIF.ID),
 			Timeout:      d.Timeout(schema.TimeoutUpdate),
 			Delay:        5 * time.Second,
-			PollInterval: loadBalancerUpdatePollInterval,
+			PollInterval: loadBalancerPollInterval,
 			MinTimeout:   3 * time.Second,
 		}
 
@@ -1088,7 +1086,7 @@ func updateLoadBalancerInterface(networkClient *eclcloud.ServiceClient, d *schem
 		Refresh:      waitForLoadBalancerInterfaceComplete(networkClient, id),
 		Timeout:      d.Timeout(schema.TimeoutUpdate),
 		Delay:        5 * time.Second,
-		PollInterval: loadBalancerUpdatePollInterval,
+		PollInterval: loadBalancerPollInterval,
 		MinTimeout:   3 * time.Second,
 	}
 
@@ -1106,7 +1104,7 @@ func updateLoadBalancerInterface(networkClient *eclcloud.ServiceClient, d *schem
 		Refresh:      waitForLoadBalancerComplete(networkClient, d.Id()),
 		Timeout:      d.Timeout(schema.TimeoutUpdate),
 		Delay:        5 * time.Second,
-		PollInterval: loadBalancerUpdatePollInterval,
+		PollInterval: loadBalancerPollInterval,
 		MinTimeout:   3 * time.Second,
 	}
 
@@ -1135,7 +1133,7 @@ func updateLoadBalancerSyslogServer(networkClient *eclcloud.ServiceClient, d *sc
 		Refresh:      waitForLoadBalancerSyslogServerComplete(networkClient, id),
 		Timeout:      d.Timeout(schema.TimeoutUpdate),
 		Delay:        5 * time.Second,
-		PollInterval: loadBalancerUpdatePollInterval,
+		PollInterval: loadBalancerPollInterval,
 		MinTimeout:   3 * time.Second,
 	}
 
@@ -1387,7 +1385,7 @@ func deleteLoadBalancerSyslogServer(d *schema.ResourceData, networkClient *eclcl
 		Target:     []string{"DELETED"},
 		Refresh:    waitForLoadBalancerSyslogServerDelete(networkClient, id),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
-		Delay:      loadBalancerDeletePollInterval,
+		Delay:      loadBalancerPollInterval,
 		MinTimeout: 3 * time.Second,
 	}
 
