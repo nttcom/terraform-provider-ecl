@@ -1316,7 +1316,7 @@ func testAccCheckNetworkV2LoadBalancerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkClient, err := config.networkV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("error creating ECL network client: %s", err)
+		return fmt.Errorf("error creating ECL network client: %w", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -1324,8 +1324,7 @@ func testAccCheckNetworkV2LoadBalancerDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := load_balancers.Get(networkClient, rs.Primary.ID).Extract()
-		if err == nil {
+		if _, err := load_balancers.Get(networkClient, rs.Primary.ID).Extract(); err == nil {
 			return fmt.Errorf("load balancer still exists")
 		}
 	}
@@ -1347,7 +1346,7 @@ func testAccCheckNetworkV2LoadBalancerExists(n string, lb *load_balancers.LoadBa
 		config := testAccProvider.Meta().(*Config)
 		networkClient, err := config.networkV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("error creating ECL network client: %s", err)
+			return fmt.Errorf("error creating ECL network client: %w", err)
 		}
 
 		found, err := load_balancers.Get(networkClient, rs.Primary.ID).Extract()
@@ -1370,11 +1369,10 @@ func testAccCheckNetworkV2LoadBalancerDoesNotExist(loadBalancer *load_balancers.
 		config := testAccProvider.Meta().(*Config)
 		networkClient, err := config.networkV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("error creating ECL network client: %s", err)
+			return fmt.Errorf("error creating ECL network client: %w", err)
 		}
 
-		_, err = load_balancer_syslog_servers.Get(networkClient, loadBalancer.ID).Extract()
-		if err != nil {
+		if _, err := load_balancer_syslog_servers.Get(networkClient, loadBalancer.ID).Extract(); err != nil {
 			if _, ok := err.(eclcloud.ErrDefault404); ok {
 				return nil
 			}
@@ -1401,7 +1399,7 @@ func testAccCheckNetworkV2LoadBalancerInterfaceExists(n string, i string, lbIF *
 		config := testAccProvider.Meta().(*Config)
 		networkClient, err := config.networkV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("error creating ECL network client: %s", err)
+			return fmt.Errorf("error creating ECL network client: %w", err)
 		}
 
 		found, err := load_balancer_interfaces.Get(networkClient, value).Extract()
@@ -1435,7 +1433,7 @@ func testAccCheckNetworkV2LoadBalancerSyslogServerExists(n string, i string, lbS
 		config := testAccProvider.Meta().(*Config)
 		networkClient, err := config.networkV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("error creating ECL network client: %s", err)
+			return fmt.Errorf("error creating ECL network client: %w", err)
 		}
 
 		found, err := load_balancer_syslog_servers.Get(networkClient, value).Extract()
@@ -1458,11 +1456,10 @@ func testAccCheckNetworkV2LoadBalancerSyslogServerDoesNotExist(syslogServer *loa
 		config := testAccProvider.Meta().(*Config)
 		networkClient, err := config.networkV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("error creating ECL network client: %s", err)
+			return fmt.Errorf("error creating ECL network client: %w", err)
 		}
 
-		_, err = load_balancer_syslog_servers.Get(networkClient, syslogServer.ID).Extract()
-		if err != nil {
+		if _, err = load_balancer_syslog_servers.Get(networkClient, syslogServer.ID).Extract(); err != nil {
 			if _, ok := err.(eclcloud.ErrDefault404); ok {
 				return nil
 			}

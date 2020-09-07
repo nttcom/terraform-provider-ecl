@@ -371,7 +371,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 	networkClient, err := config.networkV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL network client: %s", err)
+		return fmt.Errorf("error creating ECL network client: %w", err)
 	}
 
 	// Get plan and check response whether the plan is enabled or not.
@@ -400,7 +400,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] Create Load Balancer Options: %#v", createOpts)
 	loadBalancer, err := load_balancers.Create(networkClient, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("error creating ECL load balancer: %s", err)
+		return fmt.Errorf("error creating ECL load balancer: %w", err)
 	}
 
 	d.SetId(loadBalancer.ID)
@@ -419,10 +419,9 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 		MinTimeout:   10 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err := stateConf.WaitForState(); err != nil {
 		return fmt.Errorf(
-			"error waiting for load balancer (%s) to become ACTIVE: %s",
+			"error waiting for load balancer (%s) to become ACTIVE: %w",
 			loadBalancer.ID, err)
 	}
 
@@ -438,10 +437,9 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 			MinTimeout:   3 * time.Second,
 		}
 
-		_, err = stateConf.WaitForState()
-		if err != nil {
+		if _, err := stateConf.WaitForState(); err != nil {
 			return fmt.Errorf(
-				"error waiting for Load Balancer Interface (%s) to become ACTIVE(after Load Balancer create): %s",
+				"error waiting for Load Balancer Interface (%s) to become ACTIVE(after Load Balancer create): %w",
 				lbIF.ID, err)
 		}
 	}
@@ -456,8 +454,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 			updateInterfaceOpts := getLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig)
 
 			// .. update, call Show interface API and wait for active
-			err = updateLoadBalancerInterface(networkClient, d, loadBalancer.Interfaces[configIndex].ID, *updateInterfaceOpts)
-			if err != nil {
+			if err = updateLoadBalancerInterface(networkClient, d, loadBalancer.Interfaces[configIndex].ID, *updateInterfaceOpts); err != nil {
 				return fmt.Errorf("error updating Load Balancer Interface in creating LB: %w", err)
 			}
 		}
@@ -475,8 +472,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 				DefaultGateway: &defaultGateway,
 			}
 			// update, call Show load_balancer API and wait for active
-			err = updateLoadBalancer(networkClient, d, loadBalancer.ID, updateOpts)
-			if err != nil {
+			if err = updateLoadBalancer(networkClient, d, loadBalancer.ID, updateOpts); err != nil {
 				return fmt.Errorf("error updating Load Balancer Default Gateway in creating LB: %w", err)
 			}
 		}
@@ -487,8 +483,7 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 	for _, v := range syslogConfigs {
 		syslogConfig := v.(map[string]interface{})
 
-		err := createLoadBalancerSyslogServer(syslogConfig, loadBalancer.ID, networkClient, d)
-		if err != nil {
+		if err := createLoadBalancerSyslogServer(syslogConfig, loadBalancer.ID, networkClient, d); err != nil {
 			return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 		}
 
@@ -501,7 +496,7 @@ func resourceNetworkLoadBalancerV2Read(d *schema.ResourceData, meta interface{})
 	config := meta.(*Config)
 	networkClient, err := config.networkV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL network client: %s", err)
+		return fmt.Errorf("error creating ECL network client: %w", err)
 	}
 
 	loadBalancer, err := load_balancers.Get(networkClient, d.Id()).Extract()
@@ -548,7 +543,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 	networkClient, err := config.networkV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL network client: %s", err)
+		return fmt.Errorf("error creating ECL network client: %w", err)
 	}
 
 	// detect network-related changes
@@ -586,9 +581,8 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 				log.Printf("[DEBUG] Start updating Load Balancer Plan ...")
 				updatePlanOpts := load_balancers.UpdateOpts{}
 				updatePlanOpts.LoadBalancerPlanID = d.Get("load_balancer_plan_id").(string)
-				err = updateLoadBalancer(networkClient, d, d.Id(), updatePlanOpts)
-				if err != nil {
-					return fmt.Errorf("error in updating Load Balancer Plan : %s", err)
+				if err = updateLoadBalancer(networkClient, d, d.Id(), updatePlanOpts); err != nil {
+					return fmt.Errorf("error in updating Load Balancer Plan : %w", err)
 				}
 				planUpdated = true
 			}
@@ -603,9 +597,8 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			i = nil
 			updateGatewayOpts.DefaultGateway = &i
 			log.Printf("[DEBUG] Start updating Load Balancer Default Gateway ...")
-			err = updateLoadBalancer(networkClient, d, d.Id(), updateGatewayOpts)
-			if err != nil {
-				return fmt.Errorf("error in updating Load Balancer Default Gateway : %s", err)
+			if err = updateLoadBalancer(networkClient, d, d.Id(), updateGatewayOpts); err != nil {
+				return fmt.Errorf("error in updating Load Balancer Default Gateway : %w", err)
 			}
 			gatewayInitialized = true
 		}
@@ -617,8 +610,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			o, _ := d.GetChange("syslog_servers")
 			for _, e := range o.([]interface{}) {
 				syslogServerID := e.(map[string]interface{})["id"].(string)
-				err = deleteLoadBalancerSyslogServer(d, networkClient, syslogServerID)
-				if err != nil {
+				if err = deleteLoadBalancerSyslogServer(d, networkClient, syslogServerID); err != nil {
 					return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 				}
 			}
@@ -659,8 +651,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 			if updateInterfaceOpts != nil {
 				// .. update, call Show interface API and wait for active
-				err = updateLoadBalancerInterface(networkClient, d, m["id"].(string), *updateInterfaceOpts)
-				if err != nil {
+				if err = updateLoadBalancerInterface(networkClient, d, m["id"].(string), *updateInterfaceOpts); err != nil {
 					return fmt.Errorf("error while updating Load Balancer Interface: %w", err)
 				}
 			}
@@ -690,8 +681,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 				for _, e := range loadBalancer.Interfaces {
 					if e.SlotNumber == slotNumber {
 						// .. update, call Show interface API and wait for active
-						err = updateLoadBalancerInterface(networkClient, d, e.ID, *updateInterfaceOpts)
-						if err != nil {
+						if err = updateLoadBalancerInterface(networkClient, d, e.ID, *updateInterfaceOpts); err != nil {
 							return fmt.Errorf("error while updating newly configured Load Balancer Interface: %w", err)
 						}
 						break
@@ -707,8 +697,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 		for _, v := range syslogConfigs {
 			syslogConfig := v.(map[string]interface{})
 
-			err := createLoadBalancerSyslogServer(syslogConfig, d.Id(), networkClient, d)
-			if err != nil {
+			if err := createLoadBalancerSyslogServer(syslogConfig, d.Id(), networkClient, d); err != nil {
 				return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 			}
 		}
@@ -733,8 +722,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 					var updateSyslogOpts *load_balancer_syslog_servers.UpdateOpts
 					updateSyslogOpts = getLoadBalancerSyslogServerChanges(om, nm)
 					if updateSyslogOpts != nil {
-						err = updateLoadBalancerSyslogServer(networkClient, d, om["id"].(string), *updateSyslogOpts)
-						if err != nil {
+						if err = updateLoadBalancerSyslogServer(networkClient, d, om["id"].(string), *updateSyslogOpts); err != nil {
 							return fmt.Errorf("error updating Load Balancer Syslog Server: %w", err)
 						}
 					}
@@ -743,8 +731,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 			if !found {
 				// new config not exists -> delete syslog server
-				err = deleteLoadBalancerSyslogServer(d, networkClient, om["id"].(string))
-				if err != nil {
+				if err = deleteLoadBalancerSyslogServer(d, networkClient, om["id"].(string)); err != nil {
 					return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 				}
 			}
@@ -768,8 +755,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			}
 
 			if !found {
-				err := createLoadBalancerSyslogServer(nm, d.Id(), networkClient, d)
-				if err != nil {
+				if err := createLoadBalancerSyslogServer(nm, d.Id(), networkClient, d); err != nil {
 					return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 				}
 			}
@@ -779,9 +765,8 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 	updateOpts := getLoadBalancerUpdateOpts(d, gatewayInitialized, planUpdated)
 	if updateOpts != nil {
 		log.Printf("[DEBUG] Start updating Load Balancer (core) ...")
-		err = updateLoadBalancer(networkClient, d, d.Id(), *updateOpts)
-		if err != nil {
-			return fmt.Errorf("error in updating Load Balancer (core) : %s", err)
+		if err = updateLoadBalancer(networkClient, d, d.Id(), *updateOpts); err != nil {
+			return fmt.Errorf("error in updating Load Balancer (core) : %w", err)
 		}
 	}
 
@@ -792,7 +777,7 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 	networkV2Client, err := config.networkV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("error creating ECL network client: %s", err)
+		return fmt.Errorf("error creating ECL network client: %w", err)
 	}
 
 	// delete syslog servers
@@ -800,8 +785,7 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 	for _, syslogServer := range syslogServers {
 		m := syslogServer.(map[string]interface{})
 		syslogServerID := m["id"].(string)
-		err = deleteLoadBalancerSyslogServer(d, networkV2Client, syslogServerID)
-		if err != nil {
+		if err = deleteLoadBalancerSyslogServer(d, networkV2Client, syslogServerID); err != nil {
 			return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 		}
 	}
@@ -818,9 +802,8 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 		MinTimeout: 3 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
-		return fmt.Errorf("error deleting ECL Load Balancer: %s", err)
+	if _, err := stateConf.WaitForState(); err != nil {
+		return fmt.Errorf("error deleting ECL Load Balancer: %w", err)
 	}
 
 	d.SetId("")
@@ -939,7 +922,7 @@ func createLoadBalancerSyslogServer(syslogConfig map[string]interface{}, loadBal
 	log.Printf("[DEBUG] Create Load Balancer Syslog Server Options: %#v", createSyslogOpts)
 	syslogServer, err := load_balancer_syslog_servers.Create(networkClient, createSyslogOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("error creating ECL load balancer syslog server: %s", err)
+		return fmt.Errorf("error creating ECL load balancer syslog server: %w", err)
 	}
 
 	log.Printf("[INFO] Load Balancer Syslog Server ID: %s", syslogServer.ID)
@@ -955,10 +938,9 @@ func createLoadBalancerSyslogServer(syslogConfig map[string]interface{}, loadBal
 		MinTimeout:   10 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err := stateConf.WaitForState(); err != nil {
 		return fmt.Errorf(
-			"error waiting for load balancer syslog server (%s) to become ACTIVE: %s",
+			"error waiting for load balancer syslog server (%s) to become ACTIVE: %w",
 			syslogServer.ID, err)
 	}
 	return nil
@@ -1027,7 +1009,7 @@ func updateLoadBalancer(networkClient *eclcloud.ServiceClient, d *schema.Resourc
 	lb, err := load_balancers.Update(networkClient, id, updateOpts).Extract()
 	if err != nil {
 		return fmt.Errorf(
-			"error updating for Load Balancer (%s) with option %#v: %s",
+			"error updating for Load Balancer (%s) with option %#v: %w",
 			id, updateOpts, err)
 	}
 
@@ -1041,10 +1023,9 @@ func updateLoadBalancer(networkClient *eclcloud.ServiceClient, d *schema.Resourc
 		MinTimeout:   3 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err := stateConf.WaitForState(); err != nil {
 		return fmt.Errorf(
-			"error waiting for Load Balancer (%s) to become ACTIVE(after update): %s",
+			"error waiting for Load Balancer (%s) to become ACTIVE(after update): %w",
 			id, err)
 	}
 
@@ -1060,10 +1041,9 @@ func updateLoadBalancer(networkClient *eclcloud.ServiceClient, d *schema.Resourc
 			MinTimeout:   3 * time.Second,
 		}
 
-		_, err = stateConf.WaitForState()
-		if err != nil {
+		if _, err := stateConf.WaitForState(); err != nil {
 			return fmt.Errorf(
-				"error waiting for Load Balancer Interface (%s) to become ACTIVE(after Load Balancer update): %s",
+				"error waiting for Load Balancer Interface (%s) to become ACTIVE(after Load Balancer update): %w",
 				id, err)
 		}
 	}
@@ -1073,10 +1053,9 @@ func updateLoadBalancer(networkClient *eclcloud.ServiceClient, d *schema.Resourc
 
 func updateLoadBalancerInterface(networkClient *eclcloud.ServiceClient, d *schema.ResourceData, id string, updateOpts load_balancer_interfaces.UpdateOpts) error {
 	log.Printf("[DEBUG] Updating Load Balancer Interface %s with options: %+v", id, updateOpts)
-	_, err := load_balancer_interfaces.Update(networkClient, id, updateOpts).Extract()
-	if err != nil {
+	if _, err := load_balancer_interfaces.Update(networkClient, id, updateOpts).Extract(); err != nil {
 		return fmt.Errorf(
-			"error updating for Load Balancer Interface (%s) with option %#v: %s",
+			"error updating for Load Balancer Interface (%s) with option %#v: %w",
 			id, updateOpts, err)
 	}
 
@@ -1090,10 +1069,9 @@ func updateLoadBalancerInterface(networkClient *eclcloud.ServiceClient, d *schem
 		MinTimeout:   3 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err := stateConf.WaitForState(); err != nil {
 		return fmt.Errorf(
-			"error waiting for Load Balancer Interface (%s) to become ACTIVE(after interface update): %s",
+			"error waiting for Load Balancer Interface (%s) to become ACTIVE(after interface update): %w",
 			id, err)
 	}
 
@@ -1108,10 +1086,9 @@ func updateLoadBalancerInterface(networkClient *eclcloud.ServiceClient, d *schem
 		MinTimeout:   3 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err := stateConf.WaitForState(); err != nil {
 		return fmt.Errorf(
-			"error waiting for Load Balancer (%s) to become ACTIVE(after interface update): %s",
+			"error waiting for Load Balancer (%s) to become ACTIVE(after interface update): %w",
 			d.Id(), err)
 	}
 
@@ -1120,10 +1097,9 @@ func updateLoadBalancerInterface(networkClient *eclcloud.ServiceClient, d *schem
 
 func updateLoadBalancerSyslogServer(networkClient *eclcloud.ServiceClient, d *schema.ResourceData, id string, updateOpts load_balancer_syslog_servers.UpdateOpts) error {
 	log.Printf("[DEBUG] Updating Load Balancer Syslog Server %s with options: %+v", id, updateOpts)
-	_, err := load_balancer_syslog_servers.Update(networkClient, id, updateOpts).Extract()
-	if err != nil {
+	if _, err := load_balancer_syslog_servers.Update(networkClient, id, updateOpts).Extract(); err != nil {
 		return fmt.Errorf(
-			"error updating for Load Balancer Syslog Server (%s) with option %#v: %s",
+			"error updating for Load Balancer Syslog Server (%s) with option %#v: %w",
 			id, updateOpts, err)
 	}
 
@@ -1137,10 +1113,9 @@ func updateLoadBalancerSyslogServer(networkClient *eclcloud.ServiceClient, d *sc
 		MinTimeout:   3 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
+	if _, err := stateConf.WaitForState(); err != nil {
 		return fmt.Errorf(
-			"error waiting for Load Balancer Syslog Server (%s) to become ACTIVE(after Syslog Server update): %s",
+			"error waiting for Load Balancer Syslog Server (%s) to become ACTIVE(after Syslog Server update): %w",
 			id, err)
 	}
 
@@ -1378,7 +1353,9 @@ func getLoadBalancerSyslogServerChanges(om map[string]interface{}, nm map[string
 }
 
 func deleteLoadBalancerSyslogServer(d *schema.ResourceData, networkClient *eclcloud.ServiceClient, id string) error {
-	err := load_balancer_syslog_servers.Delete(networkClient, id).ExtractErr()
+	if err := load_balancer_syslog_servers.Delete(networkClient, id).ExtractErr(); err != nil {
+		return fmt.Errorf("error deleting ECL Load Balancer Syslog Server: %w", err)
+	}
 
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"PROCESSING"},
@@ -1389,9 +1366,8 @@ func deleteLoadBalancerSyslogServer(d *schema.ResourceData, networkClient *eclcl
 		MinTimeout: 3 * time.Second,
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
-		return fmt.Errorf("error deleting ECL Load Balancer Syslog Server: %s", err)
+	if _, err := stateConf.WaitForState(); err != nil {
+		return fmt.Errorf("error deleting ECL Load Balancer Syslog Server: %w", err)
 	}
 
 	return nil
