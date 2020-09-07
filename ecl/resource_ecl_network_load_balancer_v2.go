@@ -589,23 +589,24 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			syslogInitialized = true
 		}
 
-		interfacesState, interfacesConfig := d.GetChange("interfaces")
+		interfaceStates, interfaceConfigs := d.GetChange("interfaces")
 
 		// Determine if any interface elements were removed from the configuration.
 		// Then request those elements to be disconnected,
 		// else update interfaces.
-		for _, ov := range interfacesState.([]interface{}) {
+		for _, ov := range interfaceStates.([]interface{}) {
 			state := ov.(map[string]interface{})
 
 			var updateInterfaceOpts *load_balancer_interfaces.UpdateOpts
 			found := false
 			slotNumber := state["slot_number"].(int)
 
-			for _, nv := range interfacesConfig.([]interface{}) {
+			for _, nv := range interfaceConfigs.([]interface{}) {
 				config := nv.(map[string]interface{})
 				if slotNumber == config["slot_number"] {
 					found = true
 					updateInterfaceOpts = expandLoadBalancerInterfaceChanges(state, config)
+					break
 				}
 			}
 
@@ -637,12 +638,12 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			}
 
 			// Find new interface slot configs and connect them.
-			for _, nv := range interfacesConfig.([]interface{}) {
+			for _, nv := range interfaceConfigs.([]interface{}) {
 				config := nv.(map[string]interface{})
 
 				slotNumber := config["slot_number"].(int)
 
-				if slotNumber <= len(interfacesState.([]interface{})) {
+				if slotNumber <= len(interfaceStates.([]interface{})) {
 					continue
 				}
 
@@ -677,13 +678,13 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 	} else if d.HasChange("syslog_servers") {
 
-		o, n := d.GetChange("syslog_servers")
+		syslogServerStates, syslogServerConfigs := d.GetChange("syslog_servers")
 
-		for _, ov := range o.(*schema.Set).List() {
+		for _, ov := range syslogServerStates.(*schema.Set).List() {
 			state := ov.(map[string]interface{})
 			var found bool
 
-			for _, nv := range n.(*schema.Set).List() {
+			for _, nv := range syslogServerConfigs.(*schema.Set).List() {
 				config := nv.(map[string]interface{})
 				if state["ip_address"] == config["ip_address"] &&
 					state["name"] == config["name"] &&
@@ -699,6 +700,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 							return fmt.Errorf("error updating Load Balancer Syslog Server: %w", err)
 						}
 					}
+					break
 				}
 			}
 
@@ -711,11 +713,11 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 		}
 
 		// new config exists and old config not exists -> create syslog server
-		for _, nv := range n.(*schema.Set).List() {
+		for _, nv := range syslogServerConfigs.(*schema.Set).List() {
 			config := nv.(map[string]interface{})
 			var found bool
 
-			for _, ov := range o.(*schema.Set).List() {
+			for _, ov := range syslogServerStates.(*schema.Set).List() {
 				state := ov.(map[string]interface{})
 
 				if state["ip_address"] == config["ip_address"] &&
@@ -724,6 +726,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 					state["tenant_id"] == config["tenant_id"] &&
 					state["transport_type"] == config["transport_type"] {
 					found = true
+					break
 				}
 			}
 
@@ -756,8 +759,7 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 
 	// delete syslog servers
 	for _, syslogServer := range d.Get("syslog_servers").(*schema.Set).List() {
-		syslogServerID := syslogServer.(map[string]interface{})["id"].(string)
-		if err := deleteLoadBalancerSyslogServer(d, networkV2Client, syslogServerID); err != nil {
+		if err := deleteLoadBalancerSyslogServer(d, networkV2Client, syslogServer.(map[string]interface{})["id"].(string)); err != nil {
 			return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 		}
 	}
@@ -1112,26 +1114,26 @@ func expandLoadBalancerUpdateOpts(d *schema.ResourceData, gatewayInitialized boo
 	}
 }
 
-func expandLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig map[string]interface{}) *load_balancer_interfaces.UpdateOpts {
+func expandLoadBalancerInterfaceInitialUpdateOpts(new map[string]interface{}) *load_balancer_interfaces.UpdateOpts {
 	updateInterfaceOpts := load_balancer_interfaces.UpdateOpts{}
 
-	s := interfaceConfig["description"].(string)
+	s := new["description"].(string)
 	updateInterfaceOpts.Description = &s
 
-	updateInterfaceOpts.IPAddress = interfaceConfig["ip_address"].(string)
+	updateInterfaceOpts.IPAddress = new["ip_address"].(string)
 
-	s = interfaceConfig["name"].(string)
+	s = new["name"].(string)
 	updateInterfaceOpts.Name = &s
 
-	i := interfaceConfig["network_id"]
+	i := new["network_id"]
 	updateInterfaceOpts.NetworkID = &i
 
-	if s = interfaceConfig["virtual_ip_address"].(string); s != "" {
+	if s = new["virtual_ip_address"].(string); s != "" {
 		virtualIPAddress := interface{}(s)
 		updateInterfaceOpts.VirtualIPAddress = &virtualIPAddress
 	}
 
-	if v := interfaceConfig["virtual_ip_properties"].([]interface{}); len(v) == 1 {
+	if v := new["virtual_ip_properties"].([]interface{}); len(v) == 1 {
 		m := v[0].(map[string]interface{})
 		updateInterfaceOpts.VirtualIPProperties = &load_balancer_interfaces.VirtualIPProperties{}
 		updateInterfaceOpts.VirtualIPProperties.Protocol = m["protocol"].(string)
@@ -1141,59 +1143,55 @@ func expandLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig map[string]int
 	return &updateInterfaceOpts
 }
 
-func expandLoadBalancerInterfaceChanges(om map[string]interface{}, nm map[string]interface{}) *load_balancer_interfaces.UpdateOpts {
-	var isUpdated bool
+func expandLoadBalancerInterfaceChanges(old map[string]interface{}, new map[string]interface{}) *load_balancer_interfaces.UpdateOpts {
+	var updateOpts *load_balancer_interfaces.UpdateOpts
 
-	var updateOpts load_balancer_interfaces.UpdateOpts
-
-	if om["description"] != nm["description"] {
-		isUpdated = true
-		description := nm["description"].(string)
+	if old["description"] != new["description"] {
+		updateOpts = &load_balancer_interfaces.UpdateOpts{}
+		description := new["description"].(string)
 		updateOpts.Description = &description
 	}
 
-	if om["name"] != nm["name"] {
-		isUpdated = true
-		name := nm["name"].(string)
+	if old["name"] != new["name"] {
+		if updateOpts == nil {
+			updateOpts = &load_balancer_interfaces.UpdateOpts{}
+		}
+		name := new["name"].(string)
 		updateOpts.Name = &name
 	}
 
-	if om["ip_address"] != nm["ip_address"] ||
-		om["network_id"] != nm["network_id"] {
-		isUpdated = true
+	if old["ip_address"] != new["ip_address"] ||
+		old["network_id"] != new["network_id"] {
+		if updateOpts == nil {
+			updateOpts = &load_balancer_interfaces.UpdateOpts{}
+		}
 		// Both ip_address and network properties must be provided to API.
-		updateOpts.IPAddress = nm["ip_address"].(string)
+		updateOpts.IPAddress = new["ip_address"].(string)
 		var networkID interface{}
-		if nm["network_id"] == "" {
+		if new["network_id"] == "" {
 			networkID = nil
 		} else {
-			networkID = nm["network_id"]
+			networkID = new["network_id"]
 		}
 		updateOpts.NetworkID = &networkID
 	}
 
-	ova := om["virtual_ip_properties"].([]interface{})
-	var op string
-	var ov int
-	if len(ova) == 1 {
-		ovp := ova[0].(map[string]interface{})
-		op = ovp["protocol"].(string)
-		ov = ovp["vrid"].(int)
+	oldVIPs := old["virtual_ip_properties"].([]interface{})
+	newVIPs := new["virtual_ip_properties"].([]interface{})
+	var newProtocol string
+	var newVRID int
+	if len(newVIPs) == 1 {
+		newProtocol = newVIPs[0].(map[string]interface{})["protocol"].(string)
+		newVRID = newVIPs[0].(map[string]interface{})["vrid"].(int)
 	}
-	nva := nm["virtual_ip_properties"].([]interface{})
-	var np string
-	var nv int
-	if len(nva) == 1 {
-		nvp := nva[0].(map[string]interface{})
-		np = nvp["protocol"].(string)
-		nv = nvp["vrid"].(int)
-	}
-	if om["virtual_ip_address"] != nm["virtual_ip_address"] ||
-		op != np ||
-		ov != nv {
-		isUpdated = true
+	if old["virtual_ip_address"] != new["virtual_ip_address"] ||
+		len(oldVIPs) != len(newVIPs) ||
+		len(oldVIPs) == 1 && (oldVIPs[0].(map[string]interface{})["protocol"].(string) != newProtocol || oldVIPs[0].(map[string]interface{})["vrid"].(int) != newVRID) {
+		if updateOpts == nil {
+			updateOpts = &load_balancer_interfaces.UpdateOpts{}
+		}
 		// Both ip_address and network properties must be provided to API.
-		s := nm["virtual_ip_address"]
+		s := new["virtual_ip_address"]
 		var virtualIPAddress interface{}
 		if s == "" {
 			virtualIPAddress = nil
@@ -1201,107 +1199,103 @@ func expandLoadBalancerInterfaceChanges(om map[string]interface{}, nm map[string
 			virtualIPAddress = s
 		}
 		updateOpts.VirtualIPAddress = &virtualIPAddress
-		if np != "" && nv != 0 {
+		if newProtocol != "" && newVRID != 0 {
 			updateOpts.VirtualIPProperties = &load_balancer_interfaces.VirtualIPProperties{}
-			updateOpts.VirtualIPProperties.Protocol = np
-			updateOpts.VirtualIPProperties.Vrid = nv
+			updateOpts.VirtualIPProperties.Protocol = newProtocol
+			updateOpts.VirtualIPProperties.Vrid = newVRID
 		}
 	}
 
-	if isUpdated {
-		return &updateOpts
-	} else {
-		return nil
-	}
+	return updateOpts
 }
 
-func expandLoadBalancerSyslogServerCreateOpts(syslogConfig map[string]interface{}, loadBalancerID string) load_balancer_syslog_servers.CreateOpts {
+func expandLoadBalancerSyslogServerCreateOpts(new map[string]interface{}, loadBalancerID string) load_balancer_syslog_servers.CreateOpts {
 	createSyslogOpts := load_balancer_syslog_servers.CreateOpts{
-		AclLogging:                  syslogConfig["acl_logging"].(string),
-		AppflowLogging:              syslogConfig["appflow_logging"].(string),
-		DateFormat:                  syslogConfig["date_format"].(string),
-		Description:                 syslogConfig["description"].(string),
-		IPAddress:                   syslogConfig["ip_address"].(string),
+		AclLogging:                  new["acl_logging"].(string),
+		AppflowLogging:              new["appflow_logging"].(string),
+		DateFormat:                  new["date_format"].(string),
+		Description:                 new["description"].(string),
+		IPAddress:                   new["ip_address"].(string),
 		LoadBalancerID:              loadBalancerID,
-		LogFacility:                 syslogConfig["log_facility"].(string),
-		LogLevel:                    syslogConfig["log_level"].(string),
-		Name:                        syslogConfig["name"].(string),
-		PortNumber:                  syslogConfig["port_number"].(int),
-		TcpLogging:                  syslogConfig["tcp_logging"].(string),
-		TenantID:                    syslogConfig["tenant_id"].(string),
-		TimeZone:                    syslogConfig["time_zone"].(string),
-		TransportType:               syslogConfig["transport_type"].(string),
-		UserConfigurableLogMessages: syslogConfig["user_configurable_log_messages"].(string),
+		LogFacility:                 new["log_facility"].(string),
+		LogLevel:                    new["log_level"].(string),
+		Name:                        new["name"].(string),
+		PortNumber:                  new["port_number"].(int),
+		TcpLogging:                  new["tcp_logging"].(string),
+		TenantID:                    new["tenant_id"].(string),
+		TimeZone:                    new["time_zone"].(string),
+		TransportType:               new["transport_type"].(string),
+		UserConfigurableLogMessages: new["user_configurable_log_messages"].(string),
 	}
 
-	i := syslogConfig["priority"].(int)
+	i := new["priority"].(int)
 	createSyslogOpts.Priority = &i
 
 	return createSyslogOpts
 }
 
-func expandLoadBalancerSyslogServerChanges(om map[string]interface{}, nm map[string]interface{}) *load_balancer_syslog_servers.UpdateOpts {
+func expandLoadBalancerSyslogServerChanges(old map[string]interface{}, new map[string]interface{}) *load_balancer_syslog_servers.UpdateOpts {
 	var isUpdated bool
 
 	var updateOpts load_balancer_syslog_servers.UpdateOpts
 
-	if om["acl_logging"] != nm["acl_logging"] {
+	if old["acl_logging"] != new["acl_logging"] {
 		isUpdated = true
-		aclLogging := nm["acl_logging"].(string)
+		aclLogging := new["acl_logging"].(string)
 		updateOpts.AclLogging = aclLogging
 	}
 
-	if om["appflow_logging"] != nm["appflow_logging"] {
+	if old["appflow_logging"] != new["appflow_logging"] {
 		isUpdated = true
-		appflowLogging := nm["appflow_logging"].(string)
+		appflowLogging := new["appflow_logging"].(string)
 		updateOpts.AppflowLogging = appflowLogging
 	}
 
-	if om["date_format"] != nm["date_format"] {
+	if old["date_format"] != new["date_format"] {
 		isUpdated = true
-		dateFormat := nm["date_format"].(string)
+		dateFormat := new["date_format"].(string)
 		updateOpts.DateFormat = dateFormat
 	}
 
-	if om["description"] != nm["description"] {
+	if old["description"] != new["description"] {
 		isUpdated = true
-		description := nm["description"].(string)
+		description := new["description"].(string)
 		updateOpts.Description = &description
 	}
 
-	if om["log_facility"] != nm["log_facility"] {
+	if old["log_facility"] != new["log_facility"] {
 		isUpdated = true
-		logFacility := nm["log_facility"].(string)
+		logFacility := new["log_facility"].(string)
 		updateOpts.LogFacility = logFacility
 	}
 
-	if om["log_level"] != nm["log_level"] {
+	if old["log_level"] != new["log_level"] {
 		isUpdated = true
-		logLevel := nm["log_level"].(string)
+		logLevel := new["log_level"].(string)
 		updateOpts.LogLevel = logLevel
 	}
 
-	if om["priority"] != nm["priority"] {
+	if old["priority"] != new["priority"] {
 		isUpdated = true
-		priority := nm["priority"].(int)
+		priority := new["priority"].(int)
 		updateOpts.Priority = &priority
 	}
 
-	if om["tcp_logging"] != nm["tcp_logging"] {
+	if old["tcp_logging"] != new["tcp_logging"] {
 		isUpdated = true
-		tcpLogging := nm["tcp_logging"].(string)
+		tcpLogging := new["tcp_logging"].(string)
 		updateOpts.TcpLogging = tcpLogging
 	}
 
-	if om["time_zone"] != nm["time_zone"] {
+	if old["time_zone"] != new["time_zone"] {
 		isUpdated = true
-		timeZone := nm["time_zone"].(string)
+		timeZone := new["time_zone"].(string)
 		updateOpts.TimeZone = timeZone
 	}
 
-	if om["user_configurable_log_messages"] != nm["user_configurable_log_messages"] {
+	if old["user_configurable_log_messages"] != new["user_configurable_log_messages"] {
 		isUpdated = true
-		userConfigurableLogMessages := nm["user_configurable_log_messages"].(string)
+		userConfigurableLogMessages := new["user_configurable_log_messages"].(string)
 		updateOpts.UserConfigurableLogMessages = userConfigurableLogMessages
 	}
 

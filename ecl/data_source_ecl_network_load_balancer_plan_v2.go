@@ -88,30 +88,13 @@ func dataSourceNetworkLoadBalancerPlanV2Read(d *schema.ResourceData, meta interf
 		return fmt.Errorf("error creating ECL network client: %w", err)
 	}
 
-	listOpts := load_balancer_plans.ListOpts{}
-
-	if v, ok := d.GetOk("description"); ok {
-		listOpts.Description = v.(string)
-	}
-
-	if v, ok := d.GetOk("id"); ok {
-		listOpts.ID = v.(string)
-	}
-
-	if v, ok := d.GetOk("maximum_syslog_servers"); ok {
-		listOpts.MaximumSyslogServers = v.(int)
-	}
-
-	if v, ok := d.GetOk("name"); ok {
-		listOpts.Name = v.(string)
-	}
-
-	if v, ok := d.GetOk("vendor"); ok {
-		listOpts.Vendor = v.(string)
-	}
-
-	if v, ok := d.GetOk("version"); ok {
-		listOpts.Version = v.(string)
+	listOpts := load_balancer_plans.ListOpts{
+		Description:          d.Get("description").(string),
+		ID:                   d.Get("id").(string),
+		MaximumSyslogServers: d.Get("maximum_syslog_servers").(int),
+		Name:                 d.Get("name").(string),
+		Vendor:               d.Get("vendor").(string),
+		Version:              d.Get("version").(string),
 	}
 
 	allPlans, err := getLoadBalancerPlans(networkClient, listOpts)
