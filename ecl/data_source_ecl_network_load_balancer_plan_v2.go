@@ -177,12 +177,12 @@ func dataSourceNetworkLoadBalancerPlanV2Read(d *schema.ResourceData, meta interf
 func getLoadBalancerPlans(networkClient *eclcloud.ServiceClient, listOpts load_balancer_plans.ListOpts) ([]load_balancer_plans.LoadBalancerPlan, error) {
 	pages, err := load_balancer_plans.List(networkClient, listOpts).AllPages()
 	if err != nil {
-		return nil, fmt.Errorf("unable to retrieve Load Balancer Plans: %s", err)
+		return nil, fmt.Errorf("unable to retrieve Load Balancer Plans: %w", err)
 	}
 
 	allPlans, err := load_balancer_plans.ExtractLoadBalancerPlans(pages)
 	if err != nil {
-		return nil, fmt.Errorf("unable to extract retrieved Load Balancer Plans: %s", err)
+		return nil, fmt.Errorf("unable to extract retrieved Load Balancer Plans: %w", err)
 	}
 
 	if len(allPlans) < 1 {

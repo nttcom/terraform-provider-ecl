@@ -436,41 +436,36 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 	}
 
 	// If interface configs are specified, update interfaces according to the configs.
-	interfaceConfigs := d.Get("interfaces").([]interface{})
-	if len(interfaceConfigs) > 0 {
+	for configIndex, v := range d.Get("interfaces").([]interface{}) {
+		interfaceConfig := v.(map[string]interface{})
 
-		for configIndex, v := range interfaceConfigs {
-			interfaceConfig := v.(map[string]interface{})
+		updateInterfaceOpts := expandLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig)
 
-			updateInterfaceOpts := expandLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig)
-
-			// .. update, call Show interface API and wait for active
-			if err = updateLoadBalancerInterface(networkClient, d, loadBalancer.Interfaces[configIndex].ID, *updateInterfaceOpts); err != nil {
-				return fmt.Errorf("error updating Load Balancer Interface in creating LB: %w", err)
-			}
+		// .. update, call Show interface API and wait for active
+		if err := updateLoadBalancerInterface(networkClient, d, loadBalancer.Interfaces[configIndex].ID, *updateInterfaceOpts); err != nil {
+			return fmt.Errorf("error updating Load Balancer Interface in creating LB: %w", err)
 		}
+	}
 
-		// Update default_gateway if specified
-		if v, ok := d.GetOk("default_gateway"); ok {
-			updateOpts := load_balancers.UpdateOpts{
-				DefaultGateway: &v,
-			}
-			// update, call Show load_balancer API and wait for active
-			if err = updateLoadBalancer(networkClient, d, loadBalancer.ID, updateOpts); err != nil {
-				return fmt.Errorf("error updating Load Balancer Default Gateway in creating LB: %w", err)
-			}
+	// Update default_gateway if specified
+	if v, ok := d.GetOk("default_gateway"); ok {
+		updateOpts := load_balancers.UpdateOpts{
+			DefaultGateway: &v,
+		}
+		// update, call Show load_balancer API and wait for active
+		if err := updateLoadBalancer(networkClient, d, loadBalancer.ID, updateOpts); err != nil {
+			return fmt.Errorf("error updating Load Balancer Default Gateway in creating LB: %w", err)
 		}
 	}
 
 	// If syslog server configs are specified, create syslog servers according to the configs.
-	syslogConfigs := d.Get("syslog_servers").(*schema.Set).List()
-	for _, v := range syslogConfigs {
+	for _, v := range d.Get("syslog_servers").(*schema.Set).List() {
 		syslogConfig := v.(map[string]interface{})
 
-		if err := createLoadBalancerSyslogServer(syslogConfig, loadBalancer.ID, networkClient, d); err != nil {
+		createSyslogOpts := expandLoadBalancerSyslogServerCreateOpts(syslogConfig, loadBalancer.ID)
+		if err := createLoadBalancerSyslogServer(networkClient, d, loadBalancer.ID, createSyslogOpts); err != nil {
 			return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 		}
-
 	}
 
 	return resourceNetworkLoadBalancerV2Read(d, meta)
@@ -556,9 +551,10 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			o, n := d.GetChange("interfaces")
 			if len(o.([]interface{})) < len(n.([]interface{})) {
 				log.Printf("[DEBUG] Start updating Load Balancer Plan ...")
-				updatePlanOpts := load_balancers.UpdateOpts{}
-				updatePlanOpts.LoadBalancerPlanID = d.Get("load_balancer_plan_id").(string)
-				if err = updateLoadBalancer(networkClient, d, d.Id(), updatePlanOpts); err != nil {
+				updatePlanOpts := load_balancers.UpdateOpts{
+					LoadBalancerPlanID: d.Get("load_balancer_plan_id").(string),
+				}
+				if err := updateLoadBalancer(networkClient, d, d.Id(), updatePlanOpts); err != nil {
 					return fmt.Errorf("error in updating Load Balancer Plan : %w", err)
 				}
 				planUpdated = true
@@ -569,12 +565,12 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			// 1. detach default_gateway
 			// 2. (later) update interfaces
 			// 3. (later) attach new default_gateway
-			updateGatewayOpts := load_balancers.UpdateOpts{}
-			var i interface{}
-			i = nil
-			updateGatewayOpts.DefaultGateway = &i
+			dg := interface{}(nil)
+			updateGatewayOpts := load_balancers.UpdateOpts{
+				DefaultGateway: &dg,
+			}
 			log.Printf("[DEBUG] Start updating Load Balancer Default Gateway ...")
-			if err = updateLoadBalancer(networkClient, d, d.Id(), updateGatewayOpts); err != nil {
+			if err := updateLoadBalancer(networkClient, d, d.Id(), updateGatewayOpts); err != nil {
 				return fmt.Errorf("error in updating Load Balancer Default Gateway : %w", err)
 			}
 			gatewayInitialized = true
@@ -586,35 +582,34 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			// 3. (later) create syslog servers
 			o, _ := d.GetChange("syslog_servers")
 			for _, e := range o.([]interface{}) {
-				syslogServerID := e.(map[string]interface{})["id"].(string)
-				if err = deleteLoadBalancerSyslogServer(d, networkClient, syslogServerID); err != nil {
+				if err := deleteLoadBalancerSyslogServer(d, networkClient, e.(map[string]interface{})["id"].(string)); err != nil {
 					return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 				}
 			}
 			syslogInitialized = true
 		}
 
-		o, n := d.GetChange("interfaces")
+		interfacesState, interfacesConfig := d.GetChange("interfaces")
 
 		// Determine if any interface elements were removed from the configuration.
 		// Then request those elements to be disconnected,
 		// else update interfaces.
-		for _, ov := range o.([]interface{}) {
-			m := ov.(map[string]interface{})
+		for _, ov := range interfacesState.([]interface{}) {
+			state := ov.(map[string]interface{})
 
 			var updateInterfaceOpts *load_balancer_interfaces.UpdateOpts
 			found := false
-			slotNumber := m["slot_number"].(int)
+			slotNumber := state["slot_number"].(int)
 
-			for _, nv := range n.([]interface{}) {
-				nm := nv.(map[string]interface{})
-				if slotNumber == nm["slot_number"] {
+			for _, nv := range interfacesConfig.([]interface{}) {
+				config := nv.(map[string]interface{})
+				if slotNumber == config["slot_number"] {
 					found = true
-					updateInterfaceOpts = expandLoadBalancerInterfaceChanges(m, nm)
+					updateInterfaceOpts = expandLoadBalancerInterfaceChanges(state, config)
 				}
 			}
 
-			if !found && !(m["status"].(string) == "DOWN" && m["name"].(string) == fmt.Sprintf("Interface 1/%d", slotNumber) && m["description"].(string) == "") {
+			if !found && !(state["status"].(string) == "DOWN" && state["name"].(string) == fmt.Sprintf("Interface 1/%d", slotNumber) && state["description"].(string) == "") {
 				updateInterfaceOpts = &load_balancer_interfaces.UpdateOpts{}
 				virtualIPAddress := interface{}(nil)
 				updateInterfaceOpts.VirtualIPAddress = &virtualIPAddress
@@ -628,7 +623,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 			if updateInterfaceOpts != nil {
 				// .. update, call Show interface API and wait for active
-				if err = updateLoadBalancerInterface(networkClient, d, m["id"].(string), *updateInterfaceOpts); err != nil {
+				if err := updateLoadBalancerInterface(networkClient, d, state["id"].(string), *updateInterfaceOpts); err != nil {
 					return fmt.Errorf("error while updating Load Balancer Interface: %w", err)
 				}
 			}
@@ -642,23 +637,23 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 			}
 
 			// Find new interface slot configs and connect them.
-			for _, nv := range n.([]interface{}) {
-				nm := nv.(map[string]interface{})
+			for _, nv := range interfacesConfig.([]interface{}) {
+				config := nv.(map[string]interface{})
 
-				slotNumber := nm["slot_number"].(int)
+				slotNumber := config["slot_number"].(int)
 
-				if slotNumber <= len(o.([]interface{})) {
+				if slotNumber <= len(interfacesState.([]interface{})) {
 					continue
 				}
 
-				updateInterfaceOpts := expandLoadBalancerInterfaceInitialUpdateOpts(nm)
+				updateInterfaceOpts := expandLoadBalancerInterfaceInitialUpdateOpts(config)
 				if len(loadBalancer.Interfaces) < slotNumber {
 					return fmt.Errorf("invalid slot number: %d", slotNumber)
 				}
 				for _, e := range loadBalancer.Interfaces {
 					if e.SlotNumber == slotNumber {
 						// .. update, call Show interface API and wait for active
-						if err = updateLoadBalancerInterface(networkClient, d, e.ID, *updateInterfaceOpts); err != nil {
+						if err := updateLoadBalancerInterface(networkClient, d, e.ID, *updateInterfaceOpts); err != nil {
 							return fmt.Errorf("error while updating newly configured Load Balancer Interface: %w", err)
 						}
 						break
@@ -674,7 +669,8 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 		for _, v := range syslogConfigs {
 			syslogConfig := v.(map[string]interface{})
 
-			if err := createLoadBalancerSyslogServer(syslogConfig, d.Id(), networkClient, d); err != nil {
+			createSyslogOpts := expandLoadBalancerSyslogServerCreateOpts(syslogConfig, d.Id())
+			if err := createLoadBalancerSyslogServer(networkClient, d, d.Id(), createSyslogOpts); err != nil {
 				return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 			}
 		}
@@ -684,22 +680,22 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 		o, n := d.GetChange("syslog_servers")
 
 		for _, ov := range o.(*schema.Set).List() {
-			om := ov.(map[string]interface{})
+			state := ov.(map[string]interface{})
 			var found bool
 
 			for _, nv := range n.(*schema.Set).List() {
-				nm := nv.(map[string]interface{})
-				if om["ip_address"] == nm["ip_address"] &&
-					om["name"] == nm["name"] &&
-					om["port_number"] == nm["port_number"] &&
-					om["tenant_id"] == nm["tenant_id"] &&
-					om["transport_type"] == nm["transport_type"] {
+				config := nv.(map[string]interface{})
+				if state["ip_address"] == config["ip_address"] &&
+					state["name"] == config["name"] &&
+					state["port_number"] == config["port_number"] &&
+					state["tenant_id"] == config["tenant_id"] &&
+					state["transport_type"] == config["transport_type"] {
 					// Normal update.
 					found = true
 					var updateSyslogOpts *load_balancer_syslog_servers.UpdateOpts
-					updateSyslogOpts = expandLoadBalancerSyslogServerChanges(om, nm)
+					updateSyslogOpts = expandLoadBalancerSyslogServerChanges(state, config)
 					if updateSyslogOpts != nil {
-						if err = updateLoadBalancerSyslogServer(networkClient, d, om["id"].(string), *updateSyslogOpts); err != nil {
+						if err := updateLoadBalancerSyslogServer(networkClient, d, state["id"].(string), *updateSyslogOpts); err != nil {
 							return fmt.Errorf("error updating Load Balancer Syslog Server: %w", err)
 						}
 					}
@@ -708,7 +704,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 			if !found {
 				// new config not exists -> delete syslog server
-				if err = deleteLoadBalancerSyslogServer(d, networkClient, om["id"].(string)); err != nil {
+				if err := deleteLoadBalancerSyslogServer(d, networkClient, state["id"].(string)); err != nil {
 					return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 				}
 			}
@@ -716,23 +712,24 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 
 		// new config exists and old config not exists -> create syslog server
 		for _, nv := range n.(*schema.Set).List() {
-			nm := nv.(map[string]interface{})
+			config := nv.(map[string]interface{})
 			var found bool
 
 			for _, ov := range o.(*schema.Set).List() {
-				om := ov.(map[string]interface{})
+				state := ov.(map[string]interface{})
 
-				if om["ip_address"] == nm["ip_address"] &&
-					om["name"] == nm["name"] &&
-					om["port_number"] == nm["port_number"] &&
-					om["tenant_id"] == nm["tenant_id"] &&
-					om["transport_type"] == nm["transport_type"] {
+				if state["ip_address"] == config["ip_address"] &&
+					state["name"] == config["name"] &&
+					state["port_number"] == config["port_number"] &&
+					state["tenant_id"] == config["tenant_id"] &&
+					state["transport_type"] == config["transport_type"] {
 					found = true
 				}
 			}
 
 			if !found {
-				if err := createLoadBalancerSyslogServer(nm, d.Id(), networkClient, d); err != nil {
+				createSyslogOpts := expandLoadBalancerSyslogServerCreateOpts(config, d.Id())
+				if err := createLoadBalancerSyslogServer(networkClient, d, d.Id(), createSyslogOpts); err != nil {
 					return fmt.Errorf("error creating Load Balancer Syslog Server: %w", err)
 				}
 			}
@@ -742,7 +739,7 @@ func resourceNetworkLoadBalancerV2Update(d *schema.ResourceData, meta interface{
 	updateOpts := expandLoadBalancerUpdateOpts(d, gatewayInitialized, planUpdated)
 	if updateOpts != nil {
 		log.Printf("[DEBUG] Start updating Load Balancer (core) ...")
-		if err = updateLoadBalancer(networkClient, d, d.Id(), *updateOpts); err != nil {
+		if err := updateLoadBalancer(networkClient, d, d.Id(), *updateOpts); err != nil {
 			return fmt.Errorf("error in updating Load Balancer (core) : %w", err)
 		}
 	}
@@ -758,17 +755,17 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 	}
 
 	// delete syslog servers
-	syslogServers := d.Get("syslog_servers").(*schema.Set).List()
-	for _, syslogServer := range syslogServers {
-		m := syslogServer.(map[string]interface{})
-		syslogServerID := m["id"].(string)
-		if err = deleteLoadBalancerSyslogServer(d, networkV2Client, syslogServerID); err != nil {
+	for _, syslogServer := range d.Get("syslog_servers").(*schema.Set).List() {
+		syslogServerID := syslogServer.(map[string]interface{})["id"].(string)
+		if err := deleteLoadBalancerSyslogServer(d, networkV2Client, syslogServerID); err != nil {
 			return fmt.Errorf("error deleting Load Balancer Syslog Server: %w", err)
 		}
 	}
 
 	// Delete Load Balancer (core)
-	err = load_balancers.Delete(networkV2Client, d.Id()).ExtractErr()
+	if err := load_balancers.Delete(networkV2Client, d.Id()).ExtractErr(); err != nil {
+		return fmt.Errorf("error deleting ECL Load Balancer: %w", err)
+	}
 
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"PROCESSING"},
@@ -872,30 +869,7 @@ func waitForLoadBalancerSyslogServerDelete(networkClient *eclcloud.ServiceClient
 	}
 }
 
-func createLoadBalancerSyslogServer(syslogConfig map[string]interface{}, loadBalancerID string, networkClient *eclcloud.ServiceClient, d *schema.ResourceData) error {
-	createSyslogOpts := load_balancer_syslog_servers.CreateOpts{
-		AclLogging:                  syslogConfig["acl_logging"].(string),
-		AppflowLogging:              syslogConfig["appflow_logging"].(string),
-		DateFormat:                  syslogConfig["date_format"].(string),
-		Description:                 syslogConfig["description"].(string),
-		IPAddress:                   syslogConfig["ip_address"].(string),
-		LoadBalancerID:              loadBalancerID,
-		LogFacility:                 syslogConfig["log_facility"].(string),
-		LogLevel:                    syslogConfig["log_level"].(string),
-		Name:                        syslogConfig["name"].(string),
-		PortNumber:                  syslogConfig["port_number"].(int),
-		TcpLogging:                  syslogConfig["tcp_logging"].(string),
-		TenantID:                    syslogConfig["tenant_id"].(string),
-		TimeZone:                    syslogConfig["time_zone"].(string),
-		TransportType:               syslogConfig["transport_type"].(string),
-		UserConfigurableLogMessages: syslogConfig["user_configurable_log_messages"].(string),
-	}
-
-	if elem, ok := syslogConfig["priority"]; ok {
-		i := elem.(int)
-		createSyslogOpts.Priority = &i
-	}
-
+func createLoadBalancerSyslogServer(networkClient *eclcloud.ServiceClient, d *schema.ResourceData, loadBalancerID string, createSyslogOpts load_balancer_syslog_servers.CreateOpts) error {
 	log.Printf("[DEBUG] Create Load Balancer Syslog Server Options: %#v", createSyslogOpts)
 	syslogServer, err := load_balancer_syslog_servers.Create(networkClient, createSyslogOpts).Extract()
 	if err != nil {
@@ -923,8 +897,8 @@ func createLoadBalancerSyslogServer(syslogConfig map[string]interface{}, loadBal
 	return nil
 }
 
-func flattenLoadBalancerInterfaces(in []load_balancer_interfaces.LoadBalancerInterface) []map[string]interface{} {
-	var out []map[string]interface{}
+func flattenLoadBalancerInterfaces(in []load_balancer_interfaces.LoadBalancerInterface) []interface{} {
+	var out []interface{}
 
 	for _, v := range in {
 
@@ -942,9 +916,7 @@ func flattenLoadBalancerInterfaces(in []load_balancer_interfaces.LoadBalancerInt
 			mv := make(map[string]interface{})
 			mv["protocol"] = v.VirtualIPProperties.Protocol
 			mv["vrid"] = v.VirtualIPProperties.Vrid
-			iv := make([]map[string]interface{}, 1)
-			iv[0] = mv
-			m["virtual_ip_properties"] = iv
+			m["virtual_ip_properties"] = []interface{}{mv}
 		}
 
 		out = append(out, m)
@@ -953,8 +925,8 @@ func flattenLoadBalancerInterfaces(in []load_balancer_interfaces.LoadBalancerInt
 	return out
 }
 
-func flattenLoadBalancerSyslogServers(in []load_balancer_syslog_servers.LoadBalancerSyslogServer) []map[string]interface{} {
-	var out = make([]map[string]interface{}, len(in), len(in))
+func flattenLoadBalancerSyslogServers(in []load_balancer_syslog_servers.LoadBalancerSyslogServer) []interface{} {
+	var out = make([]interface{}, len(in))
 
 	for i, v := range in {
 		m := make(map[string]interface{})
@@ -1104,8 +1076,7 @@ func expandLoadBalancerUpdateOpts(d *schema.ResourceData, gatewayInitialized boo
 
 	var updateOpts load_balancers.UpdateOpts
 
-	s := d.Get("default_gateway").(string)
-	if d.HasChange("default_gateway") || (gatewayInitialized && s != "") {
+	if s := d.Get("default_gateway").(string); d.HasChange("default_gateway") || (gatewayInitialized && s != "") {
 		returnUpdateOpts = true
 		var defaultGateway interface{}
 		if s == "" {
@@ -1144,40 +1115,29 @@ func expandLoadBalancerUpdateOpts(d *schema.ResourceData, gatewayInitialized boo
 func expandLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig map[string]interface{}) *load_balancer_interfaces.UpdateOpts {
 	updateInterfaceOpts := load_balancer_interfaces.UpdateOpts{}
 
-	if elem, ok := interfaceConfig["description"]; ok {
-		s := elem.(string)
-		updateInterfaceOpts.Description = &s
+	s := interfaceConfig["description"].(string)
+	updateInterfaceOpts.Description = &s
+
+	updateInterfaceOpts.IPAddress = interfaceConfig["ip_address"].(string)
+
+	s = interfaceConfig["name"].(string)
+	updateInterfaceOpts.Name = &s
+
+	i := interfaceConfig["network_id"]
+	updateInterfaceOpts.NetworkID = &i
+
+	if s = interfaceConfig["virtual_ip_address"].(string); s != "" {
+		virtualIPAddress := interface{}(s)
+		updateInterfaceOpts.VirtualIPAddress = &virtualIPAddress
 	}
 
-	if elem, ok := interfaceConfig["ip_address"]; ok {
-		s := elem.(string)
-		updateInterfaceOpts.IPAddress = s
-	}
-
-	if elem, ok := interfaceConfig["name"]; ok {
-		s := elem.(string)
-		updateInterfaceOpts.Name = &s
-	}
-
-	if elem, ok := interfaceConfig["network_id"]; ok {
-		updateInterfaceOpts.NetworkID = &elem
-	}
-
-	if elem, ok := interfaceConfig["virtual_ip_address"]; ok {
-		s := elem.(string)
-		if s != "" {
-			var virtualIPAddress interface{}
-			virtualIPAddress = s
-			updateInterfaceOpts.VirtualIPAddress = &virtualIPAddress
-		}
-	}
-
-	if elem, ok := interfaceConfig["virtual_ip_properties"].([]interface{}); ok && len(elem) == 1 {
+	if v := interfaceConfig["virtual_ip_properties"].([]interface{}); len(v) == 1 {
+		m := v[0].(map[string]interface{})
 		updateInterfaceOpts.VirtualIPProperties = &load_balancer_interfaces.VirtualIPProperties{}
-		m := elem[0].(map[string]interface{})
 		updateInterfaceOpts.VirtualIPProperties.Protocol = m["protocol"].(string)
 		updateInterfaceOpts.VirtualIPProperties.Vrid = m["vrid"].(int)
 	}
+
 	return &updateInterfaceOpts
 }
 
@@ -1253,6 +1213,31 @@ func expandLoadBalancerInterfaceChanges(om map[string]interface{}, nm map[string
 	} else {
 		return nil
 	}
+}
+
+func expandLoadBalancerSyslogServerCreateOpts(syslogConfig map[string]interface{}, loadBalancerID string) load_balancer_syslog_servers.CreateOpts {
+	createSyslogOpts := load_balancer_syslog_servers.CreateOpts{
+		AclLogging:                  syslogConfig["acl_logging"].(string),
+		AppflowLogging:              syslogConfig["appflow_logging"].(string),
+		DateFormat:                  syslogConfig["date_format"].(string),
+		Description:                 syslogConfig["description"].(string),
+		IPAddress:                   syslogConfig["ip_address"].(string),
+		LoadBalancerID:              loadBalancerID,
+		LogFacility:                 syslogConfig["log_facility"].(string),
+		LogLevel:                    syslogConfig["log_level"].(string),
+		Name:                        syslogConfig["name"].(string),
+		PortNumber:                  syslogConfig["port_number"].(int),
+		TcpLogging:                  syslogConfig["tcp_logging"].(string),
+		TenantID:                    syslogConfig["tenant_id"].(string),
+		TimeZone:                    syslogConfig["time_zone"].(string),
+		TransportType:               syslogConfig["transport_type"].(string),
+		UserConfigurableLogMessages: syslogConfig["user_configurable_log_messages"].(string),
+	}
+
+	i := syslogConfig["priority"].(int)
+	createSyslogOpts.Priority = &i
+
+	return createSyslogOpts
 }
 
 func expandLoadBalancerSyslogServerChanges(om map[string]interface{}, nm map[string]interface{}) *load_balancer_syslog_servers.UpdateOpts {
