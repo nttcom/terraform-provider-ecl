@@ -27,7 +27,7 @@ resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Network client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Network client.
     Internet gateways are associated with accounts, but a Network client is needed to
     create one. If omitted, the `region` argument of the provider is used.
     Changing this creates a new internet gateway.

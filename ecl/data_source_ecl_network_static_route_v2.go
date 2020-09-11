@@ -13,83 +13,84 @@ func dataSourceNetworkStaticRouteV2() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceNetworkStaticRouteV2Read,
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+			"region": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				ForceNew:   true,
+				Deprecated: "This attribute is not used to set up the resource",
 			},
-			"aws_gw_id": &schema.Schema{
+			"aws_gw_id": {
 				Type:          schema.TypeString,
 				Computed:      true,
 				Optional:      true,
 				ConflictsWith: []string{"azure_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id", "vpn_gw_id"},
 			},
-			"azure_gw_id": &schema.Schema{
+			"azure_gw_id": {
 				Type:          schema.TypeString,
 				Computed:      true,
 				Optional:      true,
 				ConflictsWith: []string{"aws_gw_id", "gcp_gw_id", "interdc_gw_id", "internet_gw_id", "vpn_gw_id"},
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 			},
-			"destination": &schema.Schema{
+			"destination": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 			},
-			"gcp_gw_id": &schema.Schema{
+			"gcp_gw_id": {
 				Type:          schema.TypeString,
 				Computed:      true,
 				Optional:      true,
 				ConflictsWith: []string{"aws_gw_id", "azure_gw_id", "interdc_gw_id", "internet_gw_id", "vpn_gw_id"},
 			},
-			"interdc_gw_id": &schema.Schema{
+			"interdc_gw_id": {
 				Type:          schema.TypeString,
 				Computed:      true,
 				Optional:      true,
 				ConflictsWith: []string{"aws_gw_id", "azure_gw_id", "gcp_gw_id", "internet_gw_id", "vpn_gw_id"},
 			},
-			"internet_gw_id": &schema.Schema{
+			"internet_gw_id": {
 				Type:          schema.TypeString,
 				Computed:      true,
 				Optional:      true,
 				ConflictsWith: []string{"aws_gw_id", "azure_gw_id", "gcp_gw_id", "interdc_gw_id", "vpn_gw_id"},
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 			},
-			"nexthop": &schema.Schema{
+			"nexthop": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 			},
-			"service_type": &schema.Schema{
+			"service_type": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 			},
-			"static_route_id": &schema.Schema{
+			"static_route_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 			},
-			"tenant_id": &schema.Schema{
+			"tenant_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 			},
-			"vpn_gw_id": &schema.Schema{
+			"vpn_gw_id": {
 				Type:          schema.TypeString,
 				Computed:      true,
 				Optional:      true,
@@ -163,42 +164,42 @@ func dataSourceNetworkStaticRouteV2Read(d *schema.ResourceData, meta interface{}
 
 	pages, err := static_routes.List(networkClient, listOpts).AllPages()
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve static_routes: %s", err)
+		return fmt.Errorf("unable to retrieve static_routes: %w", err)
 	}
 
 	allStaticRoutes, err := static_routes.ExtractStaticRoutes(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to extract static_routes: %s", err)
+		return fmt.Errorf("unable to extract static_routes: %w", err)
 	}
 
 	if len(allStaticRoutes) < 1 {
-		return fmt.Errorf("Your query returned no results. " +
-			"Please change your search criteria and try again.")
+		return fmt.Errorf("your query returned no results. " +
+			"please change your search criteria and try again")
 	}
 
 	if len(allStaticRoutes) > 1 {
-		return fmt.Errorf("Your query returned more than one result." +
-			" Please try a more specific search criteria")
+		return fmt.Errorf("your query returned more than one result. " +
+			"please try a more specific search criteria")
 	}
 
-	static_route := allStaticRoutes[0]
+	staticRoute := allStaticRoutes[0]
 
-	log.Printf("[DEBUG] Retrieved StaticRoute %s: %+v", static_route.ID, static_route)
-	d.SetId(static_route.ID)
+	log.Printf("[DEBUG] Retrieved StaticRoute %s: %+v", staticRoute.ID, staticRoute)
+	d.SetId(staticRoute.ID)
 
-	d.Set("aws_gw_id", static_route.AwsGwID)
-	d.Set("azure_gw_id", static_route.AzureGwID)
-	d.Set("description", static_route.Description)
-	d.Set("destination", static_route.Destination)
-	d.Set("gcp_gw_id", static_route.GcpGwID)
-	d.Set("interdc_gw_id", static_route.InterdcGwID)
-	d.Set("internet_gw_id", static_route.InternetGwID)
-	d.Set("name", static_route.Name)
-	d.Set("nexthop", static_route.Nexthop)
-	d.Set("service_type", static_route.ServiceType)
-	d.Set("status", static_route.Status)
-	d.Set("tenant_id", static_route.TenantID)
-	d.Set("vpn_gw_id", static_route.VpnGwID)
+	d.Set("aws_gw_id", staticRoute.AwsGwID)
+	d.Set("azure_gw_id", staticRoute.AzureGwID)
+	d.Set("description", staticRoute.Description)
+	d.Set("destination", staticRoute.Destination)
+	d.Set("gcp_gw_id", staticRoute.GcpGwID)
+	d.Set("interdc_gw_id", staticRoute.InterdcGwID)
+	d.Set("internet_gw_id", staticRoute.InternetGwID)
+	d.Set("name", staticRoute.Name)
+	d.Set("nexthop", staticRoute.Nexthop)
+	d.Set("service_type", staticRoute.ServiceType)
+	d.Set("status", staticRoute.Status)
+	d.Set("tenant_id", staticRoute.TenantID)
+	d.Set("vpn_gw_id", staticRoute.VpnGwID)
 	d.Set("region", GetRegion(d, config))
 
 	return nil

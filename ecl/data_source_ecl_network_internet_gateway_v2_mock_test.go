@@ -58,6 +58,11 @@ func TestMockedAccNetworkV2InternetGatewayDataSource_queries(t *testing.T) {
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayGetDeleted)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways/", testMockNetworkV2InternetGatewayDelete)
 	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayListNameQuery)
+	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayListInternetServiceIDQuery)
+	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayListQoSOptionIDQuery)
+	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayListDescriptionQuery)
+	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayListIDQuery)
+	mc.Register(t, "internet_gateway", "/v2.0/internet_gateways", testMockNetworkV2InternetGatewayListStatuQuery)
 
 	mc.StartServer(t)
 
@@ -111,9 +116,130 @@ func TestMockedAccNetworkV2InternetGatewayDataSource_queries(t *testing.T) {
 var testMockNetworkV2InternetGatewayListNameQuery = `
 request:
     method: GET
-    Query:
+    query:
       name:
         - Terraform_Test_Internet_Gateway_01
+response: 
+    code: 200
+    body: >
+        {
+            "internet_gateways": [
+                {
+                    "description": "test_internet_gateway",
+                    "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
+                    "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
+                    "name": "Terraform_Test_Internet_Gateway_01",
+                    "qos_option_id": "e497bbc3-1127-4490-a51d-93582c40ab40",
+                    "status": "ACTIVE",
+                    "tenant_id": "01234567890123456789abcdefabcdef"
+                }
+            ]
+        }
+`
+
+var testMockNetworkV2InternetGatewayListInternetServiceIDQuery = `
+request:
+    method: GET
+    query:
+      internet_service_id:
+        - a7791c79-19b0-4eb6-9a8f-ea739b44e8d5
+response: 
+    code: 200
+    body: >
+        {
+            "internet_gateways": [
+                {
+                    "description": "test_internet_gateway",
+                    "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
+                    "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
+                    "name": "Terraform_Test_Internet_Gateway_01",
+                    "qos_option_id": "e497bbc3-1127-4490-a51d-93582c40ab40",
+                    "status": "ACTIVE",
+                    "tenant_id": "01234567890123456789abcdefabcdef"
+                }
+            ]
+        }
+`
+
+var testMockNetworkV2InternetGatewayListQoSOptionIDQuery = fmt.Sprintf(`
+request:
+    method: GET
+    query:
+    qos_option_id:
+        - %s
+response: 
+    code: 200
+    body: >
+        {
+            "internet_gateways": [
+                {
+                    "description": "test_internet_gateway",
+                    "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
+                    "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
+                    "name": "Terraform_Test_Internet_Gateway_01",
+                    "qos_option_id": "e497bbc3-1127-4490-a51d-93582c40ab40",
+                    "status": "ACTIVE",
+                    "tenant_id": "01234567890123456789abcdefabcdef"
+                }
+            ]
+        }
+`,
+	OS_QOS_OPTION_ID_10M)
+
+var testMockNetworkV2InternetGatewayListDescriptionQuery = `
+request:
+    method: GET
+    query:
+      description:
+        - test_internet_gateway
+response: 
+    code: 200
+    body: >
+        {
+            "internet_gateways": [
+                {
+                    "description": "test_internet_gateway",
+                    "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
+                    "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
+                    "name": "Terraform_Test_Internet_Gateway_01",
+                    "qos_option_id": "e497bbc3-1127-4490-a51d-93582c40ab40",
+                    "status": "ACTIVE",
+                    "tenant_id": "01234567890123456789abcdefabcdef"
+                }
+            ]
+        }
+`
+
+var testMockNetworkV2InternetGatewayListIDQuery = `
+request:
+    method: GET
+    query:
+      id:
+        - 3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61
+response: 
+    code: 200
+    body: >
+        {
+            "internet_gateways": [
+                {
+                    "description": "test_internet_gateway",
+                    "id": "3e71cf00-ddb5-4eb5-9ed0-ed4c481f6d61",
+                    "internet_service_id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
+                    "name": "Terraform_Test_Internet_Gateway_01",
+                    "qos_option_id": "e497bbc3-1127-4490-a51d-93582c40ab40",
+                    "status": "ACTIVE",
+                    "tenant_id": "01234567890123456789abcdefabcdef"
+                }
+            ]
+        }
+`
+
+var testMockNetworkV2InternetGatewayListStatuQuery = `
+request:
+    method: GET
+    query:
+      status:
+        - ACTIVE
 response: 
     code: 200
     body: >

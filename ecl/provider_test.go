@@ -17,11 +17,16 @@ import (
 
 var (
 	OS_ACCEPTER_TENANT_ID                    = os.Getenv("OS_ACCEPTER_TENANT_ID")
+	OS_BAREMETAL_ZONE                        = os.Getenv("OS_BAREMETAL_ZONE")
 	OS_COMMON_FUNCTION_POOL_ID               = os.Getenv("OS_COMMON_FUNCTION_POOL_ID")
+	OS_COMPUTE_ZONE_HA                       = os.Getenv("OS_COMPUTE_ZONE_HA")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
-	OS_BAREMETAL_ZONE                        = os.Getenv("OS_BAREMETAL_ZONE")
-	OS_COMPUTE_ZONE_HA                       = os.Getenv("OS_COMPUTE_ZONE_HA")
+	OS_FIC_GW_DESCRIPTION                    = os.Getenv("OS_FIC_GW_DESCRIPTION")
+	OS_FIC_GW_ID                             = os.Getenv("OS_FIC_GW_ID")
+	OS_FIC_GW_NAME                           = os.Getenv("OS_FIC_GW_NAME")
+	OS_FIC_GW_QOS_OPTION_ID                  = os.Getenv("OS_FIC_GW_QOS_OPTION_ID")
+	OS_FIC_SERVICE_ID                        = os.Getenv("OS_FIC_SERVICE_ID")
 	OS_INTERNET_SERVICE_ZONE_NAME            = os.Getenv("OS_INTERNET_SERVICE_ZONE_NAME")
 	OS_QOS_OPTION_ID_100M                    = os.Getenv("OS_QOS_OPTION_ID_100M")
 	OS_QOS_OPTION_ID_10M                     = os.Getenv("OS_QOS_OPTION_ID_10M")
@@ -48,42 +53,37 @@ func init() {
 func accepter() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"auth_url": &schema.Schema{
+			"auth_url": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_AUTH_URL", ""),
 				Description: descriptions["auth_url"],
 			},
-
-			"region": &schema.Schema{
+			"region": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: descriptions["region"],
 				DefaultFunc: schema.EnvDefaultFunc("OS_REGION_NAME", ""),
 			},
-
-			"user_name": &schema.Schema{
+			"user_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_USERNAME", ""),
 				Description: descriptions["user_name"],
 			},
-
-			"user_id": &schema.Schema{
+			"user_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_USER_ID", ""),
 				Description: descriptions["user_name"],
 			},
-
-			"tenant_id": &schema.Schema{
+			"tenant_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_ACCEPTER_TENANT_ID", ""),
 				Description: descriptions["tenant_id"],
 			},
-
-			"tenant_name": &schema.Schema{
+			"tenant_name": {
 				Type:     schema.TypeString,
 				Optional: true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
@@ -92,16 +92,14 @@ func accepter() terraform.ResourceProvider {
 				}, ""),
 				Description: descriptions["tenant_name"],
 			},
-
-			"password": &schema.Schema{
+			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_PASSWORD", ""),
 				Description: descriptions["password"],
 			},
-
-			"token": &schema.Schema{
+			"token": {
 				Type:     schema.TypeString,
 				Optional: true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
@@ -110,98 +108,84 @@ func accepter() terraform.ResourceProvider {
 				}, ""),
 				Description: descriptions["token"],
 			},
-
-			"user_domain_name": &schema.Schema{
+			"user_domain_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_USER_DOMAIN_NAME", ""),
 				Description: descriptions["user_domain_name"],
 			},
-
-			"user_domain_id": &schema.Schema{
+			"user_domain_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_USER_DOMAIN_ID", ""),
 				Description: descriptions["user_domain_id"],
 			},
-
-			"project_domain_name": &schema.Schema{
+			"project_domain_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_PROJECT_DOMAIN_NAME", ""),
 				Description: descriptions["project_domain_name"],
 			},
-
-			"project_domain_id": &schema.Schema{
+			"project_domain_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_PROJECT_DOMAIN_ID", ""),
 				Description: descriptions["project_domain_id"],
 			},
-
-			"domain_id": &schema.Schema{
+			"domain_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_DOMAIN_ID", ""),
 				Description: descriptions["domain_id"],
 			},
-
-			"domain_name": &schema.Schema{
+			"domain_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_DOMAIN_NAME", ""),
 				Description: descriptions["domain_name"],
 			},
-
-			"default_domain": &schema.Schema{
+			"default_domain": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_DEFAULT_DOMAIN", "default"),
 				Description: descriptions["default_domain"],
 			},
-
-			"insecure": &schema.Schema{
+			"insecure": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_INSECURE", nil),
 				Description: descriptions["insecure"],
 			},
-
-			"endpoint_type": &schema.Schema{
+			"endpoint_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", ""),
 			},
-
-			"cacert_file": &schema.Schema{
+			"cacert_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_CACERT", ""),
 				Description: descriptions["cacert_file"],
 			},
-
-			"cert": &schema.Schema{
+			"cert": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_CERT", ""),
 				Description: descriptions["cert"],
 			},
-
-			"key": &schema.Schema{
+			"key": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_KEY", ""),
 				Description: descriptions["key"],
 			},
-
-			"cloud": &schema.Schema{
+			"cloud": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_CLOUD", ""),
 				Description: descriptions["cloud"],
 			},
-
-			"force_sss_endpoint": &schema.Schema{
+			"force_sss_endpoint": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_FORCE_SSS_ENDPOINT", ""),
@@ -294,8 +278,20 @@ func testAccPreCheckAdminOnly(t *testing.T) {
 	}
 }
 
-func testAccPreCheckGatewayInterface(t *testing.T) {
-	testAccPreCheckInternetGateway(t)
+func testAccPreCheckGatewayInterfaceInternet(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_QOS_OPTION_ID_10M == "" {
+		t.Fatal("OS_QOS_OPTION_ID_10M must be set for acceptance tests")
+	}
+}
+
+func testAccPreCheckGatewayInterfaceFIC(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_FIC_GW_ID == "" {
+		t.Fatal("OS_FIC_GW_ID must be set for acceptance tests")
+	}
 }
 
 func testAccPreCheckInternetGateway(t *testing.T) {
@@ -322,10 +318,6 @@ func testAccPreCheckInternetService(t *testing.T) {
 }
 
 func testAccPreCheckPublicIP(t *testing.T) {
-	testAccPreCheckInternetGateway(t)
-}
-
-func testAccPreCheckStaticRoute(t *testing.T) {
 	testAccPreCheckInternetGateway(t)
 }
 
@@ -403,6 +395,35 @@ func testAccPreCheckBaremetal(t *testing.T) {
 
 	if OS_BAREMETAL_ZONE == "" {
 		t.Skip("OS_BAREMETAL_ZONE must be set for acceptance tests of baremetal")
+	}
+}
+
+func testAccPreCheckFICGateway(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_TENANT_ID == "" {
+		t.Fatal("OS_TENANT_ID must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_GW_DESCRIPTION == "" {
+		t.Fatal("OS_FIC_GW_DESCRIPTION must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_SERVICE_ID == "" {
+		t.Fatal("OS_FIC_SERVICE_ID must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_GW_ID == "" {
+		t.Fatal("OS_FIC_GW_ID must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_GW_NAME == "" {
+		t.Fatal("OS_FIC_GW_NAME must be set for acceptance tests of fic gateway")
+	}
+	if OS_FIC_GW_QOS_OPTION_ID == "" {
+		t.Fatal("OS_FIC_GW_QOS_OPTION_ID must be set for acceptance tests of fic gateway")
+	}
+}
+
+func testMockedAccPreCheckFICGateway(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_TENANT_ID == "" {
+		t.Fatal("OS_TENANT_ID must be set for acceptance tests of fic gateway")
 	}
 }
 

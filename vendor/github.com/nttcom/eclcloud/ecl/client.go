@@ -373,3 +373,10 @@ func NewDedicatedHypervisorV1(client *eclcloud.ProviderClient, eo eclcloud.Endpo
 func NewRCAV1(client *eclcloud.ProviderClient, eo eclcloud.EndpointOpts) (*eclcloud.ServiceClient, error) {
 	return initClientOpts(client, eo, "rca")
 }
+
+// NewProviderConnectivityV2 creates a ServiceClient that may be used to access the v2 Provider Connectivity service.
+func NewProviderConnectivityV2(client *eclcloud.ProviderClient, eo eclcloud.EndpointOpts) (*eclcloud.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "provider-connectivity")
+	sc.ResourceBase = sc.Endpoint + "v2.0/"
+	return sc, err
+}

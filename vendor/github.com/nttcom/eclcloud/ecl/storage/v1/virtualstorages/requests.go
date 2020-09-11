@@ -16,17 +16,17 @@ type CreateOptsBuilder interface {
 // see the VirtualStorage object.
 type CreateOpts struct {
 	// The virtual storage name
-	Name string `json:"name,required"`
+	Name string `json:"name" required:"true"`
 	// The virtual storage description
 	Description string `json:"description,omitempty"`
 	// The network_id to connect virtual storage
-	NetworkID string `json:"network_id,required"`
+	NetworkID string `json:"network_id" required:"true"`
 	// The subnet_id to connect virtual storage
-	SubnetID string `json:"subnet_id,required"`
+	SubnetID string `json:"subnet_id" required:"true"`
 	// The virtual storage volume_type_id
-	VolumeTypeID string `json:"volume_type_id,required"`
+	VolumeTypeID string `json:"volume_type_id" required:"true"`
 	// The ip address pool of virtual storage
-	IPAddrPool IPAddressPool `json:"ip_addr_pool,required"`
+	IPAddrPool IPAddressPool `json:"ip_addr_pool" required:"true"`
 	// The virtual storage host_routes
 	HostRoutes []HostRoute `json:"host_routes,omitempty"`
 }

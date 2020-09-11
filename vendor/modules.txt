@@ -125,6 +125,7 @@ github.com/hashicorp/hil/scanner
 # github.com/hashicorp/logutils v1.0.0
 github.com/hashicorp/logutils
 # github.com/hashicorp/terraform v0.12.6
+## explicit
 github.com/hashicorp/terraform/addrs
 github.com/hashicorp/terraform/command/format
 github.com/hashicorp/terraform/config
@@ -203,7 +204,8 @@ github.com/mitchellh/hashstructure
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.0
 github.com/mitchellh/reflectwalk
-# github.com/nttcom/eclcloud v1.8.1
+# github.com/nttcom/eclcloud v1.10.4
+## explicit
 github.com/nttcom/eclcloud
 github.com/nttcom/eclcloud/ecl
 github.com/nttcom/eclcloud/ecl/baremetal/v2/availabilityzones
@@ -223,13 +225,12 @@ github.com/nttcom/eclcloud/ecl/dedicated_hypervisor/v1/licenses
 github.com/nttcom/eclcloud/ecl/dedicated_hypervisor/v1/servers
 github.com/nttcom/eclcloud/ecl/dns/v2/recordsets
 github.com/nttcom/eclcloud/ecl/dns/v2/zones
-github.com/nttcom/eclcloud/ecl/identity/v3/endpoints
-github.com/nttcom/eclcloud/ecl/identity/v3/services
 github.com/nttcom/eclcloud/ecl/identity/v3/tokens
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/imagedata
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/images
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/members
 github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways
+github.com/nttcom/eclcloud/ecl/network/v2/fic_gateways
 github.com/nttcom/eclcloud/ecl/network/v2/gateway_interfaces
 github.com/nttcom/eclcloud/ecl/network/v2/internet_gateways
 github.com/nttcom/eclcloud/ecl/network/v2/internet_services
@@ -238,6 +239,8 @@ github.com/nttcom/eclcloud/ecl/network/v2/ports
 github.com/nttcom/eclcloud/ecl/network/v2/public_ips
 github.com/nttcom/eclcloud/ecl/network/v2/static_routes
 github.com/nttcom/eclcloud/ecl/network/v2/subnets
+github.com/nttcom/eclcloud/ecl/provider_connectivity/v2/tenant_connection_requests
+github.com/nttcom/eclcloud/ecl/provider_connectivity/v2/tenant_connections
 github.com/nttcom/eclcloud/ecl/rca/v1/users
 github.com/nttcom/eclcloud/ecl/security_order/v1/host_based
 github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha
@@ -248,6 +251,7 @@ github.com/nttcom/eclcloud/ecl/security_portal/v1/devices
 github.com/nttcom/eclcloud/ecl/security_portal/v1/ha_ports
 github.com/nttcom/eclcloud/ecl/security_portal/v1/ports
 github.com/nttcom/eclcloud/ecl/security_portal/v1/processes
+github.com/nttcom/eclcloud/ecl/sss/v1/approval_requests
 github.com/nttcom/eclcloud/ecl/sss/v1/tenants
 github.com/nttcom/eclcloud/ecl/sss/v1/users
 github.com/nttcom/eclcloud/ecl/storage/v1/virtualstorages
@@ -276,6 +280,7 @@ github.com/ulikunitz/xz/internal/hash
 github.com/ulikunitz/xz/internal/xlog
 github.com/ulikunitz/xz/lzma
 # github.com/unknwon/com v0.0.0-20190804042917-757f69c95f3e
+## explicit
 github.com/unknwon/com
 # github.com/vmihailenco/msgpack v4.0.1+incompatible
 github.com/vmihailenco/msgpack
@@ -410,4 +415,5 @@ google.golang.org/grpc/status
 google.golang.org/grpc/tap
 google.golang.org/grpc/test/bufconn
 # gopkg.in/yaml.v2 v2.2.2
+## explicit
 gopkg.in/yaml.v2

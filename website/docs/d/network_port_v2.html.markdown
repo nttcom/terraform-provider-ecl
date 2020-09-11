@@ -29,7 +29,7 @@ The following arguments are supported:
 * `name` - (Optional) Port name.
 * `network_id` - (Optional) The ID of network this port belongs to.
 * `port_id` - (Optional) Port unique id.
-* `region` - (Optional) The region in which to obtain the V2 Neutron client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Neutron client.
   A Neutron client is needed to retrieve port ids. If omitted, the
   `region` argument of the provider is used.
 * `segmentation_id` - (Optional) The segmentation ID used for this port (i.e. for vlan type it is vlan tag)

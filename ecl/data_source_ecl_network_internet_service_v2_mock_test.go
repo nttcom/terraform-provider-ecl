@@ -89,7 +89,7 @@ func TestMockedAccNetworkV2InternetServiceDataSource_queries(t *testing.T) {
 var testMockNetworkV2InternetServiceListNameQuery = `
 request:
     method: GET
-    Query:
+    query:
       name:
         - Internet-Service-01
 response: 
@@ -111,7 +111,7 @@ response:
 var testMockNetworkV2InternetServiceListIDQuery = `
 request:
     method: GET
-    Query:
+    query:
       id:
         - a7791c79-19b0-4eb6-9a8f-ea739b44e8d5
 response: 
@@ -133,16 +133,16 @@ response:
 var testMockNetworkV2InternetServiceListDescriptionQuery = `
 request:
     method: GET
-    Query:
-      decsription:
-        - Internet-Service-01
+    query:
+      description:
+        - " "
 response: 
     code: 200
     body: >
         {
             "internet_services": [
                 {
-                    "description": "Internet-Service-01",
+                    "description": " ",
                     "id": "a7791c79-19b0-4eb6-9a8f-ea739b44e8d5",
                     "minimal_submask_length": 26,
                     "name": "Internet-Service-01",
@@ -155,7 +155,7 @@ response:
 var testMockNetworkV2InternetServiceListMinimalSubmaskLengthQuery = `
 request:
     method: GET
-    Query:
+    query:
       minimal_submask_length:
         - 26
 response: 
@@ -177,7 +177,7 @@ response:
 var testMockNetworkV2InternetServiceListZoneQuery = `
 request:
     method: GET
-    Query:
+    query:
       zone:
         - jp1-zone1
 response: 

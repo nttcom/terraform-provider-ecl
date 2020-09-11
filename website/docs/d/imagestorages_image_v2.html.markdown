@@ -21,7 +21,7 @@ data "ecl_imagestorages_image_v2" "image_1" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Network client.
+* `region` - (Optional, **DEPRECATED**) The region in which to obtain the V2 Network client.
     If omitted, the `region` argument of the provider is used.
 
 * `member_status` - (Optional) Only show images with the specified member status. Must be one of "queued", "saving", "active", "killed", "deleted", "pending_delete".

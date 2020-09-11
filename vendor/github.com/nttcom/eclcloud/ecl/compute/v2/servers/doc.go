@@ -25,6 +25,17 @@ Example to List Servers
 		fmt.Printf("%+v\n", server)
 	}
 
+Example to Get a Server
+
+	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
+
+	server, err := servers.Get(client, serverID).Extract()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%+v\n", server)
+
 Example to Create a Server
 
 	createOpts := servers.CreateOpts{
@@ -33,52 +44,98 @@ Example to Create a Server
 		FlavorRef: "flavor-uuid",
 	}
 
-	server, err := servers.Create(computeClient, createOpts).Extract()
-	if err != nil {
-		panic(err)
+	result := servers.Create(computeClient, createOpts)
+	if result.Err != nil {
+		panic(result.Err)
+	}
+
+Example to Update a Server
+
+	name := "update_name"
+	updateOpts := servers.UpdateOpts{Name: &name}
+
+	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
+
+	result := servers.Update(client, serverID, updateOpts)
+	if result.Err != nil {
+		panic(result.Err)
 	}
 
 Example to Delete a Server
 
 	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
-	err := servers.Delete(computeClient, serverID).ExtractErr()
-	if err != nil {
+
+	result := servers.Delete(computeClient, serverID)
+	if result.Err != nil {
 		panic(err)
 	}
 
-Example to Force Delete a Server
-
-	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
-	err := servers.ForceDelete(computeClient, serverID).ExtractErr()
-	if err != nil {
-		panic(err)
-	}
-
-Example to Reboot a Server
-
-	rebootOpts := servers.RebootOpts{
-		Type: servers.SoftReboot,
-	}
+Example to Show Metadata a server
 
 	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
 
-	err := servers.Reboot(computeClient, serverID, rebootOpts).ExtractErr()
+	metadata, err := servers.Metadata(client, serverID).Extract()
 	if err != nil {
 		panic(err)
 	}
 
-Example to Rebuild a Server
+	fmt.Printf("%+v\n", metadata)
 
-	rebuildOpts := servers.RebuildOpts{
-		Name:    "new_name",
-		ImageID: "image-uuid",
-	}
+Example to Show details for a Metadata item by key for a Server
+
+	key := "key"
 
 	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
 
-	server, err := servers.Rebuilt(computeClient, serverID, rebuildOpts).Extract()
+	metadatum, err := servers.Metadatum(client, serverID, key).Extract()
 	if err != nil {
 		panic(err)
+	}
+
+	fmt.Printf("%+v\n", metadatum)
+
+Example to Create Metadata a Server
+
+	createMetadatumOpts := servers.MetadatumOpts{"key": "value"}
+
+	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
+
+	result := servers.CreateMetadatum(client, serverID, createMetadatumOpts)
+	if err != nil {
+		panic(result.Err)
+	}
+
+Example to Update Metadata a Server
+
+	updateMetadataOpts := servers.MetadataOpts{"key": "update"}
+
+	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
+
+	result := servers.UpdateMetadata(client, serverID, updateMetadataOpts)
+	if result.Err != nil {
+		panic(result.Err)
+	}
+
+Example to Delete Metadata a Server
+
+	key := "key"
+
+	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
+
+	result := servers.DeleteMetadatum(client, serverID, key)
+	if result.Err != nil {
+		panic(result.Err)
+	}
+
+Example to Reset Metadata a Server
+
+	resetMetadataOpts := servers.MetadataOpts{"key2": "val2"}
+
+	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
+
+	result := servers.ResetMetadata(client, serverID, resetMetadataOpts)
+	if result.Err != nil {
+		panic(nil)
 	}
 
 Example to Resize a Server
@@ -89,14 +146,9 @@ Example to Resize a Server
 
 	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
 
-	err := servers.Resize(computeClient, serverID, resizeOpts).ExtractErr()
-	if err != nil {
-		panic(err)
-	}
-
-	err = servers.ConfirmResize(computeClient, serverID).ExtractErr()
-	if err != nil {
-		panic(err)
+	result := servers.Resize(computeClient, serverID, resizeOpts)
+	if result.Err != nil {
+		panic(result.Err)
 	}
 
 Example to Snapshot a Server
@@ -107,9 +159,10 @@ Example to Snapshot a Server
 
 	serverID := "d9072956-1560-487c-97f2-18bdf65ec749"
 
-	image, err := servers.CreateImage(computeClient, serverID, snapshotOpts).ExtractImageID()
-	if err != nil {
-		panic(err)
+	result := servers.CreateImage(computeClient, serverID, snapshotOpts)
+	if result.Err != nil {
+		panic(result.Err)
 	}
+
 */
 package servers

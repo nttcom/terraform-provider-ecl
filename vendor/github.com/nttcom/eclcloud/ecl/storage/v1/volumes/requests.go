@@ -18,11 +18,11 @@ type CreateOptsBuilder interface {
 // see the Volume object.
 type CreateOpts struct {
 	// The volume name
-	Name string `json:"name,required"`
+	Name string `json:"name" required:"true"`
 	// The volume description
 	Description string `json:"description,omitempty"`
 	// The volume size
-	Size int `json:"size,required"`
+	Size int `json:"size" required:"true"`
 	// The volume IOPS as IOPS/GB
 	IOPSPerGB string `json:"iops_per_gb,omitempty"`
 	// The volume Throughput
@@ -32,7 +32,7 @@ type CreateOpts struct {
 	// The availability zone of volume
 	AvailabilityZone string `json:"availability_zone,omitempty"`
 	// The parent virtual storage ID to connect volume
-	VirtualStorageID string `json:"virtual_storage_id,required"`
+	VirtualStorageID string `json:"virtual_storage_id" required:"true"`
 }
 
 // ToVolumeCreateMap assembles a request body based on the contents of a

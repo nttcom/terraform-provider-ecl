@@ -9,7 +9,6 @@ This provider plugin is maintained by:
 * Keiichi Hikita ([@keiichi-hikita](https://github.com/keiichi-hikita))
 * Takuma Watanabe ([@t-wata](https://github.com/t-wata))
 * Kazunori Yoshihara ([@kazyshr](https://github.com/kazyshr))
-* Hitoyoshi Ohta ([@htysh](https://github.com/htysh))
 
 Requirements
 ------------

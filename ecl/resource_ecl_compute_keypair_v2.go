@@ -19,10 +19,11 @@ func resourceComputeKeypairV2() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				ForceNew:   true,
+				Deprecated: "This attribute is not used to set up the resource.",
 			},
 
 			"name": &schema.Schema{

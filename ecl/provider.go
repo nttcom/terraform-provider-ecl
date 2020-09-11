@@ -186,6 +186,7 @@ func Provider() terraform.ResourceProvider {
 			"ecl_dns_zone_v2":                        dataSourceDNSZoneV2(),
 			"ecl_imagestorages_image_v2":             dataSourceImagesImageV2(),
 			"ecl_network_common_function_gateway_v2": dataSourceNetworkCommonFunctionGatewayV2(),
+			"ecl_network_fic_gateway_v2":             dataSourceNetworkFICGatewayV2(),
 			"ecl_network_gateway_interface_v2":       dataSourceNetworkGatewayInterfaceV2(),
 			"ecl_network_internet_gateway_v2":        dataSourceNetworkInternetGatewayV2(),
 			"ecl_network_internet_service_v2":        dataSourceNetworkInternetServiceV2(),

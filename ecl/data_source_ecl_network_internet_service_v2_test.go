@@ -127,7 +127,7 @@ data "ecl_network_internet_service_v2" "internet_service_1" {
 
 var testAccNetworkV2InternetServiceDataSourceDescription = `
 data "ecl_network_internet_service_v2" "internet_service_1" {
-    description = ""
+    description = " "
 }
 `
 
