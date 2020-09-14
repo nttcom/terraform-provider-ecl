@@ -324,6 +324,12 @@ func testAccNetworkV2LoadBalancerBasicSteps(t *testing.T) {
 					resource.TestCheckResourceAttr(r, fmt.Sprintf("syslog_servers.%s.tenant_id", syslog2UpdateKey), OS_TENANT_ID),
 				),
 			},
+			{
+				ResourceName:            r,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"admin_password", "user_password"},
+			},
 		},
 	})
 }
