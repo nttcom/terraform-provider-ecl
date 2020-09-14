@@ -1079,12 +1079,10 @@ func updateLoadBalancerSyslogServer(networkClient *eclcloud.ServiceClient, d *sc
 }
 
 func expandLoadBalancerUpdateOpts(d *schema.ResourceData, gatewayInitialized bool, planUpdated bool) *load_balancers.UpdateOpts {
-	var returnUpdateOpts bool
-
-	var updateOpts load_balancers.UpdateOpts
+	var updateOpts *load_balancers.UpdateOpts
 
 	if s := d.Get("default_gateway").(string); d.HasChange("default_gateway") || (gatewayInitialized && s != "") {
-		returnUpdateOpts = true
+		updateOpts = &load_balancers.UpdateOpts{}
 		var defaultGateway interface{}
 		if s == "" {
 			defaultGateway = nil
@@ -1095,28 +1093,30 @@ func expandLoadBalancerUpdateOpts(d *schema.ResourceData, gatewayInitialized boo
 	}
 
 	if d.HasChange("description") {
-		returnUpdateOpts = true
+		if updateOpts == nil {
+			updateOpts = &load_balancers.UpdateOpts{}
+		}
 		description := d.Get("description").(string)
 		updateOpts.Description = &description
 	}
 
 	if d.HasChange("load_balancer_plan_id") && !planUpdated {
-		returnUpdateOpts = true
+		if updateOpts == nil {
+			updateOpts = &load_balancers.UpdateOpts{}
+		}
 		loadBalancerPlanID := d.Get("load_balancer_plan_id").(string)
 		updateOpts.LoadBalancerPlanID = loadBalancerPlanID
 	}
 
 	if d.HasChange("name") {
-		returnUpdateOpts = true
+		if updateOpts == nil {
+			updateOpts = &load_balancers.UpdateOpts{}
+		}
 		name := d.Get("name").(string)
 		updateOpts.Name = &name
 	}
 
-	if returnUpdateOpts {
-		return &updateOpts
-	} else {
-		return nil
-	}
+	return updateOpts
 }
 
 func expandLoadBalancerInterfaceInitialUpdateOpts(new map[string]interface{}) *load_balancer_interfaces.UpdateOpts {
@@ -1240,75 +1240,87 @@ func expandLoadBalancerSyslogServerCreateOpts(new map[string]interface{}, loadBa
 }
 
 func expandLoadBalancerSyslogServerChanges(old map[string]interface{}, new map[string]interface{}) *load_balancer_syslog_servers.UpdateOpts {
-	var isUpdated bool
-
-	var updateOpts load_balancer_syslog_servers.UpdateOpts
+	var updateOpts *load_balancer_syslog_servers.UpdateOpts
 
 	if old["acl_logging"] != new["acl_logging"] {
-		isUpdated = true
+		updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
 		aclLogging := new["acl_logging"].(string)
 		updateOpts.AclLogging = aclLogging
 	}
 
 	if old["appflow_logging"] != new["appflow_logging"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		appflowLogging := new["appflow_logging"].(string)
 		updateOpts.AppflowLogging = appflowLogging
 	}
 
 	if old["date_format"] != new["date_format"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		dateFormat := new["date_format"].(string)
 		updateOpts.DateFormat = dateFormat
 	}
 
 	if old["description"] != new["description"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		description := new["description"].(string)
 		updateOpts.Description = &description
 	}
 
 	if old["log_facility"] != new["log_facility"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		logFacility := new["log_facility"].(string)
 		updateOpts.LogFacility = logFacility
 	}
 
 	if old["log_level"] != new["log_level"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		logLevel := new["log_level"].(string)
 		updateOpts.LogLevel = logLevel
 	}
 
 	if old["priority"] != new["priority"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		priority := new["priority"].(int)
 		updateOpts.Priority = &priority
 	}
 
 	if old["tcp_logging"] != new["tcp_logging"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		tcpLogging := new["tcp_logging"].(string)
 		updateOpts.TcpLogging = tcpLogging
 	}
 
 	if old["time_zone"] != new["time_zone"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		timeZone := new["time_zone"].(string)
 		updateOpts.TimeZone = timeZone
 	}
 
 	if old["user_configurable_log_messages"] != new["user_configurable_log_messages"] {
-		isUpdated = true
+		if updateOpts == nil {
+			updateOpts = &load_balancer_syslog_servers.UpdateOpts{}
+		}
 		userConfigurableLogMessages := new["user_configurable_log_messages"].(string)
 		updateOpts.UserConfigurableLogMessages = userConfigurableLogMessages
 	}
 
-	if isUpdated {
-		return &updateOpts
-	} else {
-		return nil
-	}
+	return updateOpts
 }
 
 func deleteLoadBalancerSyslogServer(d *schema.ResourceData, networkClient *eclcloud.ServiceClient, id string) error {
