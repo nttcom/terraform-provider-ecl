@@ -2,16 +2,17 @@ package ecl
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl/network/v2/load_balancer_interfaces"
 	"github.com/nttcom/eclcloud/ecl/network/v2/load_balancer_syslog_servers"
+	"github.com/nttcom/eclcloud/ecl/network/v2/load_balancers"
 	"github.com/nttcom/eclcloud/ecl/network/v2/networks"
 	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
-	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/nttcom/eclcloud/ecl/network/v2/load_balancers"
 )
 
 // TestAccNetworkV2LoadBalancer_basic tests basic behavior of Load Balancer creation and update requests.

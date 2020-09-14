@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/validation"
+	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl/network/v2/load_balancer_interfaces"
 	"github.com/nttcom/eclcloud/ecl/network/v2/load_balancer_plans"
 	"github.com/nttcom/eclcloud/ecl/network/v2/load_balancer_syslog_servers"
@@ -14,7 +14,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud"
+	"github.com/hashicorp/terraform/helper/validation"
 )
 
 const loadBalancerPollInterval = 30 * time.Second
