@@ -2,10 +2,10 @@ package ecl
 
 import (
 	"fmt"
-	"github.com/nttcom/eclcloud"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl/network/v2/load_balancer_plans"
 )
 
