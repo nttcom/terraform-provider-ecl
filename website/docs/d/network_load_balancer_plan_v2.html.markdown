@@ -22,7 +22,7 @@ data "ecl_network_load_balancer_plan_v2" "load_balancer_plan_1" {
 
 * `description` - (Optional) Description of the Load Balancer Plan.
 
-* `enabled` - (Optional) The status the Load Balancer Plan is enabled.
+* `enabled` - (Optional) Whether the Load Balancer Plan is enable or not.
 
 * `id` - (Optional) Unique ID of the Load Balancer Plan.
 
