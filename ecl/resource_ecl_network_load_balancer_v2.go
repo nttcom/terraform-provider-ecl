@@ -1122,18 +1122,18 @@ func expandLoadBalancerUpdateOpts(d *schema.ResourceData, gatewayInitialized boo
 func expandLoadBalancerInterfaceInitialUpdateOpts(new map[string]interface{}) *load_balancer_interfaces.UpdateOpts {
 	updateInterfaceOpts := load_balancer_interfaces.UpdateOpts{}
 
-	s := new["description"].(string)
-	updateInterfaceOpts.Description = &s
+	d := new["description"].(string)
+	updateInterfaceOpts.Description = &d
 
 	updateInterfaceOpts.IPAddress = new["ip_address"].(string)
 
-	s = new["name"].(string)
-	updateInterfaceOpts.Name = &s
+	n := new["name"].(string)
+	updateInterfaceOpts.Name = &n
 
 	i := new["network_id"]
 	updateInterfaceOpts.NetworkID = &i
 
-	if s = new["virtual_ip_address"].(string); s != "" {
+	if s := new["virtual_ip_address"].(string); s != "" {
 		virtualIPAddress := interface{}(s)
 		updateInterfaceOpts.VirtualIPAddress = &virtualIPAddress
 	}
