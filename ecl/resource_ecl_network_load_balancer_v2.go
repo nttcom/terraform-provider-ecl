@@ -766,6 +766,12 @@ func resourceNetworkLoadBalancerV2Delete(d *schema.ResourceData, meta interface{
 
 	// Delete Load Balancer (core)
 	if err := load_balancers.Delete(networkV2Client, d.Id()).ExtractErr(); err != nil {
+		var e eclcloud.ErrDefault404
+		if errors.As(err, &e) {
+			log.Printf("[DEBUG] This ECL Load Balancer is already not exists: %s", d.Id())
+			d.SetId("")
+			return nil
+		}
 		return fmt.Errorf("error deleting ECL Load Balancer: %w", err)
 	}
 
@@ -1308,6 +1314,11 @@ func expandLoadBalancerSyslogServerChanges(old map[string]interface{}, new map[s
 
 func deleteLoadBalancerSyslogServer(d *schema.ResourceData, networkClient *eclcloud.ServiceClient, id string) error {
 	if err := load_balancer_syslog_servers.Delete(networkClient, id).ExtractErr(); err != nil {
+		var e eclcloud.ErrDefault404
+		if errors.As(err, &e) {
+			log.Printf("[DEBUG] This ECL Load Balancer Syslog Server is already not exists: %s", d.Id())
+			return nil
+		}
 		return fmt.Errorf("error deleting ECL Load Balancer Syslog Server: %w", err)
 	}
 
