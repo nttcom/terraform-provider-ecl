@@ -8,7 +8,7 @@ import (
 	"github.com/nttcom/eclcloud"
 	"github.com/nttcom/eclcloud/ecl"
 
-	"github.com/terraform-providers/terraform-provider-ecl/ecl/clientconfig"
+	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
 
 	"log"
 	"net/http"

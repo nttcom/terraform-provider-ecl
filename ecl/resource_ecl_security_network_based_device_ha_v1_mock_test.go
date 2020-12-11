@@ -8,7 +8,7 @@ import (
 
 	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha"
 
-	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
+	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
 const SoIDOfCreateHA = "FGHA_809F858574E94699952D0D7E7C58C81B"

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
+	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
 func TestMockedAccNetworkV2FICGatewayDataSource_name(t *testing.T) {
