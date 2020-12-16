@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
+	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
 func TestMockedDedicatedHypervisorV1Server_basic(t *testing.T) {

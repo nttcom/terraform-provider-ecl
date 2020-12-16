@@ -36,9 +36,5 @@ terraform-provider-ecl
 # editor specific settings
 .vscode
 
-# govendor
-vendor/*
-!vendor/vendor.json
-
 # own env files
 .myenvrc

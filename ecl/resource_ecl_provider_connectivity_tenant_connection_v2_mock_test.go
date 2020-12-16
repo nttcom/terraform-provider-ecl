@@ -6,7 +6,7 @@ import (
 
 	"github.com/nttcom/eclcloud/ecl/provider_connectivity/v2/tenant_connections"
 
-	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
+	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 
 	"github.com/hashicorp/terraform/helper/resource"
 )

@@ -2,8 +2,9 @@ package ecl
 
 import (
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-ecl/ecl/testhelper/mock"
 	"testing"
+
+	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
 // TestMockedAccNetworkV2LoadBalancer_basic tests basic behavior of Load Balancer creation and update requests.

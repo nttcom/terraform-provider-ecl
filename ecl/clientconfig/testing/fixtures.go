@@ -2,7 +2,7 @@ package testing
 
 import (
 	"github.com/nttcom/eclcloud"
-	"github.com/terraform-providers/terraform-provider-ecl/ecl/clientconfig"
+	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
 )
 
 var iTrue = true
