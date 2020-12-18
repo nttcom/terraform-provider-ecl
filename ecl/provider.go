@@ -192,6 +192,7 @@ func Provider() terraform.ResourceProvider {
 			"ecl_network_internet_service_v2":        dataSourceNetworkInternetServiceV2(),
 			"ecl_network_load_balancer_plan_v2":      dataSourceNetworkLoadBalancerPlanV2(),
 			"ecl_network_network_v2":                 dataSourceNetworkNetworkV2(),
+			"ecl_network_qos_options_v2":             dataSourceNetworkQosOptionsV2(),
 			"ecl_network_port_v2":                    dataSourceNetworkPortV2(),
 			"ecl_network_public_ip_v2":               dataSourceNetworkPublicIPV2(),
 			"ecl_network_static_route_v2":            dataSourceNetworkStaticRouteV2(),
