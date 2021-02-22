@@ -178,6 +178,8 @@ github.com/hashicorp/terraform/tfdiags
 github.com/hashicorp/terraform/version
 # github.com/hashicorp/terraform-config-inspect v0.0.0-20190327195015-8022a2663a70
 github.com/hashicorp/terraform-config-inspect/tfconfig
+# github.com/hashicorp/terraform-website v1.0.1
+## explicit
 # github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb
 github.com/hashicorp/yamux
 # github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
@@ -204,7 +206,7 @@ github.com/mitchellh/hashstructure
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.0
 github.com/mitchellh/reflectwalk
-# github.com/nttcom/eclcloud v1.10.5
+# github.com/nttcom/eclcloud v1.11.0
 ## explicit
 github.com/nttcom/eclcloud
 github.com/nttcom/eclcloud/ecl
@@ -230,6 +232,7 @@ github.com/nttcom/eclcloud/ecl/imagestorage/v2/imagedata
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/images
 github.com/nttcom/eclcloud/ecl/imagestorage/v2/members
 github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways
+github.com/nttcom/eclcloud/ecl/network/v2/common_function_pool
 github.com/nttcom/eclcloud/ecl/network/v2/fic_gateways
 github.com/nttcom/eclcloud/ecl/network/v2/gateway_interfaces
 github.com/nttcom/eclcloud/ecl/network/v2/internet_gateways

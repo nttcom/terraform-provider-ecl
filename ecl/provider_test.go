@@ -19,6 +19,8 @@ var (
 	OS_ACCEPTER_TENANT_ID                    = os.Getenv("OS_ACCEPTER_TENANT_ID")
 	OS_BAREMETAL_ZONE                        = os.Getenv("OS_BAREMETAL_ZONE")
 	OS_COMMON_FUNCTION_POOL_ID               = os.Getenv("OS_COMMON_FUNCTION_POOL_ID")
+	OS_COMMON_FUNCTION_POOL_NAME             = os.Getenv("OS_COMMON_FUNCTION_POOL_NAME")
+	OS_COMMON_FUNCTION_POOL_DESCRIPTION      = os.Getenv("OS_COMMON_FUNCTION_POOL_DESCRIPTION")
 	OS_COMPUTE_ZONE_HA                       = os.Getenv("OS_COMPUTE_ZONE_HA")
 	OS_DEDICATED_HYPERVISOR_ENVIRONMENT      = os.Getenv("OS_DEDICATED_HYPERVISOR_ENVIRONMENT")
 	OS_DEFAULT_ZONE                          = os.Getenv("OS_DEFAULT_ZONE")
@@ -246,6 +248,23 @@ func testAccPreCheckCommonFunctionGateway(t *testing.T) {
 	if OS_COMMON_FUNCTION_POOL_ID == "" {
 		t.Fatal("OS_COMMON_FUNCTION_POOL_ID must be set for acceptance tests of common function gateway")
 	}
+}
+
+func testAccPreCheckCommonFunctionPool(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_COMMON_FUNCTION_POOL_ID == "" {
+		t.Fatal("OS_COMMON_FUNCTION_POOL_ID must be set for acceptance tests of common function pool")
+	}
+	if OS_COMMON_FUNCTION_POOL_NAME == "" {
+		t.Fatal("OS_COMMON_FUNCTION_POOL_NAME must be set for acceptance tests of common function pool")
+	}
+	if OS_COMMON_FUNCTION_POOL_DESCRIPTION == "" {
+		t.Fatal("OS_COMMON_FUNCTION_POOL_DESCRIPTION must be set for acceptance tests of common function pool")
+	}
+}
+
+func testMockedAccPreCheckCommonFunctionPool(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
 }
 
 func testAccPreCheck(t *testing.T) {
