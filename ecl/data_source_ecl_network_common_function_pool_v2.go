@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-
 	"github.com/nttcom/eclcloud/ecl/network/v2/common_function_pool"
 )
 
@@ -57,22 +56,22 @@ func dataSourceNetworkCommonFunctionPoolV2Read(d *schema.ResourceData, meta inte
 
 	pages, err := common_function_pool.List(client, opts).AllPages()
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve common_function_pool: %w", err)
+		return fmt.Errorf("unable to retrieve common_function_pool: %w", err)
 	}
 
 	cfps, err := common_function_pool.ExtractCommonFunctionPools(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to extract common_function_pool: %w", err)
+		return fmt.Errorf("unable to extract common_function_pool: %w", err)
 	}
 
 	if len(cfps) < 1 {
-		return fmt.Errorf("Your query returned no results. " +
-			"Please change your search criteria and try again.")
+		return fmt.Errorf("your query returned no results. " +
+			"please change your search criteria and try again.")
 	}
 
 	if len(cfps) > 1 {
-		return fmt.Errorf("Your query returned more than one result." +
-			" Please try a more specific search criteria")
+		return fmt.Errorf("your query returned more than one result." +
+			" please try a more specific search criteria")
 	}
 
 	cfp := cfps[0]
