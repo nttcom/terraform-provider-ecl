@@ -65,8 +65,8 @@ func dataSourceNetworkCommonFunctionPoolV2Read(d *schema.ResourceData, meta inte
 	}
 
 	if len(cfps) < 1 {
-		return fmt.Errorf("your query returned no results. " +
-			"please change your search criteria and try again.")
+		return fmt.Errorf("your query returned no results." +
+			" please change your search criteria and try again")
 	}
 
 	if len(cfps) > 1 {
