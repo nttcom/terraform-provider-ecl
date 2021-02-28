@@ -22,7 +22,7 @@ func TestAccNetworkV2QosOptionsDataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2QosOptionsDataSourceID("data.ecl_network_qos_options_v2.qos_options_1"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_network_qos_options_v2.qos_options_1", "name", "20M-GA-AZURE"),
+						"data.ecl_network_qos_options_v2.qos_options_1", "name", "10Mbps-BestEffort"),
 				),
 			},
 		},
@@ -77,13 +77,13 @@ func testAccCheckNetworkV2QosOptionsDataSourceID(n string) resource.TestCheckFun
 
 var testAccNetworkV2QosOptionsDataSourceBasic = `
 data "ecl_network_qos_options_v2" "qos_options_1" {
-    name = "20M-GA-AZURE"
+    name = "10Mbps-BestEffort"
 }
 `
 
 var testAccNetworkV2QosOptionsDataSourceID = `
 data "ecl_network_qos_options_v2" "qos_options_1" {
-    name = "20M-GA-AZURE"
+    name = "10Mbps-BestEffort"
 }
 
 data "ecl_network_qos_options_v2" "qos_options_2" {
@@ -93,12 +93,12 @@ data "ecl_network_qos_options_v2" "qos_options_2" {
 
 var testAccNetworkV2QosOptionsDataSourceName = `
 data "ecl_network_qos_options_v2" "qos_options_1" {
-  name = "20M-GA-AZURE"
+  name = "10Mbps-BestEffort"
 }
 `
 
 var testAccNetworkV2QosOptionsDataSourceDescription = `
 data "ecl_network_qos_options_v2" "qos_options_1" {
-    description = " "
+    description = "10M-besteffort-menu"
 }
 `
