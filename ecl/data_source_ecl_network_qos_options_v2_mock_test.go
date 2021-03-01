@@ -73,32 +73,34 @@ func TestMockedAccNetworkV2QosOptionsDataSource_queries(t *testing.T) {
 }
 
 var testMockNetworkV2QosOptionsListNameQuery = `
-request: 
-  method: GET
-  query: 
-    name: 
-      - 10Mbps-BestEffort
+request:
+    method: GET
+    query:
+      name:
+        - 10Mbps-BestEffort
 response: 
-  code: 200
-  body: |
-      {
-          "qos_options": [{
-              "aws_service_id": null,
-              "azure_service_id": "a6b91294-8870-4f2c-b9e9-a899acada723",
-              "bandwidth": "10",
-              "description": "10M-besteffort-menu",
-              "fic_service_id": null,
-              "gcp_service_id": null,
-              "id": "a6b91294-8870-4f2c-b9e9-a899acada723",
-              "interdc_service_id": null,
-              "internet_service_id": null,
-              "name": "10Mbps-BestEffort",
-              "qos_type": "guarantee",
-              "service_type": "azure",
-              "status": "ACTIVE",
-              "vpn_service_id": null
-          }]
-      }
+    code: 200
+    body: >
+        {
+            "qos_options": [
+                {
+                    "aws_service_id": null,
+                    "azure_service_id": null,
+                    "bandwidth": "10",
+                    "description": "10M-besteffort-menu",
+                    "fic_service_id": null,
+                    "gcp_service_id": null,
+                    "id": "a6b91294-8870-4f2c-b9e9-a899acada723",
+                    "interdc_service_id": null,
+                    "internet_service_id": null,
+                    "name": "10Mbps-BestEffort",
+                    "qos_type": "besteffort",
+                    "service_type": "internet",
+                    "status": "ACTIVE",
+                    "vpn_service_id": null
+                }
+            ]
+        }
 `
 
 var testMockNetworkV2QosOptionsListIDQuery = `
@@ -108,26 +110,28 @@ request:
       id:
         - a6b91294-8870-4f2c-b9e9-a899acada723
 response: 
-  code: 200
-  body: |
-      {
-          "qos_options": [{
-              "aws_service_id": null,
-              "azure_service_id": "a6b91294-8870-4f2c-b9e9-a899acada723",
-              "bandwidth": "10",
-              "description": "10M-besteffort-menu",
-              "fic_service_id": null,
-              "gcp_service_id": null,
-              "id": "a6b91294-8870-4f2c-b9e9-a899acada723",
-              "interdc_service_id": null,
-              "internet_service_id": null,
-              "name": "10Mbps-BestEffort",
-              "qos_type": "guarantee",
-              "service_type": "azure",
-              "status": "ACTIVE",
-              "vpn_service_id": null
-          }]
-      }
+    code: 200
+    body: >
+        {
+            "qos_options": [
+                {
+                    "aws_service_id": null,
+                    "azure_service_id": null,
+                    "bandwidth": "10",
+                    "description": "10M-besteffort-menu",
+                    "fic_service_id": null,
+                    "gcp_service_id": null,
+                    "id": "a6b91294-8870-4f2c-b9e9-a899acada723",
+                    "interdc_service_id": null,
+                    "internet_service_id": null,
+                    "name": "10Mbps-BestEffort",
+                    "qos_type": "besteffort",
+                    "service_type": "internet",
+                    "status": "ACTIVE",
+                    "vpn_service_id": null
+                }
+            ]
+        }
 `
 
 var testMockNetworkV2QosOptionsListDescriptionQuery = `
@@ -135,26 +139,28 @@ request:
     method: GET
     query:
       description:
-        - "10M-besteffort-menu"
+        - "10m-besteffort-menu"
 response: 
-  code: 200
-  body: |
-      {
-          "qos_options": [{
-              "aws_service_id": null,
-              "azure_service_id": "a6b91294-8870-4f2c-b9e9-a899acada723",
-              "bandwidth": "10",
-              "description": "10M-besteffort-menu",
-              "fic_service_id": null,
-              "gcp_service_id": null,
-              "id": "a6b91294-8870-4f2c-b9e9-a899acada723",
-              "interdc_service_id": null,
-              "internet_service_id": null,
-              "name": "10Mbps-BestEffort",
-              "qos_type": "guarantee",
-              "service_type": "azure",
-              "status": "ACTIVE",
-              "vpn_service_id": null
-          }]
-      }
+    code: 200
+    body: >
+        {
+            "qos_options": [
+                {
+                    "aws_service_id": null,
+                    "azure_service_id": null,
+                    "bandwidth": "10",
+                    "description": "10m-besteffort-menu",
+                    "fic_service_id": null,
+                    "gcp_service_id": null,
+                    "id": "a6b91294-8870-4f2c-b9e9-a899acada723",
+                    "interdc_service_id": null,
+                    "internet_service_id": null,
+                    "name": "10mbps-besteffort",
+                    "qos_type": "besteffort",
+                    "service_type": "internet",
+                    "status": "active",
+                    "vpn_service_id": null
+                }
+            ]
+        }
 `
