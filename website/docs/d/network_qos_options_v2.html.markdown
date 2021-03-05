@@ -14,7 +14,7 @@ Use this data source to get the ID and Details of an Enterprise Cloud Qos option
 
 ```hcl
 data "ecl_network_qos_options_v2" "qos_options_1" {
-	name = "20M-GA-AZURE"
+	name = "10Mbps-BestEffort"
 }
 ```
 
@@ -38,7 +38,7 @@ data "ecl_network_qos_options_v2" "qos_options_1" {
 
 * `name` - (Optional) Name of the Qos option.
 
-* `qos_options_id` - (Optional) Unique ID of the Qos option.
+* `qos_option_id` - (Optional) Unique ID of the Qos option.
 
 * `qos_type` - (Optional) Type of the QoS option.(guarantee or besteffort)
 
