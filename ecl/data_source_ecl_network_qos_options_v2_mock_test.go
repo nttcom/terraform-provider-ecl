@@ -62,6 +62,12 @@ func TestMockedAccNetworkV2QosOptionsDataSource_queries(t *testing.T) {
 					testAccCheckNetworkV2QosOptionsDataSourceID("data.ecl_network_qos_options_v2.qos_options_2"),
 				),
 			},
+			resource.TestStep{
+				Config: testAccNetworkV2QosOptionsDataSourceDescription,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2QosOptionsDataSourceID("data.ecl_network_qos_options_v2.qos_options_1"),
+				),
+			},
 		},
 	})
 }
