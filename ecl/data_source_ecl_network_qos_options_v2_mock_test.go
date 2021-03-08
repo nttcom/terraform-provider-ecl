@@ -139,7 +139,7 @@ request:
     method: GET
     query:
       description:
-        - "10m-besteffort-menu"
+        - "10M-besteffort-menu"
 response: 
     code: 200
     body: >
@@ -149,13 +149,13 @@ response:
                     "aws_service_id": null,
                     "azure_service_id": null,
                     "bandwidth": "10",
-                    "description": "10m-besteffort-menu",
+                    "description": "10M-besteffort-menu",
                     "fic_service_id": null,
                     "gcp_service_id": null,
                     "id": "a6b91294-8870-4f2c-b9e9-a899acada723",
                     "interdc_service_id": null,
                     "internet_service_id": null,
-                    "name": "10mbps-besteffort",
+                    "name": "10Mbps-besteffort",
                     "qos_type": "besteffort",
                     "service_type": "internet",
                     "status": "active",
