@@ -13,11 +13,11 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud"
-	security "github.com/nttcom/eclcloud/ecl/security_order/v1/network_based_device_ha"
-	"github.com/nttcom/eclcloud/ecl/security_order/v1/service_order_status"
+	"github.com/nttcom/eclcloud/v2"
+	security "github.com/nttcom/eclcloud/v2/ecl/security_order/v2/network_based_device_ha"
+	"github.com/nttcom/eclcloud/v2/ecl/security_order/v2/service_order_status"
 
-	ports "github.com/nttcom/eclcloud/ecl/security_portal/v1/ha_ports"
+	ports "github.com/nttcom/eclcloud/v2/ecl/security_portal/v2/ha_ports"
 )
 
 const securityDeviceHAPollIntervalSec = 30
@@ -219,9 +219,9 @@ func gtHostForHADeviceUpdateAsOpts(d *schema.ResourceData) [2]security.GtHostInU
 	return result
 }
 
-func resourceSecurityNetworkBasedDeviceHAV1UpdateOrderAPIPart(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceHAV2UpdateOrderAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV1Client(GetRegion(d, config))
+	client, err := config.securityOrderV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -509,9 +509,9 @@ func resourceSecurityNetworkBasedHADevicePortsForUpdate(d *schema.ResourceData) 
 	return result, nil
 }
 
-func resourceSecurityNetworkBasedDeviceHAV1UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceHAV2UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityPortalV1Client(GetRegion(d, config))
+	client, err := config.securityPortalV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}

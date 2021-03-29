@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/network/v2/internet_gateways"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/internet_gateways"
 )
 
 func resourceNetworkInternetGatewayV2() *schema.Resource {

@@ -10,17 +10,17 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/keypairs"
-	"github.com/nttcom/eclcloud/ecl/dns/v2/recordsets"
-	"github.com/nttcom/eclcloud/ecl/dns/v2/zones"
-	"github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways"
-	"github.com/nttcom/eclcloud/ecl/network/v2/internet_gateways"
-	"github.com/nttcom/eclcloud/ecl/network/v2/networks"
-	"github.com/nttcom/eclcloud/ecl/network/v2/ports"
-	"github.com/nttcom/eclcloud/ecl/network/v2/public_ips"
-	"github.com/nttcom/eclcloud/ecl/network/v2/static_routes"
-	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
-	"github.com/nttcom/eclcloud/ecl/vna/v1/appliances"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/keypairs"
+	"github.com/nttcom/eclcloud/v2/ecl/dns/v2/recordsets"
+	"github.com/nttcom/eclcloud/v2/ecl/dns/v2/zones"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/common_function_gateways"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/internet_gateways"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/ports"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/public_ips"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/static_routes"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/subnets"
+	"github.com/nttcom/eclcloud/v2/ecl/vna/v1/appliances"
 )
 
 // LogRoundTripper satisfies the http.RoundTripper interface and is used to

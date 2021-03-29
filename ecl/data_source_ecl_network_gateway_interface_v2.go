@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/ecl/network/v2/gateway_interfaces"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/gateway_interfaces"
 )
 
 func dataSourceNetworkGatewayInterfaceV2() *schema.Resource {

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/ecl/sss/v1/users"
+	"github.com/nttcom/eclcloud/v2/ecl/sss/v1/users"
 )
 
 func TestAccSSSV1User_basic(t *testing.T) {

@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/network/v2/static_routes"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/static_routes"
 )
 
 func TestAccNetworkV2StaticRoute_internet(t *testing.T) {

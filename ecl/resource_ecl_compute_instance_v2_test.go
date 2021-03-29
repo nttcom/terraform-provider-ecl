@@ -11,13 +11,13 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/volumeattach"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/servers"
-	"github.com/nttcom/eclcloud/ecl/computevolume/v2/volumes"
-	"github.com/nttcom/eclcloud/ecl/network/v2/networks"
-	"github.com/nttcom/eclcloud/ecl/network/v2/ports"
-	"github.com/nttcom/eclcloud/pagination"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/volumeattach"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/servers"
+	"github.com/nttcom/eclcloud/v2/ecl/computevolume/v2/volumes"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/ports"
+	"github.com/nttcom/eclcloud/v2/pagination"
 )
 
 func TestAccComputeV2Instance_basic(t *testing.T) {

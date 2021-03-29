@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/nttcom/eclcloud/ecl/dedicated_hypervisor/v1/licenses"
+	"github.com/nttcom/eclcloud/v2/ecl/dedicated_hypervisor/v1/licenses"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"

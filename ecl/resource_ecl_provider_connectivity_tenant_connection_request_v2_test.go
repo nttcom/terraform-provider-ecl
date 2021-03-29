@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/provider_connectivity/v2/tenant_connection_requests"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/provider_connectivity/v2/tenant_connection_requests"
 )
 
 func TestAccProviderConnectivityV2TenantConnectionRequest_basic(t *testing.T) {

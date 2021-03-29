@@ -177,8 +177,8 @@ response:
                             }
                         ],
                         "id": "c4c383a719cb489d8210328e17659620",
-                        "name": "mss-rfg",
-                        "type": "mss-rfg"
+                        "name": "security-order",
+                        "type": "security-order"
                     },
                     {
                         "endpoints": [
@@ -205,8 +205,8 @@ response:
                             }
                         ],
                         "id": "d4c383a719cb489d8210328e17659620",
-                        "name": "mss-msa",
-                        "type": "mss-msa"
+                        "name": "security-operation",
+                        "type": "security-operation"
                     },
                     {
                         "endpoints": [
