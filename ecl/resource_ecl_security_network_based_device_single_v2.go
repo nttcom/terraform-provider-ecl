@@ -3,7 +3,6 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -135,17 +134,13 @@ func resourceSecurityNetworkBasedDeviceSingleV2Read(d *schema.ResourceData, meta
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
 
-	tenantID := os.Getenv("OS_TENANT_ID")
-	locale := d.Get("locale")
+	tenantID := d.Get("tenant_id").(string)
 
 	deviceType := getTypeOfSingleDevice(d)
 	device, err := getSingleDeviceByHostName(client, deviceType, d.Id())
 	if err != nil {
 		return err
 	}
-
-	d.Set("tenant_id", tenantID)
-	d.Set("locale", locale)
 
 	operatingMode := device.Cell[3]
 	licenseKind := device.Cell[4]
@@ -174,7 +169,7 @@ func resourceSecurityNetworkBasedDeviceSingleV2Read(d *schema.ResourceData, meta
 	}
 
 	listOpts := device_interfaces.ListOpts{
-		TenantID:  os.Getenv("OS_TENANT_ID"),
+		TenantID:  tenantID,
 		UserToken: pClient.TokenID,
 	}
 

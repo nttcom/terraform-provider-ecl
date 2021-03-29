@@ -158,8 +158,6 @@ func resourceSecurityHostBasedV2Read(d *schema.ResourceData, meta interface{}) e
 
 	log.Printf("[DEBUG] Retrieved Host Based Security: %+v", s)
 
-	d.Set("tenant_id", d.Get("tenant_id").(string))
-	d.Set("locale", d.Get("locale").(string))
 	d.Set("service_order_service", s.ServiceOrderService)
 	d.Set("max_agent_value", s.MaxAgentValue)
 	d.Set("mail_address", s.MailAddress)

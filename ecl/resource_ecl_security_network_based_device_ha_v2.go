@@ -3,7 +3,6 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -134,10 +133,7 @@ func resourceSecurityNetworkBasedDeviceHAV2Read(d *schema.ResourceData, meta int
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
 
-	tenantID := os.Getenv("OS_TENANT_ID")
-	locale := d.Get("locale")
-	d.Set("tenant_id", tenantID)
-	d.Set("locale", locale)
+	tenantID := d.Get("tenant_id").(string)
 
 	log.Printf("[DEBUG] Setting Basic information into state.")
 
@@ -213,7 +209,7 @@ func resourceSecurityNetworkBasedDeviceHAV2Read(d *schema.ResourceData, meta int
 	}
 
 	listOpts := device_interfaces.ListOpts{
-		TenantID:  os.Getenv("OS_TENANT_ID"),
+		TenantID:  tenantID,
 		UserToken: pClient.TokenID,
 	}
 
