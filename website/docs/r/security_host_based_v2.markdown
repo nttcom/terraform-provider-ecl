@@ -4,6 +4,7 @@ page_title: "Enterprise Cloud: ecl_security_host_based_v2"
 sidebar_current: "docs-ecl-security-host_based-v2"
 description: |-
   Manages a V2 Host Based Security resource within Enterprise Cloud.
+  If you are using V1 Security Service, please install v1.13.0 of terraform-provider-ecl.
 ---
 
 # ecl\_security\_host\_based\_v2

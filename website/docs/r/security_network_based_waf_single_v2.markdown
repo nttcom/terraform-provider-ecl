@@ -4,6 +4,7 @@ page_title: "Enterprise Cloud: ecl_security_network_based_waf_single_v2"
 sidebar_current: "docs-ecl-security-network_based_waf_single-v2"
 description: |-
   Manages a V2 Network Based WAF(Single) resource within Enterprise Cloud.
+  If you are using V1 Security Service, please install v1.13.0 of terraform-provider-ecl.
 ---
 
 # ecl\_security\_network\_based\_waf\_single\_v2
