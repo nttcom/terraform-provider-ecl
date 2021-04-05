@@ -1,7 +1,7 @@
 package testing
 
 import (
-	"github.com/nttcom/eclcloud"
+	"github.com/nttcom/eclcloud/v2"
 	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
 )
 

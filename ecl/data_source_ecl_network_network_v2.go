@@ -6,9 +6,9 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/network/v2/networks"
-	"github.com/nttcom/eclcloud/ecl/network/v2/subnets"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/subnets"
 )
 
 func dataSourceNetworkNetworkV2() *schema.Resource {

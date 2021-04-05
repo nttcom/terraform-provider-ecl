@@ -9,10 +9,10 @@ import (
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/volumeattach"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/images"
-	"github.com/nttcom/eclcloud/ecl/computevolume/v2/volumes"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/volumeattach"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/images"
+	"github.com/nttcom/eclcloud/v2/ecl/computevolume/v2/volumes"
 )
 
 func resourceComputeVolumeV2() *schema.Resource {

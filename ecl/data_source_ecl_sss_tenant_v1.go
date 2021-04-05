@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/ecl/sss/v1/tenants"
+	"github.com/nttcom/eclcloud/v2/ecl/sss/v1/tenants"
 )
 
 func dataSourceSSSTenantV1() *schema.Resource {

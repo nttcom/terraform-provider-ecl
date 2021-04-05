@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"github.com/nttcom/eclcloud/ecl/sss/v1/users"
+	"github.com/nttcom/eclcloud/v2/ecl/sss/v1/users"
 )
 
 func resourceSSSUserV1() *schema.Resource {

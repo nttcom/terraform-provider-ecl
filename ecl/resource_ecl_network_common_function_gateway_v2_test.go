@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/ecl/network/v2/common_function_gateways"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/common_function_gateways"
 )
 
 func TestAccNetworkV2CommonFunctionGateway_basic(t *testing.T) {

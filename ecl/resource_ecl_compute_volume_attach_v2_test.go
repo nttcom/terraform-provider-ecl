@@ -8,9 +8,9 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/volumeattach"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/servers"
-	"github.com/nttcom/eclcloud/ecl/computevolume/v2/volumes"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/volumeattach"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/servers"
+	"github.com/nttcom/eclcloud/v2/ecl/computevolume/v2/volumes"
 )
 
 func TestAccComputeVolumeV2Attach_basic(t *testing.T) {

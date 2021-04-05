@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/ecl/network/v2/fic_gateways"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/fic_gateways"
 )
 
 func dataSourceNetworkFICGatewayV2() *schema.Resource {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/ecl/network/v2/static_routes"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/static_routes"
 )
 
 func dataSourceNetworkStaticRouteV2() *schema.Resource {

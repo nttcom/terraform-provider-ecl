@@ -9,9 +9,9 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/provider_connectivity/v2/tenant_connection_requests"
-	"github.com/nttcom/eclcloud/ecl/sss/v1/approval_requests"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/provider_connectivity/v2/tenant_connection_requests"
+	"github.com/nttcom/eclcloud/v2/ecl/sss/v1/approval_requests"
 )
 
 func resourceProviderConnectivityTenantConnectionRequestV2() *schema.Resource {

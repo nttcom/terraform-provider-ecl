@@ -13,14 +13,14 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/availabilityzones"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/bootfromvolume"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/keypairs"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/extensions/startstop"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/flavors"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/images"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/servers"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/availabilityzones"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/bootfromvolume"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/keypairs"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/startstop"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/flavors"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/images"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/servers"
 )
 
 func resourceComputeInstanceV2() *schema.Resource {

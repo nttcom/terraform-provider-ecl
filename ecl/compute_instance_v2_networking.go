@@ -15,10 +15,10 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud"
-	"github.com/nttcom/eclcloud/ecl/compute/v2/servers"
-	"github.com/nttcom/eclcloud/ecl/network/v2/networks"
-	"github.com/nttcom/eclcloud/ecl/network/v2/ports"
+	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/servers"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/v2/ecl/network/v2/ports"
 )
 
 // InstanceNIC is a structured representation of a Eclcloud servers.Server
