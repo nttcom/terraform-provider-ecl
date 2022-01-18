@@ -28,6 +28,6 @@ The following attributes are exported:
 
 * `description` - Description for this tenant.
 * `tenant_region` - Region this tenant belongs to.
-* `contract_id` -　Contract which new tenant belongs to.
+* `contract_id` - Contract which new tenant belongs to.
 * `start_time` - Tenant created time.
 * `tenant_id` - ID of the tenant.
