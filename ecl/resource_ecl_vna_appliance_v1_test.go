@@ -297,6 +297,176 @@ func TestAccVNAV1Appliance_updateFixedIPBasic(t *testing.T) {
 	})
 }
 
+func TestAccVNAV1Appliance_createInterfaceDiscontinuity(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	var vna appliances.Appliance
+	var n3, n8 networks.Network
+	var sn3, sn8 subnets.Subnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceInterfaceDiscontinuity,
+				Check: resource.ComposeTestCheckFunc(
+
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_3", &n3),
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_8", &n8),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_3", &sn3),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_8", &sn8),
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.name", "interface_3"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.description", "interface_3_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.network_id", &n3.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_fixed_ips.0.ip_address", "192.168.3.50"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_3_fixed_ips.0.subnet_id", &sn3.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_8_info.0.name", "interface_8"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_8_info.0.description", "interface_8_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_8_info.0.network_id", &n8.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_8_fixed_ips.0.ip_address", "192.168.8.50"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_8_fixed_ips.0.subnet_id", &sn8.ID),
+					testAccCheckVNAV1FixedIPLength(&vna, 1, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 2, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 3, 1),
+					testAccCheckVNAV1FixedIPLength(&vna, 4, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 5, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 6, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 7, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 8, 1),
+				),
+			},
+		},
+	})
+}
+
+func TestAccVNAV1Appliance_createNoInterface(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	var vna appliances.Appliance
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceNoInterface,
+				Check: resource.ComposeTestCheckFunc(
+
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					testAccCheckVNAV1FixedIPLength(&vna, 1, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 2, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 3, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 4, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 5, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 6, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 7, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 8, 0),
+				),
+			},
+		},
+	})
+}
+
+func TestAccVNAV1Appliance_createFixedIPsEmpty(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	var vna appliances.Appliance
+	var n networks.Network
+	var sn subnets.Subnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceFixedIPsEmpty,
+				Check: resource.ComposeTestCheckFunc(
+
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
+					testAccCheckVNAV1FixedIPLength(&vna, 1, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 2, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 3, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 4, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 5, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 6, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 7, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 8, 0),
+				),
+			},
+		},
+	})
+}
+
+func TestAccVNAV1Appliance_createNoFixedIPs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skip this test in short mode")
+	}
+
+	var vna appliances.Appliance
+	var n networks.Network
+	var sn subnets.Subnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccVNAV1ApplianceNoFixedIPs,
+				Check: resource.ComposeTestCheckFunc(
+
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn),
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
+					testAccCheckVNAV1FixedIPLength(&vna, 1, 1),
+					testAccCheckVNAV1FixedIPLength(&vna, 2, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 3, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 4, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 5, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 6, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 7, 0),
+					testAccCheckVNAV1FixedIPLength(&vna, 8, 0),
+				),
+			},
+		},
+	})
+}
+
 func TestAccVNAV1Appliance_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
@@ -584,6 +754,22 @@ resource "ecl_network_subnet_v2" "subnet_4" {
 	}
 }
 `
+const testAccVNAV1ApplianceSingleNetworkAndSubnetPair8 = `
+resource "ecl_network_network_v2" "network_8" {
+	name = "network_8"
+}
+
+resource "ecl_network_subnet_v2" "subnet_8" {
+	name = "subnet_8"
+	cidr = "192.168.8.0/24"
+	network_id = "${ecl_network_network_v2.network_8.id}"
+	gateway_ip = "192.168.8.1"
+	allocation_pools {
+		start = "192.168.8.100"
+		end = "192.168.8.200"
+	}
+}
+`
 
 var testAccVNAV1ApplianceBasic = fmt.Sprintf(`
 %s
@@ -608,6 +794,144 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
+	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testAccVNAV1ApplianceInterfaceDiscontinuity = fmt.Sprintf(`
+%s
+%s
+
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.3.1"
+	availability_zone = "%s"
+	virtual_network_appliance_plan_id = "%s"
+
+	depends_on = [
+		"ecl_network_subnet_v2.subnet_3",
+		"ecl_network_subnet_v2.subnet_8"
+	]
+	tags = {
+        k1 = "v1"
+    }
+
+	interface_3_info  {
+		name = "interface_3"
+		description = "interface_3_description"
+		network_id = "${ecl_network_network_v2.network_3.id}"
+	}
+
+	interface_3_fixed_ips {
+		ip_address = "192.168.3.50"
+	}
+
+    interface_8_info  {
+		name = "interface_8"
+		description = "interface_8_description"
+		network_id = "${ecl_network_network_v2.network_8.id}"
+	}
+
+	interface_8_fixed_ips {
+		ip_address = "192.168.8.50"
+	}
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair3,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair8,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testAccVNAV1ApplianceNoInterface = fmt.Sprintf(`
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	availability_zone = "%s"
+	virtual_network_appliance_plan_id = "%s"
+
+	tags = {
+        k1 = "v1"
+    }
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testAccVNAV1ApplianceFixedIPsEmpty = fmt.Sprintf(`
+%s
+
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "%s"
+	virtual_network_appliance_plan_id = "%s"
+
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+    tags = {
+        k1 = "v1"
+    }
+
+	interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+		network_id = "${ecl_network_network_v2.network_1.id}"
+	}
+
+	interface_1_no_fixed_ips = "true"
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testAccVNAV1ApplianceNoFixedIPs = fmt.Sprintf(`
+%s
+
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "%s"
+	virtual_network_appliance_plan_id = "%s"
+
+	depends_on = ["ecl_network_subnet_v2.subnet_1"]
+    tags = {
+        k1 = "v1"
+    }
+
+	interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+		network_id = "${ecl_network_network_v2.network_1.id}"
 	}
 
 	lifecycle {
