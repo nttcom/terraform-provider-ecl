@@ -283,7 +283,7 @@ func NewOrchestrationV1(client *eclcloud.ProviderClient, eo eclcloud.EndpointOpt
 // service.
 func NewDNSV2(client *eclcloud.ProviderClient, eo eclcloud.EndpointOpts) (*eclcloud.ServiceClient, error) {
 	sc, err := initClientOpts(client, eo, "dns")
-	// sc.ResourceBase = sc.Endpoint + "v2/"
+	sc.ResourceBase = sc.Endpoint + "v2/"
 	return sc, err
 }
 
