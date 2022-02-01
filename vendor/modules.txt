@@ -125,6 +125,7 @@ github.com/hashicorp/hil/scanner
 # github.com/hashicorp/logutils v1.0.0
 github.com/hashicorp/logutils
 # github.com/hashicorp/terraform v0.12.6
+## explicit
 github.com/hashicorp/terraform/addrs
 github.com/hashicorp/terraform/command/format
 github.com/hashicorp/terraform/config
@@ -204,6 +205,7 @@ github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.0
 github.com/mitchellh/reflectwalk
 # github.com/nttcom/eclcloud/v2 v2.1.0
+## explicit
 github.com/nttcom/eclcloud/v2
 github.com/nttcom/eclcloud/v2/ecl
 github.com/nttcom/eclcloud/v2/ecl/baremetal/v2/availabilityzones
@@ -284,6 +286,7 @@ github.com/ulikunitz/xz/internal/hash
 github.com/ulikunitz/xz/internal/xlog
 github.com/ulikunitz/xz/lzma
 # github.com/unknwon/com v0.0.0-20190804042917-757f69c95f3e
+## explicit
 github.com/unknwon/com
 # github.com/vmihailenco/msgpack v4.0.1+incompatible
 github.com/vmihailenco/msgpack
@@ -418,4 +421,5 @@ google.golang.org/grpc/status
 google.golang.org/grpc/tap
 google.golang.org/grpc/test/bufconn
 # gopkg.in/yaml.v2 v2.2.2
+## explicit
 gopkg.in/yaml.v2
