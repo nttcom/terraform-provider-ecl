@@ -14,8 +14,8 @@ Manages a V1 Virtual Network Appliance resource within Enterprise Cloud.
 
 ### Basic Appliance Creation
 
-You can only connect interface1 in creation phase.
-Also you must specify one fixed_ips in creation phase.
+You can connect interfaces in creation phase (`interface_1_info`, ... `interface_8_info`).  
+Also you can specify fixed_ips in creation phase (`interface_1_fixed_ips`, ... `interface_8_fixed_ips`).
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
@@ -35,6 +35,11 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 }
 ```
+
+You have another choices on how to specify fixed_ips:
+
+* If you don’t specify fixed_ips, an IP address is automatically assigned from your subnets and the address is associated with the OS.
+* If you specify `interface_1_no_fixed_ips = "true"` instead of fixed_ips, an IP address is not assigned.
 
 ### Connect interface-2 with auto assigned IP address
 
