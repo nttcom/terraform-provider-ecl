@@ -39,7 +39,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 You have another choices on how to specify fixed_ips:
 
 * If you don’t specify fixed_ips, an IP address is automatically assigned from your subnets and the address is associated with the OS.
-* If you specify `interface_1_no_fixed_ips = "true"` instead of fixed_ips, an IP address is not assigned.
+* If you specify `interface_[slot number]_no_fixed_ips = "true"` instead of fixed_ips, an IP address is not assigned.
 
 ### Connect interface-2 with auto assigned IP address
 
