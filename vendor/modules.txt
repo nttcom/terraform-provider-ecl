@@ -204,7 +204,7 @@ github.com/mitchellh/hashstructure
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.0
 github.com/mitchellh/reflectwalk
-# github.com/nttcom/eclcloud/v2 v2.1.0
+# github.com/nttcom/eclcloud/v2 v2.2.0
 ## explicit
 github.com/nttcom/eclcloud/v2
 github.com/nttcom/eclcloud/v2/ecl
