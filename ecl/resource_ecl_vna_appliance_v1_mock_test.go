@@ -182,6 +182,161 @@ func TestMockedAccVNAV1ApplianceUpdateFixedIP_basic(t *testing.T) {
 	})
 }
 
+func TestMockedAccVNAV1Appliance_createInterfaceDiscontinuity(t *testing.T) {
+	var vna appliances.Appliance
+
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
+
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances", testMockVNAV1ApplianceInterfaceDiscontinuityPost)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterInterfaceDiscontinuityCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterInterfaceDiscontinuityCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterInterfaceDiscontinuityDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetDeleteComplete)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testMockedAccVNAV1ApplianceInterfaceDiscontinuity,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.name", "interface_3"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.description", "interface_3_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.network_id", "dummyNetworkID"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_fixed_ips.0.ip_address", "192.168.1.53"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_8_info.0.name", "interface_8"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_8_info.0.description", "interface_8_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_8_info.0.network_id", "dummyNetworkID"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_8_fixed_ips.0.ip_address", "192.168.1.58"),
+				),
+			},
+		},
+	})
+}
+
+func TestMockedAccVNAV1Appliance_createNoInterface(t *testing.T) {
+	var vna appliances.Appliance
+
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
+
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances", testMockVNAV1ApplianceNoInterfacePost)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterNoInterfaceCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterNoInterfaceCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterNoInterfaceDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetDeleteComplete)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testMockedAccVNAV1ApplianceNoInterface,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+				),
+			},
+		},
+	})
+}
+
+func TestMockedAccVNAV1Appliance_createFixedIPsEmpty(t *testing.T) {
+	var vna appliances.Appliance
+
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
+
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances", testMockVNAV1ApplianceFixedIPsEmptyPost)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterFixedIPsEmptyCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterFixedIPsEmptyCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterFixedIPsEmptyDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetDeleteComplete)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testMockedAccVNAV1ApplianceFixedIPsEmpty,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
+				),
+			},
+		},
+	})
+}
+
+func TestMockedAccVNAV1Appliance_createNoFixedIPs(t *testing.T) {
+	var vna appliances.Appliance
+
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
+
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances", testMockVNAV1ApplianceNoFixedIPsPost)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterNoFixedIPsCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetActiveAfterNoFixedIPsCreate)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceProcessingAfterNoFixedIPsDelete)
+	mc.Register(t, "virtual_network_appliance", "/v1.0/virtual_network_appliances/", testMockVNAV1ApplianceGetDeleteComplete)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckVNA(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVNAV1ApplianceDestroy,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testMockedAccVNAV1ApplianceNoFixedIPs,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVNAV1ApplianceExists("ecl_vna_appliance_v1.appliance_1", &vna),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+				),
+			},
+		},
+	})
+}
+
 func TestMockedAccVNAV1Appliance_basic(t *testing.T) {
 	var vna appliances.Appliance
 
@@ -273,6 +428,111 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 
 	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockedAccVNAV1ApplianceInterfaceDiscontinuity = fmt.Sprintf(`
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "%s"
+	virtual_network_appliance_plan_id = "%s"
+
+    interface_3_info  {
+		name = "interface_3"
+		description = "interface_3_description"
+        network_id = "dummyNetworkID"
+	}
+
+	interface_3_fixed_ips {
+		ip_address = "192.168.1.53"
+	}
+
+    interface_8_info  {
+		name = "interface_8"
+		description = "interface_8_description"
+        network_id = "dummyNetworkID"
+	}
+
+	interface_8_fixed_ips {
+		ip_address = "192.168.1.58"
+	}
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockedAccVNAV1ApplianceNoInterface = fmt.Sprintf(`
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "%s"
+	virtual_network_appliance_plan_id = "%s"
+
+	lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockedAccVNAV1ApplianceFixedIPsEmpty = fmt.Sprintf(`
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "%s"
+	virtual_network_appliance_plan_id = "%s"
+
+    interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+        network_id = "dummyNetworkID"
+	}
+
+    interface_1_no_fixed_ips = "true"
+
+    lifecycle {
+		ignore_changes = [
+			"default_gateway",
+		]
+	}
+}`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockedAccVNAV1ApplianceNoFixedIPs = fmt.Sprintf(`
+resource "ecl_vna_appliance_v1" "appliance_1" {
+	name = "appliance_1"
+	description = "appliance_1_description"
+	default_gateway = "192.168.1.1"
+	availability_zone = "%s"
+	virtual_network_appliance_plan_id = "%s"
+
+    interface_1_info  {
+		name = "interface_1"
+		description = "interface_1_description"
+        network_id = "dummyNetworkID"
+	}
+
+    lifecycle {
 		ignore_changes = [
 			"default_gateway",
 		]
@@ -2659,6 +2919,764 @@ expectedStatus:
     - Created
 counter:
     min: 4
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceInterfaceDiscontinuityPost = fmt.Sprintf(`
+request:
+    method: POST
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_3": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_3_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.53",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_3",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_8": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_8_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.58",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_8",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "Passw0rd",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "initial"
+            }
+        }
+newStatus: Created
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterInterfaceDiscontinuityCreate = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_3": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_3_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.53",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_3",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_8": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_8_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.58",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_8",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "Undxlri8Bo6m",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "initial"
+            }
+        }
+expectedStatus:
+    - Created
+counter:
+    max: 3
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceGetActiveAfterInterfaceDiscontinuityCreate = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_3": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_3_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.53",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_3",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_8": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_8_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.58",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_8",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "COMPLETE",
+                "os_login_status": "ACTIVE",
+                "os_monitoring_status": "ACTIVE",
+                "password": "Undxlri8Bo6m",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "ACTIVE"
+            }
+        }
+expectedStatus:
+    - Created
+counter:
+    min: 4
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterInterfaceDiscontinuityDelete = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_3": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_3_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.53",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_3",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    },
+                    "interface_8": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_8_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.58",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_8",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "ACTIVE",
+                "os_monitoring_status": "ACTIVE",
+                "password": "Undxlri8Bo6m",
+                "tags": {
+                    "k1": "v1"
+                },
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "ACTIVE"
+            }
+        }
+expectedStatus:
+    - Deleted
+counter:
+    max: 3
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceNoInterfacePost = fmt.Sprintf(`
+request:
+    method: POST
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "Passw0rd",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "initial"
+            }
+        }
+newStatus: Created
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterNoInterfaceCreate = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "Undxlri8Bo6m",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "initial"
+            }
+        }
+expectedStatus:
+    - Created
+counter:
+    max: 3
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceGetActiveAfterNoInterfaceCreate = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "name": "appliance_1",
+                "operation_status": "COMPLETE",
+                "os_login_status": "ACTIVE",
+                "os_monitoring_status": "ACTIVE",
+                "password": "Undxlri8Bo6m",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "ACTIVE"
+            }
+        }
+expectedStatus:
+    - Created
+counter:
+    min: 4
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterNoInterfaceDelete = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "ACTIVE",
+                "os_monitoring_status": "ACTIVE",
+                "password": "Undxlri8Bo6m",
+                "tags": {
+                    "k1": "v1"
+                },
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "ACTIVE"
+            }
+        }
+expectedStatus:
+    - Deleted
+counter:
+    max: 3
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceFixedIPsEmptyPost = fmt.Sprintf(`
+request:
+    method: POST
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [],
+                        "name": "interface_1",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "Passw0rd",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "initial"
+            }
+        }
+newStatus: Created
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterFixedIPsEmptyCreate = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [],
+                        "name": "interface_1",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "Undxlri8Bo6m",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "initial"
+            }
+        }
+expectedStatus:
+    - Created
+counter:
+    max: 3
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceGetActiveAfterFixedIPsEmptyCreate = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [],
+                        "name": "interface_1",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "COMPLETE",
+                "os_login_status": "ACTIVE",
+                "os_monitoring_status": "ACTIVE",
+                "password": "Undxlri8Bo6m",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "ACTIVE"
+            }
+        }
+expectedStatus:
+    - Created
+counter:
+    min: 4
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterFixedIPsEmptyDelete = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [],
+                        "name": "interface_1",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "ACTIVE",
+                "os_monitoring_status": "ACTIVE",
+                "password": "Undxlri8Bo6m",
+                "tags": {
+                    "k1": "v1"
+                },
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "ACTIVE"
+            }
+        }
+expectedStatus:
+    - Deleted
+counter:
+    max: 3
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceNoFixedIPsPost = fmt.Sprintf(`
+request:
+    method: POST
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [],
+                        "name": "interface_1",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "Passw0rd",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "initial"
+            }
+        }
+newStatus: Created
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterNoFixedIPsCreate = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [],
+                        "name": "interface_1",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "initial",
+                "os_monitoring_status": "initial",
+                "password": "Undxlri8Bo6m",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "initial"
+            }
+        }
+expectedStatus:
+    - Created
+counter:
+    max: 3
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceGetActiveAfterNoFixedIPsCreate = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.50",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_1",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "COMPLETE",
+                "os_login_status": "ACTIVE",
+                "os_monitoring_status": "ACTIVE",
+                "password": "Undxlri8Bo6m",
+                "tags": {},
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "ACTIVE"
+            }
+        }
+expectedStatus:
+    - Created
+counter:
+    min: 4
+`,
+	OS_DEFAULT_ZONE,
+	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
+)
+
+var testMockVNAV1ApplianceProcessingAfterNoFixedIPsDelete = fmt.Sprintf(`
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "virtual_network_appliance": {
+                "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
+                "availability_zone": "%s",
+                "default_gateway": "192.168.1.1",
+                "description": "appliance_1_description",
+                "id": "45db3e66-31af-45a6-8ad2-d01521726145",
+                "interfaces": {
+                    "interface_1": {
+                        "allowed_address_pairs": [],
+                        "description": "interface_1_description",
+                        "fixed_ips": [
+                            {
+                                "ip_address": "192.168.1.50",
+                                "subnet_id": ""
+                            }
+                        ],
+                        "name": "interface_1",
+                        "network_id": "dummyNetworkID",
+                        "tags": {},
+                        "updatable": true
+                    }
+                },
+                "name": "appliance_1",
+                "operation_status": "PROCESSING",
+                "os_login_status": "ACTIVE",
+                "os_monitoring_status": "ACTIVE",
+                "password": "Undxlri8Bo6m",
+                "tags": {
+                    "k1": "v1"
+                },
+                "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
+                "username": "root",
+                "virtual_network_appliance_plan_id": "%s",
+                "vm_status": "ACTIVE"
+            }
+        }
+expectedStatus:
+    - Deleted
+counter:
+    max: 3
 `,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,

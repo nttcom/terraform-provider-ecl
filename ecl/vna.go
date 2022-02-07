@@ -102,42 +102,86 @@ func getTagsAsOpts(rawTags map[string]interface{}) map[string]string {
 	return tags
 }
 
-func getInterfaceCreateOpts(d *schema.ResourceData) appliances.CreateOptsInterfaces {
-	var interface1 appliances.CreateOptsInterface
+func getInterfaceCreateOpts(d *schema.ResourceData) *appliances.CreateOptsInterfaces {
 	var interfaces appliances.CreateOptsInterfaces
+	isInterfacesCreated := false
 
-	rawMeta := d.Get("interface_1_info").([]interface{})
-	rawFips := d.Get("interface_1_fixed_ips").([]interface{})
+	for slotNumber := 1; slotNumber <= maxNumberOfInterfaces; slotNumber++ {
+		isInterfaceCreated := false
+		var interfaceEach appliances.CreateOptsInterface
+		rawMeta := d.Get(fmt.Sprintf("interface_%d_info", slotNumber)).([]interface{})
+		rawFips := d.Get(fmt.Sprintf("interface_%d_fixed_ips", slotNumber)).([]interface{})
+		noFixedIPsKey := fmt.Sprintf("interface_%d_no_fixed_ips", slotNumber)
 
-	for index, rm := range rawMeta {
-		thisRawMeta := rm.(map[string]interface{})
-		if index == 0 {
-			interface1.Name = thisRawMeta["name"].(string)
-			interface1.Description = thisRawMeta["description"].(string)
-			interface1.NetworkID = thisRawMeta["network_id"].(string)
-			tags := getTagsAsOpts(thisRawMeta["tags"].(map[string]interface{}))
-			interface1.Tags = tags
+		for index, rm := range rawMeta {
+			thisRawMeta := rm.(map[string]interface{})
+			if index == 0 {
+				isInterfaceCreated = true
+				interfaceEach.Name = thisRawMeta["name"].(string)
+				interfaceEach.Description = thisRawMeta["description"].(string)
+				interfaceEach.NetworkID = thisRawMeta["network_id"].(string)
+				tags := getTagsAsOpts(thisRawMeta["tags"].(map[string]interface{}))
+				interfaceEach.Tags = tags
+			}
+		}
+
+		interfaceEach.FixedIPs = nil
+		for index, rawFip := range rawFips {
+			if index == 0 {
+				fip := rawFip.(map[string]interface{})
+
+				ipAddress := fip["ip_address"].(string)
+				var fixedIP appliances.CreateOptsFixedIP
+				fixedIP.IPAddress = ipAddress
+				resultFixedIPs := []appliances.CreateOptsFixedIP{}
+				resultFixedIPs = append(resultFixedIPs, fixedIP)
+
+				interfaceEach.FixedIPs = &resultFixedIPs
+			}
+		}
+
+		if _, ok := d.GetOk(noFixedIPsKey); ok {
+			resultFixedIPs := []appliances.CreateOptsFixedIP{}
+			interfaceEach.FixedIPs = &resultFixedIPs
+		}
+
+		interfaceOrNil := &interfaceEach
+		if !isInterfaceCreated {
+			interfaceOrNil = nil
+		} else {
+			isInterfacesCreated = true
+		}
+		switch slotNumber {
+		case 1:
+			interfaces.Interface1 = interfaceOrNil
+			break
+		case 2:
+			interfaces.Interface2 = interfaceOrNil
+			break
+		case 3:
+			interfaces.Interface3 = interfaceOrNil
+			break
+		case 4:
+			interfaces.Interface4 = interfaceOrNil
+			break
+		case 5:
+			interfaces.Interface5 = interfaceOrNil
+			break
+		case 6:
+			interfaces.Interface6 = interfaceOrNil
+			break
+		case 7:
+			interfaces.Interface7 = interfaceOrNil
+			break
+		case 8:
+			interfaces.Interface8 = interfaceOrNil
+			break
 		}
 	}
-
-	var resultFixedIPs [1]appliances.CreateOptsFixedIP
-	var fixedIP appliances.CreateOptsFixedIP
-
-	for index, rawFip := range rawFips {
-		if index == 0 {
-			fip := rawFip.(map[string]interface{})
-
-			ipAddress := fip["ip_address"].(string)
-			fixedIP.IPAddress = ipAddress
-			resultFixedIPs[0] = fixedIP
-
-			interface1.FixedIPs = resultFixedIPs
-		}
+	if !isInterfacesCreated {
+		return nil
 	}
-
-	interfaces.Interface1 = interface1
-
-	return interfaces
+	return &interfaces
 }
 
 func getInterfaceBySlotNumber(vna *appliances.Appliance, slotNumber int) appliances.InterfaceInResponse {
