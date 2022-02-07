@@ -79,24 +79,31 @@ type CreateOptsInterface struct {
 	Description string               `json:"description,omitempty"`
 	NetworkID   string               `json:"network_id" required:"true"`
 	Tags        map[string]string    `json:"tags,omitempty"`
-	FixedIPs    [1]CreateOptsFixedIP `json:"fixed_ips" required:"true"`
+	FixedIPs    *[]CreateOptsFixedIP `json:"fixed_ips,omitempty"`
 }
 
 // CreateOptsInterfaces represents 1st interface in virtual network appliance creation.
 type CreateOptsInterfaces struct {
-	Interface1 CreateOptsInterface `json:"interface_1" required:"true"`
+	Interface1 *CreateOptsInterface `json:"interface_1,omitempty"`
+	Interface2 *CreateOptsInterface `json:"interface_2,omitempty"`
+	Interface3 *CreateOptsInterface `json:"interface_3,omitempty"`
+	Interface4 *CreateOptsInterface `json:"interface_4,omitempty"`
+	Interface5 *CreateOptsInterface `json:"interface_5,omitempty"`
+	Interface6 *CreateOptsInterface `json:"interface_6,omitempty"`
+	Interface7 *CreateOptsInterface `json:"interface_7,omitempty"`
+	Interface8 *CreateOptsInterface `json:"interface_8,omitempty"`
 }
 
 // CreateOpts represents options used to create a virtual network appliance.
 type CreateOpts struct {
-	Name                          string               `json:"name,omitempty"`
-	Description                   string               `json:"description,omitempty"`
-	DefaultGateway                string               `json:"default_gateway,omitempty"`
-	AvailabilityZone              string               `json:"availability_zone,omitempty"`
-	VirtualNetworkAppliancePlanID string               `json:"virtual_network_appliance_plan_id" required:"true"`
-	TenantID                      string               `json:"tenant_id,omitempty"`
-	Tags                          map[string]string    `json:"tags,omitempty"`
-	Interfaces                    CreateOptsInterfaces `json:"interfaces" required:"true"`
+	Name                          string                `json:"name,omitempty"`
+	Description                   string                `json:"description,omitempty"`
+	DefaultGateway                string                `json:"default_gateway,omitempty"`
+	AvailabilityZone              string                `json:"availability_zone,omitempty"`
+	VirtualNetworkAppliancePlanID string                `json:"virtual_network_appliance_plan_id" required:"true"`
+	TenantID                      string                `json:"tenant_id,omitempty"`
+	Tags                          map[string]string     `json:"tags,omitempty"`
+	Interfaces                    *CreateOptsInterfaces `json:"interfaces,omitempty"`
 }
 
 // ToApplianceCreateMap builds a request body from CreateOpts.
