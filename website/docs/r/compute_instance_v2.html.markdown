@@ -241,3 +241,24 @@ The following attributes are exported:
 * `access_ip_v4` - The first detected Fixed IPv4 address.
 * `all_metadata` - Contains all instance metadata, even metadata not set
     by Terraform.
+
+## Import
+
+Compute instances can be imported using the `id`, e.g.
+
+```
+$ terraform import ecl_compute_instance_v2.instance_1 f42dbc37-4642-4628-8b47-50bf95d8fdd5
+```
+
+Following arguments are not supported, empty characters or default values are output.
+
+* region
+* user_data
+* stop_before_destroy
+* network
+  - port
+* block_device
+  - source_type
+  - destination_type
+  - boot_index
+  - delete_on_termination

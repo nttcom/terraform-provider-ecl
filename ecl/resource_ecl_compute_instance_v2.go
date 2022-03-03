@@ -18,9 +18,11 @@ import (
 	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/bootfromvolume"
 	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/keypairs"
 	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/startstop"
+	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/volumeattach"
 	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/flavors"
 	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/images"
 	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/servers"
+	"github.com/nttcom/eclcloud/v2/ecl/computevolume/v2/volumes"
 )
 
 func resourceComputeInstanceV2() *schema.Resource {
@@ -29,6 +31,9 @@ func resourceComputeInstanceV2() *schema.Resource {
 		Read:   resourceComputeInstanceV2Read,
 		Update: resourceComputeInstanceV2Update,
 		Delete: resourceComputeInstanceV2Delete,
+		Importer: &schema.ResourceImporter{
+			State: resourceComputeInstanceV2Import,
+		},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(30 * time.Minute),
@@ -679,6 +684,63 @@ func resourceComputeInstanceV2Delete(d *schema.ResourceData, meta interface{}) e
 	return nil
 }
 
+func resourceComputeInstanceV2Import(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	err := resourceComputeInstanceV2Read(d, meta)
+	if err != nil {
+		return nil, fmt.Errorf("Error reading ECL compute client: %s", err)
+	}
+
+	config := meta.(*Config)
+	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	if err != nil {
+		return nil, fmt.Errorf("Error creating ECL compute client: %s", err)
+	}
+
+	server, err := servers.Get(computeClient, d.Id()).Extract()
+	if err != nil {
+		return nil, CheckDeleted(d, err, "server")
+	}
+
+	log.Printf("[DEBUG] Retrieved Server %s: %+v", d.Id(), server)
+
+	if server.KeyName != "" {
+		d.Set("key_pair", server.KeyName)
+	}
+
+	allPages, err := volumeattach.List(computeClient, d.Id()).AllPages()
+	if err != nil {
+		return nil, CheckDeleted(d, err, "volumeAttachments")
+	}
+
+	allAttachments, err := volumeattach.ExtractVolumeAttachments(allPages)
+	if err != nil {
+		return nil, err
+	}
+
+	computeVolumeClient, err := config.computeVolumeV2Client(GetRegion(d, config))
+	if err != nil {
+		return nil, fmt.Errorf("Error creating ECL compute volume client: %s", err)
+	}
+
+	devices := make([]map[string]interface{}, len(allAttachments))
+	if len(allAttachments) > 0 {
+		for i, att := range allAttachments {
+			v, err := volumes.Get(computeVolumeClient, att.VolumeID).Extract()
+			if err != nil {
+				return nil, CheckDeleted(d, err, "volume")
+			}
+			devices[i] = make(map[string]interface{})
+			devices[i]["uuid"] = att.VolumeID
+			devices[i]["volume_size"] = v.Size
+		}
+	}
+	if len(devices) > 0 {
+		d.Set("block_device", devices)
+	}
+
+	return []*schema.ResourceData{d}, nil
+}
+
 // ServerV2StateRefreshFunc returns a resource.StateRefreshFunc that is used to watch
 // an Enterprise Cloud instance.
 func ServerV2StateRefreshFunc(client *eclcloud.ServiceClient, instanceID string) resource.StateRefreshFunc {
@@ -791,7 +853,10 @@ func setImageInformation(computeClient *eclcloud.ServiceClient, server *servers.
 		}
 	}
 
-	imageID := server.Image["id"].(string)
+	imageID := ""
+	if server.Image != nil {
+		imageID = server.Image["id"].(string)
+	}
 	if imageID != "" {
 		d.Set("image_id", imageID)
 		if image, err := images.Get(computeClient, imageID).Extract(); err != nil {
