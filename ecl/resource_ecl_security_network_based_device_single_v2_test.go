@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -201,7 +202,7 @@ func testAccCheckSecurityV2NetworkBasedDeviceSingleExists(n string, sd *security
 			return fmt.Errorf("Error creating ECL security client: %s", err)
 		}
 
-		found, err := getSingleDeviceByHostName(client, "UTM", rs.Primary.ID)
+		found, err := getSingleDeviceByHostName(client, "UTM", rs.Primary.ID, os.Getenv("OS_TENANT_ID"))
 		if err != nil {
 			return err
 		}
@@ -228,7 +229,7 @@ func testAccCheckSecurityV2NetworkBasedDeviceSingleDestroy(s *terraform.State) e
 			continue
 		}
 
-		_, err := getSingleDeviceByHostName(client, "UTM", rs.Primary.ID)
+		_, err := getSingleDeviceByHostName(client, "UTM", rs.Primary.ID, os.Getenv("OS_TENANT_ID"))
 
 		if err == nil {
 			return fmt.Errorf("Security single device still exists")

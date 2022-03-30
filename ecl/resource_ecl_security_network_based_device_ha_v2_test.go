@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -264,7 +265,7 @@ func testAccCheckSecurityV2NetworkBasedDeviceHAExists(n string, hd1, hd2 *securi
 		id1 := ids[0]
 		id2 := ids[1]
 
-		found1, err := getHADeviceByHostName(client, id1)
+		found1, err := getHADeviceByHostName(client, id1, os.Getenv("OS_TENANT_ID"))
 		if err != nil {
 			return err
 		}
@@ -274,7 +275,7 @@ func testAccCheckSecurityV2NetworkBasedDeviceHAExists(n string, hd1, hd2 *securi
 		}
 		*hd1 = found1
 
-		found2, err := getHADeviceByHostName(client, id2)
+		found2, err := getHADeviceByHostName(client, id2, os.Getenv("OS_TENANT_ID"))
 		if err != nil {
 			return err
 		}
@@ -303,12 +304,12 @@ func testAccCheckSecurityV2NetworkBasedDeviceHADestroy(s *terraform.State) error
 		id1 := ids[0]
 		id2 := ids[1]
 
-		_, err := getHADeviceByHostName(client, id1)
+		_, err := getHADeviceByHostName(client, id1, os.Getenv("OS_TENANT_ID"))
 		if err == nil {
 			return fmt.Errorf("Security single device-1 still exists")
 		}
 
-		_, err = getHADeviceByHostName(client, id2)
+		_, err = getHADeviceByHostName(client, id2, os.Getenv("OS_TENANT_ID"))
 		if err == nil {
 			return fmt.Errorf("Security single device-2 still exists")
 		}

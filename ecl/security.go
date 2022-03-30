@@ -3,7 +3,6 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -193,10 +192,10 @@ func singleWAFSchema() map[string]*schema.Schema {
 	}
 }
 
-func getUUIDFromServerHostName(client *eclcloud.ServiceClient, hostName string) (string, error) {
+func getUUIDFromServerHostName(client *eclcloud.ServiceClient, hostName string, tenantID string) (string, error) {
 
 	listOpts := devices.ListOpts{
-		TenantID:  os.Getenv("OS_TENANT_ID"),
+		TenantID:  tenantID,
 		UserToken: client.TokenID,
 	}
 
@@ -261,12 +260,12 @@ func gtHostForSingleDeviceDeleteAsOpts(d *schema.ResourceData) [1]security.GtHos
 	return result
 }
 
-func getSingleDeviceByHostName(client *eclcloud.ServiceClient, deviceType, hostName string) (security.SingleDevice, error) {
+func getSingleDeviceByHostName(client *eclcloud.ServiceClient, deviceType, hostName string, tenantID string) (security.SingleDevice, error) {
 	log.Printf("[DEBUG] Start getting %s by HostName %s ...", deviceType, hostName)
 	var sd = security.SingleDevice{}
 
 	listOpts := security.ListOpts{
-		TenantID: os.Getenv("OS_TENANT_ID"),
+		TenantID: tenantID,
 		Locale:   "en",
 	}
 
