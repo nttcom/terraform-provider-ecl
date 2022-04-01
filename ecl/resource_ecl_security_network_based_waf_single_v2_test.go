@@ -2,7 +2,6 @@ package ecl
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -142,7 +141,7 @@ func testAccCheckSecurityV2NetworkBasedWAFSingleExists(n string, sd *security.Si
 			return fmt.Errorf("Error creating ECL security client: %s", err)
 		}
 
-		found, err := getSingleDeviceByHostName(client, "WAF", rs.Primary.ID, os.Getenv("OS_TENANT_ID"))
+		found, err := getSingleDeviceByHostName(client, "WAF", rs.Primary.ID, OS_TENANT_ID)
 		if err != nil {
 			return err
 		}
@@ -169,7 +168,7 @@ func testAccCheckSecurityV2NetworkBasedWAFSingleDestroy(s *terraform.State) erro
 			continue
 		}
 
-		_, err := getSingleDeviceByHostName(client, "WAF", rs.Primary.ID, os.Getenv("OS_TENANT_ID"))
+		_, err := getSingleDeviceByHostName(client, "WAF", rs.Primary.ID, OS_TENANT_ID)
 
 		if err == nil {
 			return fmt.Errorf("Security single WAF still exists")
