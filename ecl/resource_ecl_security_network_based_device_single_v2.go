@@ -135,9 +135,12 @@ func resourceSecurityNetworkBasedDeviceSingleV2Read(d *schema.ResourceData, meta
 	}
 
 	tenantID := d.Get("tenant_id").(string)
+	if tenantID == "" {
+		tenantID = config.TenantID
+	}
 
 	deviceType := getTypeOfSingleDevice(d)
-	device, err := getSingleDeviceByHostName(client, deviceType, d.Id())
+	device, err := getSingleDeviceByHostName(client, deviceType, d.Id(), tenantID)
 	if err != nil {
 		return err
 	}
@@ -163,7 +166,7 @@ func resourceSecurityNetworkBasedDeviceSingleV2Read(d *schema.ResourceData, meta
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}
 
-	hostUUID, err := getUUIDFromServerHostName(pClient, d.Id())
+	hostUUID, err := getUUIDFromServerHostName(pClient, d.Id(), tenantID)
 	if err != nil {
 		return fmt.Errorf("Unable to get host UUID: %s", err)
 	}

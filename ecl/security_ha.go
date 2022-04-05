@@ -3,7 +3,6 @@ package ecl
 import (
 	"fmt"
 	"log"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -331,12 +330,12 @@ func gtHostForHADeviceCreateAsOpts(d *schema.ResourceData) [2]security.GtHostInC
 	return result
 }
 
-func getHADeviceByHostName(client *eclcloud.ServiceClient, hostName string) (security.HADevice, error) {
+func getHADeviceByHostName(client *eclcloud.ServiceClient, hostName string, tenantID string) (security.HADevice, error) {
 	log.Printf("[DEBUG] Start getting HA Device by HostName %s ...", hostName)
 	var hd = security.HADevice{}
 
 	listOpts := security.ListOpts{
-		TenantID: os.Getenv("OS_TENANT_ID"),
+		TenantID: tenantID,
 		Locale:   "en",
 	}
 

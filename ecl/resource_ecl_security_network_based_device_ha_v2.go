@@ -134,6 +134,9 @@ func resourceSecurityNetworkBasedDeviceHAV2Read(d *schema.ResourceData, meta int
 	}
 
 	tenantID := d.Get("tenant_id").(string)
+	if tenantID == "" {
+		tenantID = config.TenantID
+	}
 
 	log.Printf("[DEBUG] Setting Basic information into state.")
 
@@ -143,12 +146,12 @@ func resourceSecurityNetworkBasedDeviceHAV2Read(d *schema.ResourceData, meta int
 	id1 := idArr[0]
 	id2 := idArr[1]
 
-	device1, err := getHADeviceByHostName(client, id1)
+	device1, err := getHADeviceByHostName(client, id1, tenantID)
 	if err != nil {
 		return err
 	}
 
-	device2, err := getHADeviceByHostName(client, id2)
+	device2, err := getHADeviceByHostName(client, id2, tenantID)
 	if err != nil {
 		return err
 	}
@@ -198,12 +201,12 @@ func resourceSecurityNetworkBasedDeviceHAV2Read(d *schema.ResourceData, meta int
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}
 
-	hostUUID1, err := getUUIDFromServerHostName(pClient, id1)
+	hostUUID1, err := getUUIDFromServerHostName(pClient, id1, tenantID)
 	if err != nil {
 		return fmt.Errorf("Unable to get host UUID of %s: %s", id1, err)
 	}
 
-	hostUUID2, err := getUUIDFromServerHostName(pClient, id2)
+	hostUUID2, err := getUUIDFromServerHostName(pClient, id2, tenantID)
 	if err != nil {
 		return fmt.Errorf("Unable to get host UUID of %s: %s", id2, err)
 	}
