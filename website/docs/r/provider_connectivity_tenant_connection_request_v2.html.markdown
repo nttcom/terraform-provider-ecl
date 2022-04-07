@@ -14,13 +14,13 @@ Manages a Provider Connectivity v2 Tenant Connection Request resource within Ent
 
 ```hcl
 resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
-    tenant_id_other = "7e91b19b9baa423793ee74a8e1ff2be1"
-    network_id = "77cfc6b0-d032-4e5a-b6fb-4cce2537f4d1"
-    name = "test_name1"
-    description = "test_desc1"
-    tags = {
-    	"test_tags1" = "test1"
-    }
+  tenant_id_other = "7e91b19b9baa423793ee74a8e1ff2be1"
+  network_id      = "77cfc6b0-d032-4e5a-b6fb-4cce2537f4d1"
+  name            = "test_name1"
+  description     = "test_desc1"
+  tags = {
+    "test_tags1" = "test1"
+  }
 }
 ```
 

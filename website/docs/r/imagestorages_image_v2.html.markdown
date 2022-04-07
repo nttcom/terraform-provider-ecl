@@ -16,10 +16,10 @@ Manages a V2 image resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_imagestorages_image_v2" "image_1" {
-    name  = "Temp_Terraform_AccTest"
-    local_file_path = "/tmp/tempfile.img"
-    container_format = "bare"
-    disk_format = "qcow2"
+  name             = "Temp_Terraform_AccTest"
+  local_file_path  = "/tmp/tempfile.img"
+  container_format = "bare"
+  disk_format      = "qcow2"
 }
 ```
 

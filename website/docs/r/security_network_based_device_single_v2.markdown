@@ -17,11 +17,11 @@ Manages a V2 Network Based Device(Single) resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_security_network_based_device_single_v2" "device_1" {
-	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
-	locale = "ja"
-	operating_mode = "FW"
-	license_kind = "02"
-	az_group = "zone1-groupb"
+  tenant_id      = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
+  locale         = "ja"
+  operating_mode = "FW"
+  license_kind   = "02"
+  az_group       = "zone1-groupb"
 }
 ```
 
@@ -33,11 +33,11 @@ resource "ecl_security_network_based_device_single_v2" "device_1" {
 
 ```hcl
 resource "ecl_security_network_based_device_single_v2" "device_1" {
-	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
-	locale = "en"
-	operating_mode = "UTM"
-	license_kind = "08"
-	az_group = "zone1-groupb"
+  tenant_id      = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
+  locale         = "en"
+  operating_mode = "UTM"
+  license_kind   = "08"
+  az_group       = "zone1-groupb"
 }
 ```
 
@@ -49,20 +49,20 @@ Note: You can use port from 4 to 7 on this device.
 
 ```hcl
 resource "ecl_security_network_based_device_single_v2" "device_1" {
-	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
-	locale = "ja"
-	operating_mode = "FW"
-	license_kind = "02"
-	az_group = "zone1-groupb"
+  tenant_id      = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
+  locale         = "ja"
+  operating_mode = "FW"
+  license_kind   = "02"
+  az_group       = "zone1-groupb"
 
   port {
-    enable = "true"
-    ip_address = "192.168.1.50"
+    enable            = "true"
+    ip_address        = "192.168.1.50"
     ip_address_prefix = 24
-    network_id = "a29348a4-2887-41c2-ae1e-46ddffd3f500"
-    subnet_id = "0739738b-8afe-4414-a328-4afaf14156d0"
-    mtu = "1500"
-    comment = "port 0 comment"
+    network_id        = "a29348a4-2887-41c2-ae1e-46ddffd3f500"
+    subnet_id         = "0739738b-8afe-4414-a328-4afaf14156d0"
+    mtu               = "1500"
+    comment           = "port 0 comment"
   }
 
   port {
@@ -72,15 +72,15 @@ resource "ecl_security_network_based_device_single_v2" "device_1" {
   port {
     enable = "false"
   }
-  
+
   port {
-    enable = "true"
-    ip_address = "192.168.2.50"
+    enable            = "true"
+    ip_address        = "192.168.2.50"
     ip_address_prefix = 24
-    network_id = "a29348a4-2887-41c2-ae1e-46ddffd3f501"
-    subnet_id = "0739738b-8afe-4414-a328-4afaf14156d1"
-    mtu = "1500"
-    comment = "port 3 comment"
+    network_id        = "a29348a4-2887-41c2-ae1e-46ddffd3f501"
+    subnet_id         = "0739738b-8afe-4414-a328-4afaf14156d1"
+    mtu               = "1500"
+    comment           = "port 3 comment"
   }
 
   port {
@@ -101,11 +101,11 @@ resource "ecl_security_network_based_device_single_v2" "device_1" {
 
 ```hcl
 resource "ecl_security_network_based_device_single_v2" "device_1" {
-	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
-	locale = "ja"
-	operating_mode = "FW"
-	license_kind = "02"
-	az_group = "zone1-groupb"
+  tenant_id      = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
+  locale         = "ja"
+  operating_mode = "FW"
+  license_kind   = "02"
+  az_group       = "zone1-groupb"
 
   port {
     enable = "false"
@@ -118,7 +118,7 @@ resource "ecl_security_network_based_device_single_v2" "device_1" {
   port {
     enable = "false"
   }
-  
+
   port {
     enable = "false"
   }

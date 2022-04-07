@@ -14,7 +14,7 @@ Manages a rca v1 user resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_rca_user_v1" "user_1" {
-    password = "dummy_passw@rd"
+  password = "dummy_passw@rd"
 }
 ```
 

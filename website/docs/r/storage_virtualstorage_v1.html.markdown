@@ -16,21 +16,19 @@ Manages a V1 virtual storage resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_storage_virtualstorage_v1" "virtualstorage_1" {
-  name = "virtualstorage_1"
-  description = "new virtual storage"
+  name           = "virtualstorage_1"
+  description    = "new virtual storage"
   volume_type_id = "314ae838-9d9a-4a99-aa2b-ec31c762bd20"
-  network_id = "8fff25a1-5cd8-410c-8c12-13d78e870637"
-  subnet_id = "7126a4f5-d205-419e-a15d-a4d5757e8624"
+  network_id     = "8fff25a1-5cd8-410c-8c12-13d78e870637"
+  subnet_id      = "7126a4f5-d205-419e-a15d-a4d5757e8624"
   ip_addr_pool = {
-    start = "192.168.1.10",
-    end = "192.168.1.20"
+    start = "192.168.1.10"
+    end   = "192.168.1.20"
   }
-  host_routes = [
-    {
-      destination = "1.1.1.0/24"
-      nexthop = "192.168.1.1"
-    }
-  ]
+  host_routes {
+    destination = "1.1.1.0/24"
+    nexthop     = "192.168.1.1"
+  }
 }
 ```
 

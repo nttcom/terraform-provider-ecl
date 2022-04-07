@@ -14,101 +14,101 @@ Manages a baremetal v2 Server resource within Enterprise Cloud.
 
 ```hcl
 data "ecl_imagestorages_image_v2" "centos" {
-    name = "CentOS-7.3-1611_64_baremetal-server_01"
+  name = "CentOS-7.3-1611_64_baremetal-server_01"
 }
 
 data "ecl_baremetal_flavor_v2" "gp2" {
-    name = "General Purpose 2 v1"
+  name = "General Purpose 2 v1"
 }
 
 data "ecl_baremetal_availability_zone_v2" "groupa" {
-    zone_name = "groupa"
+  zone_name = "groupa"
 }
 
 resource "ecl_network_network_v2" "network_1" {
-    name = "baremetal_network"
-    plane = "data"
+  name  = "baremetal_network"
+  plane = "data"
 }
 
 resource "ecl_network_subnet_v2" "subnet_1" {
-    name = "baremetal_subnet"
-    network_id = "${ecl_network_network_v2.network_1.id}"
-    cidr = "192.168.1.0/24"
-    gateway_ip = "192.168.1.1"
-    allocation_pools {
-        start = "192.168.1.100"
-        end = "192.168.1.200"
-    }
+  name       = "baremetal_subnet"
+  network_id = ecl_network_network_v2.network_1.id
+  cidr       = "192.168.1.0/24"
+  gateway_ip = "192.168.1.1"
+  allocation_pools {
+    start = "192.168.1.100"
+    end   = "192.168.1.200"
+  }
 }
 
 resource "ecl_baremetal_keypair_v2" "keypair_1" {
-    name = "keypair1"
+  name = "keypair1"
 }
 
 resource "ecl_baremetal_server_v2" "server_1" {
-    depends_on = [
-        "ecl_network_subnet_v2.subnet_1",
-        "ecl_baremetal_keypair_v2.keypair_1"
-    ]
+  depends_on = [
+    ecl_network_subnet_v2.subnet_1,
+    ecl_baremetal_keypair_v2.keypair_1
+  ]
 
-    name = "server1"
-    image_id = "${data.ecl_imagestorages_image_v2.centos.id}"
-    flavor_id = "${data.ecl_baremetal_flavor_v2.gp2.id}"
-    user_data = "user_data"
-    availability_zone = "${data.ecl_baremetal_availability_zone_v2.groupa.zone_name}"
-    key_pair = "${ecl_baremetal_keypair_v2.keypair_1.name}"
-    admin_pass = "password"
-    metadata = {
-        k1 = "v1"
-        k2 = "v2"
+  name              = "server1"
+  image_id          = data.ecl_imagestorages_image_v2.centos.id
+  flavor_id         = data.ecl_baremetal_flavor_v2.gp2.id
+  user_data         = "user_data"
+  availability_zone = data.ecl_baremetal_availability_zone_v2.groupa.zone_name
+  key_pair          = ecl_baremetal_keypair_v2.keypair_1.name
+  admin_pass        = "password"
+  metadata = {
+    k1 = "v1"
+    k2 = "v2"
+  }
+  networks {
+    uuid     = ecl_network_network_v2.network_1.id
+    fixed_ip = "192.168.1.10"
+    plane    = "data"
+  }
+  raid_arrays {
+    primary_storage = true
+    partitions {
+      lvm             = true
+      partition_label = "primary-part1"
     }
-    networks {
-        uuid = "${ecl_network_network_v2.network_1.id}"
-        fixed_ip = "192.168.1.10"
-        plane = "data"
+    partitions {
+      lvm             = false
+      size            = "100G"
+      partition_label = "var"
     }
-    raid_arrays {
-        primary_storage = true
-        partitions {
-            lvm = true
-            partition_label = "primary-part1"
-        }
-        partitions {
-            lvm = false
-            size = "100G"
-            partition_label = "var"
-        }
+  }
+  lvm_volume_groups {
+    vg_label                         = "VG_root"
+    physical_volume_partition_labels = ["primary-part1"]
+    logical_volumes {
+      lv_label = "LV_root"
+      size     = "300G"
     }
-    lvm_volume_groups {
-        vg_label = "VG_root"
-        physical_volume_partition_labels = ["primary-part1"]
-        logical_volumes {
-            lv_label = "LV_root"
-            size = "300G"
-        }
-        logical_volumes {
-            lv_label = "LV_swap"
-            size = "2G"
-        }
+    logical_volumes {
+      lv_label = "LV_swap"
+      size     = "2G"
     }
-    filesystems {
-        label = "LV_root"
-        mount_point =  "/"
-        fs_type = "xfs"
-    }
-    filesystems {
-        label = "var"
-        mount_point = "/var"
-        fs_type = "xfs"
-    }
-    filesystems {
-        label = "LV_swap"
-        fs_type = "swap"
-    }
-    personality {
-        path = "/home/big/banner.txt"
-        contents = "ZWNobyAiS3VtYSBQZXJzb25hbGl0eSIgPj4gL2hvbWUvYmlnL3BlcnNvbmFsaXR5"
-    }
+  }
+  filesystems {
+    label       = "LV_root"
+    mount_point = "/"
+    fs_type     = "xfs"
+  }
+  filesystems {
+    label       = "var"
+    mount_point = "/var"
+    fs_type     = "xfs"
+  }
+  filesystems {
+    label   = "LV_swap"
+    fs_type = "swap"
+  }
+  personality {
+    path     = "/home/big/banner.txt"
+    contents = "ZWNobyAiS3VtYSBQZXJzb25hbGl0eSIgPj4gL2hvbWUvYmlnL3BlcnNvbmFsaXR5"
+  }
 }
 ```
 

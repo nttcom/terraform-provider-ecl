@@ -16,9 +16,9 @@ Manages a V2 Instance resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-  flavor_id       = "1CPU-4GB"
+  name      = "instance_1"
+  image_id  = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+  flavor_id = "1CPU-4GB"
 
   network {
     uuid = "38d66f60-52be-4a5c-925f-8f1dde66d3a7"
@@ -30,8 +30,8 @@ resource "ecl_compute_instance_v2" "instance_1" {
 
 ```hcl
 resource "ecl_compute_instance_v2" "boot-from-volume" {
-  name            = "boot-from-volume"
-  flavor_id       = "1CPU-4GB"
+  name      = "boot-from-volume"
+  flavor_id = "1CPU-4GB"
 
   block_device {
     uuid                  = "ad091b52-742f-469e-8f3c-fd81cadf0743"
@@ -51,18 +51,18 @@ resource "ecl_compute_instance_v2" "boot-from-volume" {
 ### Boot From an Existing Volume
 
 ```hcl
-resource "ecl_compute_volume_v1" "volume_1" {
+resource "ecl_compute_volume_v2" "volume_1" {
   name     = "volume_1"
   size     = 15
   image_id = "<image-id>"
 }
 
 resource "ecl_compute_instance_v2" "boot-from-volume" {
-  name            = "volume_1"
-  flavor_id       = "1CPU-4GB"
+  name      = "volume_1"
+  flavor_id = "1CPU-4GB"
 
   block_device {
-    uuid                  = "${ecl_compute_volume_v1.volume_1.id}"
+    uuid                  = ecl_compute_volume_v2.volume_1.id
     source_type           = "volume"
     boot_index            = 0
     destination_type      = "volume"
@@ -79,9 +79,9 @@ resource "ecl_compute_instance_v2" "boot-from-volume" {
 
 ```hcl
 resource "ecl_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  image_id        = "<image-id>"
-  flavor_id       = "1CPU-4GB"
+  name      = "instance_1"
+  image_id  = "<image-id>"
+  flavor_id = "1CPU-4GB"
 
   block_device {
     uuid                  = "ad091b52-742f-469e-8f3c-fd81cadf0743"
@@ -106,9 +106,9 @@ resource "ecl_compute_instance_v2" "instance_1" {
 
 ```hcl
 resource "ecl_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-  flavor_id       = "1CPU-4GB"
+  name      = "instance_1"
+  image_id  = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+  flavor_id = "1CPU-4GB"
 
   network {
     uuid = "38d66f60-52be-4a5c-925f-8f1dde66d3a7"

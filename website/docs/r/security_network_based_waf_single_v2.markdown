@@ -17,10 +17,10 @@ Manages a V2 Network Based WAF(Single) resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_security_network_based_waf_single_v2" "waf_1" {
-	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
-	locale = "ja"
-	license_kind = "02"
-	az_group = "zone1-groupb"
+  tenant_id    = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
+  locale       = "ja"
+  license_kind = "02"
+  az_group     = "zone1-groupb"
 }
 ```
 
@@ -32,19 +32,19 @@ Note: WAF only has one port as port-2.
 
 ```hcl
 resource "ecl_security_network_based_waf_single_v2" "waf_1" {
-	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
-	locale = "ja"
-	license_kind = "02"
-	az_group = "zone1-groupb"
+  tenant_id    = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
+  locale       = "ja"
+  license_kind = "02"
+  az_group     = "zone1-groupb"
 
   port {
-    enable = "true"
-    ip_address = "192.168.1.50"
+    enable            = "true"
+    ip_address        = "192.168.1.50"
     ip_address_prefix = 24
-    network_id = "a29348a4-2887-41c2-ae1e-46ddffd3f500"
-    subnet_id = "0739738b-8afe-4414-a328-4afaf14156d0"
-    mtu = "1500"
-    comment = "port 0 comment"
+    network_id        = "a29348a4-2887-41c2-ae1e-46ddffd3f500"
+    subnet_id         = "0739738b-8afe-4414-a328-4afaf14156d0"
+    mtu               = "1500"
+    comment           = "port 0 comment"
   }
 }
 ```
@@ -53,10 +53,10 @@ resource "ecl_security_network_based_waf_single_v2" "waf_1" {
 
 ```hcl
 resource "ecl_security_network_based_waf_single_v2" "waf_1" {
-	tenant_id = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
-	locale = "ja"
-	license_kind = "02"
-	az_group = "zone1-groupb"
+  tenant_id    = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
+  locale       = "ja"
+  license_kind = "02"
+  az_group     = "zone1-groupb"
 
   port {
     enable = "false"

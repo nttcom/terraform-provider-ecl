@@ -16,8 +16,8 @@ Manages a V2 common_function_gateway resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_network_common_function_gateway_v2" "common_function_gateway_1" {
-  name       = "common_function_gateway_1"
-  description = "new common function gateway"
+  name                    = "common_function_gateway_1"
+  description             = "new common function gateway"
   common_function_pool_id = "6a972387-1fc6-4635-985d-0506a019a261"
 }
 ```

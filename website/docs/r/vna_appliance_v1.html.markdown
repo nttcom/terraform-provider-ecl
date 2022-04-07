@@ -19,20 +19,20 @@ Also you can specify fixed_ips in creation phase (`interface_1_fixed_ips`, ... `
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.10"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.10"
+  }
 }
 ```
 
@@ -45,24 +45,24 @@ You have another choices on how to specify fixed_ips:
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.10"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.10"
+  }
 
-	interface_2_info {
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd782"
-	}
+  interface_2_info {
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd782"
+  }
 }
 ```
 
@@ -70,28 +70,28 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.10"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.10"
+  }
 
-	interface_2_info {
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd782"
-	}
+  interface_2_info {
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd782"
+  }
 
-	interface_2_fixed_ips {
-		ip_address = "192.168.2.50"
-	}
+  interface_2_fixed_ips {
+    ip_address = "192.168.2.50"
+  }
 }
 ```
 
@@ -99,24 +99,24 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd781"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.10"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.10"
+  }
 
-	interface_2_info {
-		network_id = ""
-	}
+  interface_2_info {
+    network_id = ""
+  }
 }
 ```
 
@@ -124,42 +124,42 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.10"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.10"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.11"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.11"
+  }
 }
 ```
 ### Remove fixed ips from interface 1
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
+  }
 
-	interface_1_no_fixed_ips = "true" 
+  interface_1_no_fixed_ips = "true"
 }
 ```
 
@@ -169,27 +169,27 @@ you need to specify vrid as string(need to surround by "")
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.10"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.10"
+  }
 
-	interface_1_allowed_address_pairs {
-		ip_address = "192.168.1.11"
-		mac_address = ""
-		type = "vrrp"
-		vrid = "123"
-	}
+  interface_1_allowed_address_pairs {
+    ip_address  = "192.168.1.11"
+    mac_address = ""
+    type        = "vrrp"
+    vrid        = "123"
+  }
 }
 ```
 
@@ -199,27 +199,27 @@ you need to specify vrid as string(need to surround by "")
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.10"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.10"
+  }
 
-	interface_1_allowed_address_pairs {
-		ip_address = "192.168.1.11"
-		mac_address = ""
-		type = ""
-		vrid = "null"
-	}
+  interface_1_allowed_address_pairs {
+    ip_address  = "192.168.1.11"
+    mac_address = ""
+    type        = ""
+    vrid        = "null"
+  }
 }
 ```
 
@@ -229,22 +229,22 @@ you need to specify vrid as string(need to surround by "")
 
 ```hcl
 resource "ecl_vna_appliance_v1" "appliance_1" {
-	name = "appliance_1"
-	description = "appliance_1_description"
-	default_gateway = "192.168.1.1"
-	availability_zone = "zone1-groupb"
-	virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
+  name                              = "appliance_1"
+  description                       = "appliance_1_description"
+  default_gateway                   = "192.168.1.1"
+  availability_zone                 = "zone1-groupb"
+  virtual_network_appliance_plan_id = "6589b37a-cf82-4918-96fe-255683f78e76"
 
-	interface_1_info {
-		name = "interface_1"
-		network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
-	}
+  interface_1_info {
+    name       = "interface_1"
+    network_id = "30f50994-b860-41f1-ba5b-87d9da7fd78a"
+  }
 
-	interface_1_fixed_ips {
-		ip_address = "192.168.1.10"
-	}
+  interface_1_fixed_ips {
+    ip_address = "192.168.1.10"
+  }
 
-	interface_1_no_allowed_address_pairs = "true"
+  interface_1_no_allowed_address_pairs = "true"
 }
 ```
 

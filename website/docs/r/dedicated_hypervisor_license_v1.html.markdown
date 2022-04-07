@@ -14,7 +14,7 @@ Manages a dedicated hypervisor v1 License resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_dedicated_hypervisor_license_v1" "license_1" {
-    license_type = "vCenter Server 6.x Standard"
+  license_type = "vCenter Server 6.x Standard"
 }
 ```
 

@@ -16,10 +16,10 @@ Manages a V2 internet gateway resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_network_internet_gateway_v2" "internet_gateway_1" {
-    description = "test_internet_gateway"
-    internet_service_id = "ed9af0c6-477e-4d39-9603-e30de8849328"
-    name = "Terraform_Test_Internet_Gateway_01"
-    qos_option_id = "34208320-6572-4578-906d-39185325edb7"
+  description         = "test_internet_gateway"
+  internet_service_id = "ed9af0c6-477e-4d39-9603-e30de8849328"
+  name                = "Terraform_Test_Internet_Gateway_01"
+  qos_option_id       = "34208320-6572-4578-906d-39185325edb7"
 }
 ```
 

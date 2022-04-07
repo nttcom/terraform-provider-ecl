@@ -18,8 +18,8 @@ Compute (Nova) v2 API.
 ```hcl
 resource "ecl_compute_volume_attach_v2" "volume_attach_1" {
   server_id = "266c074d-a699-4438-99da-71e8f8cdf789"
-  volume_id   = "5bf42655-dd01-4206-8549-5ea41c13d535"
-  device   = "/dev/vdb"
+  volume_id = "5bf42655-dd01-4206-8549-5ea41c13d535"
+  device    = "/dev/vdb"
 }
 ```
 

@@ -16,34 +16,34 @@ Manages a Provider Connectivity v2 Tenant Connection resource within Enterprise 
 
 ```hcl
 resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
-	tenant_id_other = "7e91b19b9baa423793ee74a8e1ff2be1"
-	network_id = "77cfc6b0-d032-4e5a-b6fb-4cce2537f4d1"
-	name = "test_name1"
-	description = "test_desc1"
-	tags = {
-		"test_tags1" = "test1"
-	}
+  tenant_id_other = "7e91b19b9baa423793ee74a8e1ff2be1"
+  network_id      = "77cfc6b0-d032-4e5a-b6fb-4cce2537f4d1"
+  name            = "test_name1"
+  description     = "test_desc1"
+  tags = {
+    "test_tags1" = "test1"
+  }
 }
 
-resource "ecl_sss_approval_requests_v1" "approval_1" {
-	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
-	status = "approved"
+resource "ecl_sss_approval_request_v1" "approval_1" {
+  request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
+  status     = "approved"
 }
 
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
-	name = "test_name1"
-	description = "test_desc1"
-	tags = {
-		"test_tags1" = "test1"
-	}
-    tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
-    device_type = "ECL::Compute::Server"
-    device_id = "8c235a3b-8dee-41a1-b81a-64e06edc0986"
-    attachment_opts_compute {
-        fixed_ips {
-            ip_address = "192.168.1.1"
-        }
+  name        = "test_name1"
+  description = "test_desc1"
+  tags = {
+    "test_tags1" = "test1"
+  }
+  tenant_connection_request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
+  device_type                  = "ECL::Compute::Server"
+  device_id                    = "8c235a3b-8dee-41a1-b81a-64e06edc0986"
+  attachment_opts_compute {
+    fixed_ips {
+      ip_address = "192.168.1.1"
     }
+  }
 }
 ```
 
@@ -51,37 +51,37 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 
 ```hcl
 resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
-	tenant_id_other = "7e91b19b9baa423793ee74a8e1ff2be1"
-	network_id = "77cfc6b0-d032-4e5a-b6fb-4cce2537f4d1"
-	name = "test_name1"
-	description = "test_desc1"
-	tags = {
-		"test_tags1" = "test1"
-	}
+  tenant_id_other = "7e91b19b9baa423793ee74a8e1ff2be1"
+  network_id      = "77cfc6b0-d032-4e5a-b6fb-4cce2537f4d1"
+  name            = "test_name1"
+  description     = "test_desc1"
+  tags = {
+    "test_tags1" = "test1"
+  }
 }
 
-resource "ecl_sss_approval_requests_v1" "approval_1" {
-	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
-	status = "approved"
+resource "ecl_sss_approval_request_v1" "approval_1" {
+  request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
+  status     = "approved"
 }
 
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
-	name = "test_name1"
-	description = "test_desc1"
-	tags = {
-		"test_tags1" = "test1"
-	}
-    tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
-    device_type = "ECL::Baremetal::Server"
-    device_id = "6032fa92-0150-46f9-8c10-ef7180c88a32"
-    device_interface_id = "55ac2850-e280-47a3-a6b3-b9b3c0e8493e"
-    attachment_opts_baremetal {
-        segmentation_type = "flat"
-        segmentation_id = "10"
-        fixed_ips {
-            ip_address = "192.168.1.1"
-        }
+  name        = "test_name1"
+  description = "test_desc1"
+  tags = {
+    "test_tags1" = "test1"
+  }
+  tenant_connection_request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
+  device_type                  = "ECL::Baremetal::Server"
+  device_id                    = "6032fa92-0150-46f9-8c10-ef7180c88a32"
+  device_interface_id          = "55ac2850-e280-47a3-a6b3-b9b3c0e8493e"
+  attachment_opts_baremetal {
+    segmentation_type = "flat"
+    segmentation_id   = "10"
+    fixed_ips {
+      ip_address = "192.168.1.1"
     }
+  }
 }
 ```
 
@@ -89,35 +89,35 @@ resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 
 ```hcl
 resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
-	tenant_id_other = "7e91b19b9baa423793ee74a8e1ff2be1"
-	network_id = "77cfc6b0-d032-4e5a-b6fb-4cce2537f4d1"
-	name = "test_name1"
-	description = "test_desc1"
-	tags = {
-		"test_tags1" = "test1"
-	}
+  tenant_id_other = "7e91b19b9baa423793ee74a8e1ff2be1"
+  network_id      = "77cfc6b0-d032-4e5a-b6fb-4cce2537f4d1"
+  name            = "test_name1"
+  description     = "test_desc1"
+  tags = {
+    "test_tags1" = "test1"
+  }
 }
 
-resource "ecl_sss_approval_requests_v1" "approval_1" {
-	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
-	status = "approved"
+resource "ecl_sss_approval_request_v1" "approval_1" {
+  request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
+  status     = "approved"
 }
 
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
-	name = "test_name1"
-	description = "test_desc1"
-	tags = {
-		"test_tags1" = "test1"
-	}
-    tenant_connection_request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
-    device_type = "ECL::VirtualNetworkAppliance::VSRX"
-    device_id = "c291f4c4-a680-4db0-8b88-7e579f0aaa37"
-    device_interface_id = "interface_2"
-    attachment_opts_vna {
-        fixed_ips {
-            ip_address = "192.168.1.1"
-        }
+  name        = "test_name1"
+  description = "test_desc1"
+  tags = {
+    "test_tags1" = "test1"
+  }
+  tenant_connection_request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
+  device_type                  = "ECL::VirtualNetworkAppliance::VSRX"
+  device_id                    = "c291f4c4-a680-4db0-8b88-7e579f0aaa37"
+  device_interface_id          = "interface_2"
+  attachment_opts_vna {
+    fixed_ips {
+      ip_address = "192.168.1.1"
     }
+  }
 }
 ```
 

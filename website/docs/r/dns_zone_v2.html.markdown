@@ -16,7 +16,7 @@ Manages a V2 zone resource of Enterprise Cloud.
 
 ```hcl
 resource "ecl_dns_zone_v2" "zone_1" {
-  name       = "terraform-example.com."
+  name = "terraform-example.com."
 }
 ```
 

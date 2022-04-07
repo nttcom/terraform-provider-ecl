@@ -14,7 +14,7 @@ Use this data source to get the ID and Details of an Enterprise Cloud FIC Gatewa
 
 ```hcl
 data "ecl_network_fic_gateway_v2" "fic_gateway_1" {
-	name = "FIC-Gateway-01"
+  name = "FIC-Gateway-01"
 }
 ```
 
