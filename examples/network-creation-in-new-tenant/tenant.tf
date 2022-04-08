@@ -13,5 +13,5 @@ resource "ecl_sss_tenant_v1" "tenant_1" {
 
 module "network" {
   source    = "./modules/"
-  tenant_id = "${ecl_sss_tenant_v1.tenant_1.tenant_id}"
+  tenant_id = ecl_sss_tenant_v1.tenant_1.tenant_id
 }
