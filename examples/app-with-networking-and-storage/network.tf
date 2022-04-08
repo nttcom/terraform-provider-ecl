@@ -33,7 +33,7 @@ resource "ecl_network_port_v2" "port_1_1" {
   admin_state_up = "true"
   network_id     = ecl_network_network_v2.network_1.id
 
-  fixed_ip = {
+  fixed_ip {
     subnet_id  = "${ecl_network_subnet_v2.subnet_1_1.id}"
     ip_address = "192.168.1.50"
   }
@@ -44,7 +44,7 @@ resource "ecl_network_port_v2" "port_1_2" {
   admin_state_up = "true"
   network_id     = ecl_network_network_v2.network_1.id
 
-  fixed_ip = {
+  fixed_ip {
     subnet_id  = "${ecl_network_subnet_v2.subnet_1_2.id}"
     ip_address = "192.168.2.50"
   }

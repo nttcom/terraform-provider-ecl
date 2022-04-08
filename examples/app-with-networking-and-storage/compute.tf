@@ -19,7 +19,7 @@ resource "ecl_compute_instance_v2" "instance_1" {
   flavor_id = "1CPU-4GB"
   image_id  = var.centos_image_id
 
-  network = {
+  network {
     port = "${ecl_network_port_v2.port_1_1.id}"
   }
 }
@@ -29,7 +29,7 @@ resource "ecl_compute_instance_v2" "instance_2" {
   flavor_id = "1CPU-4GB"
   key_pair  = ecl_compute_keypair_v2.keypair_1.name
 
-  network = {
+  network {
     port = "${ecl_network_port_v2.port_1_2.id}"
   }
 
