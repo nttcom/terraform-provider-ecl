@@ -47,17 +47,17 @@ resource "ecl_compute_instance_v2" "instance_3" {
   flavor_id = "1CPU-4GB"
   image_id  = "${var.windows_image_id}"
 
-  network = {
+  network {
     uuid        = "${ecl_network_network_v2.network_1.id}"
     fixed_ip_v4 = "192.168.1.10"
   }
 
-  network = {
+  network {
     uuid        = "${ecl_network_network_v2.network_2.id}"
     fixed_ip_v4 = "192.168.3.10"
   }
 
-  network = {
+  network {
     uuid = "${ecl_network_common_function_gateway_v2.common_function_gateway_1.network_id}"
   }
 
@@ -72,17 +72,17 @@ resource "ecl_compute_instance_v2" "instance_4" {
   flavor_id = "1CPU-4GB"
   image_id  = "${var.windows_image_id}"
 
-  network = {
+  network {
     uuid        = "${ecl_network_network_v2.network_1.id}"
     fixed_ip_v4 = "192.168.2.10"
   }
 
-  network = {
+  network {
     uuid        = "${ecl_network_network_v2.network_2.id}"
     fixed_ip_v4 = "192.168.3.20"
   }
 
-  network = {
+  network {
     uuid = "${ecl_network_common_function_gateway_v2.common_function_gateway_1.network_id}"
   }
 
