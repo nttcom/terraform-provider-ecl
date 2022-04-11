@@ -161,7 +161,7 @@ You can use a production Enterprise Cloud which you have access to.
 
 ### Eclcloud
 
-This provider uses [Eclcloud](https://github.com/nttcom/eclcloud/v2)
+This provider uses [Eclcloud](https://github.com/nttcom/eclcloud/)
 as the Go Enterprise Cloud SDK.
 All API interaction between this provider and an Enterprise Cloud is
 done exclusively with Eclcloud.

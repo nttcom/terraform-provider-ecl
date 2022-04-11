@@ -1,6 +1,12 @@
 Terraform Enterprise Cloud Provider
 ===================================
 
+Documentation
+-------------
+Full, comprehensive documentation is available on the Terraform website:
+
+https://registry.terraform.io/providers/nttcom/ecl/latest/docs
+
 Requirements
 ------------
 
