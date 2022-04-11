@@ -15,7 +15,7 @@ Use this data source to get the ID and Details of an Enterprise Cloud Image.
 ```hcl
 data "ecl_imagestorages_image_v2" "image_1" {
   most_recent = true
-  name = "Temp_Terraform_AccTest"
+  name        = "Temp_Terraform_AccTest"
 }
 ```
 
