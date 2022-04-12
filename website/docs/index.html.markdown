@@ -22,7 +22,7 @@ terraform {
   required_providers {
     ecl = {
       source  = "nttcom/ecl"
-      version = "x.y.z"
+      version = "2.3.1"
     }
   }
 }
