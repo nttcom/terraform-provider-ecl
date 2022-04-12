@@ -14,7 +14,7 @@ Use this data source to get the ID and Details of an Enterprise Cloud Internet s
 
 ```hcl
 data "ecl_network_internet_service_v2" "internet_service_1" {
-	name = "Internet-Service-01"
+  name = "Internet-Service-01"
 }
 ```
 

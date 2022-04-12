@@ -21,7 +21,7 @@ resource "ecl_network_subnet_v2" "subnet_1_1" {
   name       = "subnet_1_1"
   cidr       = "192.168.151.0/24"
   gateway_ip = "192.168.151.1"
-  network_id = "${ecl_network_network_v2.network_1.id}"
+  network_id = ecl_network_network_v2.network_1.id
 
   allocation_pools {
     start = "192.168.151.100"
@@ -37,7 +37,7 @@ resource "ecl_network_subnet_v2" "subnet_2_1" {
   name       = "subnet_2_1"
   cidr       = "192.168.152.0/24"
   gateway_ip = "192.168.152.1"
-  network_id = "${ecl_network_network_v2.network_2.id}"
+  network_id = ecl_network_network_v2.network_2.id
 
   allocation_pools {
     start = "192.168.152.100"
@@ -53,61 +53,61 @@ data "ecl_network_load_balancer_plan_v2" "load_balancer_plan_1" {
 }
 
 resource "ecl_network_load_balancer_v2" "load_balancer_1" {
-  name = "lb_test1"
-  availability_zone = "zone1_groupa"
-  description = "load_balancer_test1_description"
+  name                  = "lb_test1"
+  availability_zone     = "zone1_groupa"
+  description           = "load_balancer_test1_description"
   load_balancer_plan_id = data.ecl_network_load_balancer_plan_v2.lb_plan1.id
-  default_gateway = "192.168.151.1"
+  default_gateway       = "192.168.151.1"
   interfaces {
-      description = "lb_test1_interface1_description"
-      ip_address = "192.168.151.11"
-      name = "lb_test1_interface1"
-      network_id = "${ecl_network_network_v2.network_1.id}"
-      virtual_ip_address = "192.168.151.31"
-      slot_number = 1
-      virtual_ip_properties {
-          protocol = "vrrp"
-          vrid = 20
-      }
+    description        = "lb_test1_interface1_description"
+    ip_address         = "192.168.151.11"
+    name               = "lb_test1_interface1"
+    network_id         = ecl_network_network_v2.network_1.id
+    virtual_ip_address = "192.168.151.31"
+    slot_number        = 1
+    virtual_ip_properties {
+      protocol = "vrrp"
+      vrid     = 20
+    }
   }
   interfaces {
-      description = "lb_test1_interface2_description"
-      ip_address = "192.168.152.11"
-      name = "lb_test1_interface2"
-      network_id = "${ecl_network_network_v2.network_2.id}"
-      slot_number = 2
+    description = "lb_test1_interface2_description"
+    ip_address  = "192.168.152.11"
+    name        = "lb_test1_interface2"
+    network_id  = ecl_network_network_v2.network_2.id
+    slot_number = 2
   }
   syslog_servers {
-      acl_logging = "ENABLED"
-      appflow_logging = "ENABLED"
-      date_format = "MMDDYYYY"
-      description = "lb_test1_syslog1_description"
-      ip_address = "192.168.151.21"
-      log_facility = "LOCAL0"
-      log_level = "ALERT|CRITICAL|EMERGENCY"
-      name = "lb_test1_syslog1"
-      port_number = "514"
-      priority = "20"
-      tcp_logging = "ALL"
-      time_zone = "LOCAL_TIME"
-      transport_type = "UDP"
-      user_configurable_log_messages = "NO"
+    acl_logging                    = "ENABLED"
+    appflow_logging                = "ENABLED"
+    date_format                    = "MMDDYYYY"
+    description                    = "lb_test1_syslog1_description"
+    ip_address                     = "192.168.151.21"
+    log_facility                   = "LOCAL0"
+    log_level                      = "ALERT|CRITICAL|EMERGENCY"
+    name                           = "lb_test1_syslog1"
+    port_number                    = "514"
+    priority                       = "20"
+    tcp_logging                    = "ALL"
+    time_zone                      = "LOCAL_TIME"
+    transport_type                 = "UDP"
+    user_configurable_log_messages = "NO"
   }
   syslog_servers {
-      acl_logging = "DISABLED"
-      appflow_logging = "DISABLED"
-      date_format = "YYYYMMDD"
-      description = "lb_test1_syslog2_description"
-      ip_address = "192.168.151.22"
-      log_facility = "LOCAL1"
-      log_level = "DEBUG"
-      name = "lb_test1_syslog2"
-      port_number = "514"
-      priority = "0"
-      tcp_logging = "NONE"
-      time_zone = "GMT_TIME"
-      transport_type = "UDP"
-      user_configurable_log_messages = "YES"
+    acl_logging                    = "DISABLED"
+    appflow_logging                = "DISABLED"
+    date_format                    = "YYYYMMDD"
+    description                    = "lb_test1_syslog2_description"
+    ip_address                     = "192.168.151.22"
+    log_facility                   = "LOCAL1"
+    log_level                      = "DEBUG"
+    name                           = "lb_test1_syslog2"
+    port_number                    = "514"
+    priority                       = "0"
+    tcp_logging                    = "NONE"
+    time_zone                      = "GMT_TIME"
+    transport_type                 = "UDP"
+    user_configurable_log_messages = "YES"
   }
 }
 ```

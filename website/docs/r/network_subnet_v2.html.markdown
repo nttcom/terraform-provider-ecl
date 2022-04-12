@@ -19,7 +19,7 @@ resource "ecl_network_network_v2" "network_1" {
 }
 
 resource "ecl_network_subnet_v2" "subnet_1" {
-  network_id = "${ecl_network_network_v2.network_1.id}"
+  network_id = ecl_network_network_v2.network_1.id
   cidr       = "192.168.199.0/24"
 }
 ```

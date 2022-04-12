@@ -16,10 +16,10 @@ Manages a V1 user resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_sss_user_v1" "user_1" {
-	  login_id = "myuser"
-	  mail_address = "myuser@example.com"
-	  password = "Passw0rd"
-	  notify_password = "true"
+  login_id        = "myuser"
+  mail_address    = "myuser@example.com"
+  password        = "Passw0rd"
+  notify_password = "true"
 }
 ```
 

@@ -16,10 +16,10 @@ Manages a V2 public ip resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_network_public_ip_v2" "public_ip_1" {
-    name = "Terraform_Test_Public_IP_01"
-    description = "test_public_ip"
-    internet_gw_id = "${ecl_network_internet_gateway_v2.internet_gateway_1.id}"
-    submask_length = 32
+  name           = "Terraform_Test_Public_IP_01"
+  description    = "test_public_ip"
+  internet_gw_id = ecl_network_internet_gateway_v2.internet_gateway_1.id
+  submask_length = 32
 }
 ```
 

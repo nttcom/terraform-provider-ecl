@@ -16,9 +16,9 @@ Manages a V1 tenant resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_sss_tenant_v1" "tenant_1" {
-	  tenant_name = "tenant_1"
-	  description = "new tenant"
-	  tenant_region = "jp1"
+  tenant_name   = "tenant_1"
+  description   = "new tenant"
+  tenant_region = "jp1"
 }
 ```
 

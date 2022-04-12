@@ -14,7 +14,7 @@ Use this data source to get the ID and Details of an Enterprise Cloud Internet g
 
 ```hcl
 data "ecl_network_internet_gateway_v2" "internet_gateway_1" {
-	name = "Terraform_Test_Internet_Gateway_01"
+  name = "Terraform_Test_Internet_Gateway_01"
 }
 ```
 

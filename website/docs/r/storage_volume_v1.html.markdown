@@ -16,11 +16,11 @@ Manages a V1 volume resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_storage_volume_v1" "volume_1" {
-  name = "volume_1"
-  description = "new volume"
+  name               = "volume_1"
+  description        = "new volume"
   virtual_storage_id = "3253f1a0-9f01-4cc7-904b-8eeaec317c03"
-  iops_per_gb = "2"
-  size = 100
+  iops_per_gb        = "2"
+  size               = 100
   initiator_iqns = [
     "iqn.2003-01.org.sample-iscsi.node1.x8664:sn.2613f8620d98"
   ]

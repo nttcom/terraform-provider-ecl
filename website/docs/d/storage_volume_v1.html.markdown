@@ -14,7 +14,7 @@ Use this data source to get the ID of an Enterprise Cloud volume.
 
 ```hcl
 data "ecl_storage_volume_v1" "volume_1" {
-	name = "volume_1"
+  name = "volume_1"
 }
 ```
 

@@ -14,60 +14,60 @@ Manages a dedicated hypervisor v1 Server resource within Enterprise Cloud.
 
 ```hcl
 data "ecl_baremetal_flavor_v2" "gp1" {
-    name = "General Purpose 1 v2"
+  name = "General Purpose 1 v2"
 }
 
 data "ecl_imagestorages_image_v2" "esxi" {
-    name = "vSphere_ESXi-6.0.u2_64_dedicated-hypervisor_01"
+  name = "vSphere_ESXi-6.5.u1_64_dedicated-hypervisor_01"
 }
 
 data "ecl_baremetal_availability_zone_v2" "groupa" {
-    zone_name = "zone1-groupa"
+  zone_name = "groupa"
 }
 
 resource "ecl_network_network_v2" "network_1" {
-    name = "dedicated_hypervisor_network"
-    plane = "data"
+  name  = "dedicated_hypervisor_network"
+  plane = "data"
 }
 
 resource "ecl_network_subnet_v2" "subnet_1" {
-    name = "dedicated_hypervisor_subnet"
-    network_id = "${ecl_network_network_v2.network_1.id}"
-    cidr = "192.168.1.0/24"
-    gateway_ip = "192.168.1.1"
-    allocation_pools {
-        start = "192.168.1.100"
-        end = "192.168.1.200"
-    }
+  name       = "dedicated_hypervisor_subnet"
+  network_id = ecl_network_network_v2.network_1.id
+  cidr       = "192.168.1.0/24"
+  gateway_ip = "192.168.1.1"
+  allocation_pools {
+    start = "192.168.1.100"
+    end   = "192.168.1.200"
+  }
 }
 
 resource "ecl_dedicated_hypervisor_server_v1" "server_1" {
-    depends_on = [
-        "ecl_network_subnet_v2.subnet_1"
-    ]
+  depends_on = [
+    ecl_network_subnet_v2.subnet_1
+  ]
 
-    name = "server1"
-    description = "ESXi Dedicated Hypervisor"
-    networks {
-        uuid = "${ecl_network_network_v2.network_1.id}"
-        fixed_ip = "192.168.1.10"
-        plane = "data"
-        segmentation_id = 4
-    }
-    networks {
-        uuid = "${ecl_network_network_v2.network_1.id}"
-        fixed_ip = "192.168.1.11"
-        plane = "data"
-        segmentation_id = 4
-    }
-    admin_pass = "aabbccddeeff"
-    image_ref = "${data.ecl_imagestorages_image_v2.esxi.id}"
-    flavor_ref = "${data.ecl_baremetal_flavor_v2.gp1.id}"
-    availability_zone = "${data.ecl_baremetal_availability_zone_v2.groupa.zone_name}"
-    metadata = {
-        k1 = "v1"
-        k2 = "v2"
-    }
+  name        = "server1"
+  description = "ESXi Dedicated Hypervisor"
+  networks {
+    uuid            = ecl_network_network_v2.network_1.id
+    fixed_ip        = "192.168.1.10"
+    plane           = "data"
+    segmentation_id = 4
+  }
+  networks {
+    uuid            = ecl_network_network_v2.network_1.id
+    fixed_ip        = "192.168.1.11"
+    plane           = "data"
+    segmentation_id = 4
+  }
+  admin_pass        = "aabbccddeeff"
+  image_ref         = data.ecl_imagestorages_image_v2.esxi.id
+  flavor_ref        = data.ecl_baremetal_flavor_v2.gp1.id
+  availability_zone = data.ecl_baremetal_availability_zone_v2.groupa.zone_name
+  metadata = {
+    k1 = "v1"
+    k2 = "v2"
+  }
 }
 ```
 

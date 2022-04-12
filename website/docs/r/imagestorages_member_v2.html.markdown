@@ -16,15 +16,15 @@ Manages a V2 Image member resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_imagestorages_image_v2" "image_1" {
-    name  = "Temp_Terraform_AccTest"
-    local_file_path = "/tmp/tempfile.img"
-    container_format = "bare"
-    disk_format = "qcow2"
+  name             = "Temp_Terraform_AccTest"
+  local_file_path  = "/tmp/tempfile.img"
+  container_format = "bare"
+  disk_format      = "qcow2"
 }
 
 resource "ecl_imagestorages_member_v2" "member_1" {
-	image_id = "${ecl_imagestorages_image_v2.image_1}"
-	member_id = "f6a818c3d4aa458798ed86892e7150c0"
+  image_id  = ecl_imagestorages_image_v2.image_1.id
+  member_id = "f6a818c3d4aa458798ed86892e7150c0"
 }
 ```
 

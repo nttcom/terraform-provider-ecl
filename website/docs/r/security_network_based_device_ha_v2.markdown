@@ -17,27 +17,27 @@ Manages a V2 Network Based Device(Single) resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_security_network_based_device_ha_v2" "ha_1" {
-	tenant_id = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
-	locale = "ja"
-	operating_mode = "FW_HA"
-	license_kind = "02"
+  tenant_id      = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
+  locale         = "ja"
+  operating_mode = "FW_HA"
+  license_kind   = "02"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
-  
-	ha_link_1 {
-		network_id = "241842a8-e52e-4f4a-8206-bd78de53dfe6"
-		subnet_id = "1626cdb9-1f5f-4fec-b7f0-5b738b39117e"
-		host_1_ip_address = "192.168.1.3"
-		host_2_ip_address = "192.168.1.4"
-	}
+  host_1_az_group = "zone1-groupa"
+  host_2_az_group = "zone1-groupb"
 
-	ha_link_2 {
-		network_id = "${ecl_network_network_v2.network_2.id}"
-		subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
-		host_1_ip_address = "192.168.2.3"
-		host_2_ip_address = "192.168.2.4"
-	}
+  ha_link_1 {
+    network_id        = "241842a8-e52e-4f4a-8206-bd78de53dfe6"
+    subnet_id         = "1626cdb9-1f5f-4fec-b7f0-5b738b39117e"
+    host_1_ip_address = "192.168.1.3"
+    host_2_ip_address = "192.168.1.4"
+  }
+
+  ha_link_2 {
+    network_id        = ecl_network_network_v2.network_2.id
+    subnet_id         = ecl_network_subnet_v2.subnet_2.id
+    host_1_ip_address = "192.168.2.3"
+    host_2_ip_address = "192.168.2.4"
+  }
 }
 ```
 
@@ -49,27 +49,27 @@ resource "ecl_security_network_based_device_ha_v2" "ha_1" {
 
 ```hcl
 resource "ecl_security_network_based_device_ha_v2" "ha_1" {
-	tenant_id = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
-	locale = "en"
-	operating_mode = "UTM_HA"
-	license_kind = "08"
+  tenant_id      = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
+  locale         = "en"
+  operating_mode = "UTM_HA"
+  license_kind   = "08"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
-  
-	ha_link_1 {
-		network_id = "241842a8-e52e-4f4a-8206-bd78de53dfe6"
-		subnet_id = "1626cdb9-1f5f-4fec-b7f0-5b738b39117e"
-		host_1_ip_address = "192.168.1.3"
-		host_2_ip_address = "192.168.1.4"
-	}
+  host_1_az_group = "zone1-groupa"
+  host_2_az_group = "zone1-groupb"
 
-	ha_link_2 {
-		network_id = "${ecl_network_network_v2.network_2.id}"
-		subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
-		host_1_ip_address = "192.168.2.3"
-		host_2_ip_address = "192.168.2.4"
-	}
+  ha_link_1 {
+    network_id        = "241842a8-e52e-4f4a-8206-bd78de53dfe6"
+    subnet_id         = "1626cdb9-1f5f-4fec-b7f0-5b738b39117e"
+    host_1_ip_address = "192.168.1.3"
+    host_2_ip_address = "192.168.1.4"
+  }
+
+  ha_link_2 {
+    network_id        = ecl_network_network_v2.network_2.id
+    subnet_id         = ecl_network_subnet_v2.subnet_2.id
+    host_1_ip_address = "192.168.2.3"
+    host_2_ip_address = "192.168.2.4"
+  }
 }
 ```
 
@@ -81,89 +81,89 @@ Note: You can use port from 4 to 7 on this device.
 
 ```hcl
 resource "ecl_security_network_based_device_ha_v2" "ha_1" {
-	tenant_id = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
-	locale = "ja"
-	operating_mode = "FW_HA"
-	license_kind = "02"
+  tenant_id      = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
+  locale         = "ja"
+  operating_mode = "FW_HA"
+  license_kind   = "02"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
-  
-	ha_link_1 {
-		network_id = "241842a8-e52e-4f4a-8206-bd78de53dfe6"
-		subnet_id = "1626cdb9-1f5f-4fec-b7f0-5b738b39117e"
-		host_1_ip_address = "192.168.1.3"
-		host_2_ip_address = "192.168.1.4"
-	}
+  host_1_az_group = "zone1-groupa"
+  host_2_az_group = "zone1-groupb"
 
-	ha_link_2 {
-		network_id = "${ecl_network_network_v2.network_2.id}"
-		subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
-		host_1_ip_address = "192.168.2.3"
-		host_2_ip_address = "192.168.2.4"
-	}
+  ha_link_1 {
+    network_id        = "241842a8-e52e-4f4a-8206-bd78de53dfe6"
+    subnet_id         = "1626cdb9-1f5f-4fec-b7f0-5b738b39117e"
+    host_1_ip_address = "192.168.1.3"
+    host_2_ip_address = "192.168.1.4"
+  }
 
-	port {
-		enable = "true"
+  ha_link_2 {
+    network_id        = ecl_network_network_v2.network_2.id
+    subnet_id         = ecl_network_subnet_v2.subnet_2.id
+    host_1_ip_address = "192.168.2.3"
+    host_2_ip_address = "192.168.2.4"
+  }
 
-		network_id = "54c7765d-c1ac-42cf-aba9-3d2c819cb426"
-		subnet_id = "7ff85baa-cd0c-48c0-8a2f-967cf4d14e6a"
-		mtu = "1500"
-		comment = "port 0 comment"
-		enable_ping = "true"
+  port {
+    enable = "true"
 
-		host_1_ip_address = "10.0.0.51"
-		host_1_ip_address_prefix = 24
+    network_id  = "54c7765d-c1ac-42cf-aba9-3d2c819cb426"
+    subnet_id   = "7ff85baa-cd0c-48c0-8a2f-967cf4d14e6a"
+    mtu         = "1500"
+    comment     = "port 0 comment"
+    enable_ping = "true"
 
-		host_2_ip_address = "10.0.0.52"
-		host_2_ip_address_prefix = 24
+    host_1_ip_address        = "10.0.0.51"
+    host_1_ip_address_prefix = 24
 
-		vrrp_ip_address = "10.0.0.50"
-		vrrp_grp_id = "11"
-		vrrp_id = "50"
-		preempt = "true"
-	}
+    host_2_ip_address        = "10.0.0.52"
+    host_2_ip_address_prefix = 24
 
-	port {
-	  enable = "false"
-	}
+    vrrp_ip_address = "10.0.0.50"
+    vrrp_grp_id     = "11"
+    vrrp_id         = "50"
+    preempt         = "true"
+  }
 
-	port {
-	  enable = "false"
-	}
+  port {
+    enable = "false"
+  }
 
-	port {
-		enable = "true"
+  port {
+    enable = "false"
+  }
 
-		network_id = "bd776d33-630d-4373-8e29-e89b8a50a55b"
-		subnet_id = "482e5597-1536-4bc8-a8d9-51338adca3c8"
-		mtu = "1500"
-		comment = "port 3 comment"
-		enable_ping = "true"
+  port {
+    enable = "true"
 
-		host_1_ip_address = "10.0.1.51"
-		host_1_ip_address_prefix = 24
+    network_id  = "bd776d33-630d-4373-8e29-e89b8a50a55b"
+    subnet_id   = "482e5597-1536-4bc8-a8d9-51338adca3c8"
+    mtu         = "1500"
+    comment     = "port 3 comment"
+    enable_ping = "true"
 
-		host_2_ip_address = "10.0.1.52"
-		host_2_ip_address_prefix = 24
+    host_1_ip_address        = "10.0.1.51"
+    host_1_ip_address_prefix = 24
 
-		vrrp_ip_address = "10.0.1.50"
-		vrrp_grp_id = "11"
-		vrrp_id = "60"
-		preempt = "true"
-	}
+    host_2_ip_address        = "10.0.1.52"
+    host_2_ip_address_prefix = 24
 
-	port {
-	    enable = "false"
-	}
+    vrrp_ip_address = "10.0.1.50"
+    vrrp_grp_id     = "11"
+    vrrp_id         = "60"
+    preempt         = "true"
+  }
 
-	port {
-	    enable = "false"
-	}
+  port {
+    enable = "false"
+  }
 
-	port {
-	    enable = "false"
-	}
+  port {
+    enable = "false"
+  }
+
+  port {
+    enable = "false"
+  }
 }
 ```
 
@@ -171,55 +171,55 @@ resource "ecl_security_network_based_device_ha_v2" "ha_1" {
 
 ```hcl
 resource "ecl_security_network_based_device_ha_v2" "ha_1" {
-	tenant_id = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
-	locale = "ja"
-	operating_mode = "FW_HA"
-	license_kind = "02"
+  tenant_id      = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
+  locale         = "ja"
+  operating_mode = "FW_HA"
+  license_kind   = "02"
 
-	host_1_az_group = "zone1-groupa"
-	host_2_az_group = "zone1-groupb"
-  
-	ha_link_1 {
-		network_id = "241842a8-e52e-4f4a-8206-bd78de53dfe6"
-		subnet_id = "1626cdb9-1f5f-4fec-b7f0-5b738b39117e"
-		host_1_ip_address = "192.168.1.3"
-		host_2_ip_address = "192.168.1.4"
-	}
+  host_1_az_group = "zone1-groupa"
+  host_2_az_group = "zone1-groupb"
 
-	ha_link_2 {
-		network_id = "${ecl_network_network_v2.network_2.id}"
-		subnet_id = "${ecl_network_subnet_v2.subnet_2.id}"
-		host_1_ip_address = "192.168.2.3"
-		host_2_ip_address = "192.168.2.4"
-	}
+  ha_link_1 {
+    network_id        = "241842a8-e52e-4f4a-8206-bd78de53dfe6"
+    subnet_id         = "1626cdb9-1f5f-4fec-b7f0-5b738b39117e"
+    host_1_ip_address = "192.168.1.3"
+    host_2_ip_address = "192.168.1.4"
+  }
 
-	port {
-	  enable = "false"
-	}
+  ha_link_2 {
+    network_id        = ecl_network_network_v2.network_2.id
+    subnet_id         = ecl_network_subnet_v2.subnet_2.id
+    host_1_ip_address = "192.168.2.3"
+    host_2_ip_address = "192.168.2.4"
+  }
 
-	port {
-	  enable = "false"
-	}
+  port {
+    enable = "false"
+  }
 
-	port {
-	  enable = "false"
-	}
+  port {
+    enable = "false"
+  }
 
-	port {
-	  enable = "false"
-	}
+  port {
+    enable = "false"
+  }
 
-	port {
-	    enable = "false"
-	}
+  port {
+    enable = "false"
+  }
 
-	port {
-	    enable = "false"
-	}
+  port {
+    enable = "false"
+  }
 
-	port {
-	    enable = "false"
-	}
+  port {
+    enable = "false"
+  }
+
+  port {
+    enable = "false"
+  }
 }
 ```
 

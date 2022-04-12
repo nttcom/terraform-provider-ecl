@@ -16,13 +16,13 @@ Manages a V2 Host Based WAF Security resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_security_host_based_v2" "host_1" {
-	tenant_id = "a98123d4-3c59-4c44-ab66-ee2eb3d61edd"
-	locale = "ja"
-	service_order_service = "Managed Anti-Virus"
-	max_agent_value = 1
-	mail_address = "terraform@example.com"
-	dsm_lang = "ja"
-	time_zone = "Asia/Tokyo"
+  tenant_id             = "a98123d4-3c59-4c44-ab66-ee2eb3d61edd"
+  locale                = "ja"
+  service_order_service = "Managed Anti-Virus"
+  max_agent_value       = 1
+  mail_address          = "terraform@example.com"
+  dsm_lang              = "ja"
+  time_zone             = "Asia/Tokyo"
 }
 ```
 

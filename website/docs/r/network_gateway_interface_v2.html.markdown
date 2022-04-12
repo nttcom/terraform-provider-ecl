@@ -16,17 +16,17 @@ Manages a V2 gateway interface resource within Enterprise Cloud.
 
 ```hcl
 resource "ecl_network_gateway_interface_v2" "gateway_interface_1" {
-    description = "test_gateway_interface"
-    gw_vipv4 = "192.168.200.1"
-    internet_gw_id = "${ecl_network_internet_gateway_v2.internet_gateway_1.id}"
-    name = "Terraform_Test_Gateway_Interface_01"
-    netmask = 29
-    network_id = "${ecl_network_network_v2.network_1.id}"
-    primary_ipv4 = "192.168.200.2"
-    secondary_ipv4 = "192.168.200.3"
-    service_type = "internet"
-    vrid=1
-    depends_on = ["ecl_network_subnet_v2.subnet_1"]
+  description    = "test_gateway_interface"
+  gw_vipv4       = "192.168.200.1"
+  internet_gw_id = ecl_network_internet_gateway_v2.internet_gateway_1.id
+  name           = "Terraform_Test_Gateway_Interface_01"
+  netmask        = 29
+  network_id     = ecl_network_network_v2.network_1.id
+  primary_ipv4   = "192.168.200.2"
+  secondary_ipv4 = "192.168.200.3"
+  service_type   = "internet"
+  vrid           = 1
+  depends_on     = [ecl_network_subnet_v2.subnet_1]
 }
 ```
 Must set "ecl_network_subnet_v2" resources in "depends_on" schema to declare dependency explicitly.

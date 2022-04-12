@@ -18,35 +18,35 @@ Accepter project handles this member accepter resource.
 
 ```hcl
 provider "ecl" {
-  alias = "requester"
-  auth_url = "https://keystone-jp5-ecl.api.ntt.com/v3/"
-  user_name = "<user_name>"
-  tenant_id = "<tenant_id>"
-  password = "<password>"
-  user_domain_id = "default"
+  alias             = "requester"
+  auth_url          = "https://keystone-jp5-ecl.api.ntt.com/v3/"
+  user_name         = "<user_name>"
+  tenant_id         = "<tenant_id>"
+  password          = "<password>"
+  user_domain_id    = "default"
   project_domain_id = "default"
 }
 
 provider "ecl" {
-  alias = "accepter"
-  auth_url = "https://keystone-jp5-ecl.api.ntt.com/v3/"
-  user_name = "<user_name>"
-  tenant_id = "<tenant_id>"
-  password = "<password>"
-  user_domain_id = "default"
+  alias             = "accepter"
+  auth_url          = "https://keystone-jp5-ecl.api.ntt.com/v3/"
+  user_name         = "<user_name>"
+  tenant_id         = "<tenant_id>"
+  password          = "<password>"
+  user_domain_id    = "default"
   project_domain_id = "default"
 }
 
 resource "ecl_imagestorages_member_v2" "member_1" {
-	provider = "ecl.requester"
-	image_id = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-	member_id = "f6a818c3d4aa458798ed86892e7150c0"
+  provider  = ecl.requester
+  image_id  = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+  member_id = "f6a818c3d4aa458798ed86892e7150c0"
 }
 
 resource "ecl_imagestorages_member_accepter_v2" "accepter_1" {
-	provider = "ecl.accepter"
-	image_member_id = "${ecl_imagestorages_member_v2.member_1.id}"
-	status = "accepted"
+  provider        = ecl.accepter
+  image_member_id = ecl_imagestorages_member_v2.member_1.id
+  status          = "accepted"
 }
 ```
 

@@ -18,11 +18,20 @@ Use the navigation to the left to read about the available resources.
 
 ```hcl
 # Configure the Enterprise Cloud Provider
+terraform {
+  required_providers {
+    ecl = {
+      source  = "nttcom/ecl"
+      version = "2.3.1"
+    }
+  }
+}
+
 provider "ecl" {
-  user_name   = "my-api-key"
-  password    = "my-api-secret-key"
-  tenant_name = "my-tenant-id"
-  auth_url    = "https://keystone-myregion-ecl.api.ntt.com/v3/"
+  user_name         = "my-api-key"
+  password          = "my-api-secret-key"
+  tenant_name       = "my-tenant-id"
+  auth_url          = "https://keystone-[region]-ecl.api.ntt.com/v3/"
   user_domain_id    = "default"
   project_domain_id = "default"
 }

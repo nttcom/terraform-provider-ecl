@@ -14,7 +14,7 @@ Use this data source to get the ID and Details of an Enterprise Cloud Qos option
 
 ```hcl
 data "ecl_network_qos_options_v2" "qos_options_1" {
-	name = "10Mbps-BestEffort"
+  name = "10Mbps-BestEffort"
 }
 ```
 
