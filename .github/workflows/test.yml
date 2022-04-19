@@ -31,7 +31,7 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Go Format
-        run: if [ "$(gofmt -l . | grep -v vendor | wc -l)" -gt 0 ]; then exit 1; fi
+        run: if [ "$(gofmt -l `find . -name '*.go' | grep -v vendor` | wc -l)" -gt 0 ]; then exit 1; fi
 
       - name: Terraform Format
         run: terraform fmt -recursive -check
