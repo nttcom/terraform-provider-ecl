@@ -48,7 +48,6 @@ data "ecl_vna_appliance_plan_v1" "appliance_plan_1" {
 
 `id` is set to the ID of the found VNA Plan. In addition, the following attributes are exported:
 
-* `id` - See Argument Reference above.
 * `name` - See Argument Reference above.
 * `description` - See Argument Reference above.
 * `appliance_type` - See Argument Reference above.
