@@ -203,6 +203,7 @@ func Provider() terraform.ResourceProvider {
 			"ecl_storage_volume_v1":                  dataSourceStorageVolumeV1(),
 			"ecl_storage_volumetype_v1":              dataSourceStorageVolumeTypeV1(),
 			"ecl_vna_appliance_v1":                   dataSourceVNAApplianceV1(),
+			"ecl_vna_appliance_plan_v1":              dataSourceVNAAppliancePlanV1(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
