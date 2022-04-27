@@ -68,6 +68,8 @@ func TestMockedAccVNAV1AppliancePlanDataSource_queries(t *testing.T) {
 				Config: testAccVNAV1AppliancePlanDataSourceQueryDescription,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVNAV1AppliancePlanDataSourceID("data.ecl_vna_appliance_plan_v1.appliance_plan_1"),
+					resource.TestCheckResourceAttr(
+						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "description", testAccVNAV1AppliancePlanDataSourcePlanName),
 				),
 			},
 		},
