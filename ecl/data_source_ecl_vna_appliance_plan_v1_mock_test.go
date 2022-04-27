@@ -177,7 +177,7 @@ response:
             {
               "id": "37556569-87f2-4699-b5ff-bf38e7cbf8a7",
               "name": %q,
-              "description": "virtual_network_appliance_plans_description",
+              "description": %q,
               "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
               "version": "",
               "flavor": "2CPU-8GB",
