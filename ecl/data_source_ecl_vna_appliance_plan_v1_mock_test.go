@@ -204,5 +204,5 @@ response:
             }
           ]
         }
-`, testAccVNAV1AppliancePlanDataSourcePlanName,
+`, testAccVNAV1AppliancePlanDataSourcePlanName, testAccVNAV1AppliancePlanDataSourcePlanName, testAccVNAV1AppliancePlanDataSourcePlanName,
 )
