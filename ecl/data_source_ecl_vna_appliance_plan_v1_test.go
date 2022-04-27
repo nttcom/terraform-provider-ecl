@@ -26,7 +26,7 @@ func TestAccVNAV1AppliancePlanDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "appliance_type", "ECL::VirtualNetworkAppliance::VSRX"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "flavor", "2CPU-8GB"),
+						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "flavor", "2CPU-4GB"),
 					resource.TestCheckResourceAttr(
 						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "enabled", "true"),
 					resource.TestCheckResourceAttr(
