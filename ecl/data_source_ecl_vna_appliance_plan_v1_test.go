@@ -34,7 +34,7 @@ func TestAccVNAV1AppliancePlanDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "licenses.0.license_type", "STD"),
 					resource.TestCheckResourceAttr(
-						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "availability_zones.#", "1"),
+						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "availability_zones.#", "3"),
 					resource.TestCheckResourceAttr(
 						"data.ecl_vna_appliance_plan_v1.appliance_plan_1", "availability_zones.0.availability_zone", "zone1_groupa"),
 					resource.TestCheckResourceAttr(
