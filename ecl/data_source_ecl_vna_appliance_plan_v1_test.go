@@ -107,7 +107,7 @@ data "ecl_vna_appliance_plan_v1" "appliance_plan_1" {
   name = %q
 }
 data "ecl_vna_appliance_plan_v1" "appliance_plan_2" {
-  id = "${data.ecl_network_appliance_plan_v1.appliance_plan_1.id}"
+  id = "${data.ecl_vna_appliance_plan_v1.appliance_plan_1.id}"
 }
 `, testAccVNAV1AppliancePlanDataSourcePlanName,
 )
