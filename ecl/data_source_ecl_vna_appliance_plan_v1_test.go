@@ -88,7 +88,7 @@ data "ecl_vna_appliance_plan_v1" "appliance_plan_1" {
   name = %q
   description = %q
   appliance_type = "ECL::VirtualNetworkAppliance::VSRX"
-  flavor = "2CPU-8GB"
+  flavor = "2CPU-4GB"
   enabled = true
   licenses {
     license_type = "STD"
