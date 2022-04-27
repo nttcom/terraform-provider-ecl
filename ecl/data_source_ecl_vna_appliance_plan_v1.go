@@ -193,12 +193,12 @@ func dataSourceVNAAppliancePlanV1Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("licenses", licenses)
 
 	availability_zones := make([]map[string]interface{}, len(plan.AvailabilityZones))
-	for _, az := range plan.AvailabilityZones {
+	for i, az := range plan.AvailabilityZones {
 		availability_zone := make(map[string]interface{})
 		availability_zone["availability_zone"] = az.AvailabilityZone
 		availability_zone["available"] = az.Available
 		availability_zone["rank"] = az.Rank
-		availability_zones = append(availability_zones, availability_zone)
+		availability_zones[i] = availability_zone
 	}
 	d.Set("availability_zones", availability_zones)
 
