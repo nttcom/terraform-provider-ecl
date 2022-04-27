@@ -165,8 +165,8 @@ var testMockVNAV1AppliancePlansListDescriptionQuery = fmt.Sprintf(`
 request:
     method: GET
     query:
-      id:
-        - virtual_network_appliance_plans_description
+      description:
+        - %q
 response:
     code: 200
     body: >
