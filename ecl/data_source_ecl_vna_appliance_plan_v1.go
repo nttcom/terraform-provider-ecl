@@ -186,9 +186,9 @@ func dataSourceVNAAppliancePlanV1Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("max_number_of_aap", plan.MaxNumberOfAap)
 
 	licenses := make([]map[string]string, len(plan.Licenses))
-	for _, l := range plan.Licenses {
+	for i, l := range plan.Licenses {
 		license := map[string]string{"license_type": l.LicenseType}
-		licenses = append(licenses, license)
+		licenses[i] = license
 	}
 	d.Set("licenses", licenses)
 
