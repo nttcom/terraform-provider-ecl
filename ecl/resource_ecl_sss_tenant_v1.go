@@ -52,6 +52,8 @@ func resourceSSSTenantV1() *schema.Resource {
 				Computed: true,
 			},
 		},
+
+		DeprecationMessage: "The ecl_sss_tenant resource has been deprecated and will be removed in a future version.",
 	}
 }
 
