@@ -84,5 +84,5 @@ The following attributes are exported:
 Virtual Storage can be imported using the `id`, e.g.
 
 ```
-$ terraform import ecl_storage_virtualstorage_v1.virtual_storage_1 <virtual-storage-id>
+$ terraform import ecl_storage_virtualstorage_v1.virtual_storage_1 f42dbc37-4642-4628-8b47-50bf95d8fdd5
 ```
