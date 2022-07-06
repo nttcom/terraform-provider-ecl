@@ -32,7 +32,7 @@ The following arguments are supported:
     this creates a new volume.
     User can choice following volume sizes. 
 
-        1, 15, 40, 80, 100, 300, 500,
+        15, 40, 80, 100, 300, 500,
         1024, 2048, 3072, 4096
 
 * `name` - (Optional) A unique name for the volume. Changing this updates the
