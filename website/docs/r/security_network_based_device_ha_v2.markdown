@@ -9,7 +9,7 @@ description: |-
 
 # ecl\_security\_network\_based\_device\_ha\_v2
 
-Manages a V2 Network Based Device(Single) resource within Enterprise Cloud.
+Manages a V2 Network Based Device(HA) resource within Enterprise Cloud.
 
 ## Example Usage
 
