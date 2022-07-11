@@ -58,7 +58,7 @@ func resourceNetworkStaticRouteV2() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validation.CIDRNetwork(1, 32),
+				ValidateFunc: validation.CIDRNetwork(0, 32),
 			},
 			"fic_gw_id": {
 				Type:          schema.TypeString,
