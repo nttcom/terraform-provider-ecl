@@ -171,7 +171,7 @@ func resourceComputeVolumeAttachV2Delete(d *schema.ResourceData, meta interface{
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"in-use", "attaching"},
+		Pending:    []string{"in-use", "detaching"},
 		Target:     []string{"available", "deleted"},
 		Refresh:    VolumeV2StateRefreshFunc(computeVolumeClient, attachmentID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
