@@ -317,6 +317,10 @@ The following attributes are exported:
 
 * `tenant_id` - See Argument Reference above.
 
+* `username` - Username with user access to VNA instance
+
+* `password` - Password for user
+
 * `interface_[slot number]_info/updatable` - See Argument Reference above.
 
 * `interface_[slot number]_info/tags` - See Argument Reference above.
