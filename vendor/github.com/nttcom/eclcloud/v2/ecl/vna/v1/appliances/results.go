@@ -101,6 +101,8 @@ type Appliance struct {
 	OperationStatus    string               `json:"operation_status"`
 	AppliancePlanID    string               `json:"virtual_network_appliance_plan_id"`
 	TenantID           string               `json:"tenant_id"`
+	Username           string               `json:"username"`
+	Password           string               `json:"password"`
 	Tags               map[string]string    `json:"tags"`
 	Interfaces         InterfacesInResponse `json:"interfaces"`
 }

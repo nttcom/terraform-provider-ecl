@@ -159,6 +159,16 @@ func resourceVNAApplianceV1() *schema.Resource {
 				Optional: true,
 			},
 
+			"username": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"password": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
 			"default_gateway": &schema.Schema{
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -231,6 +241,8 @@ func resourceVNAApplianceV1Create(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	d.SetId(vna.ID)
+	d.Set("username", vna.Username)
+	d.Set("password", vna.Password)
 	log.Printf("[INFO] Virtual Network Appliance ID: %s", vna.ID)
 	log.Printf("[DEBUG] Waiting for Virtual Network Appliance (%s) to become COMPLETE", vna.ID)
 
