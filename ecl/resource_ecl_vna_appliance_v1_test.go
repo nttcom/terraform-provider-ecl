@@ -323,6 +323,7 @@ func TestAccVNAV1Appliance_createInterfaceDiscontinuity(t *testing.T) {
 
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "username", "root"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.name", "interface_3"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_3_info.0.description", "interface_3_description"),
@@ -368,6 +369,7 @@ func TestAccVNAV1Appliance_createNoInterface(t *testing.T) {
 
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "username", "root"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
 					testAccCheckVNAV1FixedIPLength(&vna, 1, 0),
 					testAccCheckVNAV1FixedIPLength(&vna, 2, 0),
@@ -407,6 +409,7 @@ func TestAccVNAV1Appliance_createFixedIPsEmpty(t *testing.T) {
 
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "username", "root"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
@@ -449,6 +452,7 @@ func TestAccVNAV1Appliance_createNoFixedIPs(t *testing.T) {
 
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "name", "appliance_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "description", "appliance_1_description"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "username", "root"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "virtual_network_appliance_plan_id", OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.name", "interface_1"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
@@ -798,6 +802,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -848,6 +854,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -871,6 +879,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -904,6 +914,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -936,6 +948,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -999,6 +1013,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1064,6 +1080,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1108,6 +1126,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1142,6 +1162,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1178,6 +1200,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1217,11 +1241,13 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		ip_address = "192.168.1.200"
 		mac_address = ""
 		type = "vrrp"
-		vrid = "123"	
+		vrid = "123"
 	}
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1260,11 +1286,13 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		ip_address = "192.168.1.200"
 		mac_address = "aa:bb:cc:dd:ee:f1"
 		type = ""
-		vrid = "null"	
+		vrid = "null"
 	}
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1303,6 +1331,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1345,9 +1375,11 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_2_info  {
 		network_id = "${ecl_network_network_v2.network_2.id}"
 	}
-	
+
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
@@ -1391,9 +1423,11 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_2_info  {
 		network_id = ""
 	}
-	
+
 	lifecycle {
 		ignore_changes = [
+			"username",
+			"password",
 			"default_gateway",
 		]
 	}
