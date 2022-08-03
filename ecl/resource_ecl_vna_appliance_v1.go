@@ -165,8 +165,9 @@ func resourceVNAApplianceV1() *schema.Resource {
 			},
 
 			"password": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
 			},
 
 			"default_gateway": &schema.Schema{
