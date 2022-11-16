@@ -204,7 +204,7 @@ github.com/mitchellh/hashstructure
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.0
 github.com/mitchellh/reflectwalk
-# github.com/nttcom/eclcloud/v2 v2.3.1
+# github.com/nttcom/eclcloud/v2 v2.4.1
 ## explicit
 github.com/nttcom/eclcloud/v2
 github.com/nttcom/eclcloud/v2/ecl
@@ -229,6 +229,18 @@ github.com/nttcom/eclcloud/v2/ecl/identity/v3/tokens
 github.com/nttcom/eclcloud/v2/ecl/imagestorage/v2/imagedata
 github.com/nttcom/eclcloud/v2/ecl/imagestorage/v2/images
 github.com/nttcom/eclcloud/v2/ecl/imagestorage/v2/members
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/certificates
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/health_monitors
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/listeners
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/load_balancers
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/operations
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/plans
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/policies
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/routes
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/rules
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/system_updates
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/target_groups
+github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/tls_policies
 github.com/nttcom/eclcloud/v2/ecl/network/v2/common_function_gateways
 github.com/nttcom/eclcloud/v2/ecl/network/v2/common_function_pool
 github.com/nttcom/eclcloud/v2/ecl/network/v2/fic_gateways
