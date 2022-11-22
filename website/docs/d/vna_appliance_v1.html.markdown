@@ -1,9 +1,9 @@
 ---
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_vna_appliance_v1"
-sidebar_current: "docs-ecl-datasource-vna-appliance-v2"
+sidebar_current: "docs-ecl-datasource-vna-appliance-v1"
 description: |-
-  Get information on an Enterprise Virtual Network Appliance.
+  Get information on an Enterprise Cloud Virtual Network Appliance.
 ---
 
 # ecl\_vna\_appliance\_v1

@@ -1,7 +1,7 @@
 ---
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_vna_appliance_plan_v1"
-sidebar_current: "docs-ecl-datasource-vna-appliance_plan-v1"
+sidebar_current: "docs-ecl-datasource-vna-appliance-plan-v1"
 description: |-
   Get information on an Enterprise Cloud VNA Plan.
 ---
