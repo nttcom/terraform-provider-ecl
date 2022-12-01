@@ -75,5 +75,5 @@ The following attributes are exported:
 Volume can be imported using the `id`, e.g.
 
 ```
-$ terraform import ecl_storage_volume_v1.volume_1 <volume-id>
+$ terraform import ecl_storage_volume_v1.volume_1 f42dbc37-4642-4628-8b47-50bf95d8fdd5
 ```
