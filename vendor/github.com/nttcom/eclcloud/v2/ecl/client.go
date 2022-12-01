@@ -310,6 +310,14 @@ func NewLoadBalancerV2(client *eclcloud.ProviderClient, eo eclcloud.EndpointOpts
 	return sc, err
 }
 
+// NewManagedLoadBalancerV1 creates a ServiceClient that may be used to access the v1
+// managed load balancer service.
+func NewManagedLoadBalancerV1(client *eclcloud.ProviderClient, eo eclcloud.EndpointOpts) (*eclcloud.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "managed-load-balancer")
+	sc.ResourceBase = sc.Endpoint + "v1.0/"
+	return sc, err
+}
+
 // NewClusteringV1 creates a ServiceClient that may be used with the v1 clustering
 // package.
 func NewClusteringV1(client *eclcloud.ProviderClient, eo eclcloud.EndpointOpts) (*eclcloud.ServiceClient, error) {

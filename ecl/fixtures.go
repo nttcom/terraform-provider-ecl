@@ -319,6 +319,34 @@ response:
                         "id": "df7ca430-9fe3-11ea-b509-525403060400",
                         "name": "provider-connectivity",
                         "type": "provider-connectivity"
+                    },
+                    {
+                        "endpoints": [
+                            {
+                                "id": "097fe34a-ee38-4de2-955b-697639f9210d",
+                                "interface": "internal",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "097fe34a-ee38-4de2-955b-697639f9210d",
+                                "interface": "public",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "097fe34a-ee38-4de2-955b-697639f9210d",
+                                "interface": "admin",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            }
+                        ],
+                        "id": "097fe34a-ee38-4de2-955b-697639f9210d",
+                        "name": "managed-load-balancer",
+                        "type": "managed-load-balancer"
                     }
                 ],
                 "expires_at": "2018-11-28T02:48:52.111201Z",
