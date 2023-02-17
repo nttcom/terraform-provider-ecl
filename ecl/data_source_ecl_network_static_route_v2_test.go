@@ -149,7 +149,7 @@ resource "ecl_network_public_ip_v2" "public_ip_1" {
 
 resource "ecl_network_static_route_v2" "static_route_1" {
     description = "test_static_route1"
-    destination = "${ecl_network_public_ip_v2.public_ip_1.cidr}"
+    destination = "${ecl_network_public_ip_v2.public_ip_1.cidr}/${ecl_network_public_ip_v2.public_ip_1.submask_length}"
     internet_gw_id = "${ecl_network_internet_gateway_v2.internet_gateway_1.id}"
     name = "Terraform_Test_Static_Route_01"
     nexthop = "192.168.200.1"
@@ -188,7 +188,7 @@ var testAccNetworkV2StaticRouteDataSourceDestination = fmt.Sprintf(`
 %s
 
 data "ecl_network_static_route_v2" "static_route_1" {
-    destination = "${ecl_network_public_ip_v2.public_ip_1.cidr}"
+    destination = "${ecl_network_public_ip_v2.public_ip_1.cidr}/${ecl_network_public_ip_v2.public_ip_1.submask_length}"
 }
 `, testAccNetworkV2StaticRouteDataSourceStaticRoute)
 

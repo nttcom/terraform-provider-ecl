@@ -32,7 +32,7 @@ resource "ecl_network_public_ip_v2" "public_ip_2" {
 resource "ecl_network_static_route_v2" "static_route_1" {
   name           = "static_route_1"
   internet_gw_id = ecl_network_internet_gateway_v2.internet_gateway_1.id
-  destination    = ecl_network_public_ip_v2.public_ip_1.cidr
+  destination    = format("%s/%#v", ecl_network_public_ip_v2.public_ip_1.cidr, ecl_network_public_ip_v2.public_ip_1.submask_length)
   nexthop        = "192.168.1.1"
   service_type   = "internet"
 
