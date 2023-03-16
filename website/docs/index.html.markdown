@@ -16,13 +16,15 @@ Use the navigation to the left to read about the available resources.
 
 ## Example Usage
 
+Replace `"x.y.z"` with version. See [https://github.com/nttcom/terraform-provider-ecl/releases](https://github.com/nttcom/terraform-provider-ecl/releases) for available versions.
+
 ```hcl
 # Configure the Enterprise Cloud Provider
 terraform {
   required_providers {
     ecl = {
       source  = "nttcom/ecl"
-      version = "2.3.1"
+      version = "x.y.z"
     }
   }
 }
