@@ -114,7 +114,7 @@ func resourceImageStoragesImageV2() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: resourceImageStoragesImageV2ValidateVisibility,
-				Computed: true,
+				Computed:     true,
 			},
 
 			"properties": &schema.Schema{
