@@ -118,6 +118,7 @@ resource "ecl_imagestorages_image_v2" "image_1" {
     foo = "bar"
     bar = "foo"
   }
+  visibility = "private"
 }
 
 `, localFileForDataSourceTest)

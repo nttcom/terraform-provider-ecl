@@ -39,6 +39,8 @@ func TestAccImageStoragesV2Image_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ecl_imagestorages_image_v2.image_1", "disk_format", "qcow2"),
 					resource.TestCheckResourceAttr(
+						"ecl_imagestorages_image_v2.image_1", "visibility", "shared"),
+					resource.TestCheckResourceAttr(
 						"ecl_imagestorages_image_v2.image_1", "schema", "/v2/schemas/image"),
 				),
 			},
