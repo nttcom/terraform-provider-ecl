@@ -5,8 +5,8 @@ import (
 	"crypto/x509"
 	"fmt"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
 
@@ -268,15 +268,15 @@ func (c *Config) networkV2Client(region string) (*eclcloud.ServiceClient, error)
 	})
 }
 
-func (c *Config) securityOrderV2Client(region string) (*eclcloud.ServiceClient, error) {
-	return ecl.NewSecurityOrderV2(c.OsClient, eclcloud.EndpointOpts{
+func (c *Config) securityOrderV3Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewSecurityOrderV3(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getEndpointType(),
 	})
 }
 
-func (c *Config) securityPortalV2Client(region string) (*eclcloud.ServiceClient, error) {
-	return ecl.NewSecurityPortalV2(c.OsClient, eclcloud.EndpointOpts{
+func (c *Config) securityPortalV3Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewSecurityPortalV3(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getEndpointType(),
 	})

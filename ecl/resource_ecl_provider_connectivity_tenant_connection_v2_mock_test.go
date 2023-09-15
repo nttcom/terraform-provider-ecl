@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/nttcom/eclcloud/v2/ecl/provider_connectivity/v2/tenant_connections"
+	"github.com/nttcom/eclcloud/v4/ecl/provider_connectivity/v2/tenant_connections"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 

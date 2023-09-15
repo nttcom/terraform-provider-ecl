@@ -177,8 +177,8 @@ response:
                             }
                         ],
                         "id": "c4c383a719cb489d8210328e17659620",
-                        "name": "security-order",
-                        "type": "security-order"
+                        "name": "security-order-th",
+                        "type": "security-order-th"
                     },
                     {
                         "endpoints": [
@@ -205,8 +205,8 @@ response:
                             }
                         ],
                         "id": "d4c383a719cb489d8210328e17659620",
-                        "name": "security-operation",
-                        "type": "security-operation"
+                        "name": "security-operation-th",
+                        "type": "security-operation-th"
                     },
                     {
                         "endpoints": [

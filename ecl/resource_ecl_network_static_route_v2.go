@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/static_routes"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/static_routes"
 )
 
 func resourceNetworkStaticRouteV2() *schema.Resource {

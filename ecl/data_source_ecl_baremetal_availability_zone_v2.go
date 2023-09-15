@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nttcom/eclcloud/v2/ecl/baremetal/v2/availabilityzones"
+	"github.com/nttcom/eclcloud/v4/ecl/baremetal/v2/availabilityzones"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )

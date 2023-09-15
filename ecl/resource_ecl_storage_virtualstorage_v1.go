@@ -9,10 +9,10 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v4"
 
-	"github.com/nttcom/eclcloud/v2/ecl/storage/v1/virtualstorages"
-	"github.com/nttcom/eclcloud/v2/ecl/storage/v1/volumetypes"
+	"github.com/nttcom/eclcloud/v4/ecl/storage/v1/virtualstorages"
+	"github.com/nttcom/eclcloud/v4/ecl/storage/v1/volumetypes"
 )
 
 func resourceStorageVirtualStorageV1() *schema.Resource {

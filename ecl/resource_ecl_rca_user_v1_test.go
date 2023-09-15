@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v4"
 
-	"github.com/nttcom/eclcloud/v2/ecl/rca/v1/users"
+	"github.com/nttcom/eclcloud/v4/ecl/rca/v1/users"
 
 	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"

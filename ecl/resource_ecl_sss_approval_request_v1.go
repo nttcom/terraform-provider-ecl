@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v2/ecl/sss/v1/approval_requests"
+	"github.com/nttcom/eclcloud/v4/ecl/sss/v1/approval_requests"
 )
 
 func resourceSSSApprovalRequestV1() *schema.Resource {

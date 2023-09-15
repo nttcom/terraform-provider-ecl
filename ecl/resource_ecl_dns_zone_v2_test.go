@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v2/ecl/dns/v2/zones"
+	"github.com/nttcom/eclcloud/v4/ecl/dns/v2/zones"
 )
 
 func TestAccDNSV2Zone_basic(t *testing.T) {

@@ -2,8 +2,8 @@ package clientconfig
 
 import (
 	"fmt"
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl"
 	"os"
 	"reflect"
 	"strings"

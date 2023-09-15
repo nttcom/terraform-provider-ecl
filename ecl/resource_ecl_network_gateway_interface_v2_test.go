@@ -7,12 +7,12 @@ import (
 
 	"github.com/hashicorp/terraform/helper/acctest"
 
-	"github.com/nttcom/eclcloud/v2"
+	"github.com/nttcom/eclcloud/v4"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/gateway_interfaces"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/gateway_interfaces"
 )
 
 func TestAccNetworkV2GatewayInterface_internet(t *testing.T) {

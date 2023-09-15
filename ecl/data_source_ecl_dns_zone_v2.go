@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/v2/ecl/dns/v2/zones"
+	"github.com/nttcom/eclcloud/v4/ecl/dns/v2/zones"
 )
 
 func dataSourceDNSZoneV2() *schema.Resource {

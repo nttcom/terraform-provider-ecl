@@ -3,7 +3,7 @@ package ecl
 import (
 	"fmt"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/v2/ecl/storage/v1/virtualstorages"
+	"github.com/nttcom/eclcloud/v4/ecl/storage/v1/virtualstorages"
 	"log"
 )
 
