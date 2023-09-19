@@ -334,7 +334,7 @@ func resourceSecurityNetworkBasedSingleDevicePortsForUpdate(d *schema.ResourceDa
 
 func resourceSecurityNetworkBasedDeviceSingleV3UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.SecurityPortalV3Client(GetRegion(d, config))
+	client, err := config.securityPortalV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}
@@ -394,7 +394,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3UpdatePortalAPIPart(d *schema.Res
 
 func resourceSecurityNetworkBasedDeviceSingleV3UpdateOrderAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.SecurityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}

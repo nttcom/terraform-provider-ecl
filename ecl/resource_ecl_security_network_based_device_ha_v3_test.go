@@ -289,7 +289,7 @@ func testAccCheckSecurityV3NetworkBasedDeviceHAExists(n string, hd1, hd2 *securi
 }
 func testAccCheckSecurityV3NetworkBasedDeviceHADestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.SecurityOrderV3Client(OS_REGION_NAME)
+	client, err := config.securityOrderV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating ECL network client: %s", err)
 	}

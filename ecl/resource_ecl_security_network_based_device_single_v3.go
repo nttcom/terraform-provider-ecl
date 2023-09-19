@@ -161,7 +161,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3Read(d *schema.ResourceData, meta
 	d.Set("az_group", azGroup)
 
 	// Device Interface Part
-	pClient, err := config.SecurityPortalV3Client(GetRegion(d, config))
+	pClient, err := config.securityPortalV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}
@@ -260,7 +260,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3Update(d *schema.ResourceData, me
 
 func resourceSecurityNetworkBasedDeviceSingleV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.SecurityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}

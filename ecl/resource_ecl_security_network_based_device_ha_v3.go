@@ -128,7 +128,7 @@ func resourceSecurityNetworkBasedDeviceHAV3Create(d *schema.ResourceData, meta i
 func resourceSecurityNetworkBasedDeviceHAV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	client, err := config.SecurityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -196,7 +196,7 @@ func resourceSecurityNetworkBasedDeviceHAV3Read(d *schema.ResourceData, meta int
 	d.Set("ha_link_2", haLink2Info)
 
 	log.Printf("[DEBUG] Setting Port information into state.")
-	pClient, err := config.SecurityPortalV3Client(GetRegion(d, config))
+	pClient, err := config.securityPortalV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}
@@ -325,7 +325,7 @@ func resourceSecurityNetworkBasedDeviceHAV3Update(d *schema.ResourceData, meta i
 
 func resourceSecurityNetworkBasedDeviceHAV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.SecurityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}

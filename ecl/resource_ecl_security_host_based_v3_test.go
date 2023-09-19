@@ -138,7 +138,7 @@ func testAccCheckSecurityV3HostBasedExists(n string, hs *security.HostBasedSecur
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.SecurityOrderV3Client(OS_REGION_NAME)
+		client, err := config.securityOrderV3Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating ECL security client: %s", err)
 		}
@@ -163,7 +163,7 @@ func testAccCheckSecurityV3HostBasedExists(n string, hs *security.HostBasedSecur
 
 func testAccCheckSecurityV3HostBasedDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.SecurityOrderV3Client(OS_REGION_NAME)
+	client, err := config.securityOrderV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating ECL network client: %s", err)
 	}

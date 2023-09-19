@@ -510,7 +510,7 @@ func resourceSecurityNetworkBasedHADevicePortsForUpdate(d *schema.ResourceData) 
 
 func resourceSecurityNetworkBasedDeviceHAV3UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.SecurityPortalV3Client(GetRegion(d, config))
+	client, err := config.securityPortalV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}

@@ -196,7 +196,7 @@ func testAccCheckSecurityV3NetworkBasedDeviceSingleExists(n string, sd *security
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.SecurityOrderV3Client(OS_REGION_NAME)
+		client, err := config.securityOrderV3Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating ECL security client: %s", err)
 		}
@@ -218,7 +218,7 @@ func testAccCheckSecurityV3NetworkBasedDeviceSingleExists(n string, sd *security
 
 func testAccCheckSecurityV3NetworkBasedDeviceSingleDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.SecurityOrderV3Client(OS_REGION_NAME)
+	client, err := config.securityOrderV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating ECL network client: %s", err)
 	}

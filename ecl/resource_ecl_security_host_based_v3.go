@@ -145,7 +145,7 @@ func resourceSecurityHostBasedV3Create(d *schema.ResourceData, meta interface{})
 func resourceSecurityHostBasedV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	client, err := config.SecurityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -169,7 +169,7 @@ func resourceSecurityHostBasedV3Read(d *schema.ResourceData, meta interface{}) e
 
 func resourceSecurityHostBasedV3UpdateServiceOrderService(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.SecurityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -215,7 +215,7 @@ func resourceSecurityHostBasedV3UpdateServiceOrderService(d *schema.ResourceData
 
 func resourceSecurityHostBasedV3UpdateMaxAgentValue(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.SecurityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -274,7 +274,7 @@ func resourceSecurityHostBasedV3Update(d *schema.ResourceData, meta interface{})
 
 func resourceSecurityHostBasedV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.SecurityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
