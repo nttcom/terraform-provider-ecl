@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/load_balancer_plans"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/load_balancer_plans"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )

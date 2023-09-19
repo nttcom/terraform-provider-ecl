@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/dns/v2/zones"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/dns/v2/zones"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"

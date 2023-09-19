@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/vna/v1/appliances"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/vna/v1/appliances"
 )
 
 func noAllowedAddressPairsSchema(slotNumber int) *schema.Schema {

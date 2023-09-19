@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v2/ecl/vna/v1/appliances"
+	"github.com/nttcom/eclcloud/v4/ecl/vna/v1/appliances"
 )
 
 func allowedAddessPairsSchemaForDatasource() *schema.Schema {

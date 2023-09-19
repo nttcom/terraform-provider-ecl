@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/gateway_interfaces"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/gateway_interfaces"
 )
 
 func resourceNetworkGatewayInterfaceV2() *schema.Resource {

@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 
-	"github.com/nttcom/eclcloud/v2/ecl/vna/v1/appliances"
+	"github.com/nttcom/eclcloud/v4/ecl/vna/v1/appliances"
 )
 
 func TestMockedAccVNAV1Appliance_updateMetaBasic(t *testing.T) {

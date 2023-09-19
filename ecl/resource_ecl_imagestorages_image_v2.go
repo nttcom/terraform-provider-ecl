@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/imagestorage/v2/imagedata"
-	"github.com/nttcom/eclcloud/v2/ecl/imagestorage/v2/images"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/imagestorage/v2/imagedata"
+	"github.com/nttcom/eclcloud/v4/ecl/imagestorage/v2/images"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"

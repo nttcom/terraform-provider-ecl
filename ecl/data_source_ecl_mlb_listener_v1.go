@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/listeners"
+	"github.com/nttcom/eclcloud/v4/ecl/managed_load_balancer/v1/listeners"
 )
 
 func dataSourceMLBListenerV1() *schema.Resource {

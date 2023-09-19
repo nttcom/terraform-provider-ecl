@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/routes"
+	"github.com/nttcom/eclcloud/v4/ecl/managed_load_balancer/v1/routes"
 )
 
 func dataSourceMLBRouteV1() *schema.Resource {

@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/public_ips"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/public_ips"
 )
 
 func TestAccNetworkV2PublicIP_basic(t *testing.T) {

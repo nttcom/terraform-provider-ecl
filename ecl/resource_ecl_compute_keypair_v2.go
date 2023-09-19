@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/keypairs"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/keypairs"
 )
 
 func resourceComputeKeypairV2() *schema.Resource {

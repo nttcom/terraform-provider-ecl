@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/extensions/keypairs"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/keypairs"
 )
 
 func TestAccComputeV2Keypair_basic(t *testing.T) {
