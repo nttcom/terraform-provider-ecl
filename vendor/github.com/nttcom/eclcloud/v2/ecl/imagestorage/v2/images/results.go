@@ -85,9 +85,6 @@ type Image struct {
 
 	// VirtualSize is the virtual size of the image
 	VirtualSize int64 `json:"virtual_size"`
-
-	// License Switch is meant to bring your image license into ECL environment
-	LicenseSwitch string `json:"license_switch"`
 }
 
 func (r *Image) UnmarshalJSON(b []byte) error {

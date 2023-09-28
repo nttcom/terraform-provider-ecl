@@ -143,41 +143,6 @@ func TestAccImageStoragesV2Image_tags(t *testing.T) {
 	})
 }
 
-func TestAccImageStoragesV2Image_licenseSwitch(t *testing.T) {
-	if testing.Short() {
-		t.Skip("skip this test in short mode")
-	}
-
-	var image images.Image
-
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-			createTemporalImage(localFileForDataSourceTest)
-		},
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckImageStoragesV2ImageDestroy,
-		Steps: []resource.TestStep{
-			resource.TestStep{
-				Config: testAccImageStoragesV2ImageLicenseSwitch,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImageStoragesV2ImageExists("ecl_imagestorages_image_v2.image_1", &image),
-					resource.TestCheckResourceAttr(
-						"ecl_imagestorages_image_v2.image_1", "name", "Temp Terraform AccTest"),
-					resource.TestCheckResourceAttr(
-						"ecl_imagestorages_image_v2.image_1", "container_format", "bare"),
-					resource.TestCheckResourceAttr(
-						"ecl_imagestorages_image_v2.image_1", "disk_format", "qcow2"),
-					resource.TestCheckResourceAttr(
-						"ecl_imagestorages_image_v2.image_1", "license_switch", "WindowsServer_2012R2_Standard_64bit_ComLicense"),
-					resource.TestCheckResourceAttr(
-						"ecl_imagestorages_image_v2.image_1", "schema", "/v2/schemas/image"),
-				),
-			},
-		},
-	})
-}
-
 func TestAccImageStoragesV2Image_properties(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
@@ -238,41 +203,6 @@ func TestAccImageStoragesV2Image_properties(t *testing.T) {
 			},
 		},
 	})
-}
-
-func TestValidateLicenseSwitch(t *testing.T) {
-	validValues := []string{
-		"Red_Hat_Enterprise_Linux_6_64bit_BYOL",
-		"WindowsServer_2012R2_Standard_64bit_ComLicense",
-		"WindowsServer_2012_Standard_64bit_ComLicense",
-		"WindowsServer_2008R2_Enterprise_64bit_ComLicense",
-		"WindowsServer_2008R2_Standard_64bit_ComLicense",
-		"WindowsServer_2008_Enterprise_64bit_ComLicense",
-		"WindowsServer_2008_Standard_64bit_ComLicense",
-	}
-	for _, v := range validValues {
-		_, err := validateLicenseSwitch(v, "license_switch")
-		if err != nil {
-			t.Fatalf("Test failed while checking value = %s as %#v", v, err)
-		}
-	}
-
-	invalidValues := []string{
-		"Ped_Hat_Enterprise_Linux_6_64bit_BYOL",
-		"Red_Hat_Enterprise_Linux_6_64bit_BYOS",
-		"Red_Hat_Enterprise_Linux_X_64bit_BYOL",
-		"VindowsServer_2012R2_Standard_64bit_ComLicense",
-		"WindowsServer_2012R2_Enterprise_64bit_ComLicensu",
-		"WindowsServer_2012R2_Stundard_64bit_ComLicense",
-	}
-	for _, iv := range invalidValues {
-		_, err := validateLicenseSwitch(iv, "license_switch")
-		if err == nil {
-			t.Fatalf("Test failed while checking invalid value = %s as %#v", iv, err)
-		}
-	}
-
-	return
 }
 
 func testAccCheckImageStoragesV2ImageDestroy(s *terraform.State) error {
@@ -573,13 +503,4 @@ var testAccImageStoragesV2ImageProperties4 = fmt.Sprintf(`
         foo = "baz"
         bar = "foo"
       }
-  }`, localFileForResourceTest)
-
-var testAccImageStoragesV2ImageLicenseSwitch = fmt.Sprintf(`
-  resource "ecl_imagestorages_image_v2" "image_1" {
-    name = "Temp Terraform AccTest"
-    local_file_path = "%s"
-    container_format = "bare"
-    disk_format = "qcow2"
-    license_switch = "WindowsServer_2012R2_Standard_64bit_ComLicense"
   }`, localFileForResourceTest)
