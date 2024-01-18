@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"regexp"
 	"strings"
 	"time"
 
@@ -163,12 +162,6 @@ func resourceImageStoragesImageV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-
-			"license_switch": &schema.Schema{
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateLicenseSwitch,
-			},
 		},
 	}
 }
@@ -192,7 +185,6 @@ func resourceImageStoragesImageV2Create(d *schema.ResourceData, meta interface{}
 		DiskFormat:      d.Get("disk_format").(string),
 		MinDisk:         d.Get("min_disk_gb").(int),
 		MinRAM:          d.Get("min_ram_mb").(int),
-		LicenseSwitch:   d.Get("license_switch").(string),
 		Protected:       &protected,
 		Visibility:      &visibility,
 		Properties:      imageProperties,
@@ -449,23 +441,6 @@ func resourceImageStoragesImageV2ValidateVisibility(v interface{}, k string) (ws
 
 	err := fmt.Errorf("%s must be one of %s", k, validVisibilities)
 	errors = append(errors, err)
-	return
-}
-
-func validateLicenseSwitch(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-
-	reRedHat := regexp.MustCompile(`^Red_Hat_Enterprise_Linux_\d+_\d+bit_BYOL$`)
-	reWindows := regexp.MustCompile(`^WindowsServer_\d+[R2]*_(Enterprise|Standard)_\d+bit_ComLicense$`)
-
-	var resultRedHat, resultWindows bool
-	resultRedHat = reRedHat.MatchString(value)
-	resultWindows = reWindows.MatchString(value)
-
-	if !resultRedHat && !resultWindows {
-		err := fmt.Errorf("Given value %s does not match any of LicenseSwitch Types", value)
-		errors = append(errors, err)
-	}
 	return
 }
 

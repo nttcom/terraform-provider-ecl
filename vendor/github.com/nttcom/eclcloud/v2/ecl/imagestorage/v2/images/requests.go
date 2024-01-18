@@ -173,9 +173,6 @@ type CreateOpts struct {
 	// is required to boot the image.
 	MinRAM int `json:"min_ram,omitempty"`
 
-	// License Switch is meant to bring your image license into ECL environment
-	LicenseSwitch string `json:"license_switch,omitempty"`
-
 	// protected is whether the image is not deletable.
 	Protected *bool `json:"protected,omitempty"`
 
