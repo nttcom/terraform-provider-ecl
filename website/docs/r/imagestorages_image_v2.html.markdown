@@ -52,7 +52,7 @@ The following arguments are supported:
 
 * `verify_checksum` - (Optional) If false, the checksum will not be verified once the image is finished uploading. Defaults to true.
 
-* `visibility` - (Optional) Scope of image accessibility. Must be one of "public", "private". Defaults to "private".
+* `visibility` - (Optional) Scope of image accessibility. Must be one of "public", "private", "shared".
 
 * `peroperties` - (Optional) A map of key/value pairs to set freeform information about an image.
 

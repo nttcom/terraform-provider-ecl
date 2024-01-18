@@ -113,7 +113,7 @@ func resourceImageStoragesImageV2() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: resourceImageStoragesImageV2ValidateVisibility,
-				Default:      "private",
+				Computed:     true,
 			},
 
 			"properties": &schema.Schema{
@@ -186,13 +186,16 @@ func resourceImageStoragesImageV2Create(d *schema.ResourceData, meta interface{}
 		MinDisk:         d.Get("min_disk_gb").(int),
 		MinRAM:          d.Get("min_ram_mb").(int),
 		Protected:       &protected,
-		Visibility:      &visibility,
 		Properties:      imageProperties,
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
 		tags := v.(*schema.Set).List()
 		createOpts.Tags = resourceImageStoragesImageV2BuildTags(tags)
+	}
+
+	if visibility != "" {
+		createOpts.Visibility = &visibility
 	}
 
 	d.Partial(true)
