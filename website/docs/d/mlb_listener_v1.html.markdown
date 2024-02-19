@@ -25,7 +25,9 @@ data "ecl_mlb_listener_v1" "listener" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `configuration_status` - (Optional) Configuration status of the resource
     * Must be one of these values:
         * `"ACTIVE"`

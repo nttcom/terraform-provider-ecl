@@ -25,7 +25,9 @@ data "ecl_mlb_tls_policy_v1" "TLSv1.2_202210_01" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `default` - (Optional) Whether the TLS policy will be set `policy.tls_policy_id` when that is not specified
 
 ## Attributes Reference

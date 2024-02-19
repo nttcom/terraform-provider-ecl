@@ -25,7 +25,9 @@ data "ecl_mlb_certificate_v1" "certificate" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `tenant_id` - (Optional) ID of the owner tenant of the resource
 * `ca_cert_status` - (Optional) CA certificate file upload status of the certificate
     * Must be one of these values:

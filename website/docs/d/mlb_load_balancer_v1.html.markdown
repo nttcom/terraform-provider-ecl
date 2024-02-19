@@ -25,7 +25,9 @@ data "ecl_mlb_load_balancer_v1" "load_balancer" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `configuration_status` - (Optional) Configuration status of the resource
     * Must be one of these values:
         * `"ACTIVE"`
@@ -94,18 +96,19 @@ In addition, the following attributes are exported:
 * `primary_availability_zone` - The zone / group where the primary virtual server of load balancer is deployed
 * `secondary_availability_zone` - The zone / group where the secondary virtual server of load balancer is deployed
 * `active_availability_zone` - Primary or secondary availability zone where the load balancer is currently running
-    * Return `"UNDEFINED"` if can not define active availability zone
+    * If can not define active availability zone, returns `"UNDEFINED"`
 * `revision` - Revision of the load balancer
 * `plan_id` - ID of the plan
 * `plan_name` - Name of the plan
 * `tenant_id` - ID of the owner tenant of the load balancer
 * `syslog_servers` - Syslog servers to which access logs are transferred
+    * The facility code of syslog is 0 (kern), and the severity level is 6 (info)
     * Only access logs to listeners which `protocol` is either `"http"` or `"https"` are transferred
-    * When `protocol` of `syslog_servers` is `"tcp"`
-        * Access logs are transferred to all healthy syslog servers specified in `syslog_servers`
-    * When `protocol` of `syslog_servers` is `"udp"`
-        * Access logs are transferred to the syslog server specified first in `syslog_servers` as long as it is healthy
-        * Access logs are transferred to the syslog server specified second (last) in `syslog_servers` when the first syslog server is not healthy
+    * If `protocol` of `syslog_servers` is `"tcp"`
+        * Access logs are transferred to all healthy syslog servers set in `syslog_servers`
+    * If `protocol` of `syslog_servers` is `"udp"`
+        * Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
+        * Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
     * Structure is [documented below](#syslog-servers)
 * `interfaces` - Interfaces that attached to the load balancer
     * Structure is [documented below](#interfaces)
