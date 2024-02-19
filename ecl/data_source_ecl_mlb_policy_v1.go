@@ -63,6 +63,11 @@ func dataSourceMLBPolicyV1() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"idle_timeout": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
 			"sorry_page_url": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -134,6 +139,10 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	if v, ok := d.GetOk("persistence"); ok {
 		listOpts.Persistence = v.(string)
+	}
+
+	if v, ok := d.GetOk("idle_timeout"); ok {
+		listOpts.IdleTimeout = v.(int)
 	}
 
 	if v, ok := d.GetOk("sorry_page_url"); ok {
@@ -212,6 +221,7 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("tenant_id", policy.TenantID)
 	d.Set("algorithm", policy.Algorithm)
 	d.Set("persistence", policy.Persistence)
+	d.Set("idle_timeout", policy.IdleTimeout)
 	d.Set("sorry_page_url", policy.SorryPageUrl)
 	d.Set("source_nat", policy.SourceNat)
 	d.Set("certificate_id", policy.CertificateID)
