@@ -110,16 +110,16 @@ In addition, the following attributes are exported:
 * `idle_timeout` - The duration (in seconds) during which a session is allowed to remain inactive
     * There may be a time difference up to 60 seconds, between the set value and the actual timeout
     * If `listener.protocol` is `"tcp"` or `"udp"`
-    * Default value is 120
+        * Default value is 120
     * If `listener.protocol` is `"http"` or `"https"`
-    * Default value is 600
-    * On session timeout, the load balancer sends TCP RST packets to both the client and the real server
+        * Default value is 600
+        * On session timeout, the load balancer sends TCP RST packets to both the client and the real server
 * `sorry_page_url` - URL of the sorry page to which accesses are redirected if all members in the target group are down
     * If protocol is not `"http"` or `"https"`, returns `""`
 * `source_nat` - Source NAT setting of the policy
     * If `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"` ,
-    * The source IP address of the request is replaced with `virtual_ip_address` which is assigned to the interface from which the request was sent
-    * `X-Forwarded-For` header with the IP address of the client is added
+        * The source IP address of the request is replaced with `virtual_ip_address` which is assigned to the interface from which the request was sent
+        * `X-Forwarded-For` header with the IP address of the client is added
 * `certificate_id` - ID of the certificate that assigned to the policy
     * If protocol is not `"https"`, returns `""`
 * `health_monitor_id` - ID of the health monitor that assigned to the policy

@@ -104,11 +104,11 @@ In addition, the following attributes are exported:
 * `syslog_servers` - Syslog servers to which access logs are transferred
     * The facility code of syslog is 0 (kern), and the severity level is 6 (info)
     * Only access logs to listeners which `protocol` is either `"http"` or `"https"` are transferred
-    * If `protocol` of `syslog_servers` is `"tcp"`
-        * Access logs are transferred to all healthy syslog servers set in `syslog_servers`
-    * If `protocol` of `syslog_servers` is `"udp"`
-        * Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
-        * Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
+        * If `protocol` of `syslog_servers` is `"tcp"`
+            * Access logs are transferred to all healthy syslog servers set in `syslog_servers`
+        * If `protocol` of `syslog_servers` is `"udp"`
+            * Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
+            * Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
     * Structure is [documented below](#syslog-servers)
 * `interfaces` - Interfaces that attached to the load balancer
     * Structure is [documented below](#interfaces)
