@@ -25,7 +25,9 @@ data "ecl_mlb_health_monitor_v1" "health_monitor" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `configuration_status` - (Optional) Configuration status of the resource
     * Must be one of these values:
         * `"ACTIVE"`
@@ -94,15 +96,15 @@ In addition, the following attributes are exported:
 * `load_balancer_id` - ID of the load balancer which the health monitor belongs to
 * `tenant_id` - ID of the owner tenant of the health monitor
 * `port` - Port number of the health monitor for healthchecking
-    * Returns `0` when `protocol` is `"icmp"`
+    * If `protocol` is `"icmp"`, returns `0`
 * `protocol` - Protocol of the health monitor for healthchecking
 * `interval` - Interval of healthchecking (in seconds)
 * `retry` - Retry count of healthchecking
     * Initial monitoring is not included
-    * Retry is executed at the interval specified by `interval`
+    * Retry is executed at the interval set in `interval`
 * `timeout` - Timeout of healthchecking (in seconds)
 * `path` - URL path of healthchecking
-    * Used when `protocol` is `"http"` or `"https"`
+    * If `protocol` is `"http"` or `"https"`, uses this parameter
 * `http_status_code` - HTTP status codes expected in healthchecking
-    * Used when `protocol` is `"http"` or `"https"`
+    * If `protocol` is `"http"` or `"https"`, uses this parameter
     * Format: `"xxx"` or `"xxx-xxx"` ( `xxx` between [100, 599])
