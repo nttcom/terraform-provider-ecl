@@ -64,7 +64,7 @@ type CancelStagedResult struct {
 type ConfigurationInResponse struct {
 
 	// - Port number of the health monitor for healthchecking
-	// - Returns `0` when `protocol` is `"icmp"`
+	// - If `protocol` is `"icmp"`, returns `0`
 	Port int `json:"port,omitempty"`
 
 	// - Protocol of the health monitor for healthchecking
@@ -75,18 +75,18 @@ type ConfigurationInResponse struct {
 
 	// - Retry count of healthchecking
 	// - Initial monitoring is not included
-	// - Retry is executed at the interval specified by `interval`
+	// - Retry is executed at the interval set in `interval`
 	Retry int `json:"retry,omitempty"`
 
 	// - Timeout of healthchecking (in seconds)
 	Timeout int `json:"timeout,omitempty"`
 
 	// - URL path of healthchecking
-	// - Used when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, uses this parameter
 	Path string `json:"path,omitempty"`
 
 	// - HTTP status codes expected in healthchecking
-	// - Used when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, uses this parameter
 	// - Format: `"xxx"` or `"xxx-xxx"` ( `xxx` between [100, 599])
 	HttpStatusCode string `json:"http_status_code,omitempty"`
 }
@@ -144,7 +144,7 @@ type HealthMonitor struct {
 	TenantID string `json:"tenant_id"`
 
 	// - Port number of the health monitor for healthchecking
-	// - Returns `0` when `protocol` is `"icmp"`
+	// - If `protocol` is `"icmp"`, returns `0`
 	Port int `json:"port,omitempty"`
 
 	// - Protocol of the health monitor for healthchecking
@@ -155,29 +155,29 @@ type HealthMonitor struct {
 
 	// - Retry count of healthchecking
 	// - Initial monitoring is not included
-	// - Retry is executed at the interval specified by `interval`
+	// - Retry is executed at the interval set in `interval`
 	Retry int `json:"retry,omitempty"`
 
 	// - Timeout of healthchecking (in seconds)
 	Timeout int `json:"timeout,omitempty"`
 
 	// - URL path of healthchecking
-	// - Used when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, uses this parameter
 	Path string `json:"path,omitempty"`
 
 	// - HTTP status codes expected in healthchecking
-	// - Used when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, uses this parameter
 	// - Format: `"xxx"` or `"xxx-xxx"` ( `xxx` between [100, 599])
 	HttpStatusCode string `json:"http_status_code,omitempty"`
 
 	// - Running configurations of the health monitor
-	// - Return object when `changes` is `true`
-	// - Return `null` when current configuration does not exist
+	// - If `changes` is `true`, return object
+	// - If current configuration does not exist, return `null`
 	Current ConfigurationInResponse `json:"current,omitempty"`
 
 	// - Added or changed configurations of the health monitor that waiting to be applied
-	// - Return object when `changes` is `true`
-	// - Return `null` when staged configuration does not exist
+	// - If `changes` is `true`, return object
+	// - If staged configuration does not exist, return `null`
 	Staged ConfigurationInResponse `json:"staged,omitempty"`
 }
 

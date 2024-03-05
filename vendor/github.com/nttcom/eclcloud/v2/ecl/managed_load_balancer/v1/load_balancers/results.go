@@ -78,12 +78,13 @@ type ReservedFixedIPInResponse struct {
 type ConfigurationInResponse struct {
 
 	// - Syslog servers to which access logs are transferred
+	// - The facility code of syslog is 0 (kern), and the severity level is 6 (info)
 	// - Only access logs to listeners which `protocol` is either `"http"` or `"https"` are transferred
-	//   - When `protocol` of `syslog_servers` is `"tcp"`
-	//     - Access logs are transferred to all healthy syslog servers specified in `syslog_servers`
-	//   - When `protocol` of `syslog_servers` is `"udp"`
-	//     - Access logs are transferred to the syslog server specified first in `syslog_servers` as long as it is healthy
-	//     - Access logs are transferred to the syslog server specified second (last) in `syslog_servers` when the first syslog server is not healthy
+	//   - If `protocol` of `syslog_servers` is `"tcp"`
+	//     - Access logs are transferred to all healthy syslog servers set in `syslog_servers`
+	//   - If `protocol` of `syslog_servers` is `"udp"`
+	//     - Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
+	//     - Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
 	SyslogServers []SyslogServerInResponse `json:"syslog_servers,omitempty"`
 
 	// - Interfaces that attached to the load balancer
@@ -178,7 +179,7 @@ type LoadBalancer struct {
 	SecondaryAvailabilityZone string `json:"secondary_availability_zone,omitempty"`
 
 	// - Primary or secondary availability zone where the load balancer is currently running
-	// - Return `"UNDEFINED"` if can not define active availability zone
+	// - If can not define active availability zone, returns `"UNDEFINED"`
 	ActiveAvailabilityZone string `json:"active_availability_zone"`
 
 	// - Revision of the load balancer
@@ -194,25 +195,26 @@ type LoadBalancer struct {
 	TenantID string `json:"tenant_id"`
 
 	// - Syslog servers to which access logs are transferred
+	// - The facility code of syslog is 0 (kern), and the severity level is 6 (info)
 	// - Only access logs to listeners which `protocol` is either `"http"` or `"https"` are transferred
-	//   - When `protocol` of `syslog_servers` is `"tcp"`
-	//     - Access logs are transferred to all healthy syslog servers specified in `syslog_servers`
-	//   - When `protocol` of `syslog_servers` is `"udp"`
-	//     - Access logs are transferred to the syslog server specified first in `syslog_servers` as long as it is healthy
-	//     - Access logs are transferred to the syslog server specified second (last) in `syslog_servers` when the first syslog server is not healthy
+	//   - If `protocol` of `syslog_servers` is `"tcp"`
+	//     - Access logs are transferred to all healthy syslog servers set in `syslog_servers`
+	//   - If `protocol` of `syslog_servers` is `"udp"`
+	//     - Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
+	//     - Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
 	SyslogServers []SyslogServerInResponse `json:"syslog_servers,omitempty"`
 
 	// - Interfaces that attached to the load balancer
 	Interfaces []InterfaceInResponse `json:"interfaces,omitempty"`
 
 	// - Running configurations of the load balancer
-	// - Return object when `changes` is `true`
-	// - Return `null` when current configuration does not exist
+	// - If `changes` is `true`, return object
+	// - If current configuration does not exist, return `null`
 	Current ConfigurationInResponse `json:"current,omitempty"`
 
 	// - Added or changed configurations of the load balancer that waiting to be applied
-	// - Return object when `changes` is `true`
-	// - Return `null` when staged configuration does not exist
+	// - If `changes` is `true`, return object
+	// - If staged configuration does not exist, return `null`
 	Staged ConfigurationInResponse `json:"staged,omitempty"`
 }
 

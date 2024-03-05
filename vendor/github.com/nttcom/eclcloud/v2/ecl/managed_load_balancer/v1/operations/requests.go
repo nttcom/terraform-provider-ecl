@@ -38,10 +38,10 @@ type ListOpts struct {
 	// - ID of the owner tenant of the resource
 	TenantID string `q:"tenant_id"`
 
-	// - When `true` is specified, operations of deleted resource is not displayed
+	// - If `true` is set, operations of deleted resource is not displayed
 	NoDeleted bool `q:"no_deleted"`
 
-	// - When `true` is specified, only the latest operation of each resource is displayed
+	// - If `true` is set, only the latest operation of each resource is displayed
 	Latest bool `q:"latest"`
 }
 

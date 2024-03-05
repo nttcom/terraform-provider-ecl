@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -93,8 +95,9 @@ type CreateOptsReservedFixedIP struct {
 
 	// - The IP address assign to this interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Must be specified the unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not be specified the network IP address and broadcast IP address
+	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network IP address and broadcast IP address
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress string `json:"ip_address"`
 }
 
@@ -102,20 +105,19 @@ type CreateOptsReservedFixedIP struct {
 type CreateOptsInterface struct {
 
 	// - ID of the network that this interface belongs to
-	// - Must be specified the unique network ID in `interfaces`
-	// - Must be specified the network that plane is data
-	// - Must not be specified the network that uses ISP shared address (RFC 6598)
+	// - Set a unique network ID in `interfaces`
+	// - Set a network of which plane is data
+	// - Must not set ID of a network that uses ISP shared address (RFC 6598)
 	NetworkID string `json:"network_id"`
 
 	// - Virtual IP address of the interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Must be specified the unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not be specified the network IP address and broadcast IP address
-	// - Must not be specified for existing interfaces
+	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Set a network IP address and broadcast IP address
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	VirtualIPAddress string `json:"virtual_ip_address"`
 
 	// - IP addresses that are pre-reserved for applying configurations of load balancer to be performed without losing redundancy
-	// - Must not be specified for existing interfaces
 	ReservedFixedIPs *[]CreateOptsReservedFixedIP `json:"reserved_fixed_ips"`
 }
 
@@ -130,7 +132,7 @@ type CreateOptsSyslogServer struct {
 	Port int `json:"port,omitempty"`
 
 	// - Protocol of the syslog server
-	// - Must be specified same protocol in all syslog servers belongs to the same load balancer
+	// - Set same protocol in all syslog servers which belong to the same load balancer
 	Protocol string `json:"protocol,omitempty"`
 }
 
@@ -138,25 +140,30 @@ type CreateOptsSyslogServer struct {
 type CreateOpts struct {
 
 	// - Name of the load balancer
+	// - This field accepts single-byte characters only
 	Name string `json:"name,omitempty"`
 
 	// - Description of the load balancer
+	// - This field accepts single-byte characters only
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the load balancer
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - ID of the plan
 	PlanID string `json:"plan_id,omitempty"`
 
 	// - Syslog servers to which access logs are transferred
+	// - The facility code of syslog is 0 (kern), and the severity level is 6 (info)
 	// - Only access logs to listeners which `protocol` is either `"http"` or `"https"` are transferred
-	//   - When `protocol` of `syslog_servers` is `"tcp"`
-	//     - Access logs are transferred to all healthy syslog servers specified in `syslog_servers`
-	//   - When `protocol` of `syslog_servers` is `"udp"`
-	//     - Access logs are transferred to the syslog server specified first in `syslog_servers` as long as it is healthy
-	//     - Access logs are transferred to the syslog server specified second (last) in `syslog_servers` when the first syslog server is not healthy
+	//   - If `protocol` of `syslog_servers` is `"tcp"`
+	//     - Access logs are transferred to all healthy syslog servers set in `syslog_servers`
+	//   - If `protocol` of `syslog_servers` is `"udp"`
+	//     - Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
+	//     - Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
 	SyslogServers *[]CreateOptsSyslogServer `json:"syslog_servers,omitempty"`
 
 	// - Interfaces that attached to the load balancer
@@ -198,7 +205,7 @@ Show Load Balancer
 // ShowOpts represents options used to show a load balancer.
 type ShowOpts struct {
 
-	// - When `true` is specified, `current` and `staged` are returned in response body
+	// - If `true` is set, `current` and `staged` are returned in response body
 	Changes bool `q:"changes"`
 }
 
@@ -238,13 +245,17 @@ Update Load Balancer Attributes
 type UpdateOpts struct {
 
 	// - Name of the load balancer
+	// - This field accepts single-byte characters only
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the load balancer
+	// - This field accepts single-byte characters only
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the load balancer
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -353,8 +364,9 @@ type CreateStagedOptsReservedFixedIP struct {
 
 	// - The IP address assign to this interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Must be specified the unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not be specified the network IP address and broadcast IP address
+	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network IP address and broadcast IP address
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress string `json:"ip_address"`
 }
 
@@ -362,20 +374,21 @@ type CreateStagedOptsReservedFixedIP struct {
 type CreateStagedOptsInterface struct {
 
 	// - ID of the network that this interface belongs to
-	// - Must be specified the unique network ID in `interfaces`
-	// - Must be specified the network that plane is data
-	// - Must not be specified the network that uses ISP shared address (RFC 6598)
+	// - Set a unique network ID in `interfaces`
+	// - Set a network of which plane is data
+	// - Must not set ID of a network that uses ISP shared address (RFC 6598)
 	NetworkID string `json:"network_id"`
 
 	// - Virtual IP address of the interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Must be specified the unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not be specified the network IP address and broadcast IP address
-	// - Must not be specified for existing interfaces
+	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network IP address and broadcast IP address
+	// - If there are no changes to the `network_id` within the `interfaces[]` , set the current `virtual_ip_address` value
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	VirtualIPAddress string `json:"virtual_ip_address"`
 
 	// - IP addresses that are pre-reserved for applying configurations of load balancer to be performed without losing redundancy
-	// - Must not be specified for existing interfaces
+	// - If there are no changes to the `network_id` within the `interfaces[]` , set the current `reserved_fixed_ips` value
 	ReservedFixedIPs *[]CreateStagedOptsReservedFixedIP `json:"reserved_fixed_ips"`
 }
 
@@ -390,7 +403,7 @@ type CreateStagedOptsSyslogServer struct {
 	Port int `json:"port,omitempty"`
 
 	// - Protocol of the syslog server
-	// - Must be specified same protocol in all syslog servers belongs to the same load balancer
+	// - Set same protocol in all syslog servers which belong to the same load balancer
 	Protocol string `json:"protocol,omitempty"`
 }
 
@@ -398,12 +411,13 @@ type CreateStagedOptsSyslogServer struct {
 type CreateStagedOpts struct {
 
 	// - Syslog servers to which access logs are transferred
+	// - The facility code of syslog is 0 (kern), and the severity level is 6 (info)
 	// - Only access logs to listeners which `protocol` is either `"http"` or `"https"` are transferred
-	//   - When `protocol` of `syslog_servers` is `"tcp"`
-	//     - Access logs are transferred to all healthy syslog servers specified in `syslog_servers`
-	//   - When `protocol` of `syslog_servers` is `"udp"`
-	//     - Access logs are transferred to the syslog server specified first in `syslog_servers` as long as it is healthy
-	//     - Access logs are transferred to the syslog server specified second (last) in `syslog_servers` when the first syslog server is not healthy
+	//   - If `protocol` of `syslog_servers` is `"tcp"`
+	//     - Access logs are transferred to all healthy syslog servers set in `syslog_servers`
+	//   - If `protocol` of `syslog_servers` is `"udp"`
+	//     - Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
+	//     - Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
 	SyslogServers *[]CreateStagedOptsSyslogServer `json:"syslog_servers,omitempty"`
 
 	// - Interfaces that attached to the load balancer
@@ -460,8 +474,9 @@ type UpdateStagedOptsReservedFixedIP struct {
 
 	// - The IP address assign to this interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Must be specified the unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not be specified the network IP address and broadcast IP address
+	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network IP address and broadcast IP address
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress *string `json:"ip_address"`
 }
 
@@ -469,20 +484,21 @@ type UpdateStagedOptsReservedFixedIP struct {
 type UpdateStagedOptsInterface struct {
 
 	// - ID of the network that this interface belongs to
-	// - Must be specified the unique network ID in `interfaces`
-	// - Must be specified the network that plane is data
-	// - Must not be specified the network that uses ISP shared address (RFC 6598)
+	// - Set a unique network ID in `interfaces`
+	// - Set a network of which plane is data
+	// - Must not set ID of a network that uses ISP shared address (RFC 6598)
 	NetworkID *string `json:"network_id"`
 
 	// - Virtual IP address of the interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Must be specified the unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not be specified the network IP address and broadcast IP address
-	// - Must not be specified for existing interfaces
+	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network IP address and broadcast IP address
+	// - If there are no changes to the `network_id` within the `interfaces[]` , set the current `virtual_ip_address` value
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	VirtualIPAddress *string `json:"virtual_ip_address"`
 
 	// - IP addresses that are pre-reserved for applying configurations of load balancer to be performed without losing redundancy
-	// - Must not be specified for existing interfaces
+	// - If there are no changes to the `network_id` within the `interfaces[]` , set the current `reserved_fixed_ips` value
 	ReservedFixedIPs *[]UpdateStagedOptsReservedFixedIP `json:"reserved_fixed_ips"`
 }
 
@@ -497,7 +513,7 @@ type UpdateStagedOptsSyslogServer struct {
 	Port *int `json:"port,omitempty"`
 
 	// - Protocol of the syslog server
-	// - Must be specified same protocol in all syslog servers belongs to the same load balancer
+	// - Set same protocol in all syslog servers which belong to the same load balancer
 	Protocol *string `json:"protocol,omitempty"`
 }
 
@@ -505,12 +521,13 @@ type UpdateStagedOptsSyslogServer struct {
 type UpdateStagedOpts struct {
 
 	// - Syslog servers to which access logs are transferred
+	// - The facility code of syslog is 0 (kern), and the severity level is 6 (info)
 	// - Only access logs to listeners which `protocol` is either `"http"` or `"https"` are transferred
-	//   - When `protocol` of `syslog_servers` is `"tcp"`
-	//     - Access logs are transferred to all healthy syslog servers specified in `syslog_servers`
-	//   - When `protocol` of `syslog_servers` is `"udp"`
-	//     - Access logs are transferred to the syslog server specified first in `syslog_servers` as long as it is healthy
-	//     - Access logs are transferred to the syslog server specified second (last) in `syslog_servers` when the first syslog server is not healthy
+	//   - If `protocol` of `syslog_servers` is `"tcp"`
+	//     - Access logs are transferred to all healthy syslog servers set in `syslog_servers`
+	//   - If `protocol` of `syslog_servers` is `"udp"`
+	//     - Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
+	//     - Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
 	SyslogServers *[]UpdateStagedOptsSyslogServer `json:"syslog_servers,omitempty"`
 
 	// - Interfaces that attached to the load balancer

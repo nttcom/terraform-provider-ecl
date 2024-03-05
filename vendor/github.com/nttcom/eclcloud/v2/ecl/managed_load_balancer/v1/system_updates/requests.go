@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - URL of announcement for the system update (for example, Knowledge Center news)
@@ -37,7 +39,7 @@ type ListOpts struct {
 	// - Whether the system update can be applied to the load balancer
 	Applicable bool `q:"applicable"`
 
-	// - When `true` is specified, only the latest resource is displayed
+	// - If `true` is set, only the latest resource is displayed
 	Latest bool `q:"latest"`
 }
 

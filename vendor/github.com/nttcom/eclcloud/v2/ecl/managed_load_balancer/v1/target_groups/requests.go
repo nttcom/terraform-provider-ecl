@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -77,16 +79,19 @@ Create Target Group
 type CreateOptsMember struct {
 
 	// - IP address of the member (real server)
-	// - Must be specified the unique combination of ip address and port in all members belongs to the same target group
+	// - Set an unique combination of IP address and port in all members which belong to the same target group
+	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the target group belongs to
+	// - Must not set a IP address of listeners which belong to the same load balancer as the target group
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress string `json:"ip_address"`
 
 	// - Port number of the member (real server)
-	// - Must be specified the unique combination of ip address and port in all members belongs to the same target group
+	// - Set an unique combination of IP address and port in all members which belong to the same target group
 	Port int `json:"port"`
 
 	// - Weight for the member (real server)
-	// - Used when `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`
-	// - Must be specified same weight for the combination of ip address and port in all members belongs to the same load balancer
+	// - If `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`, use this parameter
+	// - Set same weight for the combination of IP address and port in all members which belong to the same load balancer
 	Weight int `json:"weight,omitempty"`
 }
 
@@ -94,13 +99,17 @@ type CreateOptsMember struct {
 type CreateOpts struct {
 
 	// - Name of the target group
+	// - This field accepts single-byte characters only
 	Name string `json:"name,omitempty"`
 
 	// - Description of the target group
+	// - This field accepts single-byte characters only
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the target group
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - ID of the load balancer which the target group belongs to
@@ -143,7 +152,7 @@ Show Target Group
 // ShowOpts represents options used to show a target group.
 type ShowOpts struct {
 
-	// - When `true` is specified, `current` and `staged` are returned in response body
+	// - If `true` is set, `current` and `staged` are returned in response body
 	Changes bool `q:"changes"`
 }
 
@@ -183,13 +192,17 @@ Update Target Group Attributes
 type UpdateOpts struct {
 
 	// - Name of the target group
+	// - This field accepts single-byte characters only
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the target group
+	// - This field accepts single-byte characters only
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the target group
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -240,16 +253,19 @@ Create Staged Target Group Configurations
 type CreateStagedOptsMember struct {
 
 	// - IP address of the member (real server)
-	// - Must be specified the unique combination of ip address and port in all members belongs to the same target group
+	// - Set an unique combination of IP address and port in all members which belong to the same target group
+	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the target group belongs to
+	// - Must not set a IP address of listeners which belong to the same load balancer as the target group
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress string `json:"ip_address"`
 
 	// - Port number of the member (real server)
-	// - Must be specified the unique combination of ip address and port in all members belongs to the same target group
+	// - Set an unique combination of IP address and port in all members which belong to the same target group
 	Port int `json:"port"`
 
 	// - Weight for the member (real server)
-	// - Used when `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`
-	// - Must be specified same weight for the combination of ip address and port in all members belongs to the same load balancer
+	// - If `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`, use this parameter
+	// - Set same weight for the combination of IP address and port in all members which belong to the same load balancer
 	Weight int `json:"weight,omitempty"`
 }
 
@@ -307,16 +323,19 @@ Update Staged Target Group Configurations
 type UpdateStagedOptsMember struct {
 
 	// - IP address of the member (real server)
-	// - Must be specified the unique combination of ip address and port in all members belongs to the same target group
+	// - Set an unique combination of IP address and port in all members which belong to the same target group
+	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the target group belongs to
+	// - Must not set a IP address of listeners which belong to the same load balancer as the target group
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress *string `json:"ip_address"`
 
 	// - Port number of the member (real server)
-	// - Must be specified the unique combination of ip address and port in all members belongs to the same target group
+	// - Set an unique combination of IP address and port in all members which belong to the same target group
 	Port *int `json:"port"`
 
 	// - Weight for the member (real server)
-	// - Used when `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`
-	// - Must be specified same weight for the combination of ip address and port in all members belongs to the same load balancer
+	// - If `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`, use this parameter
+	// - Set same weight for the combination of IP address and port in all members which belong to the same load balancer
 	Weight *int `json:"weight,omitempty"`
 }
 
