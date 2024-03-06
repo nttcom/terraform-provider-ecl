@@ -77,7 +77,7 @@ type MemberInResponse struct {
 	Port int `json:"port"`
 
 	// - Weight for the member (real server)
-	// - Used when `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`
+	// - If `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`, uses this parameter
 	Weight int `json:"weight"`
 }
 
@@ -137,13 +137,13 @@ type TargetGroup struct {
 	Members []MemberInResponse `json:"members,omitempty"`
 
 	// - Running configurations of the target group
-	// - Return object when `changes` is `true`
-	// - Return `null` when current configuration does not exist
+	// - If `changes` is `true`, return object
+	// - If current configuration does not exist, return `null`
 	Current ConfigurationInResponse `json:"current,omitempty"`
 
 	// - Added or changed configurations of the target group that waiting to be applied
-	// - Return object when `changes` is `true`
-	// - Return `null` when staged configuration does not exist
+	// - If `changes` is `true`, return object
+	// - If staged configuration does not exist, return `null`
 	Staged ConfigurationInResponse `json:"staged,omitempty"`
 }
 

@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -86,8 +88,8 @@ Create Rule
 type CreateOptsCondition struct {
 
 	// - URL path patterns (regular expressions) of the condition
-	// - Must be specified the unique string in all path patterns belongs to the same policy
-	// - Must be specified as PCRE (Perl Compatible Regular Expressions) format
+	// - Set a path pattern as unique string in all path patterns which belong to the same policy
+	// - Set a path pattern in PCRE (Perl Compatible Regular Expressions) format
 	//   - Capturing groups and backreferences are not supported
 	PathPatterns []string `json:"path_patterns,omitempty"`
 }
@@ -96,29 +98,33 @@ type CreateOptsCondition struct {
 type CreateOpts struct {
 
 	// - Name of the rule
+	// - This field accepts single-byte characters only
 	Name string `json:"name,omitempty"`
 
 	// - Description of the rule
+	// - This field accepts single-byte characters only
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the rule
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - Priority of the rule
-	// - Must be specified the unique number in all rules belongs to the same policy
+	// - Set an unique number in all rules which belong to the same policy
 	Priority int `json:"priority,omitempty"`
 
 	// - ID of the target group that assigned to the rule
-	// - Must be specified the different target group from `"default_target_group_id"` of the policy
+	// - Set a different target group from `"default_target_group_id"` of the policy
 	TargetGroupID string `json:"target_group_id,omitempty"`
 
 	// - ID of the policy which the rule belongs to
-	// - Must be specified a policy which has a listener of which protocol is either `"http"` or `"https"`
+	// - Set ID of the policy which has a listener in which protocol is either `"http"` or `"https"`
 	PolicyID string `json:"policy_id,omitempty"`
 
 	// - Conditions of the rules to distribute accesses to the target groups
-	// - Must be specified one or more condition
+	// - Set one or more condition
 	Conditions *CreateOptsCondition `json:"conditions,omitempty"`
 }
 
@@ -155,7 +161,7 @@ Show Rule
 // ShowOpts represents options used to show a rule.
 type ShowOpts struct {
 
-	// - When `true` is specified, `current` and `staged` are returned in response body
+	// - If `true` is set, `current` and `staged` are returned in response body
 	Changes bool `q:"changes"`
 }
 
@@ -195,13 +201,17 @@ Update Rule Attributes
 type UpdateOpts struct {
 
 	// - Name of the rule
+	// - This field accepts single-byte characters only
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the rule
+	// - This field accepts single-byte characters only
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the rule
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -252,8 +262,8 @@ Create Staged Rule Configurations
 type CreateStagedOptsCondition struct {
 
 	// - URL path patterns (regular expressions) of the condition
-	// - Must be specified the unique string in all path patterns belongs to the same policy
-	// - Must be specified as PCRE (Perl Compatible Regular Expressions) format
+	// - Set a path pattern as unique string in all path patterns which belong to the same policy
+	// - Set a path pattern in PCRE (Perl Compatible Regular Expressions) format
 	//   - Capturing groups and backreferences are not supported
 	PathPatterns []string `json:"path_patterns,omitempty"`
 }
@@ -262,15 +272,15 @@ type CreateStagedOptsCondition struct {
 type CreateStagedOpts struct {
 
 	// - Priority of the rule
-	// - Must be specified the unique number in all rules belongs to the same policy
+	// - Set an unique number in all rules which belong to the same policy
 	Priority int `json:"priority,omitempty"`
 
 	// - ID of the target group that assigned to the rule
-	// - Must be specified the different target group from `"default_target_group_id"` of the policy
+	// - Set a different target group from `"default_target_group_id"` of the policy
 	TargetGroupID string `json:"target_group_id,omitempty"`
 
 	// - Conditions of the rules to distribute accesses to the target groups
-	// - Must be specified one or more condition
+	// - Set one or more condition
 	Conditions *CreateStagedOptsCondition `json:"conditions,omitempty"`
 }
 
@@ -321,8 +331,8 @@ Update Staged Rule Configurations
 type UpdateStagedOptsCondition struct {
 
 	// - URL path patterns (regular expressions) of the condition
-	// - Must be specified the unique string in all path patterns belongs to the same policy
-	// - Must be specified as PCRE (Perl Compatible Regular Expressions) format
+	// - Set a path pattern as unique string in all path patterns which belong to the same policy
+	// - Set a path pattern in PCRE (Perl Compatible Regular Expressions) format
 	//   - Capturing groups and backreferences are not supported
 	PathPatterns *[]string `json:"path_patterns,omitempty"`
 }
@@ -331,15 +341,15 @@ type UpdateStagedOptsCondition struct {
 type UpdateStagedOpts struct {
 
 	// - Priority of the rule
-	// - Must be specified the unique number in all rules belongs to the same policy
+	// - Set an unique number in all rules which belong to the same policy
 	Priority *int `json:"priority,omitempty"`
 
 	// - ID of the target group that assigned to the rule
-	// - Must be specified the different target group from `"default_target_group_id"` of the policy
+	// - Set a different target group from `"default_target_group_id"` of the policy
 	TargetGroupID *string `json:"target_group_id,omitempty"`
 
 	// - Conditions of the rules to distribute accesses to the target groups
-	// - Must be specified one or more condition
+	// - Set one or more condition
 	Conditions *UpdateStagedOptsCondition `json:"conditions,omitempty"`
 }
 

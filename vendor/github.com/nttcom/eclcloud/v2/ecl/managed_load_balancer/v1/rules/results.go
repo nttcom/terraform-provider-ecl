@@ -145,13 +145,13 @@ type Rule struct {
 	Conditions ConditionInResponse `json:"conditions,omitempty"`
 
 	// - Running configurations of the rule
-	// - Return object when `changes` is `true`
-	// - Return `null` when current configuration does not exist
+	// - If `changes` is `true`, return object
+	// - If current configuration does not exist, return `null`
 	Current ConfigurationInResponse `json:"current,omitempty"`
 
 	// - Added or changed configurations of the rule that waiting to be applied
-	// - Return object when `changes` is `true`
-	// - Return `null` when staged configuration does not exist
+	// - If `changes` is `true`, return object
+	// - If staged configuration does not exist, return `null`
 	Staged ConfigurationInResponse `json:"staged,omitempty"`
 }
 
