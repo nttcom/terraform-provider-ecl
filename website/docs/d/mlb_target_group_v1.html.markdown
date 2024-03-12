@@ -6,12 +6,12 @@ layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_target_group_v1"
 sidebar_current: "docs-ecl-datasource-mlb-target-group-v1"
 description: |-
-  Get information on an Enterprise Cloud Managed Load Balancer target group.
+  Use this data source to get information of a target group within Enterprise Cloud Managed Load Balancer.
 ---
 
-# ecl\_mlb\_target_group\_v1
+# ecl\_mlb\_target\_group\_v1
 
-Get information on an Enterprise Cloud Managed Load Balancer target group.
+Use this data source to get information of a target group within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
@@ -22,6 +22,8 @@ data "ecl_mlb_target_group_v1" "target_group" {
 ```
 
 ## Argument Reference
+
+The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource

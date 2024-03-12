@@ -6,12 +6,12 @@ layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_rule_v1"
 sidebar_current: "docs-ecl-datasource-mlb-rule-v1"
 description: |-
-  Get information on an Enterprise Cloud Managed Load Balancer rule.
+  Use this data source to get information of a rule within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_rule\_v1
 
-Get information on an Enterprise Cloud Managed Load Balancer rule.
+Use this data source to get information of a rule within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
@@ -22,6 +22,8 @@ data "ecl_mlb_rule_v1" "rule" {
 ```
 
 ## Argument Reference
+
+The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource

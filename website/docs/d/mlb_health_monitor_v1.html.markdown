@@ -6,12 +6,12 @@ layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_health_monitor_v1"
 sidebar_current: "docs-ecl-datasource-mlb-health-monitor-v1"
 description: |-
-  Get information on an Enterprise Cloud Managed Load Balancer health monitor.
+  Use this data source to get information of a health monitor within Enterprise Cloud Managed Load Balancer.
 ---
 
-# ecl\_mlb\_health_monitor\_v1
+# ecl\_mlb\_health\_monitor\_v1
 
-Get information on an Enterprise Cloud Managed Load Balancer health monitor.
+Use this data source to get information of a health monitor within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
@@ -22,6 +22,8 @@ data "ecl_mlb_health_monitor_v1" "health_monitor" {
 ```
 
 ## Argument Reference
+
+The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource

@@ -6,12 +6,12 @@ layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_load_balancer_v1"
 sidebar_current: "docs-ecl-datasource-mlb-load-balancer-v1"
 description: |-
-  Get information on an Enterprise Cloud Managed Load Balancer load balancer.
+  Use this data source to get information of a load balancer within Enterprise Cloud Managed Load Balancer.
 ---
 
-# ecl\_mlb\_load_balancer\_v1
+# ecl\_mlb\_load\_balancer\_v1
 
-Get information on an Enterprise Cloud Managed Load Balancer load balancer.
+Use this data source to get information of a load balancer within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
@@ -22,6 +22,8 @@ data "ecl_mlb_load_balancer_v1" "load_balancer" {
 ```
 
 ## Argument Reference
+
+The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource

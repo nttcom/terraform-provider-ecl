@@ -6,22 +6,24 @@ layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_operation_v1"
 sidebar_current: "docs-ecl-datasource-mlb-operation-v1"
 description: |-
-  Get information on an Enterprise Cloud Managed Load Balancer operation.
+  Use this data source to get information of a operation within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_operation\_v1
 
-Get information on an Enterprise Cloud Managed Load Balancer operation.
+Use this data source to get information of a operation within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
 ```hcl
-data "ecl_mlb_operation_v1" "" {
-  name = ""
+data "ecl_mlb_operation_v1" "operation" {
+  resource_id = "4d5215ed-38bb-48ed-879a-fdb9ca58522f"
 }
 ```
 
 ## Argument Reference
+
+The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `resource_id` - (Optional) ID of the resource
@@ -30,13 +32,6 @@ data "ecl_mlb_operation_v1" "" {
         * `"ECL::ManagedLoadBalancer::LoadBalancer"`
 * `request_id` - (Optional) The unique hyphenated UUID to identify the request
     * The UUID which has been set by `X-MVNA-Request-Id` in request headers
-* `request_type` - (Optional) Type of the request
-    * Must be one of these values:
-        * `"Action::apply-configurations"`
-        * `"Action::cancel-configurations"`
-        * `"Action::system-update"`
-        * `"Action::re-create"`
-        * `"Delete"`
 * `status` - (Optional) Operation status of the resource
     * Must be one of these values:
         * `"PROCESSING"`
@@ -44,8 +39,6 @@ data "ecl_mlb_operation_v1" "" {
         * `"ERROR"`
         * `"STUCK"`
 * `tenant_id` - (Optional) ID of the owner tenant of the resource
-* `no_deleted` - (Optional) If `true` is set, operations of deleted resource is not displayed
-* `latest` - (Optional) If `true` is set, only the latest operation of each resource is displayed
 
 ## Attributes Reference
 

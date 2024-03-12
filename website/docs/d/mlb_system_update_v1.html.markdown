@@ -6,12 +6,12 @@ layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_system_update_v1"
 sidebar_current: "docs-ecl-datasource-mlb-system-update-v1"
 description: |-
-  Get information on an Enterprise Cloud Managed Load Balancer system update.
+  Use this data source to get information of a system update within Enterprise Cloud Managed Load Balancer.
 ---
 
-# ecl\_mlb\_system_update\_v1
+# ecl\_mlb\_system\_update\_v1
 
-Get information on an Enterprise Cloud Managed Load Balancer system update.
+Use this data source to get information of a system update within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
@@ -23,6 +23,8 @@ data "ecl_mlb_system_update_v1" "security_update_202210" {
 
 ## Argument Reference
 
+The following arguments are supported:
+
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
     * This field accepts single-byte characters only
@@ -32,7 +34,6 @@ data "ecl_mlb_system_update_v1" "security_update_202210" {
 * `current_revision` - (Optional) Current revision for the system update
 * `next_revision` - (Optional) Next revision for the system update
 * `applicable` - (Optional) Whether the system update can be applied to the load balancer
-* `latest` - (Optional) If `true` is set, only the latest resource is displayed
 
 ## Attributes Reference
 
