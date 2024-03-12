@@ -6,12 +6,12 @@ layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_plan_v1"
 sidebar_current: "docs-ecl-datasource-mlb-plan-v1"
 description: |-
-  Get information on an Enterprise Cloud Managed Load Balancer plan.
+  Use this data source to get information of a plan within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_plan\_v1
 
-Get information on an Enterprise Cloud Managed Load Balancer plan.
+Use this data source to get information of a plan within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
@@ -22,6 +22,8 @@ data "ecl_mlb_plan_v1" "50M_HA_4IF" {
 ```
 
 ## Argument Reference
+
+The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
