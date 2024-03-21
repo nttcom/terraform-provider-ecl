@@ -159,6 +159,8 @@ func dataSourceMLBHealthMonitorV1Read(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)
 	}
 
+	log.Printf("[DEBUG] Retrieving ECL managed load balancer health monitors with options %+v", listOpts)
+
 	pages, err := health_monitors.List(managedLoadBalancerClient, listOpts).AllPages()
 	if err != nil {
 		return err
@@ -166,7 +168,7 @@ func dataSourceMLBHealthMonitorV1Read(d *schema.ResourceData, meta interface{}) 
 
 	allHealthMonitors, err := health_monitors.ExtractHealthMonitors(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve health monitors: %s", err)
+		return fmt.Errorf("Unable to retrieve ECL managed load balancer health monitors with options %+v: %s", listOpts, err)
 	}
 
 	if len(allHealthMonitors) < 1 {
@@ -181,7 +183,7 @@ func dataSourceMLBHealthMonitorV1Read(d *schema.ResourceData, meta interface{}) 
 
 	healthMonitor := allHealthMonitors[0]
 
-	log.Printf("[DEBUG] Retrieved health monitor %s: %+v", d.Id(), healthMonitor)
+	log.Printf("[DEBUG] Retrieved ECL managed load balancer health monitor: %+v", healthMonitor)
 
 	d.SetId(healthMonitor.ID)
 

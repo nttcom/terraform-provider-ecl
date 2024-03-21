@@ -96,14 +96,12 @@ func dataSourceMLBSystemUpdateV1Read(d *schema.ResourceData, meta interface{}) e
 		listOpts.Applicable = v.(bool)
 	}
 
-	if v, ok := d.GetOk("latest"); ok {
-		listOpts.Latest = v.(bool)
-	}
-
 	managedLoadBalancerClient, err := config.managedLoadBalancerV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)
 	}
+
+	log.Printf("[DEBUG] Retrieving ECL managed load balancer system updates with options %+v", listOpts)
 
 	pages, err := system_updates.List(managedLoadBalancerClient, listOpts).AllPages()
 	if err != nil {
@@ -112,7 +110,7 @@ func dataSourceMLBSystemUpdateV1Read(d *schema.ResourceData, meta interface{}) e
 
 	allSystemUpdates, err := system_updates.ExtractSystemUpdates(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve system updates: %s", err)
+		return fmt.Errorf("Unable to retrieve ECL managed load balancer system updates with options %+v: %s", listOpts, err)
 	}
 
 	if len(allSystemUpdates) < 1 {
@@ -127,7 +125,7 @@ func dataSourceMLBSystemUpdateV1Read(d *schema.ResourceData, meta interface{}) e
 
 	systemUpdate := allSystemUpdates[0]
 
-	log.Printf("[DEBUG] Retrieved system update %s: %+v", d.Id(), systemUpdate)
+	log.Printf("[DEBUG] Retrieved ECL managed load balancer system update: %+v", systemUpdate)
 
 	d.SetId(systemUpdate.ID)
 

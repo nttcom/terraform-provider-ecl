@@ -97,10 +97,6 @@ func dataSourceMLBOperationV1Read(d *schema.ResourceData, meta interface{}) erro
 		listOpts.RequestID = v.(string)
 	}
 
-	if v, ok := d.GetOk("request_type"); ok {
-		listOpts.RequestType = v.(string)
-	}
-
 	if v, ok := d.GetOk("status"); ok {
 		listOpts.Status = v.(string)
 	}
@@ -109,18 +105,12 @@ func dataSourceMLBOperationV1Read(d *schema.ResourceData, meta interface{}) erro
 		listOpts.TenantID = v.(string)
 	}
 
-	if v, ok := d.GetOk("no_deleted"); ok {
-		listOpts.NoDeleted = v.(bool)
-	}
-
-	if v, ok := d.GetOk("latest"); ok {
-		listOpts.Latest = v.(bool)
-	}
-
 	managedLoadBalancerClient, err := config.managedLoadBalancerV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)
 	}
+
+	log.Printf("[DEBUG] Retrieving ECL managed load balancer operations with options %+v", listOpts)
 
 	pages, err := operations.List(managedLoadBalancerClient, listOpts).AllPages()
 	if err != nil {
@@ -129,7 +119,7 @@ func dataSourceMLBOperationV1Read(d *schema.ResourceData, meta interface{}) erro
 
 	allOperations, err := operations.ExtractOperations(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve operations: %s", err)
+		return fmt.Errorf("Unable to retrieve ECL managed load balancer operations with options %+v: %s", listOpts, err)
 	}
 
 	if len(allOperations) < 1 {
@@ -144,7 +134,7 @@ func dataSourceMLBOperationV1Read(d *schema.ResourceData, meta interface{}) erro
 
 	operation := allOperations[0]
 
-	log.Printf("[DEBUG] Retrieved operation %s: %+v", d.Id(), operation)
+	log.Printf("[DEBUG] Retrieved ECL managed load balancer operation: %+v", operation)
 
 	d.SetId(operation.ID)
 

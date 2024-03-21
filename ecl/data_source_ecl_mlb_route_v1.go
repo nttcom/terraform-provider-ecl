@@ -114,6 +114,8 @@ func dataSourceMLBRouteV1Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)
 	}
 
+	log.Printf("[DEBUG] Retrieving ECL managed load balancer routes with options %+v", listOpts)
+
 	pages, err := routes.List(managedLoadBalancerClient, listOpts).AllPages()
 	if err != nil {
 		return err
@@ -121,7 +123,7 @@ func dataSourceMLBRouteV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	allRoutes, err := routes.ExtractRoutes(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve routes: %s", err)
+		return fmt.Errorf("Unable to retrieve ECL managed load balancer routes with options %+v: %s", listOpts, err)
 	}
 
 	if len(allRoutes) < 1 {
@@ -136,7 +138,7 @@ func dataSourceMLBRouteV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	route := allRoutes[0]
 
-	log.Printf("[DEBUG] Retrieved route %s: %+v", d.Id(), route)
+	log.Printf("[DEBUG] Retrieved ECL managed load balancer route: %+v", route)
 
 	d.SetId(route.ID)
 

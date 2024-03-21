@@ -163,6 +163,8 @@ func dataSourceMLBPlanV1Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)
 	}
 
+	log.Printf("[DEBUG] Retrieving ECL managed load balancer plans with options %+v", listOpts)
+
 	pages, err := plans.List(managedLoadBalancerClient, listOpts).AllPages()
 	if err != nil {
 		return err
@@ -170,7 +172,7 @@ func dataSourceMLBPlanV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	allPlans, err := plans.ExtractPlans(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve plans: %s", err)
+		return fmt.Errorf("Unable to retrieve ECL managed load balancer plans with options %+v: %s", listOpts, err)
 	}
 
 	if len(allPlans) < 1 {
@@ -185,7 +187,7 @@ func dataSourceMLBPlanV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	plan := allPlans[0]
 
-	log.Printf("[DEBUG] Retrieved plan %s: %+v", d.Id(), plan)
+	log.Printf("[DEBUG] Retrieved ECL managed load balancer plan: %+v", plan)
 
 	d.SetId(plan.ID)
 

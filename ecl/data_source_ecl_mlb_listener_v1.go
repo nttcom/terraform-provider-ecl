@@ -123,6 +123,8 @@ func dataSourceMLBListenerV1Read(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)
 	}
 
+	log.Printf("[DEBUG] Retrieving ECL managed load balancer listeners with options %+v", listOpts)
+
 	pages, err := listeners.List(managedLoadBalancerClient, listOpts).AllPages()
 	if err != nil {
 		return err
@@ -130,7 +132,7 @@ func dataSourceMLBListenerV1Read(d *schema.ResourceData, meta interface{}) error
 
 	allListeners, err := listeners.ExtractListeners(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve listeners: %s", err)
+		return fmt.Errorf("Unable to retrieve ECL managed load balancer listeners with options %+v: %s", listOpts, err)
 	}
 
 	if len(allListeners) < 1 {
@@ -145,7 +147,7 @@ func dataSourceMLBListenerV1Read(d *schema.ResourceData, meta interface{}) error
 
 	listener := allListeners[0]
 
-	log.Printf("[DEBUG] Retrieved listener %s: %+v", d.Id(), listener)
+	log.Printf("[DEBUG] Retrieved ECL managed load balancer listener: %+v", listener)
 
 	d.SetId(listener.ID)
 

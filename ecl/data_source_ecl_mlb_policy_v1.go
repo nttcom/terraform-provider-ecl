@@ -186,6 +186,8 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)
 	}
 
+	log.Printf("[DEBUG] Retrieving ECL managed load balancer policies with options %+v", listOpts)
+
 	pages, err := policies.List(managedLoadBalancerClient, listOpts).AllPages()
 	if err != nil {
 		return err
@@ -193,7 +195,7 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	allPolicies, err := policies.ExtractPolicies(pages)
 	if err != nil {
-		return fmt.Errorf("Unable to retrieve policies: %s", err)
+		return fmt.Errorf("Unable to retrieve ECL managed load balancer policies with options %+v: %s", listOpts, err)
 	}
 
 	if len(allPolicies) < 1 {
@@ -208,7 +210,7 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	policy := allPolicies[0]
 
-	log.Printf("[DEBUG] Retrieved policy %s: %+v", d.Id(), policy)
+	log.Printf("[DEBUG] Retrieved ECL managed load balancer policy: %+v", policy)
 
 	d.SetId(policy.ID)
 
