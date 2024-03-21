@@ -97,24 +97,12 @@ func dataSourceMLBOperationV1Read(d *schema.ResourceData, meta interface{}) erro
 		listOpts.RequestID = v.(string)
 	}
 
-	if v, ok := d.GetOk("request_type"); ok {
-		listOpts.RequestType = v.(string)
-	}
-
 	if v, ok := d.GetOk("status"); ok {
 		listOpts.Status = v.(string)
 	}
 
 	if v, ok := d.GetOk("tenant_id"); ok {
 		listOpts.TenantID = v.(string)
-	}
-
-	if v, ok := d.GetOk("no_deleted"); ok {
-		listOpts.NoDeleted = v.(bool)
-	}
-
-	if v, ok := d.GetOk("latest"); ok {
-		listOpts.Latest = v.(bool)
 	}
 
 	managedLoadBalancerClient, err := config.managedLoadBalancerV1Client(GetRegion(d, config))

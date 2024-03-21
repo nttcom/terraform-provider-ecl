@@ -86,18 +86,6 @@ func dataSourceMLBCertificateV1Read(d *schema.ResourceData, meta interface{}) er
 		listOpts.TenantID = v.(string)
 	}
 
-	if v, ok := d.GetOk("ca_cert_status"); ok {
-		listOpts.CACertStatus = v.(string)
-	}
-
-	if v, ok := d.GetOk("ssl_cert_status"); ok {
-		listOpts.SSLCertStatus = v.(string)
-	}
-
-	if v, ok := d.GetOk("ssl_key_status"); ok {
-		listOpts.SSLKeyStatus = v.(string)
-	}
-
 	managedLoadBalancerClient, err := config.managedLoadBalancerV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)
