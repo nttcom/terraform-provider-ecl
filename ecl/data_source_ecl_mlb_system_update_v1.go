@@ -96,10 +96,6 @@ func dataSourceMLBSystemUpdateV1Read(d *schema.ResourceData, meta interface{}) e
 		listOpts.Applicable = v.(bool)
 	}
 
-	if v, ok := d.GetOk("latest"); ok {
-		listOpts.Latest = v.(bool)
-	}
-
 	managedLoadBalancerClient, err := config.managedLoadBalancerV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL managed load balancer client: %s", err)

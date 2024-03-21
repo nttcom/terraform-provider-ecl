@@ -4,20 +4,30 @@
 #
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_rule_v1"
-sidebar_current: "docs-ecl-datasource-mlb-rule-v1"
+sidebar_current: "docs-ecl-resource-mlb-rule-v1"
 description: |-
-  Use this data source to get information of a rule within Enterprise Cloud Managed Load Balancer.
+  Manages a rule within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_rule\_v1
 
-Use this data source to get information of a rule within Enterprise Cloud Managed Load Balancer.
+Manages a rule within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
 ```hcl
-data "ecl_mlb_rule_v1" "rule" {
+resource "ecl_mlb_rule_v1" "rule" {
   name = "rule"
+  description = "description"
+  tags {
+    key = "value"
+  }
+  policy_id = "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4"
+  priority = 1
+  target_group_id = "29527a3c-9e5d-48b7-868f-6442c7d21a95"
+  conditions {
+    path_patterns = "^/statics/"
+  }
 }
 ```
 
@@ -25,33 +35,34 @@ data "ecl_mlb_rule_v1" "rule" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the resource
-* `name` - (Optional) Name of the resource
+* `name` - (Optional) Name of the rule
     * This field accepts single-byte characters only
-* `description` - (Optional) Description of the resource
+* `description` - (Optional) Description of the rule
     * This field accepts single-byte characters only
-* `configuration_status` - (Optional) Configuration status of the resource
-    * Must be one of these values:
-        * `"ACTIVE"`
-        * `"CREATE_STAGED"`
-        * `"UPDATE_STAGED"`
-        * `"DELETE_STAGED"`
-* `operation_status` - (Optional) Operation status of the resource
-    * Must be one of these values:
-        * `"NONE"`
-        * `"PROCESSING"`
-        * `"COMPLETE"`
-        * `"STUCK"`
-        * `"ERROR"`
+* `tags` - (Optional) Tags of the rule
+    * Set JSON object up to 32,768 characters
+        * Nested structure is permitted
+    * This field accepts single-byte characters only
 * `priority` - (Optional) Priority of the rule
-* `target_group_id` - (Optional) ID of the target group that assigned to the rule
-* `policy_id` - (Optional) ID of the policy which the rule belongs to
-* `load_balancer_id` - (Optional) ID of the load balancer which the resource belongs to
-* `tenant_id` - (Optional) ID of the owner tenant of the resource
+    * Set an unique number in all rules which belong to the same policy
+* `target_group_id` - ID of the target group that assigned to the rule
+    * Set a different target group from `"default_target_group_id"` of the policy
+* `policy_id` - ID of the policy which the rule belongs to
+    * Set ID of the policy which has a listener in which protocol is either `"http"` or `"https"`
+* `conditions` - Conditions of the rules to distribute accesses to the target groups
+    * Set one or more condition
+    * Structure is [documented below](#conditions)
+
+<a name="conditions"></a>The `conditions` block contains:
+
+* `path_patterns` - (Optional) URL path patterns (regular expressions) of the condition
+    * Set a path pattern as unique string in all path patterns which belong to the same policy
+    * Set a path pattern in PCRE (Perl Compatible Regular Expressions) format
+        * Capturing groups and backreferences are not supported
 
 ## Attributes Reference
 
-`id` is set to the ID of the found rule.<br>
+`id` is set to the ID of the rule.<br>
 In addition, the following attributes are exported:
 
 * `name` - Name of the rule

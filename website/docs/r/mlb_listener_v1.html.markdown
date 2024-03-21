@@ -4,20 +4,28 @@
 #
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_listener_v1"
-sidebar_current: "docs-ecl-datasource-mlb-listener-v1"
+sidebar_current: "docs-ecl-resource-mlb-listener-v1"
 description: |-
-  Use this data source to get information of a listener within Enterprise Cloud Managed Load Balancer.
+  Manages a listener within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_listener\_v1
 
-Use this data source to get information of a listener within Enterprise Cloud Managed Load Balancer.
+Manages a listener within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
 ```hcl
-data "ecl_mlb_listener_v1" "listener" {
+resource "ecl_mlb_listener_v1" "listener" {
   name = "listener"
+  description = "description"
+  tags {
+    key = "value"
+  }
+  ip_address = "10.0.0.1"
+  port = 443
+  protocol = "https"
+  load_balancer_id = "67fea379-cff0-4191-9175-de7d6941a040"
 }
 ```
 
@@ -25,38 +33,31 @@ data "ecl_mlb_listener_v1" "listener" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the resource
-* `name` - (Optional) Name of the resource
+* `name` - (Optional) Name of the listener
     * This field accepts single-byte characters only
-* `description` - (Optional) Description of the resource
+* `description` - (Optional) Description of the listener
     * This field accepts single-byte characters only
-* `configuration_status` - (Optional) Configuration status of the resource
-    * Must be one of these values:
-        * `"ACTIVE"`
-        * `"CREATE_STAGED"`
-        * `"UPDATE_STAGED"`
-        * `"DELETE_STAGED"`
-* `operation_status` - (Optional) Operation status of the resource
-    * Must be one of these values:
-        * `"NONE"`
-        * `"PROCESSING"`
-        * `"COMPLETE"`
-        * `"STUCK"`
-        * `"ERROR"`
-* `ip_address` - (Optional) IP address of the resource for listening
-* `port` - (Optional) Port number of the resource for healthchecking or listening
-* `protocol` - (Optional) Protocol of the resource for healthchecking or listening
+* `tags` - (Optional) Tags of the listener
+    * Set JSON object up to 32,768 characters
+        * Nested structure is permitted
+    * This field accepts single-byte characters only
+* `ip_address` - IP address of the listener for listening
+    * Set an unique combination of IP address and port in all listeners which belong to the same load balancer
+    * Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the listener belongs to
+    * Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+* `port` - Port number of the listener for listening
+    * Combination of IP address and port must be unique for all listeners which belong to the same load balancer
+* `protocol` - Protocol of the listener for listening
     * Must be one of these values:
         * `"tcp"`
         * `"udp"`
         * `"http"`
         * `"https"`
-* `load_balancer_id` - (Optional) ID of the load balancer which the resource belongs to
-* `tenant_id` - (Optional) ID of the owner tenant of the resource
+* `load_balancer_id` - ID of the load balancer which the listener belongs to
 
 ## Attributes Reference
 
-`id` is set to the ID of the found listener.<br>
+`id` is set to the ID of the listener.<br>
 In addition, the following attributes are exported:
 
 * `name` - Name of the listener

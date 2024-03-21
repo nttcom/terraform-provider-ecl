@@ -4,20 +4,46 @@
 #
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_load_balancer_v1"
-sidebar_current: "docs-ecl-datasource-mlb-load-balancer-v1"
+sidebar_current: "docs-ecl-resource-mlb-load-balancer-v1"
 description: |-
-  Use this data source to get information of a load balancer within Enterprise Cloud Managed Load Balancer.
+  Manages a load balancer within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_load_balancer\_v1
 
-Use this data source to get information of a load balancer within Enterprise Cloud Managed Load Balancer.
+Manages a load balancer within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
 ```hcl
-data "ecl_mlb_load_balancer_v1" "load_balancer" {
+resource "ecl_mlb_load_balancer_v1" "load_balancer" {
   name = "load_balancer"
+  description = "description"
+  tags {
+    key = "value"
+  }
+  plan_id = "00713021-9aea-41da-9a88-87760c08fa72"
+  syslog_servers {
+    ip_address = "192.168.0.6"
+    port = 514
+    protocol = "udp"
+  }
+  interfaces {
+    network_id = "d6797cf4-42b9-4cad-8591-9dd91c3f0fc3"
+    virtual_ip_address = "192.168.0.1"
+    reserved_fixed_ips {
+      ip_address = "192.168.0.2"
+    }
+    reserved_fixed_ips {
+      ip_address = "192.168.0.3"
+    }
+    reserved_fixed_ips {
+      ip_address = "192.168.0.4"
+    }
+    reserved_fixed_ips {
+      ip_address = "192.168.0.5"
+    }
+  }
 }
 ```
 
@@ -25,39 +51,62 @@ data "ecl_mlb_load_balancer_v1" "load_balancer" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the resource
-* `name` - (Optional) Name of the resource
+* `name` - (Optional) Name of the load balancer
     * This field accepts single-byte characters only
-* `description` - (Optional) Description of the resource
+* `description` - (Optional) Description of the load balancer
     * This field accepts single-byte characters only
-* `configuration_status` - (Optional) Configuration status of the resource
-    * Must be one of these values:
-        * `"ACTIVE"`
-        * `"CREATE_STAGED"`
-        * `"UPDATE_STAGED"`
-        * `"DELETE_STAGED"`
-* `monitoring_status` - (Optional) Monitoring status of the load balancer
-    * Must be one of these values:
-        * `"ACTIVE"`
-        * `"INITIAL"`
-        * `"UNAVAILABLE"`
-* `operation_status` - (Optional) Operation status of the resource
-    * Must be one of these values:
-        * `"NONE"`
-        * `"PROCESSING"`
-        * `"COMPLETE"`
-        * `"STUCK"`
-        * `"ERROR"`
-* `primary_availability_zone` - (Optional) The zone / group where the primary virtual server of load balancer is deployed
-* `secondary_availability_zone` - (Optional) The zone / group where the secondary virtual server of load balancer is deployed
-* `active_availability_zone` - (Optional) Primary or secondary availability zone where the load balancer is currently running
-* `revision` - (Optional) Revision of the load balancer
-* `plan_id` - (Optional) ID of the plan
-* `tenant_id` - (Optional) ID of the owner tenant of the resource
+* `tags` - (Optional) Tags of the load balancer
+    * Set JSON object up to 32,768 characters
+        * Nested structure is permitted
+    * This field accepts single-byte characters only
+* `plan_id` - ID of the plan
+* `syslog_servers` - (Optional) Syslog servers to which access logs are transferred
+    * The facility code of syslog is 0 (kern), and the severity level is 6 (info)
+    * Only access logs to listeners which `protocol` is either `"http"` or `"https"` are transferred
+        * If `protocol` of `syslog_servers` is `"tcp"`
+            * Access logs are transferred to all healthy syslog servers set in `syslog_servers`
+        * If `protocol` of `syslog_servers` is `"udp"`
+            * Access logs are transferred to the syslog server set first in `syslog_servers` as long as it is healthy
+            * Access logs are transferred to the syslog server set second (last) in `syslog_servers` if the first syslog server is not healthy
+    * Structure is [documented below](#syslog-servers)
+* `interfaces` - Interfaces that attached to the load balancer
+    * `virtual_ip_address` and `reserved_fixed_ips` can not be changed once attached
+        * To change `virtual_ip_address` and `reserved_fixed_ips` , recreating the interface is needed
+    * Structure is [documented below](#interfaces)
+
+<a name="syslog-servers"></a>The `syslog_servers` block contains:
+
+* `ip_address` - IP address of the syslog server
+    * The load balancer sends ICMP to this IP address for health check purpose
+* `port` - (Optional) Port number of the syslog server
+* `protocol` - (Optional) Protocol of the syslog server
+    * Set same protocol in all syslog servers which belong to the same load balancer
+
+<a name="interfaces"></a>The `interfaces` block contains:
+
+* `network_id` - ID of the network that this interface belongs to
+    * Set a unique network ID in `interfaces`
+    * Set a network of which plane is data
+    * Must not set ID of a network that uses ISP shared address (RFC 6598)
+* `virtual_ip_address` - Virtual IP address of the interface within subnet
+    * Do not use this IP address at the interface of other devices, allowed address pairs, etc
+    * Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+    * Set a network IP address and broadcast IP address
+    * Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+* `reserved_fixed_ips` - IP addresses that are pre-reserved for applying configurations of load balancer to be performed without losing redundancy
+    * Structure is [documented below](#reserved-fixed-ips)
+
+<a name="reserved-fixed-ips"></a>The `reserved_fixed_ips` block contains:
+
+* `ip_address` - The IP address assign to this interface within subnet
+    * Do not use this IP address at the interface of other devices, allowed address pairs, etc
+    * Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+    * Must not set a network IP address and broadcast IP address
+    * Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 
 ## Attributes Reference
 
-`id` is set to the ID of the found load balancer.<br>
+`id` is set to the ID of the load balancer.<br>
 In addition, the following attributes are exported:
 
 * `name` - Name of the load balancer

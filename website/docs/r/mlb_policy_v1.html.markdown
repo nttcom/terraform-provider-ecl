@@ -4,20 +4,35 @@
 #
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_policy_v1"
-sidebar_current: "docs-ecl-datasource-mlb-policy-v1"
+sidebar_current: "docs-ecl-resource-mlb-policy-v1"
 description: |-
-  Use this data source to get information of a policy within Enterprise Cloud Managed Load Balancer.
+  Manages a policy within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_policy\_v1
 
-Use this data source to get information of a policy within Enterprise Cloud Managed Load Balancer.
+Manages a policy within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
 ```hcl
-data "ecl_mlb_policy_v1" "policy" {
+resource "ecl_mlb_policy_v1" "policy" {
   name = "policy"
+  description = "description"
+  tags {
+    key = "value"
+  }
+  algorithm = "round-robin"
+  persistence = "cookie"
+  idle_timeout = 600
+  sorry_page_url = "https://example.com/sorry"
+  source_nat = "enable"
+  certificate_id = "f57a98fe-d63e-4048-93a0-51fe163f30d7"
+  health_monitor_id = "dd7a96d6-4e66-4666-baca-a8555f0c472c"
+  listener_id = "68633f4f-f52a-402f-8572-b8173418904f"
+  default_target_group_id = "a44c4072-ed90-4b50-a33a-6b38fb10c7db"
+  tls_policy_id = "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
+  load_balancer_id = "67fea379-cff0-4191-9175-de7d6941a040"
 }
 ```
 
@@ -25,24 +40,14 @@ data "ecl_mlb_policy_v1" "policy" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the resource
-* `name` - (Optional) Name of the resource
+* `name` - (Optional) Name of the policy
     * This field accepts single-byte characters only
-* `description` - (Optional) Description of the resource
+* `description` - (Optional) Description of the policy
     * This field accepts single-byte characters only
-* `configuration_status` - (Optional) Configuration status of the resource
-    * Must be one of these values:
-        * `"ACTIVE"`
-        * `"CREATE_STAGED"`
-        * `"UPDATE_STAGED"`
-        * `"DELETE_STAGED"`
-* `operation_status` - (Optional) Operation status of the resource
-    * Must be one of these values:
-        * `"NONE"`
-        * `"PROCESSING"`
-        * `"COMPLETE"`
-        * `"STUCK"`
-        * `"ERROR"`
+* `tags` - (Optional) Tags of the policy
+    * Set JSON object up to 32,768 characters
+        * Nested structure is permitted
+    * This field accepts single-byte characters only
 * `algorithm` - (Optional) Load balancing algorithm (method) of the policy
     * Must be one of these values:
         * `"round-robin"`
@@ -51,27 +56,48 @@ The following arguments are supported:
         * `"weighted-least-connection"`
         * `"source-ip-port-hash"`
 * `persistence` - (Optional) Persistence setting of the policy
+    * If `listener.protocol` is `"http"` or `"https"`, `"cookie"` is available
     * Must be one of these values:
         * `"none"`
         * `"source-ip"`
         * `"cookie"`
 * `idle_timeout` - (Optional) The duration (in seconds) during which a session is allowed to remain inactive
+    * There may be a time difference up to 60 seconds, between the set value and the actual timeout
+    * If `listener.protocol` is `"tcp"` or `"udp"`
+        * Default value is 120
+    * If `listener.protocol` is `"http"` or `"https"`
+        * Default value is 600
+        * On session timeout, the load balancer sends TCP RST packets to both the client and the real server
 * `sorry_page_url` - (Optional) URL of the sorry page to which accesses are redirected if all members in the target group are down
+    * If `listener.protocol` is `"http"` or `"https"`, this parameter can be set
+    * If `listener.protocol` is neither `"http"` nor `"https"`, must not set this parameter or set `""`
 * `source_nat` - (Optional) Source NAT setting of the policy
+    * If `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"`
+        * The source IP address of the request is replaced with `virtual_ip_address` which is assigned to the interface from which the request was sent
+        * `X-Forwarded-For` header with the IP address of the client is added
     * Must be one of these values:
         * `"enable"`
         * `"disable"`
 * `certificate_id` - (Optional) ID of the certificate that assigned to the policy
-* `health_monitor_id` - (Optional) ID of the health monitor that assigned to the policy
-* `listener_id` - (Optional) ID of the listener that assigned to the policy
-* `default_target_group_id` - (Optional) ID of the default target group that assigned to the policy
+    * You can set a ID of the certificate in which `ca_cert.status`, `ssl_cert.status` and `ssl_key.status` are all `"UPLOADED"`
+    * If `listener.protocol` is `"https"`, set `certificate.id`
+    * If `listener.protocol` is not `"https"`, must not set this parameter or set `""`
+* `health_monitor_id` - ID of the health monitor that assigned to the policy
+    * Must not set ID of the health monitor that `configuration_status` is `"DELETE_STAGED"`
+* `listener_id` - ID of the listener that assigned to the policy
+    * Must not set ID of the listener that `configuration_status` is `"DELETE_STAGED"`
+    * Must not set ID of the listener that already assigned to the other policy
+* `default_target_group_id` - ID of the default target group that assigned to the policy
+    * Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
 * `tls_policy_id` - (Optional) ID of the TLS policy that assigned to the policy
-* `load_balancer_id` - (Optional) ID of the load balancer which the resource belongs to
-* `tenant_id` - (Optional) ID of the owner tenant of the resource
+    * If `listener.protocol` is `"https"`, you can set this parameter explicitly
+        * If not set this parameter, the ID of the `tls_policy` with `default: true` will be automatically set
+    * If `listener.protocol` is not `"https"`, must not set this parameter or set `""`
+* `load_balancer_id` - ID of the load balancer which the policy belongs to
 
 ## Attributes Reference
 
-`id` is set to the ID of the found policy.<br>
+`id` is set to the ID of the policy.<br>
 In addition, the following attributes are exported:
 
 * `name` - Name of the policy

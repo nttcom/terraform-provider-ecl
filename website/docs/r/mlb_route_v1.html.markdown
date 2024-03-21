@@ -4,20 +4,27 @@
 #
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_route_v1"
-sidebar_current: "docs-ecl-datasource-mlb-route-v1"
+sidebar_current: "docs-ecl-resource-mlb-route-v1"
 description: |-
-  Use this data source to get information of a route within Enterprise Cloud Managed Load Balancer.
+  Manages a route within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_route\_v1
 
-Use this data source to get information of a route within Enterprise Cloud Managed Load Balancer.
+Manages a route within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
 ```hcl
-data "ecl_mlb_route_v1" "route" {
+resource "ecl_mlb_route_v1" "route" {
   name = "route"
+  description = "description"
+  tags {
+    key = "value"
+  }
+  destination_cidr = "172.16.0.0/24"
+  next_hop_ip_address = "192.168.0.254"
+  load_balancer_id = "67fea379-cff0-4191-9175-de7d6941a040"
 }
 ```
 
@@ -25,32 +32,29 @@ data "ecl_mlb_route_v1" "route" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the resource
-* `name` - (Optional) Name of the resource
+* `name` - (Optional) Name of the (static) route
     * This field accepts single-byte characters only
-* `description` - (Optional) Description of the resource
+* `description` - (Optional) Description of the (static) route
     * This field accepts single-byte characters only
-* `configuration_status` - (Optional) Configuration status of the resource
-    * Must be one of these values:
-        * `"ACTIVE"`
-        * `"CREATE_STAGED"`
-        * `"UPDATE_STAGED"`
-        * `"DELETE_STAGED"`
-* `operation_status` - (Optional) Operation status of the resource
-    * Must be one of these values:
-        * `"NONE"`
-        * `"PROCESSING"`
-        * `"COMPLETE"`
-        * `"STUCK"`
-        * `"ERROR"`
-* `destination_cidr` - (Optional) CIDR of destination for the (static) route
-* `next_hop_ip_address` - (Optional) IP address of next hop for the (static) route
-* `load_balancer_id` - (Optional) ID of the load balancer which the resource belongs to
-* `tenant_id` - (Optional) ID of the owner tenant of the resource
+* `tags` - (Optional) Tags of the (static) route
+    * Set JSON object up to 32,768 characters
+        * Nested structure is permitted
+    * This field accepts single-byte characters only
+* `destination_cidr` - CIDR of destination for the (static) route
+    * If you configure `destination_cidr` as default gateway, set `0.0.0.0/0`
+    * `destination_cidr` can not be changed once configured
+        * If you want to change `destination_cidr`, recreate the (static) route again 
+    * Set a unique CIDR for all (static) routes which belong to the same load balancer
+    * Set a CIDR which is not included in subnet of load balancer interfaces that the (static) route belongs to
+    * Must not set a link-local CIDR (RFC 3927) which includes Common Function Gateway
+* `next_hop_ip_address` - ID of the load balancer which the (static) route belongs to
+    * Set a CIDR which is not included in subnet of load balancer interfaces that the (static) route belongs to
+    * Must not set a network IP address and broadcast IP address
+* `load_balancer_id` - ID of the load balancer which the (static) route belongs to
 
 ## Attributes Reference
 
-`id` is set to the ID of the found route.<br>
+`id` is set to the ID of the route.<br>
 In addition, the following attributes are exported:
 
 * `name` - Name of the (static) route

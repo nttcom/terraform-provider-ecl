@@ -4,20 +4,32 @@
 #
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_health_monitor_v1"
-sidebar_current: "docs-ecl-datasource-mlb-health-monitor-v1"
+sidebar_current: "docs-ecl-resource-mlb-health-monitor-v1"
 description: |-
-  Use this data source to get information of a health monitor within Enterprise Cloud Managed Load Balancer.
+  Manages a health monitor within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_health_monitor\_v1
 
-Use this data source to get information of a health monitor within Enterprise Cloud Managed Load Balancer.
+Manages a health monitor within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
 ```hcl
-data "ecl_mlb_health_monitor_v1" "health_monitor" {
+resource "ecl_mlb_health_monitor_v1" "health_monitor" {
   name = "health_monitor"
+  description = "description"
+  tags {
+    key = "value"
+  }
+  port = 80
+  protocol = "http"
+  interval = 5
+  retry = 3
+  timeout = 5
+  path = "/health"
+  http_status_code = "200-299"
+  load_balancer_id = "67fea379-cff0-4191-9175-de7d6941a040"
 }
 ```
 
@@ -25,26 +37,17 @@ data "ecl_mlb_health_monitor_v1" "health_monitor" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the resource
-* `name` - (Optional) Name of the resource
+* `name` - (Optional) Name of the health monitor
     * This field accepts single-byte characters only
-* `description` - (Optional) Description of the resource
+* `description` - (Optional) Description of the health monitor
     * This field accepts single-byte characters only
-* `configuration_status` - (Optional) Configuration status of the resource
-    * Must be one of these values:
-        * `"ACTIVE"`
-        * `"CREATE_STAGED"`
-        * `"UPDATE_STAGED"`
-        * `"DELETE_STAGED"`
-* `operation_status` - (Optional) Operation status of the resource
-    * Must be one of these values:
-        * `"NONE"`
-        * `"PROCESSING"`
-        * `"COMPLETE"`
-        * `"STUCK"`
-        * `"ERROR"`
-* `port` - (Optional) Port number of the resource for healthchecking or listening
-* `protocol` - (Optional) Protocol of the resource for healthchecking or listening
+* `tags` - (Optional) Tags of the health monitor
+    * Set JSON object up to 32,768 characters
+        * Nested structure is permitted
+    * This field accepts single-byte characters only
+* `port` - Port number of the health monitor for healthchecking
+    * If 'protocol' is 'icmp', value must be set `0`
+* `protocol` - Protocol of the health monitor for healthchecking
     * Must be one of these values:
         * `"icmp"`
         * `"tcp"`
@@ -52,17 +55,23 @@ The following arguments are supported:
         * `"https"`
 * `interval` - (Optional) Interval of healthchecking (in seconds)
 * `retry` - (Optional) Retry count of healthchecking
+    * Initial monitoring is not included
+    * Retry is executed at the interval set in `interval`
 * `timeout` - (Optional) Timeout of healthchecking (in seconds)
+    * Value must be less than or equal to `interval`
 * `path` - (Optional) URL path of healthchecking
-    * Must be started with `"/"`
+    * If `protocol` is `"http"` or `"https"`, URL path can be set
+        * If `protocol` is neither `"http"` nor `"https"`, URL path must not be set
+    * Must be started with /
 * `http_status_code` - (Optional) HTTP status codes expected in healthchecking
+    * If `protocol` is `"http"` or `"https"`, HTTP status code (or range) can be set
+        * If `protocol` is neither `"http"` nor `"https"`, HTTP status code (or range) must not be set
     * Format: `"xxx"` or `"xxx-xxx"` ( `xxx` between [100, 599])
-* `load_balancer_id` - (Optional) ID of the load balancer which the resource belongs to
-* `tenant_id` - (Optional) ID of the owner tenant of the resource
+* `load_balancer_id` - ID of the load balancer which the health monitor belongs to
 
 ## Attributes Reference
 
-`id` is set to the ID of the found health monitor.<br>
+`id` is set to the ID of the health monitor.<br>
 In addition, the following attributes are exported:
 
 * `name` - Name of the health monitor

@@ -4,20 +4,30 @@
 #
 layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_target_group_v1"
-sidebar_current: "docs-ecl-datasource-mlb-target-group-v1"
+sidebar_current: "docs-ecl-resource-mlb-target-group-v1"
 description: |-
-  Use this data source to get information of a target group within Enterprise Cloud Managed Load Balancer.
+  Manages a target group within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_target_group\_v1
 
-Use this data source to get information of a target group within Enterprise Cloud Managed Load Balancer.
+Manages a target group within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
 ```hcl
-data "ecl_mlb_target_group_v1" "target_group" {
+resource "ecl_mlb_target_group_v1" "target_group" {
   name = "target_group"
+  description = "description"
+  tags {
+    key = "value"
+  }
+  load_balancer_id = "67fea379-cff0-4191-9175-de7d6941a040"
+  members {
+    ip_address = "192.168.0.7"
+    port = 80
+    weight = 1
+  }
 }
 ```
 
@@ -25,30 +35,34 @@ data "ecl_mlb_target_group_v1" "target_group" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the resource
-* `name` - (Optional) Name of the resource
+* `name` - (Optional) Name of the target group
     * This field accepts single-byte characters only
-* `description` - (Optional) Description of the resource
+* `description` - (Optional) Description of the target group
     * This field accepts single-byte characters only
-* `configuration_status` - (Optional) Configuration status of the resource
-    * Must be one of these values:
-        * `"ACTIVE"`
-        * `"CREATE_STAGED"`
-        * `"UPDATE_STAGED"`
-        * `"DELETE_STAGED"`
-* `operation_status` - (Optional) Operation status of the resource
-    * Must be one of these values:
-        * `"NONE"`
-        * `"PROCESSING"`
-        * `"COMPLETE"`
-        * `"STUCK"`
-        * `"ERROR"`
-* `load_balancer_id` - (Optional) ID of the load balancer which the resource belongs to
-* `tenant_id` - (Optional) ID of the owner tenant of the resource
+* `tags` - (Optional) Tags of the target group
+    * Set JSON object up to 32,768 characters
+        * Nested structure is permitted
+    * This field accepts single-byte characters only
+* `load_balancer_id` - ID of the load balancer which the target group belongs to
+* `members` - Members (real servers) of the target group
+    * Structure is [documented below](#members)
+
+<a name="members"></a>The `members` block contains:
+
+* `ip_address` - IP address of the member (real server)
+    * Set an unique combination of IP address and port in all members which belong to the same target group
+    * Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the target group belongs to
+    * Must not set a IP address of listeners which belong to the same load balancer as the target group
+    * Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+* `port` - Port number of the member (real server)
+    * Set an unique combination of IP address and port in all members which belong to the same target group
+* `weight` - (Optional) Weight for the member (real server)
+    * If `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`, use this parameter
+    * Set same weight for the combination of IP address and port in all members which belong to the same load balancer
 
 ## Attributes Reference
 
-`id` is set to the ID of the found target group.<br>
+`id` is set to the ID of the target group.<br>
 In addition, the following attributes are exported:
 
 * `name` - Name of the target group

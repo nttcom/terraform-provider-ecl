@@ -6,12 +6,12 @@ layout: "ecl"
 page_title: "Enterprise Cloud: ecl_mlb_tls_policy_v1"
 sidebar_current: "docs-ecl-datasource-mlb-tls-policy-v1"
 description: |-
-  Get information on an Enterprise Cloud Managed Load Balancer tls policy.
+  Use this data source to get information of a tls policy within Enterprise Cloud Managed Load Balancer.
 ---
 
 # ecl\_mlb\_tls_policy\_v1
 
-Get information on an Enterprise Cloud Managed Load Balancer tls policy.
+Use this data source to get information of a tls policy within Enterprise Cloud Managed Load Balancer.
 
 ## Example Usage
 
@@ -22,6 +22,8 @@ data "ecl_mlb_tls_policy_v1" "TLSv1.2_202210_01" {
 ```
 
 ## Argument Reference
+
+The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
