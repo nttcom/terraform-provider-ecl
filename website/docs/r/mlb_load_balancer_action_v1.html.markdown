@@ -10,7 +10,7 @@ description: |-
 
 Performs action on a Enterprise Cloud Managed Load Balancer instance.
 
-~> **Notice** The load balancer and related resources must be configured in another tf file before applying `ecl_mlb_load_balancer_action_v1` .
+~> **Notice** The load balancer and related resources must be configured in another tf file before applying `ecl_mlb_load_balancer_action_v1` . Please refer to [examples](https://github.com/nttcom/terraform-provider-ecl/tree/master/examples/managed-load-balancer) .
 
 ## Example Usage
 
