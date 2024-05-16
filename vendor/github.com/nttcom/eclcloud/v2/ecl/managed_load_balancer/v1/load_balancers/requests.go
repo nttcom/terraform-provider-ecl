@@ -317,7 +317,7 @@ type ActionOpts struct {
 }
 
 // ToLoadBalancerActionMap builds a request body from ActionOpts.
-func (opts ActionOpts) ToLoadBalancerActionMap() (map[string]interface{}, error) {
+func (opts ActionOpts) ToLoadBalancerActionMap() map[string]interface{} {
 	optsMap := make(map[string]interface{})
 
 	if opts.ApplyConfigurations {
@@ -330,22 +330,17 @@ func (opts ActionOpts) ToLoadBalancerActionMap() (map[string]interface{}, error)
 		}
 	}
 
-	return optsMap, nil
+	return optsMap
 }
 
 // ActionOptsBuilder allows extensions to add additional parameters to the Action request.
 type ActionOptsBuilder interface {
-	ToLoadBalancerActionMap() (map[string]interface{}, error)
+	ToLoadBalancerActionMap() map[string]interface{}
 }
 
 // Action accepts a ActionOpts struct and performs action on a existing load balancer using the values provided.
 func Action(c *eclcloud.ServiceClient, id string, opts ActionOptsBuilder) (r ActionResult) {
-	b, err := opts.ToLoadBalancerActionMap()
-	if err != nil {
-		r.Err = err
-
-		return
-	}
+	b := opts.ToLoadBalancerActionMap()
 
 	_, r.Err = c.Post(actionURL(c, id), b, nil, &eclcloud.RequestOpts{
 		OkCodes: []int{204},

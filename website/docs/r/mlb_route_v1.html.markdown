@@ -10,7 +10,7 @@ description: |-
 
 Manages a route within Enterprise Cloud Managed Load Balancer.
 
--> **Note** Apply changes of a route to the Managed Load Balancer instance using [ecl_mlb_load_balancer_action_v1](./ecl_mlb_load_balancer_action_v1) in another tf file. Please refer to [examples](https://github.com/nttcom/terraform-provider-ecl/tree/master/examples/managed-load-balancer) .
+-> **Note** Apply changes of a route to the Managed Load Balancer instance using [ecl_mlb_load_balancer_action_v1](./mlb_load_balancer_action_v1) in another tf file. Please refer to [examples](https://github.com/nttcom/terraform-provider-ecl/tree/master/examples/managed-load-balancer) .
 
 ## Example Usage
 
