@@ -51,6 +51,7 @@ resource "ecl_mlb_load_balancer_v1" "load_balancer" {
       ip_address = cidrhost(ecl_network_subnet_v2.subnet.cidr, 14)
     }
   }
+  depends_on = [ecl_mlb_certificate_v1.certificate]
 }
 
 resource "ecl_mlb_route_v1" "route" {
