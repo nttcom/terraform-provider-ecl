@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -100,17 +102,21 @@ Create Health Monitor
 type CreateOpts struct {
 
 	// - Name of the health monitor
+	// - This field accepts single-byte characters only
 	Name string `json:"name,omitempty"`
 
 	// - Description of the health monitor
+	// - This field accepts single-byte characters only
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the health monitor
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - Port number of the health monitor for healthchecking
-	// - Must be specified `0` when `protocol` is `"icmp"`
+	// - If 'protocol' is 'icmp', value must be set `0`
 	Port int `json:"port"`
 
 	// - Protocol of the health monitor for healthchecking
@@ -121,20 +127,22 @@ type CreateOpts struct {
 
 	// - Retry count of healthchecking
 	// - Initial monitoring is not included
-	// - Retry is executed at the interval specified by `interval`
+	// - Retry is executed at the interval set in `interval`
 	Retry int `json:"retry,omitempty"`
 
 	// - Timeout of healthchecking (in seconds)
-	// - Must be specified a number less than or equal to `interval`
+	// - Value must be less than or equal to `interval`
 	Timeout int `json:"timeout,omitempty"`
 
 	// - URL path of healthchecking
-	// - Can be specified path to monitor when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, URL path can be set
+	//   - If `protocol` is neither `"http"` nor `"https"`, URL path must not be set
 	// - Must be started with /
 	Path string `json:"path,omitempty"`
 
 	// - HTTP status codes expected in healthchecking
-	// - Can be specified HTTP status code (or range) when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, HTTP status code (or range) can be set
+	//   - If `protocol` is neither `"http"` nor `"https"`, HTTP status code (or range) must not be set
 	// - Format: `"xxx"` or `"xxx-xxx"` ( `xxx` between [100, 599])
 	HttpStatusCode string `json:"http_status_code,omitempty"`
 
@@ -175,7 +183,7 @@ Show Health Monitor
 // ShowOpts represents options used to show a health monitor.
 type ShowOpts struct {
 
-	// - When `true` is specified, `current` and `staged` are returned in response body
+	// - If `true` is set, `current` and `staged` are returned in response body
 	Changes bool `q:"changes"`
 }
 
@@ -215,13 +223,17 @@ Update Health Monitor Attributes
 type UpdateOpts struct {
 
 	// - Name of the health monitor
+	// - This field accepts single-byte characters only
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the health monitor
+	// - This field accepts single-byte characters only
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the health monitor
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -272,7 +284,7 @@ Create Staged Health Monitor Configurations
 type CreateStagedOpts struct {
 
 	// - Port number of the health monitor for healthchecking
-	// - Must be specified `0` when `protocol` is `"icmp"`
+	// - If 'protocol' is 'icmp', value must be set `0`
 	Port int `json:"port,omitempty"`
 
 	// - Protocol of the health monitor for healthchecking
@@ -283,20 +295,22 @@ type CreateStagedOpts struct {
 
 	// - Retry count of healthchecking
 	// - Initial monitoring is not included
-	// - Retry is executed at the interval specified by `interval`
+	// - Retry is executed at the interval set in `interval`
 	Retry int `json:"retry,omitempty"`
 
 	// - Timeout of healthchecking (in seconds)
-	// - Must be specified a number less than or equal to `interval`
+	// - Value must be less than or equal to `interval`
 	Timeout int `json:"timeout,omitempty"`
 
 	// - URL path of healthchecking
-	// - Can be specified path to monitor when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, URL path can be set
+	//   - If `protocol` is neither `"http"` nor `"https"`, URL path must not be set
 	// - Must be started with /
 	Path string `json:"path,omitempty"`
 
 	// - HTTP status codes expected in healthchecking
-	// - Can be specified HTTP status code (or range) when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, HTTP status code (or range) can be set
+	//   - If `protocol` is neither `"http"` nor `"https"`, HTTP status code (or range) must not be set
 	// - Format: `"xxx"` or `"xxx-xxx"` ( `xxx` between [100, 599])
 	HttpStatusCode string `json:"http_status_code,omitempty"`
 }
@@ -348,7 +362,7 @@ Update Staged Health Monitor Configurations
 type UpdateStagedOpts struct {
 
 	// - Port number of the health monitor for healthchecking
-	// - Must be specified `0` when `protocol` is `"icmp"`
+	// - If 'protocol' is 'icmp', value must be set `0`
 	Port *int `json:"port,omitempty"`
 
 	// - Protocol of the health monitor for healthchecking
@@ -359,20 +373,22 @@ type UpdateStagedOpts struct {
 
 	// - Retry count of healthchecking
 	// - Initial monitoring is not included
-	// - Retry is executed at the interval specified by `interval`
+	// - Retry is executed at the interval set in `interval`
 	Retry *int `json:"retry,omitempty"`
 
 	// - Timeout of healthchecking (in seconds)
-	// - Must be specified a number less than or equal to `interval`
+	// - Value must be less than or equal to `interval`
 	Timeout *int `json:"timeout,omitempty"`
 
 	// - URL path of healthchecking
-	// - Can be specified path to monitor when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, URL path can be set
+	//   - If `protocol` is neither `"http"` nor `"https"`, URL path must not be set
 	// - Must be started with /
 	Path *string `json:"path,omitempty"`
 
 	// - HTTP status codes expected in healthchecking
-	// - Can be specified HTTP status code (or range) when `protocol` is `"http"` or `"https"`
+	// - If `protocol` is `"http"` or `"https"`, HTTP status code (or range) can be set
+	//   - If `protocol` is neither `"http"` nor `"https"`, HTTP status code (or range) must not be set
 	// - Format: `"xxx"` or `"xxx-xxx"` ( `xxx` between [100, 599])
 	HttpStatusCode *string `json:"http_status_code,omitempty"`
 }

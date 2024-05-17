@@ -5,7 +5,7 @@ import (
 	"log"
 	"sort"
 
-	"github.com/nttcom/eclcloud/v4/ecl/imagestorage/v2/images"
+	"github.com/nttcom/eclcloud/v3/ecl/imagestorage/v2/images"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )

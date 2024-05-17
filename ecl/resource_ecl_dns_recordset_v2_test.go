@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v4/ecl/dns/v2/recordsets"
+	"github.com/nttcom/eclcloud/v3/ecl/dns/v2/recordsets"
 )
 
 func randomZoneName() string {

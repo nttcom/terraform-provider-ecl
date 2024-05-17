@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v3"
 
 	"github.com/hashicorp/terraform/flatmap"
 	"github.com/hashicorp/terraform/helper/resource"

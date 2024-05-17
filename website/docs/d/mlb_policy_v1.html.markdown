@@ -25,7 +25,9 @@ data "ecl_mlb_policy_v1" "policy" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `configuration_status` - (Optional) Configuration status of the resource
     * Must be one of these values:
         * `"ACTIVE"`
@@ -51,8 +53,8 @@ data "ecl_mlb_policy_v1" "policy" {
         * `"none"`
         * `"source-ip"`
         * `"cookie"`
-* `sorry_page_url` - (Optional) URL of the sorry page to which accesses are redirected when all members in the target group are down
-    * Must be specified as URL format
+* `idle_timeout` - (Optional) The duration (in seconds) during which a session is allowed to remain inactive
+* `sorry_page_url` - (Optional) URL of the sorry page to which accesses are redirected if all members in the target group are down
 * `source_nat` - (Optional) Source NAT setting of the policy
     * Must be one of these values:
         * `"enable"`
@@ -104,17 +106,24 @@ In addition, the following attributes are exported:
 * `tenant_id` - ID of the owner tenant of the policy
 * `algorithm` - Load balancing algorithm (method) of the policy
 * `persistence` - Persistence setting of the policy
-    * `"cookie"` is used when `listener.protocol` is `"http"` or `"https"`
-* `sorry_page_url` - URL of the sorry page to which accesses are redirected when all members in the target group are down
-    * Returns `""` when protocol is not `"http"` or `"https"`
+    * If `listener.protocol` is `"http"` or `"https"`, `"cookie"` is available
+* `idle_timeout` - The duration (in seconds) during which a session is allowed to remain inactive
+    * There may be a time difference up to 60 seconds, between the set value and the actual timeout
+    * If `listener.protocol` is `"tcp"` or `"udp"`
+        * Default value is 120
+    * If `listener.protocol` is `"http"` or `"https"`
+        * Default value is 600
+        * On session timeout, the load balancer sends TCP RST packets to both the client and the real server
+* `sorry_page_url` - URL of the sorry page to which accesses are redirected if all members in the target group are down
+    * If protocol is not `"http"` or `"https"`, returns `""`
 * `source_nat` - Source NAT setting of the policy
-    * When `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"` ,
-    * The source IP address of the request is replaced with `virtual_ip_address` which is assigned to the interface from which the request was sent
-    * `X-Forwarded-For` header with the IP address of the client is added
+    * If `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"` ,
+        * The source IP address of the request is replaced with `virtual_ip_address` which is assigned to the interface from which the request was sent
+        * `X-Forwarded-For` header with the IP address of the client is added
 * `certificate_id` - ID of the certificate that assigned to the policy
-    * Returns `""` when protocol is not `"https"`
+    * If protocol is not `"https"`, returns `""`
 * `health_monitor_id` - ID of the health monitor that assigned to the policy
 * `listener_id` - ID of the listener that assigned to the policy
 * `default_target_group_id` - ID of the default target group that assigned to the policy
 * `tls_policy_id` - ID of the TLS policy that assigned to the policy
-    * Returns `""` when protocol is not `"https"`
+    * If protocol is not `"https"`, returns `""`

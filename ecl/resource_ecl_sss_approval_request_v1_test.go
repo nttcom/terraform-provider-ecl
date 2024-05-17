@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v4/ecl/sss/v1/approval_requests"
+	"github.com/nttcom/eclcloud/v3/ecl/sss/v1/approval_requests"
 )
 
 func TestAccSSSV1ApprovalRequest_basic(t *testing.T) {

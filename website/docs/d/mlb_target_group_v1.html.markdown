@@ -25,7 +25,9 @@ data "ecl_mlb_target_group_v1" "target_group" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `configuration_status` - (Optional) Configuration status of the resource
     * Must be one of these values:
         * `"ACTIVE"`
@@ -87,4 +89,4 @@ In addition, the following attributes are exported:
 * `ip_address` - IP address of the member (real server)
 * `port` - Port number of the member (real server)
 * `weight` - Weight for the member (real server)
-    * Used when `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`
+    * If `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`, uses this parameter

@@ -25,12 +25,14 @@ data "ecl_mlb_system_update_v1" "security_update_202210" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `href` - (Optional) URL of announcement for the system update (for example, Knowledge Center news)
 * `current_revision` - (Optional) Current revision for the system update
 * `next_revision` - (Optional) Next revision for the system update
 * `applicable` - (Optional) Whether the system update can be applied to the load balancer
-* `latest` - (Optional) When `true` is specified, only the latest resource is displayed
+* `latest` - (Optional) If `true` is set, only the latest resource is displayed
 
 ## Attributes Reference
 

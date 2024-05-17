@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/nttcom/eclcloud/v4"
-	"github.com/nttcom/eclcloud/v4/ecl/network/v2/load_balancer_interfaces"
-	"github.com/nttcom/eclcloud/v4/ecl/network/v2/load_balancer_syslog_servers"
-	"github.com/nttcom/eclcloud/v4/ecl/network/v2/load_balancers"
-	"github.com/nttcom/eclcloud/v4/ecl/network/v2/networks"
-	"github.com/nttcom/eclcloud/v4/ecl/network/v2/subnets"
+	"github.com/nttcom/eclcloud/v3"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/load_balancer_interfaces"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/load_balancer_syslog_servers"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/load_balancers"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/subnets"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/volumeattach"
+	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/extensions/volumeattach"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"

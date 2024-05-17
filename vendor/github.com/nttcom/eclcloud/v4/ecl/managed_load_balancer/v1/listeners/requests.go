@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -86,22 +88,27 @@ Create Listener
 type CreateOpts struct {
 
 	// - Name of the listener
+	// - This field accepts single-byte characters only
 	Name string `json:"name,omitempty"`
 
 	// - Description of the listener
+	// - This field accepts single-byte characters only
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the listener
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - IP address of the listener for listening
-	// - Must be specified the unique combination of ip address and port in all listeners belongs to the same load balancer
-	// - Must be specified the ip address which is not included in subnet of load balancer interfaces that the listener belongs to
+	// - Set an unique combination of IP address and port in all listeners which belong to the same load balancer
+	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the listener belongs to
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress string `json:"ip_address"`
 
 	// - Port number of the listener for listening
-	// - Must be specified the unique combination of ip address and port in all listeners belongs to the same load balancer
+	// - Combination of IP address and port must be unique for all listeners which belong to the same load balancer
 	Port int `json:"port"`
 
 	// - Protocol of the listener for listening
@@ -144,7 +151,7 @@ Show Listener
 // ShowOpts represents options used to show a listener.
 type ShowOpts struct {
 
-	// - When `true` is specified, `current` and `staged` are returned in response body
+	// - If `true` is set, `current` and `staged` are returned in response body
 	Changes bool `q:"changes"`
 }
 
@@ -184,13 +191,17 @@ Update Listener Attribute
 type UpdateOpts struct {
 
 	// - Name of the listener
+	// - This field accepts single-byte characters only
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the listener
+	// - This field accepts single-byte characters only
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the listener
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -241,12 +252,13 @@ Create Staged Listener Configurations
 type CreateStagedOpts struct {
 
 	// - IP address of the listener for listening
-	// - Must be specified the unique combination of ip address and port in all listeners belongs to the same load balancer
-	// - Must be specified the ip address which is not included in subnet of load balancer interfaces that the listener belongs to
+	// - Set an unique combination of IP address and port in all listeners which belong to the same load balancer
+	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the listener belongs to
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress string `json:"ip_address,omitempty"`
 
 	// - Port number of the listener for listening
-	// - Must be specified the unique combination of ip address and port in all listeners belongs to the same load balancer
+	// - Combination of IP address and port must be unique for all listeners which belong to the same load balancer
 	Port int `json:"port,omitempty"`
 
 	// - Protocol of the listener for listening
@@ -300,12 +312,13 @@ Update Staged Listener Configurations
 type UpdateStagedOpts struct {
 
 	// - IP address of the listener for listening
-	// - Must be specified the unique combination of ip address and port in all listeners belongs to the same load balancer
-	// - Must be specified the ip address which is not included in subnet of load balancer interfaces that the listener belongs to
+	// - Set an unique combination of IP address and port in all listeners which belong to the same load balancer
+	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the listener belongs to
+	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
 	IPAddress *string `json:"ip_address,omitempty"`
 
 	// - Port number of the listener for listening
-	// - Must be specified the unique combination of ip address and port in all listeners belongs to the same load balancer
+	// - Combination of IP address and port must be unique for all listeners which belong to the same load balancer
 	Port *int `json:"port,omitempty"`
 
 	// - Protocol of the listener for listening

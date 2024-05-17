@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v4"
-	"github.com/nttcom/eclcloud/v4/ecl/provider_connectivity/v2/tenant_connections"
+	"github.com/nttcom/eclcloud/v3"
+	"github.com/nttcom/eclcloud/v3/ecl/provider_connectivity/v2/tenant_connections"
 )
 
 func resourceProviderConnectivityTenantConnectionV2() *schema.Resource {

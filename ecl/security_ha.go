@@ -12,11 +12,11 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v4"
-	security "github.com/nttcom/eclcloud/v4/ecl/security_order/v3/network_based_device_ha"
-	"github.com/nttcom/eclcloud/v4/ecl/security_order/v3/service_order_status"
+	"github.com/nttcom/eclcloud/v3"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_ha"
+	"github.com/nttcom/eclcloud/v3/ecl/security_order/v3/service_order_status"
 
-	ports "github.com/nttcom/eclcloud/v4/ecl/security_portal/v3/ha_ports"
+	ports "github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/ha_ports"
 )
 
 const securityDeviceHAPollIntervalSec = 30

@@ -4,10 +4,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v3"
 	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
 
-	th "github.com/nttcom/eclcloud/v4/testhelper"
+	th "github.com/nttcom/eclcloud/v3/testhelper"
 )
 
 func TestGetCloudFromYAML(t *testing.T) {

@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v4/ecl/managed_load_balancer/v1/system_updates"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/system_updates"
 )
 
 func dataSourceMLBSystemUpdateV1() *schema.Resource {

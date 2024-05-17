@@ -5,8 +5,8 @@ import (
 	"crypto/x509"
 	"fmt"
 
-	"github.com/nttcom/eclcloud/v4"
-	"github.com/nttcom/eclcloud/v4/ecl"
+	"github.com/nttcom/eclcloud/v3"
+	"github.com/nttcom/eclcloud/v3/ecl"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
 

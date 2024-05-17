@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	security "github.com/nttcom/eclcloud/v4/ecl/security_order/v3/host_based"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/host_based"
 )
 
 func TestAccSecurityV3HostBased_basic(t *testing.T) {

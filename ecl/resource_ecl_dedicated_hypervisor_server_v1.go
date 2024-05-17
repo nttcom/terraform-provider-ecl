@@ -7,11 +7,11 @@ import (
 
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v3"
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	"github.com/nttcom/eclcloud/v4/ecl/dedicated_hypervisor/v1/servers"
+	"github.com/nttcom/eclcloud/v3/ecl/dedicated_hypervisor/v1/servers"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )

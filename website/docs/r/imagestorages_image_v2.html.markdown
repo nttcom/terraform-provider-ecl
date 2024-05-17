@@ -38,8 +38,6 @@ The following arguments are supported:
 
 * `disk_format` - (Required) Format of the disk. Must be one of "raw", "qcow2", "iso".
 
-* `license_switch` - (Optional) Switch destination of the license type. Must be one of "WindowsServer_2012R2_Standard_64bit_ComLicense", "WindowsServer_2012_Standard_64bit_ComLicense", "WindowsServer_2008R2_Enterprise_64bit_ComLicense", "WindowsServer_2008R2_Standard_64bit_ComLicense", "WindowsServer_2008_Enterprise_64bit_ComLicense", "WindowsServer_2008_Standard_64bit_ComLicense", "Red_Hat_Enterprise_Linux_6_64bit_BYOL".
-
 * `local_file_path` - (Required) This is the filepath of the raw image file that will be uploaded to Glance.
 
 * `min_disk_gb` - (Optional) Amount of disk space (in GB) required to boot image. Defaults to 0.
@@ -54,7 +52,7 @@ The following arguments are supported:
 
 * `verify_checksum` - (Optional) If false, the checksum will not be verified once the image is finished uploading. Defaults to true.
 
-* `visibility` - (Optional) Scope of image accessibility. Must be one of "public", "private". Defaults to "private".
+* `visibility` - (Optional) Scope of image accessibility. Must be one of "public", "private", "shared".
 
 * `peroperties` - (Optional) A map of key/value pairs to set freeform information about an image.
 

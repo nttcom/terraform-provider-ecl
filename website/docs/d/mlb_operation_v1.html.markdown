@@ -44,8 +44,8 @@ data "ecl_mlb_operation_v1" "" {
         * `"ERROR"`
         * `"STUCK"`
 * `tenant_id` - (Optional) ID of the owner tenant of the resource
-* `no_deleted` - (Optional) When `true` is specified, operations of deleted resource is not displayed
-* `latest` - (Optional) When `true` is specified, only the latest operation of each resource is displayed
+* `no_deleted` - (Optional) If `true` is set, operations of deleted resource is not displayed
+* `latest` - (Optional) If `true` is set, only the latest operation of each resource is displayed
 
 ## Attributes Reference
 

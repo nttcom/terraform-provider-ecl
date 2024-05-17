@@ -25,7 +25,9 @@ data "ecl_mlb_plan_v1" "50M_HA_4IF" {
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
+    * This field accepts single-byte characters only
 * `description` - (Optional) Description of the resource
+    * This field accepts single-byte characters only
 * `bandwidth` - (Optional) Bandwidth of the plan
     * Must be one of these values:
         * `"50M"`

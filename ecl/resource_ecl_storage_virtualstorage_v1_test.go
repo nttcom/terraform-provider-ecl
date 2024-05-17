@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v4/ecl/storage/v1/virtualstorages"
+	"github.com/nttcom/eclcloud/v3/ecl/storage/v1/virtualstorages"
 )
 
 const VOLUME_TYPE_NAME_BLOCK = "piops_iscsi_na"

@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -37,8 +39,10 @@ type ListOpts struct {
 	// - Persistence setting of the policy
 	Persistence string `q:"persistence"`
 
-	// - URL of the sorry page to which accesses are redirected when all members in the target group are down
-	// - Must be specified as URL format
+	// - The duration (in seconds) during which a session is allowed to remain inactive
+	IdleTimeout int `q:"idle_timeout"`
+
+	// - URL of the sorry page to which accesses are redirected if all members in the target group are down
 	SorryPageUrl string `q:"sorry_page_url"`
 
 	// - Source NAT setting of the policy
@@ -105,56 +109,69 @@ Create Policy
 type CreateOpts struct {
 
 	// - Name of the policy
+	// - This field accepts single-byte characters only
 	Name string `json:"name,omitempty"`
 
 	// - Description of the policy
+	// - This field accepts single-byte characters only
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the policy
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - Load balancing algorithm (method) of the policy
 	Algorithm string `json:"algorithm,omitempty"`
 
 	// - Persistence setting of the policy
-	// - `"cookie"` is used when `listener.protocol` is `"http"` or `"https"`
+	// - If `listener.protocol` is `"http"` or `"https"`, `"cookie"` is available
 	Persistence string `json:"persistence,omitempty"`
 
-	// - URL of the sorry page to which accesses are redirected when all members in the target group are down
-	// - Can be specified when `listener.protocol` is `"http"` or `"https"`
-	// - Must be specified as URL format
-	// - Must not be specified or be specified as `""` when `listener.protocol` is neither `"http"` nor `"https"`
+	// - The duration (in seconds) during which a session is allowed to remain inactive
+	// - There may be a time difference up to 60 seconds, between the set value and the actual timeout
+	// - If `listener.protocol` is `"tcp"` or `"udp"`
+	//   - Default value is 120
+	// - If `listener.protocol` is `"http"` or `"https"`
+	//   - Default value is 600
+	//   - On session timeout, the load balancer sends TCP RST packets to both the client and the real server
+	IdleTimeout int `json:"idle_timeout,omitempty"`
+
+	// - URL of the sorry page to which accesses are redirected if all members in the target group are down
+	// - If `listener.protocol` is `"http"` or `"https"`, this parameter can be set
+	// - If `listener.protocol` is neither `"http"` nor `"https"`, must not set this parameter or set `""`
 	SorryPageUrl string `json:"sorry_page_url,omitempty"`
 
 	// - Source NAT setting of the policy
-	// - When `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"` ,
+	// - If `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"`
 	//   - The source IP address of the request is replaced with `virtual_ip_address` which is assigned to the interface from which the request was sent
 	//   - `X-Forwarded-For` header with the IP address of the client is added
 	SourceNat string `json:"source_nat,omitempty"`
 
 	// - ID of the certificate that assigned to the policy
-	// - Can be specified the certificate which `ca_cert.status` , `ssl_cert.status` and `ssl_key.status` is `"UPLOADED"`
-	// - Must be specified `certificate.id` when `listener.protocol` is `"https"`
-	// - Must not be specified or be specified as `""` when `listener.protocol` is not `"https"`
+	// - You can set a ID of the certificate in which `ca_cert.status`, `ssl_cert.status` and `ssl_key.status` are all `"UPLOADED"`
+	// - If `listener.protocol` is `"https"`, set `certificate.id`
+	// - If `listener.protocol` is not `"https"`, must not set this parameter or set `""`
 	CertificateID string `json:"certificate_id,omitempty"`
 
 	// - ID of the health monitor that assigned to the policy
-	// - Must not be specified the ID of the health monitor that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the health monitor that `configuration_status` is `"DELETE_STAGED"`
 	HealthMonitorID string `json:"health_monitor_id"`
 
 	// - ID of the listener that assigned to the policy
-	// - Must not be specified the ID of the listener that `configuration_status` is `"DELETE_STAGED"`
-	// - Must not be specified the ID of the listener that already assigned to the other policy
+	// - Must not set ID of the listener that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the listener that already assigned to the other policy
 	ListenerID string `json:"listener_id"`
 
 	// - ID of the default target group that assigned to the policy
-	// - Must not be specified the ID of the target group that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
 	DefaultTargetGroupID string `json:"default_target_group_id"`
 
 	// - ID of the TLS policy that assigned to the policy
-	// - Can be specified or will be set `tls_policy.id` which `default` is `true` when `listener.protocol` is `"https"`
-	// - Must not be specified or be specified as `""` when `listener.protocol` is not `"https"`
+	// - If `listener.protocol` is `"https"`, you can set this parameter explicitly
+	//   - If not set this parameter, the ID of the `tls_policy` with `default: true` will be automatically set
+	// - If `listener.protocol` is not `"https"`, must not set this parameter or set `""`
 	TLSPolicyID string `json:"tls_policy_id,omitempty"`
 
 	// - ID of the load balancer which the policy belongs to
@@ -194,7 +211,7 @@ Show Policy
 // ShowOpts represents options used to show a policy.
 type ShowOpts struct {
 
-	// - When `true` is specified, `current` and `staged` are returned in response body
+	// - If `true` is set, `current` and `staged` are returned in response body
 	Changes bool `q:"changes"`
 }
 
@@ -234,13 +251,17 @@ Update Policy Attributes
 type UpdateOpts struct {
 
 	// - Name of the policy
+	// - This field accepts single-byte characters only
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the policy
+	// - This field accepts single-byte characters only
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the policy
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -294,46 +315,55 @@ type CreateStagedOpts struct {
 	Algorithm string `json:"algorithm,omitempty"`
 
 	// - Persistence setting of the policy
-	// - `"cookie"` is used when `listener.protocol` is `"http"` or `"https"`
+	// - If `listener.protocol` is `"http"` or `"https"`, `"cookie"` is available
 	Persistence string `json:"persistence,omitempty"`
 
-	// - URL of the sorry page to which accesses are redirected when all members in the target group are down
-	// - Can be specified when `listener.protocol` is `"http"` or `"https"`
-	// - Must be specified as URL format
-	// - Must not be specified or be specified as `""` when `listener.protocol` is neither `"http"` nor `"https"`
-	//   - Must be specified as `""` when changing `listener.protocol` from `"http"` or `"https"` to others
+	// - The duration (in seconds) during which a session is allowed to remain inactive
+	// - There may be a time difference up to 60 seconds, between the set value and the actual timeout
+	// - If `listener.protocol` is `"tcp"` or `"udp"`
+	//   - Default value is 120
+	// - If `listener.protocol` is `"http"` or `"https"`
+	//   - Default value is 600
+	//   - On session timeout, the load balancer sends TCP RST packets to both the client and the real server
+	IdleTimeout int `json:"idle_timeout,omitempty"`
+
+	// - URL of the sorry page to which accesses are redirected if all members in the target group are down
+	// - If `listener.protocol` is `"http"` or `"https"`, this parameter can be set
+	// - If `listener.protocol` is neither `"http"` nor `"https"`, must not set this parameter or set `""`
+	//   - If you change `listener.protocol` from `"http"` or `"https"` to others, set `""`
 	SorryPageUrl string `json:"sorry_page_url,omitempty"`
 
 	// - Source NAT setting of the policy
-	// - When `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"` ,
+	// - If `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"`
 	//   - The source IP address of the request is replaced with `virtual_ip_address` which is assigned to the interface from which the request was sent
 	//   - `X-Forwarded-For` header with the IP address of the client is added
 	SourceNat string `json:"source_nat,omitempty"`
 
 	// - ID of the certificate that assigned to the policy
-	// - Can be specified the certificate which `ca_cert.status` , `ssl_cert.status` and `ssl_key.status` is `"UPLOADED"`
-	// - Must be specified `certificate.id` when `listener.protocol` is `"https"`
-	// - Must not be specified or be specified as `""` when `listener.protocol` is not `"https"`
-	//   - Must be specified as `""` when changing `listener.protocol` from `"https"` to others
+	// - You can set a ID of the certificate in which `ca_cert.status`, `ssl_cert.status` and `ssl_key.status` are all `"UPLOADED"`
+	// - If `listener.protocol` is `"https"`, set `certificate.id`
+	// - If `listener.protocol` is not `"https"`, must not set this parameter or set `""`
+	//   - If you change `listener.protocol` from `"https"` to others, set `""`
 	CertificateID string `json:"certificate_id,omitempty"`
 
 	// - ID of the health monitor that assigned to the policy
-	// - Must not be specified the ID of the health monitor that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the health monitor that `configuration_status` is `"DELETE_STAGED"`
 	HealthMonitorID string `json:"health_monitor_id,omitempty"`
 
 	// - ID of the listener that assigned to the policy
-	// - Must not be specified the ID of the listener that `configuration_status` is `"DELETE_STAGED"`
-	// - Must not be specified the ID of the listener that already assigned to the other policy
+	// - Must not set ID of the listener that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the listener that already assigned to the other policy
 	ListenerID string `json:"listener_id,omitempty"`
 
 	// - ID of the default target group that assigned to the policy
-	// - Must not be specified the ID of the target group that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
 	DefaultTargetGroupID string `json:"default_target_group_id,omitempty"`
 
 	// - ID of the TLS policy that assigned to the policy
-	// - Can be specified or will be set `tls_policy.id` which `default` is `true` when `listener.protocol` is `"https"`
-	// - Must not be specified or be specified as `""` when `listener.protocol` is not `"https"`
-	//   - Must be specified as `""` when changing `listener.protocol` from `"https"` to others
+	// - If `listener.protocol` is `"https"`, you can set this parameter explicitly
+	//   - If not set this parameter, the ID of the `tls_policy` with `default: true` will be automatically set
+	// - If `listener.protocol` is not `"https"`, must not set this parameter or set `""`
+	//   - If you change `listener.protocol` from `"https"` to others, set `""`
 	TLSPolicyID string `json:"tls_policy_id,omitempty"`
 }
 
@@ -387,46 +417,55 @@ type UpdateStagedOpts struct {
 	Algorithm *string `json:"algorithm,omitempty"`
 
 	// - Persistence setting of the policy
-	// - `"cookie"` is used when `listener.protocol` is `"http"` or `"https"`
+	// - If `listener.protocol` is `"http"` or `"https"`, `"cookie"` is available
 	Persistence *string `json:"persistence,omitempty"`
 
-	// - URL of the sorry page to which accesses are redirected when all members in the target group are down
-	// - Can be specified when `listener.protocol` is `"http"` or `"https"`
-	// - Must be specified as URL format
-	// - Must not be specified or be specified as `""` when `listener.protocol` is neither `"http"` nor `"https"`
-	//   - Must be specified as `""` when changing `listener.protocol` from `"http"` or `"https"` to others
+	// - The duration (in seconds) during which a session is allowed to remain inactive
+	// - There may be a time difference up to 60 seconds, between the set value and the actual timeout
+	// - If `listener.protocol` is `"tcp"` or `"udp"`
+	//   - Default value is 120
+	// - If `listener.protocol` is `"http"` or `"https"`
+	//   - Default value is 600
+	//   - On session timeout, the load balancer sends TCP RST packets to both the client and the real server
+	IdleTimeout *int `json:"idle_timeout,omitempty"`
+
+	// - URL of the sorry page to which accesses are redirected if all members in the target group are down
+	// - If `listener.protocol` is `"http"` or `"https"`, this parameter can be set
+	// - If `listener.protocol` is neither `"http"` nor `"https"`, must not set this parameter or set `""`
+	//   - If you change `listener.protocol` from `"http"` or `"https"` to others, set `""`
 	SorryPageUrl *string `json:"sorry_page_url,omitempty"`
 
 	// - Source NAT setting of the policy
-	// - When `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"` ,
+	// - If `source_nat` is `"enable"` and `listener.protocol` is `"http"` or `"https"`
 	//   - The source IP address of the request is replaced with `virtual_ip_address` which is assigned to the interface from which the request was sent
 	//   - `X-Forwarded-For` header with the IP address of the client is added
 	SourceNat *string `json:"source_nat,omitempty"`
 
 	// - ID of the certificate that assigned to the policy
-	// - Can be specified the certificate which `ca_cert.status` , `ssl_cert.status` and `ssl_key.status` is `"UPLOADED"`
-	// - Must be specified `certificate.id` when `listener.protocol` is `"https"`
-	// - Must not be specified or be specified as `""` when `listener.protocol` is not `"https"`
-	//   - Must be specified as `""` when changing `listener.protocol` from `"https"` to others
+	// - You can set a ID of the certificate in which `ca_cert.status`, `ssl_cert.status` and `ssl_key.status` are all `"UPLOADED"`
+	// - If `listener.protocol` is `"https"`, set `certificate.id`
+	// - If `listener.protocol` is not `"https"`, must not set this parameter or set `""`
+	//   - If you change `listener.protocol` from `"https"` to others, set `""`
 	CertificateID *string `json:"certificate_id,omitempty"`
 
 	// - ID of the health monitor that assigned to the policy
-	// - Must not be specified the ID of the health monitor that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the health monitor that `configuration_status` is `"DELETE_STAGED"`
 	HealthMonitorID *string `json:"health_monitor_id,omitempty"`
 
 	// - ID of the listener that assigned to the policy
-	// - Must not be specified the ID of the listener that `configuration_status` is `"DELETE_STAGED"`
-	// - Must not be specified the ID of the listener that already assigned to the other policy
+	// - Must not set ID of the listener that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the listener that already assigned to the other policy
 	ListenerID *string `json:"listener_id,omitempty"`
 
 	// - ID of the default target group that assigned to the policy
-	// - Must not be specified the ID of the target group that `configuration_status` is `"DELETE_STAGED"`
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
 	DefaultTargetGroupID *string `json:"default_target_group_id,omitempty"`
 
 	// - ID of the TLS policy that assigned to the policy
-	// - Can be specified or will be set `tls_policy.id` which `default` is `true` when `listener.protocol` is `"https"`
-	// - Must not be specified or be specified as `""` when `listener.protocol` is not `"https"`
-	//   - Must be specified as `""` when changing `listener.protocol` from `"https"` to others
+	// - If `listener.protocol` is `"https"`, you can set this parameter explicitly
+	//   - If not set this parameter, the ID of the `tls_policy` with `default: true` will be automatically set
+	// - If `listener.protocol` is not `"https"`, must not set this parameter or set `""`
+	//   - If you change `listener.protocol` from `"https"` to others, set `""`
 	TLSPolicyID *string `json:"tls_policy_id,omitempty"`
 }
 

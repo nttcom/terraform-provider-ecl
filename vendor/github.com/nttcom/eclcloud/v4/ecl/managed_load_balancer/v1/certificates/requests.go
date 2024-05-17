@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - ID of the owner tenant of the resource
@@ -77,13 +79,17 @@ Create Certificate
 type CreateOpts struct {
 
 	// - Name of the certificate
+	// - This field accepts single-byte characters only
 	Name string `json:"name,omitempty"`
 
 	// - Description of the certificate
+	// - This field accepts single-byte characters only
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the certificate
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -134,13 +140,17 @@ Update Certificate
 type UpdateOpts struct {
 
 	// - Name of the certificate
+	// - This field accepts single-byte characters only
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the certificate
+	// - This field accepts single-byte characters only
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the certificate
-	// - Must be specified as JSON object
+	// - Set JSON object up to 32,768 characters
+	//   - Nested structure is permitted
+	// - This field accepts single-byte characters only
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -195,9 +205,9 @@ type UploadFileOpts struct {
 	Type string `json:"type"`
 
 	// - Content of the certificate file to be uploaded
-	// - Size of the file before encoding by Base64 must be less than or equal to 16KB
-	// - Must be specified the content of the file that encoded by Base64 format
-	//   - Format of the file before encoding by Base64 must be PEM
+	// - Content must be Base64 encoded
+	//   - The file size before encoding must be less than or equal to 16KB
+	//   - The file format before encoding must be PEM
 	//   - DER can be converted to PEM by using OpenSSL command
 	Content string `json:"content"`
 }

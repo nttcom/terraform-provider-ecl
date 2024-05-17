@@ -20,9 +20,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
+	// - This field accepts single-byte characters only
 	Name string `q:"name"`
 
 	// - Description of the resource
+	// - This field accepts single-byte characters only
 	Description string `q:"description"`
 
 	// - Whether the TLS policy will be set `policy.tls_policy_id` when that is not specified

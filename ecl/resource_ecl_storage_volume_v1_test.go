@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v4/ecl/storage/v1/virtualstorages"
-	"github.com/nttcom/eclcloud/v4/ecl/storage/v1/volumes"
+	"github.com/nttcom/eclcloud/v3/ecl/storage/v1/virtualstorages"
+	"github.com/nttcom/eclcloud/v3/ecl/storage/v1/volumes"
 )
 
 const IQN01 string = "iqn.2003-01.org.sample-iscsi.node1.x8664:sn.2613f8620d98"
