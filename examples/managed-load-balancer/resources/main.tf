@@ -112,3 +112,31 @@ resource "ecl_mlb_rule_v1" "rule" {
     path_patterns = ["^/statics/"]
   }
 }
+
+# You can also write the following instead of ../action/main.tf
+#
+# resource "null_resource" "always_run" {
+#   triggers = {
+#     timestamp = "${timestamp()}"
+#   }
+# }
+#
+# resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
+#   load_balancer_id     = ecl_mlb_load_balancer_v1.load_balancer.id
+#   apply_configurations = true
+#   depends_on = [
+#     ecl_mlb_certificate_v1.certificate,
+#     ecl_mlb_route_v1.route,
+#     ecl_mlb_health_monitor_v1.health_monitor,
+#     ecl_mlb_listener_v1.listener,
+#     ecl_mlb_target_group_v1.target_group_1,
+#     ecl_mlb_target_group_v1.target_group_2,
+#     ecl_mlb_policy_v1.policy,
+#     ecl_mlb_rule_v1.rule,
+#   ]
+#   lifecycle {
+#     replace_triggered_by = [
+#       null_resource.always_run
+#     ]
+#   }
+# }
