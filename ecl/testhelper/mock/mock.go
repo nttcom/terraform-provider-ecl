@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	"gopkg.in/yaml.v2"
@@ -131,15 +132,7 @@ func (mc MockController) setupHandler(t *testing.T, path string, mocks []Mock) {
 				}
 			}
 
-			if v.Request.Body != "" && v.Request.Body != string(body) {
-				continue
-			}
-
-			if v.Request.Method != r.Method {
-				continue
-			}
-
-			if v.Request.Body != "" && v.Request.Body != string(body) {
+			if v.Request.Body != "" && strings.TrimSpace(v.Request.Body) != strings.TrimSpace(string(body)) {
 				continue
 			}
 

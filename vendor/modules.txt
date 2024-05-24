@@ -290,7 +290,7 @@ github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.0
 ## explicit
 github.com/mitchellh/reflectwalk
-# github.com/nttcom/eclcloud/v2 v2.7.0
+# github.com/nttcom/eclcloud/v2 v2.8.0
 ## explicit; go 1.13
 github.com/nttcom/eclcloud/v2
 github.com/nttcom/eclcloud/v2/ecl

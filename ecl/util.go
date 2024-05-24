@@ -246,3 +246,11 @@ func getTags(d *schema.ResourceData, tagName string) (map[string]string, error) 
 	}
 	return tags, nil
 }
+
+func ternary(condition bool, ifOutput interface{}, elseOutput interface{}) interface{} {
+	if condition {
+		return ifOutput
+	}
+
+	return elseOutput
+}
