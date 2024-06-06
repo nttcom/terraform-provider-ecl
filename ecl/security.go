@@ -10,12 +10,12 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"github.com/nttcom/eclcloud/v2"
-	security "github.com/nttcom/eclcloud/v2/ecl/security_order/v2/network_based_device_single"
-	"github.com/nttcom/eclcloud/v2/ecl/security_order/v2/service_order_status"
-	"github.com/nttcom/eclcloud/v2/ecl/security_portal/v2/devices"
-	"github.com/nttcom/eclcloud/v2/ecl/security_portal/v2/ports"
-	"github.com/nttcom/eclcloud/v2/ecl/security_portal/v2/processes"
+	"github.com/nttcom/eclcloud/v3"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_single"
+	"github.com/nttcom/eclcloud/v3/ecl/security_order/v3/service_order_status"
+	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/devices"
+	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/ports"
+	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/processes"
 )
 
 const securityDeviceSinglePollIntervalSec = 30
@@ -332,9 +332,9 @@ func resourceSecurityNetworkBasedSingleDevicePortsForUpdate(d *schema.ResourceDa
 	return result, nil
 }
 
-func resourceSecurityNetworkBasedDeviceSingleV2UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceSingleV3UpdatePortalAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityPortalV2Client(GetRegion(d, config))
+	client, err := config.securityPortalV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}
@@ -392,9 +392,9 @@ func resourceSecurityNetworkBasedDeviceSingleV2UpdatePortalAPIPart(d *schema.Res
 	return nil
 }
 
-func resourceSecurityNetworkBasedDeviceSingleV2UpdateOrderAPIPart(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceSingleV3UpdateOrderAPIPart(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV2Client(GetRegion(d, config))
+	client, err := config.securityOrderV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}

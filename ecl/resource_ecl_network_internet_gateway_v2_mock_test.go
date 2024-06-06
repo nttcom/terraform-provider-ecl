@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/internet_gateways"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/internet_gateways"
 )
 
 func TestMockedAccNetworkV2InternetGateway_basic(t *testing.T) {

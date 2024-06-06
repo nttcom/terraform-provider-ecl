@@ -7,10 +7,10 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v2/ecl/compute/v2/servers"
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/networks"
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/ports"
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/subnets"
+	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/servers"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/ports"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/subnets"
 )
 
 func TestAccNetworkV2Network_basic(t *testing.T) {

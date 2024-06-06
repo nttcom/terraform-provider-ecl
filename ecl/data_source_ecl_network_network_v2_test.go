@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/ports"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/ports"
 )
 
 func TestAccNetworkV2NetworkDataSource_queries(t *testing.T) {
