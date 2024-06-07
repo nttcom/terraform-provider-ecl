@@ -7,15 +7,15 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/health_monitors"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/listeners"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/load_balancers"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/policies"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/routes"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/rules"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/system_updates"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/target_groups"
+	"github.com/nttcom/eclcloud/v3"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/health_monitors"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/listeners"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/load_balancers"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/policies"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/routes"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/rules"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/system_updates"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/target_groups"
 )
 
 func resourceMLBLoadBalancerActionV1() *schema.Resource {

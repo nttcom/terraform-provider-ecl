@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/health_monitors"
+	"github.com/nttcom/eclcloud/v3"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/health_monitors"
 )
 
 func resourceMLBHealthMonitorV1() *schema.Resource {
