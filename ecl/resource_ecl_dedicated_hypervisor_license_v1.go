@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/dedicated_hypervisor/v1/licenses"
+	"github.com/nttcom/eclcloud/v3"
+	"github.com/nttcom/eclcloud/v3/ecl/dedicated_hypervisor/v1/licenses"
 )
 
 var licenseNotFoundError = errors.New("license not found")

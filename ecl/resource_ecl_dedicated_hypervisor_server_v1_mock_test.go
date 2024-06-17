@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/nttcom/eclcloud/v2/ecl/dedicated_hypervisor/v1/servers"
+	"github.com/nttcom/eclcloud/v3/ecl/dedicated_hypervisor/v1/servers"
 
 	"github.com/hashicorp/terraform/helper/resource"
 

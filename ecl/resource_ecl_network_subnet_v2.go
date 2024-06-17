@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/network/v2/subnets"
+	"github.com/nttcom/eclcloud/v3"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/subnets"
 )
 
 func resourceNetworkSubnetV2() *schema.Resource {

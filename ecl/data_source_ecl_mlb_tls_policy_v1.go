@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v2/ecl/managed_load_balancer/v1/tls_policies"
+	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/tls_policies"
 )
 
 func dataSourceMLBTLSPolicyV1() *schema.Resource {

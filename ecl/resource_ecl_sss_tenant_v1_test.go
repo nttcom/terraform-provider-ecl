@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v2/ecl/sss/v1/tenants"
+	"github.com/nttcom/eclcloud/v3/ecl/sss/v1/tenants"
 )
 
 func TestAccSSSV1Tenant_basic(t *testing.T) {

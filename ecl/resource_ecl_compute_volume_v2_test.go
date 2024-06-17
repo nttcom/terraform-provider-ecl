@@ -7,8 +7,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v2"
-	"github.com/nttcom/eclcloud/v2/ecl/computevolume/v2/volumes"
+	"github.com/nttcom/eclcloud/v3"
+	"github.com/nttcom/eclcloud/v3/ecl/computevolume/v2/volumes"
 )
 
 func TestAccComputeVolumeV2Volume_basic(t *testing.T) {

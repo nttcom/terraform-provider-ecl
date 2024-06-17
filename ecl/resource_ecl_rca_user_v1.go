@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v2/ecl/rca/v1/users"
+	"github.com/nttcom/eclcloud/v3/ecl/rca/v1/users"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
