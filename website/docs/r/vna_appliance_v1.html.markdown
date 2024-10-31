@@ -278,6 +278,8 @@ The following arguments are supported:
 
 * `interface_[slot number]_no_allowed_address_pairs` (Optional) Set this true when you want to remove allowed address pairs from interface.
 
+* `initial_config` (Optional) Initial configuration of the Virtual Network Appliance.
+
 The `interface_[slot number]_info` block supports:
 
 * `name` - (Optional) Name of the interface.
@@ -308,6 +310,13 @@ The `interface_[slot number]_allowed_address_pairs` block supports:
 * `vrid` - (Required) VRID of allowed address pairs.
   Even though type of this parameter is integer in actual API specification, 
   You need to specify this argument by string, like, "null", "0", "255".
+
+The `initial_config` block supports:
+
+* `format` - (Required) Initial configuration format(set, text).
+
+* `data` - (Required) Initial configuration data.
+  data does not exceed 512KB in size before base64 encoding.
 
 ## Attributes Reference
 
