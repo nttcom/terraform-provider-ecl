@@ -501,6 +501,8 @@ func TestAccVNAV1Appliance_basic(t *testing.T) {
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "initial_config.format", "set"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "initial_config.data", "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"),
 					testAccCheckVNAV1FixedIPLength(&vna, 1, 1),
 					testAccCheckVNAV1FixedIPLength(&vna, 2, 0),
 					testAccCheckVNAV1FixedIPLength(&vna, 3, 0),
@@ -798,6 +800,11 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
+	}
+
+	initial_config = {
+		"format" = "set"
+		"data" = "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"
 	}
 
 	lifecycle {

@@ -14,7 +14,7 @@ Manages a V1 Virtual Network Appliance resource within Enterprise Cloud.
 
 ### Basic Appliance Creation
 
-You can connect interfaces in creation phase (`interface_1_info`, ... `interface_8_info`).  
+You can connect interfaces in creation phase (`interface_1_info`, ... `interface_8_info`).
 Also you can specify fixed_ips in creation phase (`interface_1_fixed_ips`, ... `interface_8_fixed_ips`).
 
 ```hcl
@@ -258,8 +258,8 @@ The following arguments are supported:
 
 * `default_gateway` - (Optional) IP address of default gateway.
 
-* `availability_zone` - (Optional) Availability Zone, 
-  this can be referred to using Virtual Server (Nova)'s 
+* `availability_zone` - (Optional) Availability Zone,
+  this can be referred to using Virtual Server (Nova)'s
   list availability zones.
 
 * `virtual_network_appliance_plan_id` - (Required) ID of the Virtual Network Appliance Plan.
@@ -278,6 +278,8 @@ The following arguments are supported:
 
 * `interface_[slot number]_no_allowed_address_pairs` (Optional) Set this true when you want to remove allowed address pairs from interface.
 
+* `initial_config` (Optional) Initial configuration of the Virtual_Network_Appliance
+
 The `interface_[slot number]_info` block supports:
 
 * `name` - (Optional) Name of the interface.
@@ -293,7 +295,7 @@ The `interface_[slot number]_info` block supports:
 
 The `interface_[slot number]_fixed_ips` block supports:
 
-* `ip_address` - (Required) The IP address assign to interface within subnet.	
+* `ip_address` - (Required) The IP address assign to interface within subnet.
 
 The `interface_[slot number]_allowed_address_pairs` block supports:
 
@@ -306,8 +308,15 @@ The `interface_[slot number]_allowed_address_pairs` block supports:
   You can use ""(blak string) or "vrrp" as this argument.
 
 * `vrid` - (Required) VRID of allowed address pairs.
-  Even though type of this parameter is integer in actual API specification, 
+  Even though type of this parameter is integer in actual API specification,
   You need to specify this argument by string, like, "null", "0", "255".
+
+The `initial_config` block supports:
+
+* `format` - (Required) Initial configuration format(set, text).
+
+* `data` - (Required) Initial configuration data.
+  data does not exceed 512KB in size before base64 encoding.
 
 ## Attributes Reference
 

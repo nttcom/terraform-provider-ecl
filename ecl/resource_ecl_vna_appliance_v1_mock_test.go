@@ -370,6 +370,8 @@ func TestMockedAccVNAV1Appliance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "initial_config.format", "set"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "initial_config.data", "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"),
 				),
 			},
 		},
@@ -427,9 +429,16 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		ip_address = "192.168.1.50"
 	}
 
+    initial_config = {
+        format = "set"
+        data = "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"
+    }
+
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -467,6 +476,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -485,6 +496,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -511,6 +524,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
     lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -535,6 +550,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
     lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -577,6 +594,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
     lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -614,6 +633,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -642,6 +663,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -692,6 +715,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
     lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
@@ -2587,6 +2612,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+            "username",
+            "password",
 		]
 	}
 }`,
