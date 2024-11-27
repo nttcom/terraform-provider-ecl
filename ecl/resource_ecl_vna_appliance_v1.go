@@ -139,6 +139,9 @@ func initialConfigSchema() *schema.Schema {
 				"format": &schema.Schema{
 					Type:     schema.TypeString,
 					Required: true,
+					ValidateFunc: validation.StringInSlice(
+						[]string{"set", "text"}, false,
+					),
 				},
 				"data": &schema.Schema{
 					Type:     schema.TypeString,
