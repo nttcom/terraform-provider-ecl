@@ -102,6 +102,16 @@ func getTagsAsOpts(rawTags map[string]interface{}) map[string]string {
 	return tags
 }
 
+func getInitialConfigCreateOpts(d *schema.ResourceData) *appliances.CreateOptsInitialConfig {
+	if _, ok := d.GetOk("initial_config"); ok {
+		return &appliances.CreateOptsInitialConfig{
+			Format: d.Get("initial_config.format").(string),
+			Data:   d.Get("initial_config.data").(string),
+		}
+	}
+	return nil
+}
+
 func getInterfaceCreateOpts(d *schema.ResourceData) *appliances.CreateOptsInterfaces {
 	var interfaces appliances.CreateOptsInterfaces
 	isInterfacesCreated := false

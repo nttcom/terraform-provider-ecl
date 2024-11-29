@@ -501,6 +501,8 @@ func TestAccVNAV1Appliance_basic(t *testing.T) {
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", &n.ID),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.subnet_id", &sn.ID),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "initial_config.format", "set"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "initial_config.data", "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"),
 					testAccCheckVNAV1FixedIPLength(&vna, 1, 1),
 					testAccCheckVNAV1FixedIPLength(&vna, 2, 0),
 					testAccCheckVNAV1FixedIPLength(&vna, 3, 0),
@@ -786,9 +788,9 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
-    tags = {
-        k1 = "v1"
-    }
+	tags = {
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -798,6 +800,11 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
+	}
+
+	initial_config = {
+		"format" = "set"
+		"data" = "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"
 	}
 
 	lifecycle {
@@ -829,8 +836,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		"ecl_network_subnet_v2.subnet_8"
 	]
 	tags = {
-        k1 = "v1"
-    }
+		k1 = "v1"
+	}
 
 	interface_3_info  {
 		name = "interface_3"
@@ -842,7 +849,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		ip_address = "192.168.3.50"
 	}
 
-    interface_8_info  {
+	interface_8_info  {
 		name = "interface_8"
 		description = "interface_8_description"
 		network_id = "${ecl_network_network_v2.network_8.id}"
@@ -874,8 +881,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	virtual_network_appliance_plan_id = "%s"
 
 	tags = {
-        k1 = "v1"
-    }
+		k1 = "v1"
+	}
 
 	lifecycle {
 		ignore_changes = [
@@ -900,9 +907,9 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
-    tags = {
-        k1 = "v1"
-    }
+	tags = {
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -936,9 +943,9 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
-    tags = {
-        k1 = "v1"
-    }
+	tags = {
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -980,8 +987,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	]
 
 	tags = {
-        k1 = "v1"
-    }
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -993,15 +1000,15 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		ip_address = "192.168.1.50"
 	}
 
-    interface_2_info  {
+	interface_2_info  {
 		network_id = "${ecl_network_network_v2.network_2.id}"
 	}
 
-    interface_3_info  {
+	interface_3_info  {
 		network_id = "${ecl_network_network_v2.network_3.id}"
 	}
 
-    interface_3_fixed_ips {
+	interface_3_fixed_ips {
 		ip_address = "192.168.3.50"
 	}
 
@@ -1047,8 +1054,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	]
 
 	tags = {
-        k1 = "v1"
-    }
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -1060,7 +1067,7 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		ip_address = "192.168.1.50"
 	}
 
-    interface_2_info  {
+	interface_2_info  {
 		network_id = "${ecl_network_network_v2.network_2.id}"
 	}
 
@@ -1105,10 +1112,10 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	virtual_network_appliance_plan_id = "%[2]s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
-    tags = {
-        k1 = "%[3]s"
-        k2 = "%[3]s"
-    }
+	tags = {
+		k1 = "%[3]s"
+		k2 = "%[3]s"
+	}
 
 	interface_1_info  {
 		name = "%[3]s"
@@ -1185,8 +1192,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
 	tags = {
-        k1 = "v1"
-    }
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -1223,9 +1230,9 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
-    tags = {
-        k1 = "v1"
-    }
+	tags = {
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -1268,9 +1275,9 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
-    tags = {
-        k1 = "v1"
-    }
+	tags = {
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -1313,9 +1320,9 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	virtual_network_appliance_plan_id = "%s"
 
 	depends_on = ["ecl_network_subnet_v2.subnet_1"]
-    tags = {
-        k1 = "v1"
-    }
+	tags = {
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -1359,8 +1366,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	]
 
 	tags = {
-        k1 = "v1"
-    }
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"
@@ -1407,8 +1414,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	]
 
 	tags = {
-        k1 = "v1"
-    }
+		k1 = "v1"
+	}
 
 	interface_1_info  {
 		name = "interface_1"

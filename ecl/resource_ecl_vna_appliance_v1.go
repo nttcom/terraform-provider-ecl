@@ -129,6 +129,29 @@ func interfaceInfoSchema() *schema.Schema {
 	}
 }
 
+func initialConfigSchema() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeMap,
+		Optional: true,
+
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"format": &schema.Schema{
+					Type:     schema.TypeString,
+					Required: true,
+					ValidateFunc: validation.StringInSlice(
+						[]string{"set", "text"}, false,
+					),
+				},
+				"data": &schema.Schema{
+					Type:     schema.TypeString,
+					Required: true,
+				},
+			},
+		},
+	}
+}
+
 func resourceVNAApplianceV1() *schema.Resource {
 	var result *schema.Resource
 
@@ -211,6 +234,8 @@ func resourceVNAApplianceV1() *schema.Resource {
 		result.Schema[fmt.Sprintf("interface_%d_no_allowed_address_pairs", i)] = noAllowedAddressPairsSchema(i)
 	}
 
+	result.Schema["initial_config"] = initialConfigSchema()
+
 	return result
 }
 
@@ -231,6 +256,7 @@ func resourceVNAApplianceV1Create(d *schema.ResourceData, meta interface{}) erro
 			TenantID:                      d.Get("tenant_id").(string),
 			Tags:                          resourceTags(d),
 			Interfaces:                    getInterfaceCreateOpts(d),
+			InitialConfig:                 getInitialConfigCreateOpts(d),
 		},
 	}
 

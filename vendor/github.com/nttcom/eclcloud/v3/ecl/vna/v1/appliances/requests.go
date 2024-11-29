@@ -94,16 +94,22 @@ type CreateOptsInterfaces struct {
 	Interface8 *CreateOptsInterface `json:"interface_8,omitempty"`
 }
 
+type CreateOptsInitialConfig struct {
+	Format string `json:"format" required:"true"`
+	Data   string `json:"data" required:"true"`
+}
+
 // CreateOpts represents options used to create a virtual network appliance.
 type CreateOpts struct {
-	Name                          string                `json:"name,omitempty"`
-	Description                   string                `json:"description,omitempty"`
-	DefaultGateway                string                `json:"default_gateway,omitempty"`
-	AvailabilityZone              string                `json:"availability_zone,omitempty"`
-	VirtualNetworkAppliancePlanID string                `json:"virtual_network_appliance_plan_id" required:"true"`
-	TenantID                      string                `json:"tenant_id,omitempty"`
-	Tags                          map[string]string     `json:"tags,omitempty"`
-	Interfaces                    *CreateOptsInterfaces `json:"interfaces,omitempty"`
+	Name                          string                   `json:"name,omitempty"`
+	Description                   string                   `json:"description,omitempty"`
+	DefaultGateway                string                   `json:"default_gateway,omitempty"`
+	AvailabilityZone              string                   `json:"availability_zone,omitempty"`
+	VirtualNetworkAppliancePlanID string                   `json:"virtual_network_appliance_plan_id" required:"true"`
+	TenantID                      string                   `json:"tenant_id,omitempty"`
+	Tags                          map[string]string        `json:"tags,omitempty"`
+	Interfaces                    *CreateOptsInterfaces    `json:"interfaces,omitempty"`
+	InitialConfig                 *CreateOptsInitialConfig `json:"initial_config,omitempty"`
 }
 
 // ToApplianceCreateMap builds a request body from CreateOpts.

@@ -370,6 +370,8 @@ func TestMockedAccVNAV1Appliance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.description", "interface_1_description"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_info.0.network_id", "dummyNetworkID"),
 					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "interface_1_fixed_ips.0.ip_address", "192.168.1.50"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "initial_config.format", "set"),
+					resource.TestCheckResourceAttr("ecl_vna_appliance_v1.appliance_1", "initial_config.data", "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"),
 				),
 			},
 		},
@@ -417,19 +419,26 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
-    interface_1_info  {
+	interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
-        network_id = "dummyNetworkID"
+		network_id = "dummyNetworkID"
 	}
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
 	}
 
+	initial_config = {
+		format = "set"
+		data = "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"
+	}
+
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -445,20 +454,20 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
-    interface_3_info  {
+	interface_3_info  {
 		name = "interface_3"
 		description = "interface_3_description"
-        network_id = "dummyNetworkID"
+		network_id = "dummyNetworkID"
 	}
 
 	interface_3_fixed_ips {
 		ip_address = "192.168.1.53"
 	}
 
-    interface_8_info  {
+	interface_8_info  {
 		name = "interface_8"
 		description = "interface_8_description"
-        network_id = "dummyNetworkID"
+		network_id = "dummyNetworkID"
 	}
 
 	interface_8_fixed_ips {
@@ -467,6 +476,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -485,6 +496,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -500,17 +513,19 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
-    interface_1_info  {
+	interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
-        network_id = "dummyNetworkID"
+		network_id = "dummyNetworkID"
 	}
 
-    interface_1_no_fixed_ips = "true"
+	interface_1_no_fixed_ips = "true"
 
-    lifecycle {
+	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -526,15 +541,17 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
-    interface_1_info  {
+	interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
-        network_id = "dummyNetworkID"
+		network_id = "dummyNetworkID"
 	}
 
-    lifecycle {
+	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -550,10 +567,10 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
-    interface_1_info  {
+	interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
-        network_id = "dummyNetworkID"
+		network_id = "dummyNetworkID"
 	}
 
 	interface_1_fixed_ips {
@@ -574,9 +591,11 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		vrid = "null"
 	}
 
-    lifecycle {
+	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -592,19 +611,19 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
-    tags = {
-        k1 = "v1"
-        k2 = "v2"
-    }
+	tags = {
+		k1 = "v1"
+		k2 = "v2"
+	}
 
-    interface_1_info  {
+	interface_1_info  {
 		name = "interface_1-update"
 		description = "interface_1_description-update"
-        network_id = "dummyNetworkID"
-        tags = {
-            interfaceK1 = "interfaceV1"
-            interfaceK2 = "interfaceV2"
-        }
+		network_id = "dummyNetworkID"
+		tags = {
+			interfaceK1 = "interfaceV1"
+			interfaceK2 = "interfaceV2"
+		}
 	}
 
 	interface_1_fixed_ips {
@@ -614,6 +633,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -629,10 +650,10 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
-    interface_1_info  {
+	interface_1_info  {
 		name = "interface_1-update"
 		description = "interface_1_description-update"
-        network_id = "dummyNetworkID"
+		network_id = "dummyNetworkID"
 	}
 
 	interface_1_fixed_ips {
@@ -642,6 +663,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -657,41 +680,43 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
 
-    interface_1_info  {
+	interface_1_info  {
 		name = "interface_1"
 		description = "interface_1_description"
-        network_id = "dummyNetworkID"
+		network_id = "dummyNetworkID"
 	}
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
 	}
 
-    interface_2_info  {
-        network_id = "dummyNetworkID2"
+	interface_2_info  {
+		network_id = "dummyNetworkID2"
 	}
 
-    interface_3_info  {
-        network_id = "dummyNetworkID3"
+	interface_3_info  {
+		network_id = "dummyNetworkID3"
 	}
 
-    interface_3_fixed_ips {
+	interface_3_fixed_ips {
 		ip_address = "192.168.3.50"
 	}
 
-    interface_3_fixed_ips {
+	interface_3_fixed_ips {
 		ip_address = "192.168.3.60"
 	}
 
-    interface_4_info  {
-        network_id = "dummyNetworkID4"
+	interface_4_info  {
+		network_id = "dummyNetworkID4"
 	}
 
-    interface_4_no_fixed_ips = "true"
+	interface_4_no_fixed_ips = "true"
 
-    lifecycle {
+	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
@@ -2587,6 +2612,8 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	lifecycle {
 		ignore_changes = [
 			"default_gateway",
+			"username",
+			"password",
 		]
 	}
 }`,
