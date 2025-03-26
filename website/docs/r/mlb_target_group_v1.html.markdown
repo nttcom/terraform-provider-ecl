@@ -39,13 +39,14 @@ resource "ecl_mlb_target_group_v1" "target_group" {
 The following arguments are supported:
 
 * `name` - (Optional) Name of the target group
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `description` - (Optional) Description of the target group
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `tags` - (Optional) Tags of the target group
-    * Set JSON object up to 32,768 characters
+    * Set JSON object up to 32,767 characters
         * Nested structure is permitted
-    * This field accepts single-byte characters only
+        * The whitespace around separators ( `","` and `":"` ) are ignored
+    * This field accepts UTF-8 characters up to 3 bytes
 * `load_balancer_id` - ID of the load balancer which the target group belongs to
 * `members` - Members (real servers) of the target group
     * Structure is [documented below](#members)
@@ -53,12 +54,19 @@ The following arguments are supported:
 <a name="members"></a>The `members` block contains:
 
 * `ip_address` - IP address of the member (real server)
-    * Set an unique combination of IP address and port in all members which belong to the same target group
+    * Set a unique combination of IP address and port in all members which belong to the same target group
     * Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the target group belongs to
     * Must not set a IP address of listeners which belong to the same load balancer as the target group
-    * Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+    * Cannot use a IP address in the following networks
+        * This host on this network (0.0.0.0/8)
+        * Shared Address Space (100.64.0.0/10)
+        * Loopback (127.0.0.0/8)
+        * Link Local (169.254.0.0/16)
+        * Multicast (224.0.0.0/4)
+        * Reserved (240.0.0.0/4)
+        * Limited Broadcast (255.255.255.255/32)
 * `port` - Port number of the member (real server)
-    * Set an unique combination of IP address and port in all members which belong to the same target group
+    * Set a unique combination of IP address and port in all members which belong to the same target group
 * `weight` - (Optional) Weight for the member (real server)
     * If `policy.algorithm` is `"weighted-round-robin"` or `"weighted-least-connection"`, use this parameter
     * Set same weight for the combination of IP address and port in all members which belong to the same load balancer

@@ -41,13 +41,14 @@ resource "ecl_mlb_health_monitor_v1" "health_monitor" {
 The following arguments are supported:
 
 * `name` - (Optional) Name of the health monitor
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `description` - (Optional) Description of the health monitor
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `tags` - (Optional) Tags of the health monitor
-    * Set JSON object up to 32,768 characters
+    * Set JSON object up to 32,767 characters
         * Nested structure is permitted
-    * This field accepts single-byte characters only
+        * The whitespace around separators ( `","` and `":"` ) are ignored
+    * This field accepts UTF-8 characters up to 3 bytes
 * `port` - Port number of the health monitor for healthchecking
     * If 'protocol' is 'icmp', value must be set `0`
 * `protocol` - Protocol of the health monitor for healthchecking

@@ -64,13 +64,14 @@ resource "ecl_mlb_load_balancer_v1" "load_balancer" {
 The following arguments are supported:
 
 * `name` - (Optional) Name of the load balancer
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `description` - (Optional) Description of the load balancer
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `tags` - (Optional) Tags of the load balancer
-    * Set JSON object up to 32,768 characters
+    * Set JSON object up to 32,767 characters
         * Nested structure is permitted
-    * This field accepts single-byte characters only
+        * The whitespace around separators ( `","` and `":"` ) are ignored
+    * This field accepts UTF-8 characters up to 3 bytes
 * `plan_id` - ID of the plan
 * `syslog_servers` - (Optional) Syslog servers to which access logs are transferred
     * The facility code of syslog is 0 (kern), and the severity level is 6 (info)
@@ -99,12 +100,19 @@ The following arguments are supported:
 * `network_id` - ID of the network that this interface belongs to
     * Set a unique network ID in `interfaces`
     * Set a network of which plane is data
-    * Must not set ID of a network that uses ISP shared address (RFC 6598)
+    * Must not set the ID of a network that attaches to the Common Function Gateway
 * `virtual_ip_address` - Virtual IP address of the interface within subnet
     * Do not use this IP address at the interface of other devices, allowed address pairs, etc
-    * Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-    * Set a network IP address and broadcast IP address
-    * Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+    * Set a unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+    * Must not set a network address and a broadcast address
+    * Cannot use a IP address in the following networks
+        * This host on this network (0.0.0.0/8)
+        * Shared Address Space (100.64.0.0/10)
+        * Loopback (127.0.0.0/8)
+        * Link Local (169.254.0.0/16)
+        * Multicast (224.0.0.0/4)
+        * Reserved (240.0.0.0/4)
+        * Limited Broadcast (255.255.255.255/32)
 * `reserved_fixed_ips` - IP addresses that are pre-reserved for applying configurations of load balancer to be performed without losing redundancy
     * Structure is [documented below](#reserved-fixed-ips)
 
@@ -112,9 +120,16 @@ The following arguments are supported:
 
 * `ip_address` - The IP address assign to this interface within subnet
     * Do not use this IP address at the interface of other devices, allowed address pairs, etc
-    * Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-    * Must not set a network IP address and broadcast IP address
-    * Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+    * Set a unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+    * Must not set a network address and a broadcast address
+    * Cannot use a IP address in the following networks
+        * This host on this network (0.0.0.0/8)
+        * Shared Address Space (100.64.0.0/10)
+        * Loopback (127.0.0.0/8)
+        * Link Local (169.254.0.0/16)
+        * Multicast (224.0.0.0/4)
+        * Reserved (240.0.0.0/4)
+        * Limited Broadcast (255.255.255.255/32)
 
 ## Attributes Reference
 
