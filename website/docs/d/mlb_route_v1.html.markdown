@@ -24,9 +24,9 @@ The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `description` - (Optional) Description of the resource
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `configuration_status` - (Optional) Configuration status of the resource
     * Must be one of these values:
         * `"ACTIVE"`
@@ -62,6 +62,8 @@ In addition, the following attributes are exported:
         * Changed configurations of the (static) route exists that waiting to be applied
     * `"DELETE_STAGED"`
         * The (static) route has been removed and waiting to be applied
+    * For detail, refer to the API reference appendix
+            * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 * `operation_status` - Operation status of the load balancer which the (static) route belongs to
     * `"NONE"` :
         * There are no operations of the load balancer
@@ -80,6 +82,8 @@ In addition, the following attributes are exported:
         * The latest operation of the load balancer has been failed
         * The operation was roll backed normally
         * The load balancer and related resources can be operated
+    * For detail, refer to the API reference appendix
+            * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 * `destination_cidr` - CIDR of destination for the (static) route
 * `load_balancer_id` - ID of the load balancer which the (static) route belongs to
 * `tenant_id` - ID of the owner tenant of the (static) route
