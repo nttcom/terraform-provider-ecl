@@ -16,8 +16,8 @@ resource "ecl_network_subnet_v2" "subnet" {
   cidr       = "192.168.0.0/24"
 }
 
-resource "ecl_mlb_certificate_v1" "certificate" {
-  name = "certificate"
+resource "ecl_mlb_certificate_v1" "certificate_1" {
+  name = "certificate_1"
   ca_cert = {
     content = filebase64("${path.module}/certificate/ca_dummy.pem")
   }
@@ -25,7 +25,22 @@ resource "ecl_mlb_certificate_v1" "certificate" {
     content = filebase64("${path.module}/certificate/server_dummy.crt")
   }
   ssl_key = {
-    content = filebase64("${path.module}/certificate/server_dummy.key")
+    content    = filebase64("${path.module}/certificate/server_dummy.key")
+    passphrase = "passphrase"
+  }
+}
+
+resource "ecl_mlb_certificate_v1" "certificate_2" {
+  name = "certificate_2"
+  ca_cert = {
+    content = filebase64("${path.module}/certificate/ca_dummy.pem")
+  }
+  ssl_cert = {
+    content = filebase64("${path.module}/certificate/server_dummy.crt")
+  }
+  ssl_key = {
+    content    = filebase64("${path.module}/certificate/server_dummy.key")
+    passphrase = "passphrase"
   }
 }
 
@@ -65,6 +80,11 @@ resource "ecl_mlb_health_monitor_v1" "health_monitor" {
   name             = "health_monitor"
   port             = 80
   protocol         = "http"
+  interval         = 5
+  retry            = 3
+  timeout          = 5
+  path             = "/health"
+  http_status_code = "200-299"
   load_balancer_id = ecl_mlb_load_balancer_v1.load_balancer.id
 }
 
@@ -82,6 +102,7 @@ resource "ecl_mlb_target_group_v1" "target_group_1" {
   members {
     ip_address = cidrhost(ecl_network_subnet_v2.subnet.cidr, 16)
     port       = 80
+    weight     = 1
   }
 }
 
@@ -91,23 +112,59 @@ resource "ecl_mlb_target_group_v1" "target_group_2" {
   members {
     ip_address = cidrhost(ecl_network_subnet_v2.subnet.cidr, 17)
     port       = 80
+    weight     = 1
+  }
+}
+
+resource "ecl_mlb_target_group_v1" "target_group_3" {
+  name             = "target_group_3"
+  load_balancer_id = ecl_mlb_load_balancer_v1.load_balancer.id
+  members {
+    ip_address = cidrhost(ecl_network_subnet_v2.subnet.cidr, 18)
+    port       = 80
+    weight     = 1
+  }
+}
+
+resource "ecl_mlb_target_group_v1" "target_group_4" {
+  name             = "target_group_4"
+  load_balancer_id = ecl_mlb_load_balancer_v1.load_balancer.id
+  members {
+    ip_address = cidrhost(ecl_network_subnet_v2.subnet.cidr, 19)
+    port       = 80
+    weight     = 1
   }
 }
 
 resource "ecl_mlb_policy_v1" "policy" {
   name                    = "policy"
-  certificate_id          = ecl_mlb_certificate_v1.certificate.id
+  algorithm               = "round-robin"
+  persistence             = "cookie"
+  persistence_timeout     = 525600
+  idle_timeout            = 600
+  sorry_page_url          = "https://example.com/sorry"
+  source_nat              = "enable"
+  certificate_id          = ecl_mlb_certificate_v1.certificate_1.id
   health_monitor_id       = ecl_mlb_health_monitor_v1.health_monitor.id
   listener_id             = ecl_mlb_listener_v1.listener.id
   default_target_group_id = ecl_mlb_target_group_v1.target_group_1.id
+  backup_target_group_id  = ecl_mlb_target_group_v1.target_group_2.id
   tls_policy_id           = data.ecl_mlb_tls_policy_v1.tlsv1_2_202210_01.id
   load_balancer_id        = ecl_mlb_load_balancer_v1.load_balancer.id
+  server_name_indications {
+    server_name    = "*.example.com"
+    input_type     = "fixed"
+    priority       = 1
+    certificate_id = ecl_mlb_certificate_v1.certificate_2.id
+  }
 }
 
 resource "ecl_mlb_rule_v1" "rule" {
-  name            = "rule"
-  target_group_id = ecl_mlb_target_group_v1.target_group_2.id
-  policy_id       = ecl_mlb_policy_v1.policy.id
+  name                   = "rule"
+  priority               = 1
+  target_group_id        = ecl_mlb_target_group_v1.target_group_3.id
+  backup_target_group_id = ecl_mlb_target_group_v1.target_group_4.id
+  policy_id              = ecl_mlb_policy_v1.policy.id
   conditions {
     path_patterns = ["^/statics/"]
   }
