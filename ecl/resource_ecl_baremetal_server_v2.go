@@ -10,10 +10,10 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v3"
-	"github.com/nttcom/eclcloud/v3/ecl/baremetal/v2/flavors"
-	"github.com/nttcom/eclcloud/v3/ecl/baremetal/v2/servers"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/images"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/baremetal/v2/flavors"
+	"github.com/nttcom/eclcloud/v4/ecl/baremetal/v2/servers"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/images"
 )
 
 func resourceBaremetalServerV2() *schema.Resource {

@@ -1,19 +1,19 @@
 ---
 layout: "ecl"
-page_title: "Enterprise Cloud: ecl_sss_tenant_v1"
-sidebar_current: "docs-ecl-datasource-sss-tenant-v1"
+page_title: "Enterprise Cloud: ecl_sss_tenant_v2"
+sidebar_current: "docs-ecl-datasource-sss-tenant-v2"
 description: |-
   Get information on an Enterprise Cloud Tenant.
 ---
 
-# ecl\_sss\_tenant\_v1
+# ecl\_sss\_tenant\_v2
 
 Use this data source to get the ID of an Enterprise Cloud tenant.
 
 ## Example Usage
 
 ```hcl
-data "ecl_sss_tenant_v1" "tenant_1" {
+data "ecl_sss_tenant_v2" "tenant_1" {
   tenant_name = "tenant_1"
 }
 ```

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v3/ecl/baremetal/v2/keypairs"
+	"github.com/nttcom/eclcloud/v4/ecl/baremetal/v2/keypairs"
 )
 
 func TestAccBaremetalV2Keypair_basic(t *testing.T) {

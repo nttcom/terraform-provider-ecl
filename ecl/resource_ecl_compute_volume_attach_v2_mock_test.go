@@ -8,7 +8,7 @@ import (
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 
-	"github.com/nttcom/eclcloud/v3/ecl/computevolume/v2/volumes"
+	"github.com/nttcom/eclcloud/v4/ecl/computevolume/v2/volumes"
 )
 
 func TestMockedVolumeV2Attach_basic(t *testing.T) {

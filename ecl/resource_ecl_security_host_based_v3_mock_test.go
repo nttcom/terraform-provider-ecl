@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/host_based"
+	security "github.com/nttcom/eclcloud/v4/ecl/security_order/v3/host_based"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )

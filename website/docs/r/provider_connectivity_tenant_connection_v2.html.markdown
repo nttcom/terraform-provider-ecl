@@ -25,7 +25,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
   }
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
   request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
   status     = "approved"
 }
@@ -60,7 +60,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
   }
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
   request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
   status     = "approved"
 }
@@ -98,7 +98,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
   }
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
   request_id = ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id
   status     = "approved"
 }

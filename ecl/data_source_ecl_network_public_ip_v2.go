@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v3/ecl/network/v2/public_ips"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/public_ips"
 )
 
 func dataSourceNetworkPublicIPV2() *schema.Resource {

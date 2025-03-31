@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/extensions/keypairs"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/keypairs"
 )
 
 func dataSourceComputeKeypairV2() *schema.Resource {

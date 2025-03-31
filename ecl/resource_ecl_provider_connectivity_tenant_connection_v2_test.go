@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v3"
-	"github.com/nttcom/eclcloud/v3/ecl/provider_connectivity/v2/tenant_connections"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/provider_connectivity/v2/tenant_connections"
 )
 
 func TestAccProviderConnectivityV2TenantConnection_basic(t *testing.T) {
@@ -454,7 +454,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -463,7 +463,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_compute_instance_v2.instance_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"
@@ -503,7 +503,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -512,7 +512,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_compute_instance_v2.instance_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "updated_name"
 	description = "updated_desc"
@@ -552,7 +552,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -561,7 +561,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_baremetal_server_v2.server_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"
@@ -607,14 +607,14 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
 }
 
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
-	depends_on = ["ecl_sss_approval_request_v1.approval_1"]
+	depends_on = ["ecl_sss_approval_request_v2.approval_1"]
 	name = "test_name1"
 	description = "test_desc1"
 	tags = {
@@ -654,7 +654,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -663,7 +663,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_compute_instance_v2.instance_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"
@@ -710,7 +710,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -719,7 +719,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_compute_instance_v2.instance_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"
@@ -766,7 +766,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -775,7 +775,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_compute_instance_v2.instance_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"
@@ -820,7 +820,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -829,7 +829,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_compute_instance_v2.instance_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"
@@ -875,7 +875,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -884,7 +884,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_baremetal_server_v2.server_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"
@@ -934,7 +934,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -943,7 +943,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 			"ecl_vna_appliance_v1.appliance_1",
-			"ecl_sss_approval_request_v1.approval_1"
+			"ecl_sss_approval_request_v2.approval_1"
 		]
 	name = "test_name1"
 	description = "test_desc1"
@@ -989,7 +989,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -998,7 +998,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_baremetal_server_v2.server_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"
@@ -1033,7 +1033,7 @@ resource "ecl_provider_connectivity_tenant_connection_request_v2" "request_1" {
 	}
 }
 
-resource "ecl_sss_approval_request_v1" "approval_1" {
+resource "ecl_sss_approval_request_v2" "approval_1" {
 	depends_on = ["ecl_provider_connectivity_tenant_connection_request_v2.request_1"]
 	request_id = "${ecl_provider_connectivity_tenant_connection_request_v2.request_1.approval_request_id}"
 	status = "approved"
@@ -1042,7 +1042,7 @@ resource "ecl_sss_approval_request_v1" "approval_1" {
 resource "ecl_provider_connectivity_tenant_connection_v2" "connection_1" {
 	depends_on = [
 		"ecl_vna_appliance_v1.appliance_1",
-		"ecl_sss_approval_request_v1.approval_1"
+		"ecl_sss_approval_request_v2.approval_1"
 	]
 	name = "test_name1"
 	description = "test_desc1"

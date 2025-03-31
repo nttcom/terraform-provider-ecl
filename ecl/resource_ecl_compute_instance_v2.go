@@ -13,16 +13,16 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
-	"github.com/nttcom/eclcloud/v3"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/extensions/availabilityzones"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/extensions/bootfromvolume"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/extensions/keypairs"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/extensions/startstop"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/extensions/volumeattach"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/flavors"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/images"
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/servers"
-	"github.com/nttcom/eclcloud/v3/ecl/computevolume/v2/volumes"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/availabilityzones"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/bootfromvolume"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/keypairs"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/startstop"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/extensions/volumeattach"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/flavors"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/images"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/servers"
+	"github.com/nttcom/eclcloud/v4/ecl/computevolume/v2/volumes"
 )
 
 func resourceComputeInstanceV2() *schema.Resource {

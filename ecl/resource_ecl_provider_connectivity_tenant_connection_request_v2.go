@@ -9,9 +9,9 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v3"
-	"github.com/nttcom/eclcloud/v3/ecl/provider_connectivity/v2/tenant_connection_requests"
-	"github.com/nttcom/eclcloud/v3/ecl/sss/v1/approval_requests"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/provider_connectivity/v2/tenant_connection_requests"
+	"github.com/nttcom/eclcloud/v4/ecl/sss/v2/approval_requests"
 )
 
 func resourceProviderConnectivityTenantConnectionRequestV2() *schema.Resource {
@@ -66,7 +66,7 @@ func resourceProviderConnectivityTenantConnectionRequestV2Create(d *schema.Resou
 	if err != nil {
 		return fmt.Errorf("error creating ECL Provider Connectivity connClient: %w", err)
 	}
-	sssClient, err := config.sssV1Client(GetRegion(d, config))
+	sssClient, err := config.sssV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("error creating ECL sss connClient: %w", err)
 	}

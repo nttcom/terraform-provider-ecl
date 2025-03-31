@@ -8,9 +8,9 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/nttcom/eclcloud/v3/ecl/network/v2/networks"
-	"github.com/nttcom/eclcloud/v3/ecl/network/v2/subnets"
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_ha"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/networks"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/subnets"
+	security "github.com/nttcom/eclcloud/v4/ecl/security_order/v3/network_based_device_ha"
 )
 
 func TestAccSecurityV3NetworkBasedDeviceHA_basic(t *testing.T) {

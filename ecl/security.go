@@ -10,12 +10,12 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"github.com/nttcom/eclcloud/v3"
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_single"
-	"github.com/nttcom/eclcloud/v3/ecl/security_order/v3/service_order_status"
-	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/devices"
-	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/ports"
-	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/processes"
+	"github.com/nttcom/eclcloud/v4"
+	security "github.com/nttcom/eclcloud/v4/ecl/security_order/v3/network_based_device_single"
+	"github.com/nttcom/eclcloud/v4/ecl/security_order/v3/service_order_status"
+	"github.com/nttcom/eclcloud/v4/ecl/security_portal/v3/devices"
+	"github.com/nttcom/eclcloud/v4/ecl/security_portal/v3/ports"
+	"github.com/nttcom/eclcloud/v4/ecl/security_portal/v3/processes"
 )
 
 const securityDeviceSinglePollIntervalSec = 30

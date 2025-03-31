@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/nttcom/eclcloud/v3"
-	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/target_groups"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl/managed_load_balancer/v1/target_groups"
 )
 
 func membersSchemaForResource() *schema.Schema {

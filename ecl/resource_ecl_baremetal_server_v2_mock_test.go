@@ -8,7 +8,7 @@ import (
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 
-	"github.com/nttcom/eclcloud/v3/ecl/baremetal/v2/servers"
+	"github.com/nttcom/eclcloud/v4/ecl/baremetal/v2/servers"
 )
 
 func TestMockedBaremetalV2Server_basic(t *testing.T) {

@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_ha"
-	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/device_interfaces"
+	security "github.com/nttcom/eclcloud/v4/ecl/security_order/v3/network_based_device_ha"
+	"github.com/nttcom/eclcloud/v4/ecl/security_portal/v3/device_interfaces"
 )
 
 func resourceSecurityNetworkBasedDeviceHAV3() *schema.Resource {

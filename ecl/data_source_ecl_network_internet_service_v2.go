@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/nttcom/eclcloud/v3/ecl/network/v2/internet_services"
+	"github.com/nttcom/eclcloud/v4/ecl/network/v2/internet_services"
 )
 
 func dataSourceNetworkInternetServiceV2() *schema.Resource {

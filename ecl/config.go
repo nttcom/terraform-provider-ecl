@@ -5,8 +5,8 @@ import (
 	"crypto/x509"
 	"fmt"
 
-	"github.com/nttcom/eclcloud/v3"
-	"github.com/nttcom/eclcloud/v3/ecl"
+	"github.com/nttcom/eclcloud/v4"
+	"github.com/nttcom/eclcloud/v4/ecl"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/clientconfig"
 
@@ -212,14 +212,14 @@ func (c *Config) computeVolumeV2Client(region string) (*eclcloud.ServiceClient, 
 	})
 }
 
-func (c *Config) sssV1Client(region string) (*eclcloud.ServiceClient, error) {
+func (c *Config) sssV2Client(region string) (*eclcloud.ServiceClient, error) {
 	if c.ForceSSSEndpoint != "" {
-		return ecl.NewSSSV1Forced(c.OsClient, eclcloud.EndpointOpts{
+		return ecl.NewSSSV2Forced(c.OsClient, eclcloud.EndpointOpts{
 			Region:       c.determineRegion(region),
 			Availability: c.getEndpointType(),
 		}, c.ForceSSSEndpoint)
 	}
-	return ecl.NewSSSV1(c.OsClient, eclcloud.EndpointOpts{
+	return ecl.NewSSSV2(c.OsClient, eclcloud.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getEndpointType(),
 	})

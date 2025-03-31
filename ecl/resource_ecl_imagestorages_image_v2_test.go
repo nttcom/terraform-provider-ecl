@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/nttcom/eclcloud/v3/ecl/imagestorage/v2/images"
+	"github.com/nttcom/eclcloud/v4/ecl/imagestorage/v2/images"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"

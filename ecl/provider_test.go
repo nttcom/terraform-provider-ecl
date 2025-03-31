@@ -220,6 +220,14 @@ func testAccPreCheckSSSTenant(t *testing.T) {
 	time.Sleep(time.Duration(waitSeconds) * time.Second)
 }
 
+func testAccPreCheckSSSWorkspaces(t *testing.T) {
+    testAccPreCheckRequiredEnvVars(t)
+
+    waitSeconds := 45
+    log.Printf("[DEBUG] Waiting %d seconds before starting TestCase...", waitSeconds)
+	time.Sleep(time.Duration(waitSeconds) * time.Second)
+}
+
 func testAccPreCheckDefaultZone(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 	if OS_DEFAULT_ZONE == "" {

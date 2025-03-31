@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nttcom/eclcloud/v3/ecl/compute/v2/flavors"
+	"github.com/nttcom/eclcloud/v4/ecl/compute/v2/flavors"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
