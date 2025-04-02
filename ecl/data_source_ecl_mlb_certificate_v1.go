@@ -1,6 +1,7 @@
 package ecl
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -17,6 +18,11 @@ func certificateFileSchemaForDataSource() *schema.Schema {
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"status": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+					Computed: true,
+				},
+				"info": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
 					Computed: true,
@@ -114,14 +120,32 @@ func dataSourceMLBCertificateV1Read(d *schema.ResourceData, meta interface{}) er
 
 	d.SetId(certificate.ID)
 
-	sslKey := make(map[string]interface{})
-	sslKey["status"] = certificate.SSLKey.Status
+	sslKeyInfo, err := json.Marshal(certificate.SSLKey.Info)
+	if err != nil {
+		return err
+	}
+	sslKey := map[string]interface{}{
+		"status": certificate.SSLKey.Status,
+		"info":   string(sslKeyInfo),
+	}
 
-	sslCert := make(map[string]interface{})
-	sslCert["status"] = certificate.SSLCert.Status
+	sslCertInfo, err := json.Marshal(certificate.SSLCert.Info)
+	if err != nil {
+		return err
+	}
+	sslCert := map[string]interface{}{
+		"status": certificate.SSLCert.Status,
+		"info":   string(sslCertInfo),
+	}
 
-	caCert := make(map[string]interface{})
-	caCert["status"] = certificate.CACert.Status
+	caCertInfo, err := json.Marshal(certificate.CACert.Info)
+	if err != nil {
+		return err
+	}
+	caCert := map[string]interface{}{
+		"status": certificate.CACert.Status,
+		"info":   string(caCertInfo),
+	}
 
 	d.Set("name", certificate.Name)
 	d.Set("description", certificate.Description)

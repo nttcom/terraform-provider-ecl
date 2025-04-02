@@ -22,6 +22,7 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListOperationStatusQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListAlgorithmQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListPersistenceQuery)
+	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListPersistenceTimeoutQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListIdleTimeoutQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListSorryPageUrlQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListSourceNatQuery)
@@ -29,6 +30,7 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListHealthMonitorIDQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListListenerIDQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListDefaultTargetGroupIDQuery)
+	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListBackupTargetGroupIDQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListTLSPolicyIDQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListLoadBalancerIDQuery)
 	mc.Register(t, "policies", "/v1.0/policies", testMockMLBV1PoliciesListTenantIDQuery)
@@ -52,13 +54,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -75,13 +83,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -98,13 +112,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -121,13 +141,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -144,13 +170,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -167,13 +199,48 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
+				),
+			},
+			{
+				Config: testAccMLBV1PolicyDataSourceQueryPersistenceTimeout,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "name", "policy"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "description", "description"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tags.key", "value"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "configuration_status", "ACTIVE"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "operation_status", "COMPLETE"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -190,13 +257,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -213,13 +286,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -236,13 +315,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -259,13 +344,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -282,13 +373,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -305,13 +402,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -328,13 +431,48 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
+				),
+			},
+			{
+				Config: testAccMLBV1PolicyDataSourceQueryBackupTargetGroupID,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "name", "policy"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "description", "description"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tags.key", "value"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "configuration_status", "ACTIVE"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "operation_status", "COMPLETE"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -351,13 +489,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -374,13 +518,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -397,13 +547,19 @@ func TestMockedAccMLBV1PolicyDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "server_name_indications.0.certificate_id", "fdfed344-e8ab-4f20-bd62-a4039453a389"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_policy_v1.policy_1", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 				),
 			},
@@ -441,13 +597,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -484,13 +650,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -527,13 +703,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -570,13 +756,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -613,13 +809,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -656,13 +862,76 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
+          "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
+        }
+      ]
+    }
+`)
+
+var testAccMLBV1PolicyDataSourceQueryPersistenceTimeout = fmt.Sprintf(`
+data "ecl_mlb_policy_v1" "policy_1" {
+  persistence_timeout = "525600"
+}
+`)
+
+var testMockMLBV1PoliciesListPersistenceTimeoutQuery = fmt.Sprintf(`
+request:
+  method: GET
+  query:
+    persistence_timeout:
+      - 525600
+response:
+  code: 200
+  body: >
+    {
+      "policies": [
+        {
+          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+          "name": "policy",
+          "description": "description",
+          "tags": {
+            "key": "value"
+          },
+          "configuration_status": "ACTIVE",
+          "operation_status": "COMPLETE",
+          "load_balancer_id": "67fea379-cff0-4191-9175-de7d6941a040",
+          "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
+          "algorithm": "round-robin",
+          "persistence": "cookie",
+          "persistence_timeout": 525600,
+          "idle_timeout": 600,
+          "sorry_page_url": "https://example.com/sorry",
+          "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
+          "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
+          "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
+          "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
+          "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -699,13 +968,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -742,13 +1021,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -785,13 +1074,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -828,13 +1127,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -871,13 +1180,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -914,13 +1233,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -957,13 +1286,76 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
+          "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
+        }
+      ]
+    }
+`)
+
+var testAccMLBV1PolicyDataSourceQueryBackupTargetGroupID = fmt.Sprintf(`
+data "ecl_mlb_policy_v1" "policy_1" {
+  backup_target_group_id = "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"
+}
+`)
+
+var testMockMLBV1PoliciesListBackupTargetGroupIDQuery = fmt.Sprintf(`
+request:
+  method: GET
+  query:
+    backup_target_group_id:
+      - f1a117f1-f8df-ce07-6c8c-4bbf103059b6
+response:
+  code: 200
+  body: >
+    {
+      "policies": [
+        {
+          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+          "name": "policy",
+          "description": "description",
+          "tags": {
+            "key": "value"
+          },
+          "configuration_status": "ACTIVE",
+          "operation_status": "COMPLETE",
+          "load_balancer_id": "67fea379-cff0-4191-9175-de7d6941a040",
+          "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
+          "algorithm": "round-robin",
+          "persistence": "cookie",
+          "persistence_timeout": 525600,
+          "idle_timeout": 600,
+          "sorry_page_url": "https://example.com/sorry",
+          "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
+          "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
+          "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
+          "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
+          "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -1000,13 +1392,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -1043,13 +1445,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]
@@ -1086,13 +1498,23 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "fdfed344-e8ab-4f20-bd62-a4039453a389"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       ]

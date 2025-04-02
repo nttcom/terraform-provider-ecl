@@ -34,9 +34,12 @@ func TestMockedAccMLBV1CertificateDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "description", "description"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "tags.key", "value"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.status", "NOT_UPLOADED"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.status", "NOT_UPLOADED"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.status", "NOT_UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.info", `{"fingerprint":"db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd","issuer":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"},"key_algorithm":"RSA-4096","not_after":"2024-12-10 06:20:54","not_before":"2023-11-09 06:20:55","serial":"e7:61:4a:49:85:aa:7c:f2","subject":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"}}`),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.info", `{"fingerprint":"46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2","issuer":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"},"key_algorithm":"RSA-4096","not_after":"2024-12-10 06:20:54","not_before":"2023-11-09 06:20:55","serial":"d3:11:fe:4d:a3:71:4e:13","subject":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"}}`),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.info", `{"key_algorithm":"RSA-4096","passphrase":true}`),
 				),
 			},
 			{
@@ -47,9 +50,12 @@ func TestMockedAccMLBV1CertificateDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "description", "description"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "tags.key", "value"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.status", "NOT_UPLOADED"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.status", "NOT_UPLOADED"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.status", "NOT_UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.info", `{"fingerprint":"db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd","issuer":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"},"key_algorithm":"RSA-4096","not_after":"2024-12-10 06:20:54","not_before":"2023-11-09 06:20:55","serial":"e7:61:4a:49:85:aa:7c:f2","subject":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"}}`),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.info", `{"fingerprint":"46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2","issuer":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"},"key_algorithm":"RSA-4096","not_after":"2024-12-10 06:20:54","not_before":"2023-11-09 06:20:55","serial":"d3:11:fe:4d:a3:71:4e:13","subject":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"}}`),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.info", `{"key_algorithm":"RSA-4096","passphrase":true}`),
 				),
 			},
 			{
@@ -60,9 +66,12 @@ func TestMockedAccMLBV1CertificateDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "description", "description"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "tags.key", "value"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.status", "NOT_UPLOADED"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.status", "NOT_UPLOADED"),
-					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.status", "NOT_UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ca_cert.info", `{"fingerprint":"db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd","issuer":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"},"key_algorithm":"RSA-4096","not_after":"2024-12-10 06:20:54","not_before":"2023-11-09 06:20:55","serial":"e7:61:4a:49:85:aa:7c:f2","subject":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"}}`),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_cert.info", `{"fingerprint":"46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2","issuer":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"},"key_algorithm":"RSA-4096","not_after":"2024-12-10 06:20:54","not_before":"2023-11-09 06:20:55","serial":"d3:11:fe:4d:a3:71:4e:13","subject":{"C":"JP","CN":"example.com","L":"Chiyoda-ku","O":"NTT Communications Corporation","ST":"Tokyo"}}`),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.status", "UPLOADED"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_certificate_v1.certificate_1", "ssl_key.info", `{"key_algorithm":"RSA-4096","passphrase":true}`),
 				),
 			},
 		},
@@ -95,13 +104,59 @@ response:
           },
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "ca_cert": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "issuer": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "subject": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "not_before": "2023-11-09 06:20:55",
+              "not_after": "2024-12-10 06:20:54",
+              "key_algorithm": "RSA-4096",
+              "serial": "e7:61:4a:49:85:aa:7c:f2",
+              "fingerprint": "db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd"
+            }
           },
           "ssl_cert": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "issuer": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "subject": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "not_before": "2023-11-09 06:20:55",
+              "not_after": "2024-12-10 06:20:54",
+              "key_algorithm": "RSA-4096",
+              "serial": "d3:11:fe:4d:a3:71:4e:13",
+              "fingerprint": "46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2"
+            }
           },
           "ssl_key": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "key_algorithm": "RSA-4096",
+              "passphrase": true
+            }
           }
         }
       ]
@@ -134,13 +189,59 @@ response:
           },
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "ca_cert": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "issuer": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "subject": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "not_before": "2023-11-09 06:20:55",
+              "not_after": "2024-12-10 06:20:54",
+              "key_algorithm": "RSA-4096",
+              "serial": "e7:61:4a:49:85:aa:7c:f2",
+              "fingerprint": "db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd"
+            }
           },
           "ssl_cert": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "issuer": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "subject": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "not_before": "2023-11-09 06:20:55",
+              "not_after": "2024-12-10 06:20:54",
+              "key_algorithm": "RSA-4096",
+              "serial": "d3:11:fe:4d:a3:71:4e:13",
+              "fingerprint": "46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2"
+            }
           },
           "ssl_key": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "key_algorithm": "RSA-4096",
+              "passphrase": true
+            }
           }
         }
       ]
@@ -173,13 +274,59 @@ response:
           },
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "ca_cert": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "issuer": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "subject": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "not_before": "2023-11-09 06:20:55",
+              "not_after": "2024-12-10 06:20:54",
+              "key_algorithm": "RSA-4096",
+              "serial": "e7:61:4a:49:85:aa:7c:f2",
+              "fingerprint": "db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd"
+            }
           },
           "ssl_cert": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "issuer": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "subject": {
+                "C": "JP",
+                "ST": "Tokyo",
+                "L": "Chiyoda-ku",
+                "O": "NTT Communications Corporation",
+                "CN": "example.com"
+              },
+              "not_before": "2023-11-09 06:20:55",
+              "not_after": "2024-12-10 06:20:54",
+              "key_algorithm": "RSA-4096",
+              "serial": "d3:11:fe:4d:a3:71:4e:13",
+              "fingerprint": "46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2"
+            }
           },
           "ssl_key": {
-            "status": "NOT_UPLOADED"
+            "status": "UPLOADED",
+            "info": {
+              "key_algorithm": "RSA-4096",
+              "passphrase": true
+            }
           }
         }
       ]
