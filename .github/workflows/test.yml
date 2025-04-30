@@ -10,25 +10,17 @@ jobs:
 
     steps:
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ matrix.terraform-version }}
 
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Cache modules
-        uses: actions/cache@v2
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+        uses: actions/checkout@v4
 
       - name: Go Format
         run: if [ "$(gofmt -l `find . -name '*.go' | grep -v vendor` | wc -l)" -gt 0 ]; then exit 1; fi
