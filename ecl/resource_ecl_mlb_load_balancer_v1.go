@@ -395,7 +395,7 @@ func resourceMLBLoadBalancerV1UpdateConfigurations(d *schema.ResourceData, clien
 
 			_, err := load_balancers.CreateStaged(client, d.Id(), createStagedOpts).Extract()
 			if err != nil {
-				return fmt.Errorf("Error updating ECL managed load balancer load balancer configurations (%s) with options %+v: %s", d.Id(), createStagedOpts, err)
+				return fmt.Errorf("Error updating ECL managed load balancer load balancer configurations in Active (%s) with options %+v: %s", d.Id(), createStagedOpts, err)
 			}
 		}
 	} else {
@@ -453,7 +453,7 @@ func resourceMLBLoadBalancerV1UpdateConfigurations(d *schema.ResourceData, clien
 
 			_, err := load_balancers.UpdateStaged(client, d.Id(), updateStagedOpts).Extract()
 			if err != nil {
-				return fmt.Errorf("Error updating ECL managed load balancer load balancer configurations (%s) with options %+v: %s", d.Id(), updateStagedOpts, err)
+				return fmt.Errorf("Error updating ECL managed load balancer load balancer configurations in not Active (%s) with options %+v: %s", d.Id(), updateStagedOpts, err)
 			}
 		}
 	}

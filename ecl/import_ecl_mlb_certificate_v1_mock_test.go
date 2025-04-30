@@ -19,7 +19,7 @@ func TestMockedAccMLBV1CertificateImport(t *testing.T) {
 	mc.Register(t, "certificates", "/v1.0/certificates", testMockMLBV1CertificatesCreate)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08/files", testMockMLBV1CertificatesUploadFileCaCert)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08/files", testMockMLBV1CertificatesUploadFileSslCert)
-	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08/files", testMockMLBV1CertificatesUploadFileSslKey)
+	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08/files", testMockMLBV1CertificatesUploadFileSslKeyWithPass)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1CertificatesShowAfterCreate)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1CertificatesDelete)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1CertificatesShowAfterDelete)

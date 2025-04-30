@@ -9,6 +9,33 @@ import (
 	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/policies"
 )
 
+func serverNameIndicationsSchemaForResource() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"server_name": &schema.Schema{
+					Type:     schema.TypeString,
+					Required: true,
+				},
+				"input_type": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+				"priority": &schema.Schema{
+					Type:     schema.TypeInt,
+					Required: true,
+				},
+				"certificate_id": &schema.Schema{
+					Type:     schema.TypeString,
+					Required: true,
+				},
+			},
+		},
+	}
+}
+
 func resourceMLBPolicyV1() *schema.Resource {
 	var result *schema.Resource
 
@@ -41,6 +68,10 @@ func resourceMLBPolicyV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"persistence_timeout": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
 			"idle_timeout": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -53,6 +84,7 @@ func resourceMLBPolicyV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"server_name_indications": serverNameIndicationsSchemaForResource(),
 			"certificate_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -68,6 +100,10 @@ func resourceMLBPolicyV1() *schema.Resource {
 			"default_target_group_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+			},
+			"backup_target_group_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"tls_policy_id": &schema.Schema{
 				Type:     schema.TypeString,
@@ -97,6 +133,7 @@ func resourceMLBPolicyV1Create(d *schema.ResourceData, meta interface{}) error {
 		Tags:                 d.Get("tags").(map[string]interface{}),
 		Algorithm:            d.Get("algorithm").(string),
 		Persistence:          d.Get("persistence").(string),
+		PersistenceTimeout:   d.Get("persistence_timeout").(int),
 		IdleTimeout:          d.Get("idle_timeout").(int),
 		SorryPageUrl:         d.Get("sorry_page_url").(string),
 		SourceNat:            d.Get("source_nat").(string),
@@ -104,9 +141,21 @@ func resourceMLBPolicyV1Create(d *schema.ResourceData, meta interface{}) error {
 		HealthMonitorID:      d.Get("health_monitor_id").(string),
 		ListenerID:           d.Get("listener_id").(string),
 		DefaultTargetGroupID: d.Get("default_target_group_id").(string),
+		BackupTargetGroupID:  d.Get("backup_target_group_id").(string),
 		TLSPolicyID:          d.Get("tls_policy_id").(string),
 		LoadBalancerID:       d.Get("load_balancer_id").(string),
 	}
+
+	serverNameIndications := make([]policies.CreateOptsServerNameIndication, len(d.Get("server_name_indications").([]interface{})))
+	for i, serverNameIndication := range d.Get("server_name_indications").([]interface{}) {
+		serverNameIndications[i] = policies.CreateOptsServerNameIndication{
+			ServerName:    serverNameIndication.(map[string]interface{})["server_name"].(string),
+			InputType:     serverNameIndication.(map[string]interface{})["input_type"].(string),
+			Priority:      serverNameIndication.(map[string]interface{})["priority"].(int),
+			CertificateID: serverNameIndication.(map[string]interface{})["certificate_id"].(string),
+		}
+	}
+	createOpts.ServerNameIndications = &serverNameIndications
 
 	managedLoadBalancerClient, err := config.managedLoadBalancerV1Client(GetRegion(d, config))
 	if err != nil {
@@ -153,6 +202,7 @@ func resourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 	if policy.ConfigurationStatus == "ACTIVE" {
 		d.Set("algorithm", policy.Algorithm)
 		d.Set("persistence", policy.Persistence)
+		d.Set("persistence_timeout", policy.PersistenceTimeout)
 		d.Set("idle_timeout", policy.IdleTimeout)
 		d.Set("sorry_page_url", policy.SorryPageUrl)
 		d.Set("source_nat", policy.SourceNat)
@@ -160,10 +210,22 @@ func resourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 		d.Set("health_monitor_id", policy.HealthMonitorID)
 		d.Set("listener_id", policy.ListenerID)
 		d.Set("default_target_group_id", policy.DefaultTargetGroupID)
+		d.Set("backup_target_group_id", policy.BackupTargetGroupID)
 		d.Set("tls_policy_id", policy.TLSPolicyID)
+		serverNameIndications := make([]map[string]interface{}, len(policy.ServerNameIndications))
+		for i, serverNameIndication := range policy.ServerNameIndications {
+			serverNameIndications[i] = map[string]interface{}{
+				"server_name":    serverNameIndication.ServerName,
+				"input_type":     serverNameIndication.InputType,
+				"priority":       serverNameIndication.Priority,
+				"certificate_id": serverNameIndication.CertificateID,
+			}
+		}
+		d.Set("server_name_indications", serverNameIndications)
 	} else if policy.ConfigurationStatus == "CREATE_STAGED" {
 		d.Set("algorithm", policy.Staged.Algorithm)
 		d.Set("persistence", policy.Staged.Persistence)
+		d.Set("persistence_timeout", policy.Staged.PersistenceTimeout)
 		d.Set("idle_timeout", policy.Staged.IdleTimeout)
 		d.Set("sorry_page_url", policy.Staged.SorryPageUrl)
 		d.Set("source_nat", policy.Staged.SourceNat)
@@ -171,10 +233,12 @@ func resourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 		d.Set("health_monitor_id", policy.Staged.HealthMonitorID)
 		d.Set("listener_id", policy.Staged.ListenerID)
 		d.Set("default_target_group_id", policy.Staged.DefaultTargetGroupID)
+		d.Set("backup_target_group_id", policy.Staged.BackupTargetGroupID)
 		d.Set("tls_policy_id", policy.Staged.TLSPolicyID)
 	} else if policy.ConfigurationStatus == "UPDATE_STAGED" {
 		d.Set("algorithm", ternary(policy.Staged.Algorithm == "", policy.Algorithm, policy.Staged.Algorithm))
 		d.Set("persistence", ternary(policy.Staged.Persistence == "", policy.Persistence, policy.Staged.Persistence))
+		d.Set("persistence_timeout", ternary(policy.Staged.PersistenceTimeout == 0, policy.PersistenceTimeout, policy.Staged.PersistenceTimeout))
 		d.Set("idle_timeout", ternary(policy.Staged.IdleTimeout == 0, policy.IdleTimeout, policy.Staged.IdleTimeout))
 		d.Set("sorry_page_url", ternary(policy.Staged.SorryPageUrl == "", policy.SorryPageUrl, policy.Staged.SorryPageUrl))
 		d.Set("source_nat", ternary(policy.Staged.SourceNat == "", policy.SourceNat, policy.Staged.SourceNat))
@@ -182,10 +246,41 @@ func resourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 		d.Set("health_monitor_id", ternary(policy.Staged.HealthMonitorID == "", policy.HealthMonitorID, policy.Staged.HealthMonitorID))
 		d.Set("listener_id", ternary(policy.Staged.ListenerID == "", policy.ListenerID, policy.Staged.ListenerID))
 		d.Set("default_target_group_id", ternary(policy.Staged.DefaultTargetGroupID == "", policy.DefaultTargetGroupID, policy.Staged.DefaultTargetGroupID))
+		d.Set("backup_target_group_id", ternary(policy.Staged.BackupTargetGroupID == "", policy.BackupTargetGroupID, policy.Staged.BackupTargetGroupID))
 		d.Set("tls_policy_id", ternary(policy.Staged.TLSPolicyID == "", policy.TLSPolicyID, policy.Staged.TLSPolicyID))
 	} else if policy.ConfigurationStatus == "DELETE_STAGED" {
 		d.SetId("")
 		return nil
+	}
+
+	if policy.ConfigurationStatus == "ACTIVE" || (policy.ConfigurationStatus == "UPDATE_STAGED" && policy.Staged.ServerNameIndications == nil) {
+		serverNameIndications := make([]map[string]interface{}, len(policy.ServerNameIndications))
+		for i, serverNameIndication := range policy.ServerNameIndications {
+			serverNameIndications[i] = map[string]interface{}{
+				"server_name":    serverNameIndication.ServerName,
+				"input_type":     serverNameIndication.InputType,
+				"priority":       serverNameIndication.Priority,
+				"certificate_id": serverNameIndication.CertificateID,
+			}
+		}
+
+		d.Set("server_name_indications", serverNameIndications)
+	} else if (policy.ConfigurationStatus == "CREATE_STAGED" || policy.ConfigurationStatus == "UPDATE_STAGED") && policy.Staged.ServerNameIndications != nil {
+		serverNameIndications := make([]map[string]interface{}, len(policy.Staged.ServerNameIndications))
+		for i, serverNameIndication := range policy.Staged.ServerNameIndications {
+			serverNameIndications[i] = map[string]interface{}{
+				"server_name":    serverNameIndication.ServerName,
+				"input_type":     serverNameIndication.InputType,
+				"priority":       serverNameIndication.Priority,
+				"certificate_id": serverNameIndication.CertificateID,
+			}
+		}
+
+		d.Set("server_name_indications", serverNameIndications)
+	} else {
+		serverNameIndications := make([]interface{}, 0)
+
+		d.Set("server_name_indications", serverNameIndications)
 	}
 
 	d.Set("name", policy.Name)
@@ -276,6 +371,11 @@ func resourceMLBPolicyV1UpdateConfigurations(d *schema.ResourceData, client *ecl
 			createStagedOpts.Persistence = d.Get("persistence").(string)
 		}
 
+		if d.HasChange("persistence_timeout") {
+			isConfigurationsUpdated = true
+			createStagedOpts.PersistenceTimeout = d.Get("persistence_timeout").(int)
+		}
+
 		if d.HasChange("idle_timeout") {
 			isConfigurationsUpdated = true
 			createStagedOpts.IdleTimeout = d.Get("idle_timeout").(int)
@@ -311,9 +411,29 @@ func resourceMLBPolicyV1UpdateConfigurations(d *schema.ResourceData, client *ecl
 			createStagedOpts.DefaultTargetGroupID = d.Get("default_target_group_id").(string)
 		}
 
+		if d.HasChange("backup_target_group_id") {
+			isConfigurationsUpdated = true
+			createStagedOpts.BackupTargetGroupID = d.Get("backup_target_group_id").(string)
+		}
+
 		if d.HasChange("tls_policy_id") {
 			isConfigurationsUpdated = true
 			createStagedOpts.TLSPolicyID = d.Get("tls_policy_id").(string)
+		}
+
+		if d.HasChange("server_name_indications") {
+			isConfigurationsUpdated = true
+
+			serverNameIndications := make([]policies.CreateStagedOptsServerNameIndication, len(d.Get("server_name_indications").([]interface{})))
+			for i, serverNameIndication := range d.Get("server_name_indications").([]interface{}) {
+				serverNameIndications[i] = policies.CreateStagedOptsServerNameIndication{
+					ServerName:    serverNameIndication.(map[string]interface{})["server_name"].(string),
+					InputType:     serverNameIndication.(map[string]interface{})["input_type"].(string),
+					Priority:      serverNameIndication.(map[string]interface{})["priority"].(int),
+					CertificateID: serverNameIndication.(map[string]interface{})["certificate_id"].(string),
+				}
+			}
+			createStagedOpts.ServerNameIndications = &serverNameIndications
 		}
 
 		if isConfigurationsUpdated {
@@ -337,6 +457,12 @@ func resourceMLBPolicyV1UpdateConfigurations(d *schema.ResourceData, client *ecl
 			isConfigurationsUpdated = true
 			persistence := d.Get("persistence").(string)
 			updateStagedOpts.Persistence = &persistence
+		}
+
+		if d.HasChange("persistence_timeout") {
+			isConfigurationsUpdated = true
+			persistenceTimeout := d.Get("persistence_timeout").(int)
+			updateStagedOpts.PersistenceTimeout = &persistenceTimeout
 		}
 
 		if d.HasChange("idle_timeout") {
@@ -381,10 +507,35 @@ func resourceMLBPolicyV1UpdateConfigurations(d *schema.ResourceData, client *ecl
 			updateStagedOpts.DefaultTargetGroupID = &defaultTargetGroupID
 		}
 
+		if d.HasChange("backup_target_group_id") {
+			isConfigurationsUpdated = true
+			backupTargetGroupID := d.Get("backup_target_group_id").(string)
+			updateStagedOpts.BackupTargetGroupID = &backupTargetGroupID
+		}
+
 		if d.HasChange("tls_policy_id") {
 			isConfigurationsUpdated = true
 			tlsPolicyID := d.Get("tls_policy_id").(string)
 			updateStagedOpts.TLSPolicyID = &tlsPolicyID
+		}
+
+		if d.HasChange("server_name_indications") {
+			isConfigurationsUpdated = true
+
+			serverNameIndications := make([]policies.UpdateStagedOptsServerNameIndication, len(d.Get("server_name_indications").([]interface{})))
+			for i, serverNameIndication := range d.Get("server_name_indications").([]interface{}) {
+				result := policies.UpdateStagedOptsServerNameIndication{}
+				ServerName := serverNameIndication.(map[string]interface{})["server_name"].(string)
+				InputType := serverNameIndication.(map[string]interface{})["input_type"].(string)
+				Priority := serverNameIndication.(map[string]interface{})["priority"].(int)
+				CertificateID := serverNameIndication.(map[string]interface{})["certificate_id"].(string)
+				result.ServerName = &ServerName
+				result.InputType = &InputType
+				result.Priority = &Priority
+				result.CertificateID = &CertificateID
+				serverNameIndications[i] = result
+			}
+			updateStagedOpts.ServerNameIndications = &serverNameIndications
 		}
 
 		if isConfigurationsUpdated {

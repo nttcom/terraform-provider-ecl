@@ -45,13 +45,20 @@ func TestMockedAccMLBV1PolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tags.key", "value"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.#", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.server_name", "example.com"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.certificate_id", "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
@@ -66,13 +73,20 @@ func TestMockedAccMLBV1PolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tags.key-update", "value-update"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "algorithm", "least-connection"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "persistence", "source-ip"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "persistence_timeout", "5"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "idle_timeout", "120"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "sorry_page_url", ""),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "source_nat", "disable"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.#", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.server_name", "*.example.com"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.priority", "10"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.certificate_id", "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "certificate_id", ""),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tls_policy_id", ""),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
@@ -87,13 +101,20 @@ func TestMockedAccMLBV1PolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tags.key-update", "value-update"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "algorithm", "round-robin"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "persistence", "cookie"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "persistence_timeout", "525600"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "idle_timeout", "600"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "sorry_page_url", "https://example.com/sorry"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "source_nat", "enable"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.#", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.server_name", "example.com"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.input_type", "fixed"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.priority", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "server_name_indications.0.certificate_id", "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "certificate_id", "f57a98fe-d63e-4048-93a0-51fe163f30d7"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "health_monitor_id", "dd7a96d6-4e66-4666-baca-a8555f0c472c"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "listener_id", "68633f4f-f52a-402f-8572-b8173418904f"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "default_target_group_id", "a44c4072-ed90-4b50-a33a-6b38fb10c7db"),
+					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "backup_target_group_id", "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tls_policy_id", "4ba79662-f2a1-41a4-a3d9-595799bbcd86"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
 					resource.TestCheckResourceAttr("ecl_mlb_policy_v1.policy", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
@@ -112,13 +133,21 @@ resource "ecl_mlb_policy_v1" "policy" {
   }
   algorithm = "round-robin"
   persistence = "cookie"
+  persistence_timeout = 525600
   idle_timeout = 600
   sorry_page_url = "https://example.com/sorry"
   source_nat = "enable"
+  server_name_indications {
+    server_name = "example.com"
+    input_type = "fixed"
+    priority = 1
+    certificate_id = "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+  }
   certificate_id = "f57a98fe-d63e-4048-93a0-51fe163f30d7"
   health_monitor_id = "dd7a96d6-4e66-4666-baca-a8555f0c472c"
   listener_id = "68633f4f-f52a-402f-8572-b8173418904f"
   default_target_group_id = "a44c4072-ed90-4b50-a33a-6b38fb10c7db"
+  backup_target_group_id = "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"
   tls_policy_id = "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
   load_balancer_id = "67fea379-cff0-4191-9175-de7d6941a040"
 }
@@ -133,13 +162,21 @@ resource "ecl_mlb_policy_v1" "policy" {
   }
   algorithm = "least-connection"
   persistence = "source-ip"
+  persistence_timeout = 5
   idle_timeout = 120
   sorry_page_url = ""
   source_nat = "disable"
+  server_name_indications{
+    server_name = "*.example.com"
+    input_type = "fixed"
+    priority = 10
+    certificate_id = "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+  }
   certificate_id = ""
   health_monitor_id = "dd7a96d6-4e66-4666-baca-a8555f0c472c"
   listener_id = "68633f4f-f52a-402f-8572-b8173418904f"
   default_target_group_id = "a44c4072-ed90-4b50-a33a-6b38fb10c7db"
+  backup_target_group_id = "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"
   tls_policy_id = ""
   load_balancer_id = "67fea379-cff0-4191-9175-de7d6941a040"
 }
@@ -154,13 +191,21 @@ resource "ecl_mlb_policy_v1" "policy" {
   }
   algorithm = "round-robin"
   persistence = "cookie"
+  persistence_timeout = 525600
   idle_timeout = 600
   sorry_page_url = "https://example.com/sorry"
   source_nat = "enable"
+  server_name_indications {
+    server_name = "example.com"
+    input_type = "fixed"
+    priority = 1
+    certificate_id = "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+  }
   certificate_id = "f57a98fe-d63e-4048-93a0-51fe163f30d7"
   health_monitor_id = "dd7a96d6-4e66-4666-baca-a8555f0c472c"
   listener_id = "68633f4f-f52a-402f-8572-b8173418904f"
   default_target_group_id = "a44c4072-ed90-4b50-a33a-6b38fb10c7db"
+  backup_target_group_id = "f1a117f1-f8df-ce07-6c8c-4bbf103059b6"
   tls_policy_id = "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
   load_balancer_id = "67fea379-cff0-4191-9175-de7d6941a040"
 }
@@ -170,7 +215,7 @@ var testMockMLBV1PoliciesCreate = fmt.Sprintf(`
 request:
   method: POST
   body: >
-    {"policy":{"algorithm":"round-robin","certificate_id":"f57a98fe-d63e-4048-93a0-51fe163f30d7","default_target_group_id":"a44c4072-ed90-4b50-a33a-6b38fb10c7db","description":"description","health_monitor_id":"dd7a96d6-4e66-4666-baca-a8555f0c472c","idle_timeout":600,"listener_id":"68633f4f-f52a-402f-8572-b8173418904f","load_balancer_id":"67fea379-cff0-4191-9175-de7d6941a040","name":"policy","persistence":"cookie","sorry_page_url":"https://example.com/sorry","source_nat":"enable","tags":{"key":"value"},"tls_policy_id":"4ba79662-f2a1-41a4-a3d9-595799bbcd86"}}
+    {"policy":{"algorithm":"round-robin","backup_target_group_id":"f1a117f1-f8df-ce07-6c8c-4bbf103059b6","certificate_id":"f57a98fe-d63e-4048-93a0-51fe163f30d7","default_target_group_id":"a44c4072-ed90-4b50-a33a-6b38fb10c7db","description":"description","health_monitor_id":"dd7a96d6-4e66-4666-baca-a8555f0c472c","idle_timeout":600,"listener_id":"68633f4f-f52a-402f-8572-b8173418904f","load_balancer_id":"67fea379-cff0-4191-9175-de7d6941a040","name":"policy","persistence":"cookie","persistence_timeout":525600,"server_name_indications":[{"certificate_id":"07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3","input_type":"fixed","priority":1,"server_name":"example.com"}],"sorry_page_url":"https://example.com/sorry","source_nat":"enable","tags":{"key":"value"},"tls_policy_id":"4ba79662-f2a1-41a4-a3d9-595799bbcd86"}}
 response:
   code: 200
   body: >
@@ -188,13 +233,16 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": null,
         "persistence": null,
+        "persistence_timeout": null,
         "idle_timeout": null,
         "sorry_page_url": null,
         "source_nat": null,
+        "server_name_indications": null,
         "certificate_id": null,
         "health_monitor_id": null,
         "listener_id": null,
         "default_target_group_id": null,
+        "backup_target_group_id": null,
         "tls_policy_id": null
       }
     }
@@ -224,25 +272,38 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": null,
         "persistence": null,
+        "persistence_timeout": null,
         "idle_timeout": null,
         "sorry_page_url": null,
         "source_nat": null,
+        "server_name_indications": null,
         "certificate_id": null,
         "health_monitor_id": null,
         "listener_id": null,
         "default_target_group_id": null,
+        "backup_target_group_id": null,
         "tls_policy_id": null,
         "current": null,
         "staged": {
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       }
@@ -271,13 +332,16 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": null,
         "persistence": null,
+        "persistence_timeout": null,
         "idle_timeout": null,
         "sorry_page_url": null,
         "source_nat": null,
+        "server_name_indications": null,
         "certificate_id": null,
         "health_monitor_id": null,
         "listener_id": null,
         "default_target_group_id": null,
+        "backup_target_group_id": null,
         "tls_policy_id": null
       }
     }
@@ -308,25 +372,38 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": null,
         "persistence": null,
+        "persistence_timeout": null,
         "idle_timeout": null,
         "sorry_page_url": null,
         "source_nat": null,
+        "server_name_indications": null,
         "certificate_id": null,
         "health_monitor_id": null,
         "listener_id": null,
         "default_target_group_id": null,
+        "backup_target_group_id": null,
         "tls_policy_id": null,
         "current": null,
         "staged": {
           "algorithm": "least-connection",
           "persistence": "source-ip",
+          "persistence_timeout": 5,
           "idle_timeout": 120,
           "sorry_page_url": "",
           "source_nat": "disable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 10,
+              "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+            }
+          ],
           "certificate_id": "",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": ""
         }
       }
@@ -359,24 +436,44 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": "least-connection",
         "persistence": "source-ip",
+        "persistence_timeout": 5,
         "idle_timeout": 120,
         "sorry_page_url": "",
         "source_nat": "disable",
+        "server_name_indications": [
+          {
+            "server_name": "*.example.com",
+            "input_type": "fixed",
+            "priority": 10,
+            "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+          }
+        ],
         "certificate_id": "",
         "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
         "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
         "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+        "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
         "tls_policy_id": "",
         "current": {
           "algorithm": "least-connection",
           "persistence": "source-ip",
+          "persistence_timeout": 5,
           "idle_timeout": 120,
           "sorry_page_url": "",
           "source_nat": "disable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 10,
+              "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+            }
+          ],
           "certificate_id": "",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": ""
         },
         "staged": null
@@ -406,13 +503,23 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": "least-connection",
         "persistence": "source-ip",
+        "persistence_timeout": 5,
         "idle_timeout": 120,
         "sorry_page_url": "",
         "source_nat": "disable",
+        "server_name_indications": [
+          {
+            "server_name": "*.example.com",
+            "input_type": "fixed",
+            "priority": 10,
+            "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+          }
+        ],
         "certificate_id": "",
         "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
         "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
         "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+        "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
         "tls_policy_id": ""
       }
     }
@@ -443,36 +550,66 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": "least-connection",
         "persistence": "source-ip",
+        "persistence_timeout": 5,
         "idle_timeout": 120,
         "sorry_page_url": "",
         "source_nat": "disable",
+        "server_name_indications": [
+          {
+            "server_name": "*.example.com",
+            "input_type": "fixed",
+            "priority": 10,
+            "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+          }
+        ],
         "certificate_id": "",
         "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
         "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
         "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+        "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
         "tls_policy_id": "",
         "current": {
           "algorithm": "least-connection",
           "persistence": "source-ip",
+          "persistence_timeout": 5,
           "idle_timeout": 120,
           "sorry_page_url": "",
           "source_nat": "disable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 10,
+              "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+            }
+          ],
           "certificate_id": "",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": ""
         },
         "staged": {
           "algorithm": "round-robin",
           "persistence": "cookie",
+          "persistence_timeout": 525600,
           "idle_timeout": 600,
           "sorry_page_url": "https://example.com/sorry",
           "source_nat": "enable",
+          "server_name_indications": [
+            {
+              "server_name": "example.com",
+              "input_type": "fixed",
+              "priority": 1,
+              "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+            }
+          ],
           "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
           "health_monitor_id": null,
           "listener_id": null,
           "default_target_group_id": null,
+          "backup_target_group_id": null,
           "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
         }
       }
@@ -504,24 +641,44 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": "least-connection",
         "persistence": "source-ip",
+        "persistence_timeout": 5,
         "idle_timeout": 120,
         "sorry_page_url": "",
         "source_nat": "disable",
+        "server_name_indications": [
+          {
+            "server_name": "*.example.com",
+            "input_type": "fixed",
+            "priority": 10,
+            "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+          }
+        ],
         "certificate_id": "",
         "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
         "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
         "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+        "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
         "tls_policy_id": "",
         "current": {
           "algorithm": "least-connection",
           "persistence": "source-ip",
+          "persistence_timeout": 5,
           "idle_timeout": 120,
           "sorry_page_url": "",
           "source_nat": "disable",
+          "server_name_indications": [
+            {
+              "server_name": "*.example.com",
+              "input_type": "fixed",
+              "priority": 10,
+              "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+            }
+          ],
           "certificate_id": "",
           "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
           "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
           "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+          "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
           "tls_policy_id": ""
         },
         "staged": null
@@ -553,13 +710,16 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "algorithm": null,
         "persistence": null,
+        "persistence_timeout": null,
         "idle_timeout": null,
         "sorry_page_url": null,
         "source_nat": null,
+        "server_name_indications": null,
         "certificate_id": null,
         "health_monitor_id": null,
         "listener_id": null,
         "default_target_group_id": null,
+        "backup_target_group_id": null,
         "tls_policy_id": null
       }
     }
@@ -572,7 +732,7 @@ var testMockMLBV1PoliciesCreateConfigurations = fmt.Sprintf(`
 request:
   method: POST
   body: >
-    {"policy":{"algorithm":"round-robin","certificate_id":"f57a98fe-d63e-4048-93a0-51fe163f30d7","idle_timeout":600,"persistence":"cookie","sorry_page_url":"https://example.com/sorry","source_nat":"enable","tls_policy_id":"4ba79662-f2a1-41a4-a3d9-595799bbcd86"}}
+    {"policy":{"algorithm":"round-robin","certificate_id":"f57a98fe-d63e-4048-93a0-51fe163f30d7","idle_timeout":600,"persistence":"cookie","persistence_timeout":525600,"server_name_indications":[{"certificate_id":"07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3","input_type":"fixed","priority":1,"server_name":"example.com"}],"sorry_page_url":"https://example.com/sorry","source_nat":"enable","tls_policy_id":"4ba79662-f2a1-41a4-a3d9-595799bbcd86"}}
 response:
   code: 200
   body: >
@@ -580,13 +740,23 @@ response:
       "policy": {
         "algorithm": "round-robin",
         "persistence": "cookie",
+        "persistence_timeout": 525600,
         "idle_timeout": 600,
         "sorry_page_url": "https://example.com/sorry",
         "source_nat": "enable",
+        "server_name_indications": [
+          {
+            "server_name": "example.com",
+            "input_type": "fixed",
+            "priority": 1,
+            "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+          }
+        ],
         "certificate_id": "f57a98fe-d63e-4048-93a0-51fe163f30d7",
         "health_monitor_id": null,
         "listener_id": null,
         "default_target_group_id": null,
+        "backup_target_group_id": null,
         "tls_policy_id": "4ba79662-f2a1-41a4-a3d9-595799bbcd86"
       }
     }
@@ -599,7 +769,7 @@ var testMockMLBV1PoliciesUpdateConfigurations = fmt.Sprintf(`
 request:
   method: PATCH
   body: >
-    {"policy":{"algorithm":"least-connection","certificate_id":"","idle_timeout":120,"persistence":"source-ip","sorry_page_url":"","source_nat":"disable","tls_policy_id":""}}
+    {"policy":{"algorithm":"least-connection","certificate_id":"","idle_timeout":120,"persistence":"source-ip","persistence_timeout":5,"server_name_indications":[{"certificate_id":"07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3","input_type":"fixed","priority":10,"server_name":"*.example.com"}],"sorry_page_url":"","source_nat":"disable","tls_policy_id":""}}
 response:
   code: 200
   body: >
@@ -607,13 +777,23 @@ response:
       "policy": {
         "algorithm": "least-connection",
         "persistence": "source-ip",
+        "persistence_timeout": 5,
         "idle_timeout": 120,
         "sorry_page_url": "",
         "source_nat": "disable",
+        "server_name_indications": [
+          {
+            "server_name": "*.example.com",
+            "input_type": "fixed",
+            "priority": 10,
+            "certificate_id": "07afa7bf-fbc1-4876-a2b9-eae4ca6e53f3"
+          }
+        ],
         "certificate_id": "",
         "health_monitor_id": "dd7a96d6-4e66-4666-baca-a8555f0c472c",
         "listener_id": "68633f4f-f52a-402f-8572-b8173418904f",
         "default_target_group_id": "a44c4072-ed90-4b50-a33a-6b38fb10c7db",
+        "backup_target_group_id": "f1a117f1-f8df-ce07-6c8c-4bbf103059b6",
         "tls_policy_id": ""
       }
     }

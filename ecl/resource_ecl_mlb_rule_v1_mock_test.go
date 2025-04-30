@@ -45,9 +45,12 @@ func TestMockedAccMLBV1RuleResource(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "tags.key", "value"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "priority", "1"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "policy_id", "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -60,9 +63,12 @@ func TestMockedAccMLBV1RuleResource(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "tags.key-update", "value-update"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "priority", "1"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "policy_id", "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.0.path_patterns.#", "2"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.0.path_patterns.0", "^/statics/"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.0.path_patterns.1", "^/assets/"),
 				),
@@ -76,9 +82,12 @@ func TestMockedAccMLBV1RuleResource(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "tags.key-update", "value-update"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "priority", "1"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "policy_id", "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("ecl_mlb_rule_v1.rule", "conditions.0.path_patterns.0", "^/assets/"),
 				),
 			},
@@ -95,6 +104,7 @@ resource "ecl_mlb_rule_v1" "rule" {
   }
   priority = 1
   target_group_id = "29527a3c-9e5d-48b7-868f-6442c7d21a95"
+  backup_target_group_id = "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"
   policy_id = "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4"
   conditions {
     path_patterns = ["^/statics/"]
@@ -111,6 +121,7 @@ resource "ecl_mlb_rule_v1" "rule" {
   }
   priority = 1
   target_group_id = "29527a3c-9e5d-48b7-868f-6442c7d21a95"
+  backup_target_group_id = "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"
   policy_id = "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4"
   conditions {
     path_patterns = ["^/statics/", "^/assets/"]
@@ -127,6 +138,7 @@ resource "ecl_mlb_rule_v1" "rule" {
   }
   priority = 1
   target_group_id = "29527a3c-9e5d-48b7-868f-6442c7d21a95"
+  backup_target_group_id = "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"
   policy_id = "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4"
   conditions {
     path_patterns = ["^/assets/"]
@@ -138,7 +150,7 @@ var testMockMLBV1RulesCreate = fmt.Sprintf(`
 request:
   method: POST
   body: >
-    {"rule":{"conditions":{"path_patterns":["^/statics/"]},"description":"description","name":"rule","policy_id":"fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4","priority":1,"tags":{"key":"value"},"target_group_id":"29527a3c-9e5d-48b7-868f-6442c7d21a95"}}
+    {"rule":{"backup_target_group_id":"dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52","conditions":{"path_patterns":["^/statics/"]},"description":"description","name":"rule","policy_id":"fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4","priority":1,"tags":{"key":"value"},"target_group_id":"29527a3c-9e5d-48b7-868f-6442c7d21a95"}}
 response:
   code: 200
   body: >
@@ -157,6 +169,7 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": null,
         "target_group_id": null,
+        "backup_target_group_id": null,
         "conditions": null
       }
     }
@@ -187,11 +200,13 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": null,
         "target_group_id": null,
+        "backup_target_group_id": null,
         "conditions": null,
         "current": null,
         "staged": {
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": ["^/statics/"]
           }
@@ -223,6 +238,7 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": null,
         "target_group_id": null,
+        "backup_target_group_id": null,
         "conditions": null
       }
     }
@@ -254,11 +270,13 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": null,
         "target_group_id": null,
+        "backup_target_group_id": null,
         "conditions": null,
         "current": null,
         "staged": {
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": ["^/statics/", "^/assets/"]
           }
@@ -294,12 +312,14 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": 1,
         "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+        "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
         "conditions": {
           "path_patterns": ["^/statics/", "^/assets/"]
         },
         "current": {
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": ["^/statics/", "^/assets/"]
           }
@@ -332,6 +352,7 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": 1,
         "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+        "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
         "conditions": {
           "path_patterns": ["^/statics/", "^/assets/"]
         }
@@ -365,12 +386,14 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": 1,
         "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+        "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
         "conditions": {
           "path_patterns": ["^/statics/", "^/assets/"]
         },
         "current": {
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": ["^/statics/", "^/assets/"]
           }
@@ -378,6 +401,7 @@ response:
         "staged": {
           "priority": null,
           "target_group_id": null,
+          "backup_target_group_id": null,
           "conditions": {
             "path_patterns": ["^/assets/"]
           }
@@ -412,12 +436,14 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": 1,
         "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+        "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
         "conditions": {
           "path_patterns": ["^/statics/", "^/assets/"]
         },
         "current": {
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": ["^/statics/", "^/assets/"]
           }
@@ -452,6 +478,7 @@ response:
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "priority": null,
         "target_group_id": null,
+        "backup_target_group_id": null,
         "conditions": null
       }
     }
@@ -472,6 +499,7 @@ response:
       "rule": {
         "priority": null,
         "target_group_id": null,
+        "backup_target_group_id": null,
         "conditions": {
           "path_patterns": ["^/assets/"]
         }
@@ -494,6 +522,7 @@ response:
       "rule": {
         "priority": 1,
         "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+        "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
         "conditions": {
           "path_patterns": ["^/statics/", "^/assets/"]
         }

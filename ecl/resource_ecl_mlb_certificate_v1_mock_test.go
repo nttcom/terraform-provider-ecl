@@ -19,7 +19,7 @@ func TestMockedAccMLBV1CertificateResource(t *testing.T) {
 	mc.Register(t, "certificates", "/v1.0/certificates", testMockMLBV1CertificatesCreate)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08/files", testMockMLBV1CertificatesUploadFileCaCert)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08/files", testMockMLBV1CertificatesUploadFileSslCert)
-	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08/files", testMockMLBV1CertificatesUploadFileSslKey)
+	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08/files", testMockMLBV1CertificatesUploadFileSslKeyWithPass)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1CertificatesShowAfterCreate)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1CertificatesUpdate)
 	mc.Register(t, "certificates", "/v1.0/certificates/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1CertificatesShowAfterUpdate)
@@ -43,6 +43,7 @@ func TestMockedAccMLBV1CertificateResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("ecl_mlb_certificate_v1.certificate", "ca_cert.content"),
 					resource.TestCheckResourceAttrSet("ecl_mlb_certificate_v1.certificate", "ssl_cert.content"),
 					resource.TestCheckResourceAttrSet("ecl_mlb_certificate_v1.certificate", "ssl_key.content"),
+					resource.TestCheckResourceAttrSet("ecl_mlb_certificate_v1.certificate", "ssl_key.passphrase"),
 				),
 			},
 			{
@@ -77,6 +78,7 @@ resource "ecl_mlb_certificate_v1" "certificate" {
   }
   ssl_key = {
     content = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCjAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEKMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMwo0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1CjY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1NjcKODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OQpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCCkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0QKRUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRgpHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdICklKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUoKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTApNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OCk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1AKUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUgpTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUClVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVYKV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWApZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaCmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWIKY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWJjZAplZmdoaWprbG1ub3BxcnN0dXZ3eHl6VjAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlCmZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+    passphrase = "passphrase"
   }
 }
 `)
@@ -96,6 +98,7 @@ resource "ecl_mlb_certificate_v1" "certificate" {
   }
   ssl_key = {
     content = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCjAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEKMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMwo0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1CjY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1NjcKODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OQpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCCkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0QKRUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRgpHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdICklKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUoKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTApNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OCk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1AKUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUgpTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUClVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVYKV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWApZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaCmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWIKY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWJjZAplZmdoaWprbG1ub3BxcnN0dXZ3eHl6VjAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlCmZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+    passphrase = "passphrase"
   }
 }
 `)
@@ -118,13 +121,16 @@ response:
         },
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "ca_cert": {
-          "status": "NOT_UPLOADED"
+          "status": "NOT_UPLOADED",
+          "info": {}
         },
         "ssl_cert": {
-          "status": "NOT_UPLOADED"
+          "status": "NOT_UPLOADED",
+          "info": {}
         },
         "ssl_key": {
-          "status": "NOT_UPLOADED"
+          "status": "NOT_UPLOADED",
+          "info": {}
         }
       }
     }
@@ -147,13 +153,59 @@ response:
         },
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "ca_cert": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "issuer": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "subject": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "not_before": "2023-11-09 06:20:55",
+            "not_after": "2024-12-10 06:20:54",
+            "key_algorithm": "RSA-4096",
+            "serial": "e7:61:4a:49:85:aa:7c:f2",
+            "fingerprint": "db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd"
+          }
         },
         "ssl_cert": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "issuer": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "subject": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "not_before": "2023-11-09 06:20:55",
+            "not_after": "2024-12-10 06:20:54",
+            "key_algorithm": "RSA-4096",
+            "serial": "d3:11:fe:4d:a3:71:4e:13",
+            "fingerprint": "46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2"
+          }
         },
         "ssl_key": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "key_algorithm": "RSA-4096",
+            "passphrase": true
+          }
         }
       }
     }
@@ -177,13 +229,59 @@ response:
         },
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "ca_cert": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "issuer": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "subject": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "not_before": "2023-11-09 06:20:55",
+            "not_after": "2024-12-10 06:20:54",
+            "key_algorithm": "RSA-4096",
+            "serial": "e7:61:4a:49:85:aa:7c:f2",
+            "fingerprint": "db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd"
+          }
         },
         "ssl_cert": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "issuer": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "subject": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "not_before": "2023-11-09 06:20:55",
+            "not_after": "2024-12-10 06:20:54",
+            "key_algorithm": "RSA-4096",
+            "serial": "d3:11:fe:4d:a3:71:4e:13",
+            "fingerprint": "46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2"
+          }
         },
         "ssl_key": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "key_algorithm": "RSA-4096",
+            "passphrase": true
+          }
         }
       }
     }
@@ -218,13 +316,59 @@ response:
         },
         "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
         "ca_cert": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "issuer": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "subject": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "not_before": "2023-11-09 06:20:55",
+            "not_after": "2024-12-10 06:20:54",
+            "key_algorithm": "RSA-4096",
+            "serial": "e7:61:4a:49:85:aa:7c:f2",
+            "fingerprint": "db:b1:49:84:f6:2e:ec:c9:41:fc:a1:30:26:12:2c:37:4d:bb:7a:bd"
+          }
         },
         "ssl_cert": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "issuer": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "subject": {
+              "C": "JP",
+              "ST": "Tokyo",
+              "L": "Chiyoda-ku",
+              "O": "NTT Communications Corporation",
+              "CN": "example.com"
+            },
+            "not_before": "2023-11-09 06:20:55",
+            "not_after": "2024-12-10 06:20:54",
+            "key_algorithm": "RSA-4096",
+            "serial": "d3:11:fe:4d:a3:71:4e:13",
+            "fingerprint": "46:06:c5:ed:f0:e6:9f:c5:e3:bd:06:63:54:88:9f:3d:a7:c5:42:b2"
+          }
         },
         "ssl_key": {
-          "status": "UPLOADED"
+          "status": "UPLOADED",
+          "info": {
+            "key_algorithm": "RSA-4096",
+            "passphrase": true
+          }
         }
       }
     }
@@ -264,11 +408,11 @@ expectedStatus:
   - Created
 `)
 
-var testMockMLBV1CertificatesUploadFileSslKey = fmt.Sprintf(`
+var testMockMLBV1CertificatesUploadFileSslKeyWithPass = fmt.Sprintf(`
 request:
   method: POST
   body: >
-    {"content":"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCjAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEKMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMwo0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1CjY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1NjcKODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OQpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCCkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0QKRUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRgpHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdICklKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUoKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTApNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OCk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1AKUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUgpTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUClVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVYKV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWApZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaCmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWIKY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWJjZAplZmdoaWprbG1ub3BxcnN0dXZ3eHl6VjAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlCmZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==","type":"ssl-key"}
+    {"content":"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCjAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEKMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMwo0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1CjY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1NjcKODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OQpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCCkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0QKRUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRgpHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdICklKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUoKS0xNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTApNTk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OCk9QUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1AKUVJTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUgpTVFVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUClVWV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVYKV1hZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWApZWmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaCmFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWIKY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MDEyMzQ1Njc4OUFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWJjZAplZmdoaWprbG1ub3BxcnN0dXZ3eHl6VjAxMjM0NTY3ODlBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWmFiY2RlCmZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==","passphrase":"passphrase","type":"ssl-key"}
 response:
   code: 204
 expectedStatus:
