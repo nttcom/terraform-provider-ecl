@@ -61,7 +61,7 @@ In addition, the following attributes are exported:
     * `"DELETE_STAGED"`
         * The target group has been removed and waiting to be applied
     * For detail, refer to the API reference appendix
-            * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
+        * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 * `operation_status` - Operation status of the load balancer which the target group belongs to
     * `"NONE"` :
         * There are no operations of the load balancer
@@ -81,7 +81,7 @@ In addition, the following attributes are exported:
         * The operation was roll backed normally
         * The load balancer and related resources can be operated
     * For detail, refer to the API reference appendix
-            * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
+        * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 * `load_balancer_id` - ID of the load balancer which the target group belongs to
 * `tenant_id` - ID of the owner tenant of the target group
 * `members` - Members (real servers) of the target group

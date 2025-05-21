@@ -68,7 +68,7 @@ In addition, the following attributes are exported:
     * `"UPDATE_STAGED"`
         * Changed configurations of the load balancer exists that waiting to be applied
     * For detail, refer to the API reference appendix
-            * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
+        * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 * `monitoring_status` - Monitoring status of the load balancer
     * `"ACTIVE"`
         * The load balancer is operating normally
@@ -95,7 +95,7 @@ In addition, the following attributes are exported:
         * The operation was roll backed normally
         * The load balancer and related resources can be operated
     * For detail, refer to the API reference appendix
-            * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
+        * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 * `primary_availability_zone` - The zone / group where the primary virtual server of load balancer is deployed
 * `secondary_availability_zone` - The zone / group where the secondary virtual server of load balancer is deployed
 * `active_availability_zone` - Primary or secondary availability zone where the load balancer is currently running

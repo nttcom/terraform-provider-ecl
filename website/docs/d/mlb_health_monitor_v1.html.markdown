@@ -75,7 +75,7 @@ In addition, the following attributes are exported:
     * `"DELETE_STAGED"`
         * The health monitor has been removed and waiting to be applied
     * For detail, refer to the API reference appendix
-            * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
+        * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 * `operation_status` - Operation status of the load balancer which the health monitor belongs to
     * `"NONE"` :
         * There are no operations of the load balancer
@@ -95,7 +95,7 @@ In addition, the following attributes are exported:
         * The operation was roll backed normally
         * The load balancer and related resources can be operated
     * For detail, refer to the API reference appendix
-            * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
+        * https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 * `load_balancer_id` - ID of the load balancer which the health monitor belongs to
 * `tenant_id` - ID of the owner tenant of the health monitor
 * `port` - Port number of the health monitor for healthchecking
