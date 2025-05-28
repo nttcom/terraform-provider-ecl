@@ -44,6 +44,29 @@ type FileInResponse struct {
 
 	// - File upload status of the certificate
 	Status string `json:"status"`
+
+	// - Information of the certificate file (JSON object format)
+	// - When List Certificates
+	//   - If `details` is `true`, return object
+	// - When Create, Show, and Update Certificate
+	//   - Always return object
+	// - For example, the following fields would be included
+	//   - When ca_cert or ssl_cert
+	//     - `"issuer"` (C, ST, L, O, OU and CN)
+	//       - Fields included in the certificate file would be shown
+	//     - `"subject"` (C, ST, L, O, OU and CN)
+	//       - Fields included in the certificate file would be shown
+	//     - `"not_before"` and `"not_after"`
+	//       - Format: `"%Y-%m-%d %H:%M:%S"` (UTC)
+	//     - `"key_algorithm"`
+	//       -  `"RSA-4096"` , `"EC-secp384r1"` , and so on
+	//     - `"serial"`
+	//     - `"fingerprint"` (SHA-256)
+	//   - When ssl_key
+	//     - `"key_algorithm"`
+	//       -  `"RSA-4096"` , `"EC-secp384r1"` , and so on
+	//     - `"passphrase"` ( `true` or `false` )
+	Info map[string]interface{} `json:"info"`
 }
 
 // Certificate represents a certificate.

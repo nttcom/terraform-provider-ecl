@@ -64,7 +64,15 @@ type ConfigurationInResponse struct {
 	Priority int `json:"priority,omitempty"`
 
 	// - ID of the target group that assigned to the rule
+	// - If all members of the target group specified in the rule are down:
+	//   - When `backup_target_group_id` of the rule is set, traffic is routed to it
+	//   - When `backup_target_group_id` of the rule is not set, traffic is routed to the target groups specified in the policy
 	TargetGroupID string `json:"target_group_id,omitempty"`
+
+	// - ID of the backup target group that assigned to the rule
+	// - If all members of the target group specified in the rule are down, traffic is routed to the backup target group specified in the rule
+	// - If all members of the backup target group specified in the rule are down, traffic is routed to the target groups specified in the policy
+	BackupTargetGroupID string `json:"backup_target_group_id,omitempty"`
 
 	// - Conditions of the rules to distribute accesses to the target groups
 	Conditions ConditionInResponse `json:"conditions,omitempty"`
@@ -101,6 +109,8 @@ type Rule struct {
 	//     - Changed configurations of the rule exists that waiting to be applied
 	//   - `"DELETE_STAGED"`
 	//     - The rule has been removed and waiting to be applied
+	// - For detail, refer to the API reference appendix
+	//     - https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 	ConfigurationStatus string `json:"configuration_status"`
 
 	// - Operation status of the load balancer which the rule belongs to
@@ -121,6 +131,8 @@ type Rule struct {
 	//     - The latest operation of the load balancer has been failed
 	//     - The operation was roll backed normally
 	//     - The load balancer and related resources can be operated
+	// - For detail, refer to the API reference appendix
+	//     - https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 	OperationStatus string `json:"operation_status"`
 
 	// - ID of the policy which the rule belongs to
@@ -136,7 +148,15 @@ type Rule struct {
 	Priority int `json:"priority,omitempty"`
 
 	// - ID of the target group that assigned to the rule
+	// - If all members of the target group specified in the rule are down:
+	//   - When `backup_target_group_id` of the rule is set, traffic is routed to it
+	//   - When `backup_target_group_id` of the rule is not set, traffic is routed to the target groups specified in the policy
 	TargetGroupID string `json:"target_group_id,omitempty"`
+
+	// - ID of the backup target group that assigned to the rule
+	// - If all members of the target group specified in the rule are down, traffic is routed to the backup target group specified in the rule
+	// - If all members of the backup target group specified in the rule are down, traffic is routed to the target groups specified in the policy
+	BackupTargetGroupID string `json:"backup_target_group_id,omitempty"`
 
 	// - Conditions of the rules to distribute accesses to the target groups
 	Conditions ConditionInResponse `json:"conditions,omitempty"`

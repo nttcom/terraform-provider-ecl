@@ -17,11 +17,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `q:"name"`
 
 	// - Description of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -85,23 +85,31 @@ Create Listener
 type CreateOpts struct {
 
 	// - Name of the listener
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `json:"name,omitempty"`
 
 	// - Description of the listener
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the listener
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - IP address of the listener for listening
-	// - Set an unique combination of IP address and port in all listeners which belong to the same load balancer
+	// - Set a unique combination of IP address and port in all listeners which belong to the same load balancer
 	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the listener belongs to
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	IPAddress string `json:"ip_address"`
 
 	// - Port number of the listener for listening
@@ -188,17 +196,18 @@ Update Listener Attribute
 type UpdateOpts struct {
 
 	// - Name of the listener
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the listener
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the listener
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -249,9 +258,16 @@ Create Staged Listener Configurations
 type CreateStagedOpts struct {
 
 	// - IP address of the listener for listening
-	// - Set an unique combination of IP address and port in all listeners which belong to the same load balancer
+	// - Set a unique combination of IP address and port in all listeners which belong to the same load balancer
 	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the listener belongs to
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	IPAddress string `json:"ip_address,omitempty"`
 
 	// - Port number of the listener for listening
@@ -309,9 +325,16 @@ Update Staged Listener Configurations
 type UpdateStagedOpts struct {
 
 	// - IP address of the listener for listening
-	// - Set an unique combination of IP address and port in all listeners which belong to the same load balancer
+	// - Set a unique combination of IP address and port in all listeners which belong to the same load balancer
 	// - Must not set a IP address which is included in `virtual_ip_address` and `reserved_fixed_ips` of load balancer interfaces that the listener belongs to
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	IPAddress *string `json:"ip_address,omitempty"`
 
 	// - Port number of the listener for listening

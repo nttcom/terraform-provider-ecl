@@ -17,11 +17,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `q:"name"`
 
 	// - Description of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -34,7 +34,13 @@ type ListOpts struct {
 	Priority int `q:"priority"`
 
 	// - ID of the target group that assigned to the rule
+	// - If all members of the target groups specified in the rule are down, traffic is routed to the target groups specified in the policy
 	TargetGroupID string `q:"target_group_id"`
+
+	// - ID of the backup target group that assigned to the rule
+	// - If all members of the target group are down, traffic is routed to the backup target group
+	// - If all members of the target groups specified in the rule are down, traffic is routed to the target groups specified in the policy
+	BackupTargetGroupID string `q:"backup_target_group_id"`
 
 	// - ID of the policy which the rule belongs to
 	PolicyID string `q:"policy_id"`
@@ -95,34 +101,47 @@ type CreateOptsCondition struct {
 type CreateOpts struct {
 
 	// - Name of the rule
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `json:"name,omitempty"`
 
 	// - Description of the rule
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the rule
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - Priority of the rule
-	// - Set an unique number in all rules which belong to the same policy
+	// - Set a unique number in all rules which belong to the same policy
 	Priority int `json:"priority,omitempty"`
 
 	// - ID of the target group that assigned to the rule
-	// - Set a different target group from `"default_target_group_id"` of the policy
-	TargetGroupID string `json:"target_group_id,omitempty"`
+	// - If all members of the target group specified in the rule are down:
+	//   - When `backup_target_group_id` of the rule is set, traffic is routed to it
+	//   - When `backup_target_group_id` of the rule is not set, traffic is routed to the target groups specified in the policy
+	// - The same member cannot be specified for the target group and the backup target group
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
+	TargetGroupID string `json:"target_group_id"`
+
+	// - ID of the backup target group that assigned to the rule
+	// - If all members of the target group specified in the rule are down, traffic is routed to the backup target group specified in the rule
+	// - If all members of the backup target group specified in the rule are down, traffic is routed to the target groups specified in the policy
+	// - Set a different ID of the target group from `target_group_id`
+	// - The same member cannot be specified for the target group and the backup target group
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
+	BackupTargetGroupID string `json:"backup_target_group_id,omitempty"`
 
 	// - ID of the policy which the rule belongs to
 	// - Set ID of the policy which has a listener in which protocol is either `"http"` or `"https"`
-	PolicyID string `json:"policy_id,omitempty"`
+	PolicyID string `json:"policy_id"`
 
 	// - Conditions of the rules to distribute accesses to the target groups
 	// - Set one or more condition
-	Conditions *CreateOptsCondition `json:"conditions,omitempty"`
+	Conditions *CreateOptsCondition `json:"conditions"`
 }
 
 // ToRuleCreateMap builds a request body from CreateOpts.
@@ -198,17 +217,18 @@ Update Rule Attributes
 type UpdateOpts struct {
 
 	// - Name of the rule
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the rule
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the rule
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -269,12 +289,24 @@ type CreateStagedOptsCondition struct {
 type CreateStagedOpts struct {
 
 	// - Priority of the rule
-	// - Set an unique number in all rules which belong to the same policy
+	// - Set a unique number in all rules which belong to the same policy
 	Priority int `json:"priority,omitempty"`
 
 	// - ID of the target group that assigned to the rule
-	// - Set a different target group from `"default_target_group_id"` of the policy
+	// - If all members of the target group specified in the rule are down:
+	//   - When `backup_target_group_id` of the rule is set, traffic is routed to it
+	//   - When `backup_target_group_id` of the rule is not set, traffic is routed to the target groups specified in the policy
+	// - The same member cannot be specified for the target group and the backup target group
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
 	TargetGroupID string `json:"target_group_id,omitempty"`
+
+	// - ID of the backup target group that assigned to the rule
+	// - If all members of the target group specified in the rule are down, traffic is routed to the backup target group specified in the rule
+	// - If all members of the backup target group specified in the rule are down, traffic is routed to the target groups specified in the policy
+	// - Set a different ID of the target group from `target_group_id`
+	// - The same member cannot be specified for the target group and the backup target group
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
+	BackupTargetGroupID string `json:"backup_target_group_id,omitempty"`
 
 	// - Conditions of the rules to distribute accesses to the target groups
 	// - Set one or more condition
@@ -338,12 +370,24 @@ type UpdateStagedOptsCondition struct {
 type UpdateStagedOpts struct {
 
 	// - Priority of the rule
-	// - Set an unique number in all rules which belong to the same policy
+	// - Set a unique number in all rules which belong to the same policy
 	Priority *int `json:"priority,omitempty"`
 
 	// - ID of the target group that assigned to the rule
-	// - Set a different target group from `"default_target_group_id"` of the policy
+	// - If all members of the target group specified in the rule are down:
+	//   - When `backup_target_group_id` of the rule is set, traffic is routed to it
+	//   - When `backup_target_group_id` of the rule is not set, traffic is routed to the target groups specified in the policy
+	// - The same member cannot be specified for the target group and the backup target group
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
 	TargetGroupID *string `json:"target_group_id,omitempty"`
+
+	// - ID of the backup target group that assigned to the rule
+	// - If all members of the target group specified in the rule are down, traffic is routed to the backup target group specified in the rule
+	// - If all members of the backup target group specified in the rule are down, traffic is routed to the target groups specified in the policy
+	// - Set a different ID of the target group from `target_group_id`
+	// - The same member cannot be specified for the target group and the backup target group
+	// - Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
+	BackupTargetGroupID *string `json:"backup_target_group_id,omitempty"`
 
 	// - Conditions of the rules to distribute accesses to the target groups
 	// - Set one or more condition

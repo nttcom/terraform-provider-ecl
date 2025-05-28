@@ -138,6 +138,8 @@ type LoadBalancer struct {
 	//     - The load balancer has been added and waiting to be applied
 	//   - `"UPDATE_STAGED"`
 	//     - Changed configurations of the load balancer exists that waiting to be applied
+	// - For detail, refer to the API reference appendix
+	//     - https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 	ConfigurationStatus string `json:"configuration_status"`
 
 	// - Monitoring status of the load balancer
@@ -167,6 +169,8 @@ type LoadBalancer struct {
 	//     - The latest operation of the load balancer has been failed
 	//     - The operation was roll backed normally
 	//     - The load balancer and related resources can be operated
+	// - For detail, refer to the API reference appendix
+	//     - https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 	OperationStatus string `json:"operation_status"`
 
 	// - The zone / group where the primary virtual server of load balancer is deployed
