@@ -54,6 +54,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -74,6 +75,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -94,6 +96,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -114,6 +117,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -134,6 +138,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -154,6 +159,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -174,6 +180,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -194,6 +201,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -214,6 +222,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -234,6 +243,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -254,6 +264,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -274,6 +285,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -294,6 +306,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -314,6 +327,7 @@ func TestMockedAccMLBV1PlanDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_members", "100"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_rules", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_conditions", "5"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "max_number_of_server_name_indications", "50"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_plan_v1.plan_1", "enabled", "true"),
 				),
 			},
@@ -353,6 +367,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -391,6 +406,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -429,6 +445,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -467,6 +484,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -505,6 +523,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -543,6 +562,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -581,6 +601,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -619,6 +640,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -657,6 +679,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -695,6 +718,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -733,6 +757,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -771,6 +796,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -809,6 +835,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]
@@ -847,6 +874,7 @@ response:
           "max_number_of_members": 100,
           "max_number_of_rules": 50,
           "max_number_of_conditions": 5,
+          "max_number_of_server_name_indications": 50,
           "enabled": true
         }
       ]

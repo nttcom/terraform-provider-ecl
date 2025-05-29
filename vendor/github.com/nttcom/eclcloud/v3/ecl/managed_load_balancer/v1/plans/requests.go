@@ -48,14 +48,17 @@ type ListOpts struct {
 	// - Maximum number of target groups for the plan
 	MaxNumberOfTargetGroups int `q:"max_number_of_target_groups"`
 
-	// - Maximum number of members for the target group of plan
+	// - Maximum number of members for the target group of the plan
 	MaxNumberOfMembers int `q:"max_number_of_members"`
 
-	// - Maximum number of rules for the policy of plan
+	// - Maximum number of rules for the policy of the plan
 	MaxNumberOfRules int `q:"max_number_of_rules"`
 
 	// - Maximum number of conditions in the rule of the plan
 	MaxNumberOfConditions int `q:"max_number_of_conditions"`
+
+	// - Maximum number of Server Name Indications (SNIs) for the policy of the plan
+	MaxNumberOfServerNameInidications int `q:"max_number_of_server_name_inidications"`
 
 	// - Whether a new load balancer can be created with this plan
 	Enabled bool `q:"enabled"`

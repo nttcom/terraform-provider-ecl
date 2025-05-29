@@ -38,6 +38,7 @@ Example to create a rule
 		Tags: tags,
 		Priority: 1,
 		TargetGroupID: "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+		BackupTargetGroupID: "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
 		PolicyID: "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4",
 		Conditions: &condition,
 	}
@@ -103,6 +104,7 @@ Example to create staged rule configurations
 	createStagedOpts := rules.CreateStagedOpts{
 		Priority: 1,
 		TargetGroupID: "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+		BackupTargetGroupID: "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
 		Conditions: &condition,
 	}
 
@@ -132,9 +134,11 @@ Example to update staged rule configurations
 
 	priority := 1
 	targetGroupID := "29527a3c-9e5d-48b7-868f-6442c7d21a95"
+	backupTargetGroupID := "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"
 	updateStagedOpts := rules.UpdateStagedOpts{
 		Priority: &priority,
 		TargetGroupID: &targetGroupID,
+		BackupTargetGroupID: &backupTargetGroupID,
 		Conditions: &condition,
 	}
 

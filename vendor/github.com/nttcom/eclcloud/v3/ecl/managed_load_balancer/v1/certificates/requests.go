@@ -17,15 +17,18 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `q:"name"`
 
 	// - Description of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `q:"description"`
 
 	// - ID of the owner tenant of the resource
 	TenantID string `q:"tenant_id"`
+
+	// - If `true` is set, information of the certificate file are displayed
+	Details bool `q:"details"`
 
 	// - CA certificate file upload status of the certificate
 	CACertStatus string `q:"ca_cert_status"`
@@ -76,17 +79,18 @@ Create Certificate
 type CreateOpts struct {
 
 	// - Name of the certificate
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `json:"name,omitempty"`
 
 	// - Description of the certificate
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the certificate
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -137,17 +141,18 @@ Update Certificate
 type UpdateOpts struct {
 
 	// - Name of the certificate
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the certificate
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the certificate
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -202,11 +207,19 @@ type UploadFileOpts struct {
 	Type string `json:"type"`
 
 	// - Content of the certificate file to be uploaded
-	// - Content must be Base64 encoded
+	// - The content must be Base64 encoded
 	//   - The file size before encoding must be less than or equal to 16KB
 	//   - The file format before encoding must be PEM
-	//   - DER can be converted to PEM by using OpenSSL command
+	//     - DER can be converted to PEM by using OpenSSL command
+	// - The following key algorithms are supported
+	//   - RSA 1024, 2048, 3072 and 4096 bits
+	//   - ECDSA P-256 (prime256v1, secp256r1), P-384 (secp384r1) and P-521 (secp521r1)
+	// - The content of `"ssl-cert"` and the content of `"ssl-key"` must be a pair (must be matched correctly)
 	Content string `json:"content"`
+
+	// - Passphrase of the certificate file to be uploaded
+	// - This parameter can be set when 'type' is `"ssl-key"`
+	Passphrase string `json:"passphrase,omitempty"`
 }
 
 // ToCertificateUploadFileMap builds a request body from UploadFileOpts.

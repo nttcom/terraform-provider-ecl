@@ -24,9 +24,9 @@ The following arguments are supported:
 
 * `id` - (Optional) ID of the resource
 * `name` - (Optional) Name of the resource
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `description` - (Optional) Description of the resource
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `tenant_id` - (Optional) ID of the owner tenant of the resource
 
 ## Attributes Reference
@@ -48,11 +48,74 @@ In addition, the following attributes are exported:
 <a name="ca-cert"></a>The `ca_cert` block contains:
 
 * `status` - File upload status of the certificate
+* `info` - Information of the certificate file (JSON object format)
+    * When List Certificates
+        * If `details` is `true`, return object
+    * When Create, Show, and Update Certificate
+        * Always return object
+    * For example, the following fields would be included
+        * When ca_cert or ssl_cert
+            * `"issuer"` (C, ST, L, O, OU and CN)
+                * Fields included in the certificate file would be shown
+            * `"subject"` (C, ST, L, O, OU and CN)
+                * Fields included in the certificate file would be shown
+            * `"not_before"` and `"not_after"`
+                * Format: `"%Y-%m-%d %H:%M:%S"` (UTC)
+            * `"key_algorithm"`
+                *    `"RSA-4096"` , `"EC-secp384r1"` , and so on
+            * `"serial"`
+            * `"fingerprint"` (SHA-256)
+        * When ssl_key
+            * `"key_algorithm"`
+                *    `"RSA-4096"` , `"EC-secp384r1"` , and so on
+            * `"passphrase"` ( `true` or `false` )
 
 <a name="ssl-cert"></a>The `ssl_cert` block contains:
 
 * `status` - File upload status of the certificate
+* `info` - Information of the certificate file (JSON object format)
+    * When List Certificates
+        * If `details` is `true`, return object
+    * When Create, Show, and Update Certificate
+        * Always return object
+    * For example, the following fields would be included
+        * When ca_cert or ssl_cert
+            * `"issuer"` (C, ST, L, O, OU and CN)
+                * Fields included in the certificate file would be shown
+            * `"subject"` (C, ST, L, O, OU and CN)
+                * Fields included in the certificate file would be shown
+            * `"not_before"` and `"not_after"`
+                * Format: `"%Y-%m-%d %H:%M:%S"` (UTC)
+            * `"key_algorithm"`
+                *    `"RSA-4096"` , `"EC-secp384r1"` , and so on
+            * `"serial"`
+            * `"fingerprint"` (SHA-256)
+        * When ssl_key
+            * `"key_algorithm"`
+                *    `"RSA-4096"` , `"EC-secp384r1"` , and so on
+            * `"passphrase"` ( `true` or `false` )
 
 <a name="ssl-key"></a>The `ssl_key` block contains:
 
 * `status` - File upload status of the certificate
+* `info` - Information of the certificate file (JSON object format)
+    * When List Certificates
+        * If `details` is `true`, return object
+    * When Create, Show, and Update Certificate
+        * Always return object
+    * For example, the following fields would be included
+        * When ca_cert or ssl_cert
+            * `"issuer"` (C, ST, L, O, OU and CN)
+                * Fields included in the certificate file would be shown
+            * `"subject"` (C, ST, L, O, OU and CN)
+                * Fields included in the certificate file would be shown
+            * `"not_before"` and `"not_after"`
+                * Format: `"%Y-%m-%d %H:%M:%S"` (UTC)
+            * `"key_algorithm"`
+                *    `"RSA-4096"` , `"EC-secp384r1"` , and so on
+            * `"serial"`
+            * `"fingerprint"` (SHA-256)
+        * When ssl_key
+            * `"key_algorithm"`
+                *    `"RSA-4096"` , `"EC-secp384r1"` , and so on
+            * `"passphrase"` ( `true` or `false` )

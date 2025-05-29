@@ -11,7 +11,7 @@ import (
 	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/certificates"
 )
 
-func certificateFileSchemaForResource() *schema.Schema {
+func certificateCertFileSchemaForResource() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeMap,
 		Required: true,
@@ -27,12 +27,33 @@ func certificateFileSchemaForResource() *schema.Schema {
 	}
 }
 
+func certificateKeyFileSchemaForResource() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeMap,
+		Required: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"content": &schema.Schema{
+					Type:     schema.TypeString,
+					Required: true,
+					ForceNew: true,
+				},
+				"passphrase": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+					ForceNew: true,
+				},
+			},
+		},
+	}
+}
+
 func resourceMLBCertificateV1() *schema.Resource {
 	var result *schema.Resource
 
 	result = &schema.Resource{
 		Create: resourceMLBCertificateV1Create,
-		Read:   reourceMLBCertificateV1Read,
+		Read:   resourceMLBCertificateV1Read,
 		Update: resourceMLBCertificateV1Update,
 		Delete: resourceMLBCertificateV1Delete,
 		Importer: &schema.ResourceImporter{
@@ -57,9 +78,9 @@ func resourceMLBCertificateV1() *schema.Resource {
 				Computed: true,
 				ForceNew: true,
 			},
-			"ca_cert":  certificateFileSchemaForResource(),
-			"ssl_cert": certificateFileSchemaForResource(),
-			"ssl_key":  certificateFileSchemaForResource(),
+			"ca_cert":  certificateCertFileSchemaForResource(),
+			"ssl_cert": certificateCertFileSchemaForResource(),
+			"ssl_key":  certificateKeyFileSchemaForResource(),
 		},
 	}
 
@@ -96,6 +117,12 @@ func resourceMLBCertificateV1Create(d *schema.ResourceData, meta interface{}) er
 			Content: file["content"].(string),
 		}
 
+		if fileType == "ssl_key" {
+			if passphrase, ok := file["passphrase"].(string); ok {
+				uploadFileOpts.Passphrase = passphrase
+			}
+		}
+
 		log.Printf("[DEBUG] Uploading ECL managed load balancer certificate file (%s) with options %+v", d.Id(), uploadFileOpts)
 
 		err = certificates.UploadFile(managedLoadBalancerClient, certificate.ID, uploadFileOpts).ExtractErr()
@@ -104,10 +131,10 @@ func resourceMLBCertificateV1Create(d *schema.ResourceData, meta interface{}) er
 		}
 	}
 
-	return reourceMLBCertificateV1Read(d, meta)
+	return resourceMLBCertificateV1Read(d, meta)
 }
 
-func reourceMLBCertificateV1Read(d *schema.ResourceData, meta interface{}) error {
+func resourceMLBCertificateV1Read(d *schema.ResourceData, meta interface{}) error {
 	var certificate certificates.Certificate
 
 	config := meta.(*Config)
@@ -168,7 +195,7 @@ func resourceMLBCertificateV1Update(d *schema.ResourceData, meta interface{}) er
 		}
 	}
 
-	return reourceMLBCertificateV1Read(d, meta)
+	return resourceMLBCertificateV1Read(d, meta)
 }
 
 func resourceMLBCertificateV1Delete(d *schema.ResourceData, meta interface{}) error {

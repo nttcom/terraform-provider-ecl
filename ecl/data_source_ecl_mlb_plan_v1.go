@@ -80,6 +80,11 @@ func dataSourceMLBPlanV1() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"max_number_of_server_name_indications": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
 			"enabled": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -201,6 +206,7 @@ func dataSourceMLBPlanV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("max_number_of_members", plan.MaxNumberOfMembers)
 	d.Set("max_number_of_rules", plan.MaxNumberOfRules)
 	d.Set("max_number_of_conditions", plan.MaxNumberOfConditions)
+	d.Set("max_number_of_server_name_indications", plan.MaxNumberOfServerNameIndications)
 	d.Set("enabled", plan.Enabled)
 
 	return nil

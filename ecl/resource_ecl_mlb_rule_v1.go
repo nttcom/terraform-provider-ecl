@@ -61,6 +61,10 @@ func resourceMLBRuleV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"backup_target_group_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"policy_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -86,12 +90,13 @@ func resourceMLBRuleV1() *schema.Resource {
 func resourceMLBRuleV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	createOpts := rules.CreateOpts{
-		Name:          d.Get("name").(string),
-		Description:   d.Get("description").(string),
-		Tags:          d.Get("tags").(map[string]interface{}),
-		Priority:      d.Get("priority").(int),
-		TargetGroupID: d.Get("target_group_id").(string),
-		PolicyID:      d.Get("policy_id").(string),
+		Name:                d.Get("name").(string),
+		Description:         d.Get("description").(string),
+		Tags:                d.Get("tags").(map[string]interface{}),
+		Priority:            d.Get("priority").(int),
+		TargetGroupID:       d.Get("target_group_id").(string),
+		BackupTargetGroupID: d.Get("backup_target_group_id").(string),
+		PolicyID:            d.Get("policy_id").(string),
 	}
 
 	pathPatterns := make([]string, len(d.Get("conditions").([]interface{})[0].(map[string]interface{})["path_patterns"].([]interface{})))
@@ -153,14 +158,17 @@ func resourceMLBRuleV1Read(d *schema.ResourceData, meta interface{}) error {
 	if rule.ConfigurationStatus == "ACTIVE" {
 		d.Set("priority", rule.Priority)
 		d.Set("target_group_id", rule.TargetGroupID)
+		d.Set("backup_target_group_id", rule.BackupTargetGroupID)
 		conditions["path_patterns"] = rule.Conditions.PathPatterns
 	} else if rule.ConfigurationStatus == "CREATE_STAGED" {
 		d.Set("priority", rule.Staged.Priority)
 		d.Set("target_group_id", rule.Staged.TargetGroupID)
+		d.Set("backup_target_group_id", rule.Staged.BackupTargetGroupID)
 		conditions["path_patterns"] = rule.Staged.Conditions.PathPatterns
 	} else if rule.ConfigurationStatus == "UPDATE_STAGED" {
 		d.Set("priority", ternary(rule.Staged.Priority == 0, rule.Priority, rule.Staged.Priority))
 		d.Set("target_group_id", ternary(rule.Staged.TargetGroupID == "", rule.TargetGroupID, rule.Staged.TargetGroupID))
+		d.Set("backup_target_group_id", ternary(rule.Staged.BackupTargetGroupID == "", rule.BackupTargetGroupID, rule.Staged.BackupTargetGroupID))
 		conditions["path_patterns"] = ternary(rule.Staged.Conditions.PathPatterns == nil, rule.Conditions.PathPatterns, rule.Staged.Conditions.PathPatterns)
 	} else if rule.ConfigurationStatus == "DELETE_STAGED" {
 		d.SetId("")
@@ -262,6 +270,11 @@ func resourceMLBRuleV1UpdateConfigurations(d *schema.ResourceData, client *eclcl
 			createStagedOpts.TargetGroupID = d.Get("target_group_id").(string)
 		}
 
+		if d.HasChange("backup_target_group_id") {
+			isConfigurationsUpdated = true
+			createStagedOpts.BackupTargetGroupID = d.Get("backup_target_group_id").(string)
+		}
+
 		if d.HasChange("conditions") {
 			isConfigurationsUpdated = true
 			condition := rules.CreateStagedOptsCondition{
@@ -291,6 +304,12 @@ func resourceMLBRuleV1UpdateConfigurations(d *schema.ResourceData, client *eclcl
 			isConfigurationsUpdated = true
 			targetGroupID := d.Get("target_group_id").(string)
 			updateStagedOpts.TargetGroupID = &targetGroupID
+		}
+
+		if d.HasChange("backup_target_group_id") {
+			isConfigurationsUpdated = true
+			backupTargetGroupID := d.Get("backup_target_group_id").(string)
+			updateStagedOpts.BackupTargetGroupID = &backupTargetGroupID
 		}
 
 		if d.HasChange("conditions") {

@@ -22,6 +22,7 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 	mc.Register(t, "rules", "/v1.0/rules", testMockMLBV1RulesListOperationStatusQuery)
 	mc.Register(t, "rules", "/v1.0/rules", testMockMLBV1RulesListPriorityQuery)
 	mc.Register(t, "rules", "/v1.0/rules", testMockMLBV1RulesListTargetGroupIDQuery)
+	mc.Register(t, "rules", "/v1.0/rules", testMockMLBV1RulesListBackupTargetGroupIDQuery)
 	mc.Register(t, "rules", "/v1.0/rules", testMockMLBV1RulesListPolicyIDQuery)
 	mc.Register(t, "rules", "/v1.0/rules", testMockMLBV1RulesListLoadBalancerIDQuery)
 	mc.Register(t, "rules", "/v1.0/rules", testMockMLBV1RulesListTenantIDQuery)
@@ -46,6 +47,9 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -63,6 +67,9 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -80,6 +87,9 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -97,6 +107,9 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -114,6 +127,9 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -131,6 +147,29 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
+				),
+			},
+			{
+				Config: testAccMLBV1RuleDataSourceQueryBackupTargetGroupID,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "name", "rule"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "description", "description"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tags.key", "value"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "configuration_status", "ACTIVE"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "operation_status", "COMPLETE"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "policy_id", "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "load_balancer_id", "67fea379-cff0-4191-9175-de7d6941a040"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -148,6 +187,9 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -165,6 +207,9 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -182,6 +227,9 @@ func TestMockedAccMLBV1RuleDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "priority", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "target_group_id", "29527a3c-9e5d-48b7-868f-6442c7d21a95"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "backup_target_group_id", "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.#", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.#", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_rule_v1.rule_1", "conditions.0.path_patterns.0", "^/statics/"),
 				),
 			},
@@ -220,6 +268,7 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"
@@ -261,6 +310,7 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"
@@ -302,6 +352,7 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"
@@ -343,6 +394,7 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"
@@ -384,6 +436,7 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"
@@ -425,6 +478,49 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
+          "conditions": {
+            "path_patterns": [
+              "^/statics/"
+            ]
+          }
+        }
+      ]
+    }
+`)
+
+var testAccMLBV1RuleDataSourceQueryBackupTargetGroupID = fmt.Sprintf(`
+data "ecl_mlb_rule_v1" "rule_1" {
+  backup_target_group_id = "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"
+}
+`)
+
+var testMockMLBV1RulesListBackupTargetGroupIDQuery = fmt.Sprintf(`
+request:
+  method: GET
+  query:
+    backup_target_group_id:
+      - dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52
+response:
+  code: 200
+  body: >
+    {
+      "rules": [
+        {
+          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+          "name": "rule",
+          "description": "description",
+          "tags": {
+            "key": "value"
+          },
+          "configuration_status": "ACTIVE",
+          "operation_status": "COMPLETE",
+          "policy_id": "fcb520e5-858d-4f9f-bc6c-7bd225fe7cf4",
+          "load_balancer_id": "67fea379-cff0-4191-9175-de7d6941a040",
+          "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
+          "priority": 1,
+          "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"
@@ -466,6 +562,7 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"
@@ -507,6 +604,7 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"
@@ -548,6 +646,7 @@ response:
           "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
           "priority": 1,
           "target_group_id": "29527a3c-9e5d-48b7-868f-6442c7d21a95",
+          "backup_target_group_id": "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52",
           "conditions": {
             "path_patterns": [
               "^/statics/"

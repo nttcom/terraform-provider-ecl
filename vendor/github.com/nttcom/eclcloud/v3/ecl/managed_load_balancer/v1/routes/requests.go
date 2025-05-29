@@ -17,11 +17,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `q:"name"`
 
 	// - Description of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -82,17 +82,18 @@ Create Route
 type CreateOpts struct {
 
 	// - Name of the (static) route
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `json:"name,omitempty"`
 
 	// - Description of the (static) route
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the (static) route
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - CIDR of destination for the (static) route
@@ -101,12 +102,19 @@ type CreateOpts struct {
 	//   - If you want to change `destination_cidr`, recreate the (static) route again
 	// - Set a unique CIDR for all (static) routes which belong to the same load balancer
 	// - Set a CIDR which is not included in subnet of load balancer interfaces that the (static) route belongs to
-	// - Must not set a link-local CIDR (RFC 3927) which includes Common Function Gateway
+	// - Cannot use a CIDR in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	DestinationCidr string `json:"destination_cidr"`
 
-	// - ID of the load balancer which the (static) route belongs to
-	// - Set a CIDR which is not included in subnet of load balancer interfaces that the (static) route belongs to
-	// - Must not set a network IP address and broadcast IP address
+	// - IP address of next hop for the (static) route
+	// - Set a CIDR which is included in subnet of load balancer interfaces that the (static) route belongs to
+	// - Must not set a network address and a broadcast address
 	NextHopIPAddress string `json:"next_hop_ip_address"`
 
 	// - ID of the load balancer which the (static) route belongs to
@@ -186,17 +194,18 @@ Update Route Attributes
 type UpdateOpts struct {
 
 	// - Name of the (static) route
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the (static) route
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the (static) route
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -246,9 +255,9 @@ Create Staged Route Configurations
 // CreateStagedOpts represents options used to create new route configurations.
 type CreateStagedOpts struct {
 
-	// - ID of the load balancer which the (static) route belongs to
+	// - IP address of next hop for the (static) route
 	// - Set a CIDR which is included in subnet of load balancer interfaces that the (static) route belongs to
-	// - Must not set a network IP address and broadcast IP address
+	// - Must not set a network address and a broadcast address
 	NextHopIPAddress string `json:"next_hop_ip_address,omitempty"`
 }
 
@@ -298,9 +307,9 @@ Update Staged Route Configurations
 // UpdateStagedOpts represents options used to update existing Route configurations.
 type UpdateStagedOpts struct {
 
-	// - ID of the load balancer which the (static) route belongs to
+	// - IP address of next hop for the (static) route
 	// - Set a CIDR which is included in subnet of load balancer interfaces that the (static) route belongs to
-	// - Must not set a network IP address and broadcast IP address
+	// - Must not set a network address and a broadcast address
 	NextHopIPAddress *string `json:"next_hop_ip_address,omitempty"`
 }
 

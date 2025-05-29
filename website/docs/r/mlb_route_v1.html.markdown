@@ -45,23 +45,31 @@ resource "ecl_mlb_route_v1" "route" {
 The following arguments are supported:
 
 * `name` - (Optional) Name of the (static) route
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `description` - (Optional) Description of the (static) route
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `tags` - (Optional) Tags of the (static) route
-    * Set JSON object up to 32,768 characters
+    * Set JSON object up to 32,767 characters
         * Nested structure is permitted
-    * This field accepts single-byte characters only
+        * The whitespace around separators ( `","` and `":"` ) are ignored
+    * This field accepts UTF-8 characters up to 3 bytes
 * `destination_cidr` - CIDR of destination for the (static) route
     * If you configure `destination_cidr` as default gateway, set `0.0.0.0/0`
     * `destination_cidr` can not be changed once configured
         * If you want to change `destination_cidr`, recreate the (static) route again
     * Set a unique CIDR for all (static) routes which belong to the same load balancer
     * Set a CIDR which is not included in subnet of load balancer interfaces that the (static) route belongs to
-    * Must not set a link-local CIDR (RFC 3927) which includes Common Function Gateway
-* `next_hop_ip_address` - ID of the load balancer which the (static) route belongs to
-    * Set a CIDR which is not included in subnet of load balancer interfaces that the (static) route belongs to
-    * Must not set a network IP address and broadcast IP address
+    * Cannot use a CIDR in the following networks
+        * This host on this network (0.0.0.0/8)
+        * Shared Address Space (100.64.0.0/10)
+        * Loopback (127.0.0.0/8)
+        * Link Local (169.254.0.0/16)
+        * Multicast (224.0.0.0/4)
+        * Reserved (240.0.0.0/4)
+        * Limited Broadcast (255.255.255.255/32)
+* `next_hop_ip_address` - IP address of next hop for the (static) route
+    * Set a CIDR which is included in subnet of load balancer interfaces that the (static) route belongs to
+    * Must not set a network address and a broadcast address
 * `load_balancer_id` - ID of the load balancer which the (static) route belongs to
 
 ## Attributes Reference

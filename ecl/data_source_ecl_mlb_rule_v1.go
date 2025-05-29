@@ -87,6 +87,11 @@ func dataSourceMLBRuleV1() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"backup_target_group_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 			"conditions": conditionsSchemaForDataSource(),
 		},
 	}
@@ -124,6 +129,10 @@ func dataSourceMLBRuleV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	if v, ok := d.GetOk("target_group_id"); ok {
 		listOpts.TargetGroupID = v.(string)
+	}
+
+	if v, ok := d.GetOk("backup_target_group_id"); ok {
+		listOpts.BackupTargetGroupID = v.(string)
 	}
 
 	if v, ok := d.GetOk("policy_id"); ok {
@@ -181,6 +190,7 @@ func dataSourceMLBRuleV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("tenant_id", rule.TenantID)
 	d.Set("priority", rule.Priority)
 	d.Set("target_group_id", rule.TargetGroupID)
+	d.Set("backup_target_group_id", rule.BackupTargetGroupID)
 	d.Set("conditions", []interface{}{map[string]interface{}{
 		"path_patterns": rule.Conditions.PathPatterns,
 	}})

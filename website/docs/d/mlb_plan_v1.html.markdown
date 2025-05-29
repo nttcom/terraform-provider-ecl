@@ -43,8 +43,8 @@ The following arguments are supported:
 * `max_number_of_policies` - (Optional) Maximum number of policies for the plan
 * `max_number_of_routes` - (Optional) Maximum number of routes for the plan
 * `max_number_of_target_groups` - (Optional) Maximum number of target groups for the plan
-* `max_number_of_members` - (Optional) Maximum number of members for the target group of plan
-* `max_number_of_rules` - (Optional) Maximum number of rules for the policy of plan
+* `max_number_of_members` - (Optional) Maximum number of members for the target group of the plan
+* `max_number_of_rules` - (Optional) Maximum number of rules for the policy of the plan
 * `max_number_of_conditions` - (Optional) Maximum number of conditions in the rule of the plan
 * `enabled` - (Optional) Whether a new load balancer can be created with this plan
 
@@ -55,15 +55,16 @@ In addition, the following attributes are exported:
 
 * `name` - Name of the plan
 * `description` - Description of the plan
-* `bandwidth` - Bandwidth of the load balancer created with this plan
-* `redundancy` - Redundancy of the load balancer created with this plan
-* `max_number_of_interfaces` - Maximum number of interfaces for the load balancer created with this plan
-* `max_number_of_health_monitors` - Maximum number of health monitors for the load balancer created with this plan
-* `max_number_of_listeners` - Maximum number of listeners for the load balancer created with this plan
-* `max_number_of_policies` - Maximum number of routes for the load balancer created with this plan
-* `max_number_of_routes` - Maximum number of routes for the load balancer created with this plan
-* `max_number_of_target_groups` - Maximum number of target groups for the load balancer created with this plan
-* `max_number_of_members` - Maximum number of members for the target group of load balancer created with this plan
-* `max_number_of_rules` - Maximum number of rules for the policy of load balancer created with this plan
-* `max_number_of_conditions` - Maximum number of conditions in the rule of load balancer created with this plan
+* `bandwidth` - Bandwidth of the load balancer
+* `redundancy` - Redundancy of the load balancer
+* `max_number_of_interfaces` - Maximum number of interfaces for the load balancer
+* `max_number_of_health_monitors` - Maximum number of health monitors for the load balancer
+* `max_number_of_listeners` - Maximum number of listeners for the load balancer
+* `max_number_of_policies` - Maximum number of policies for the load balancer
+* `max_number_of_routes` - Maximum number of routes for the load balancer
+* `max_number_of_target_groups` - Maximum number of target groups for the load balancer
+* `max_number_of_members` - Maximum number of members for a target group
+* `max_number_of_rules` - Maximum number of rules for a policy
+* `max_number_of_conditions` - Maximum number of conditions in a rule
+* `max_number_of_server_name_indications` - Maximum number of Server Name Indications (SNIs) in a policy
 * `enabled` - Whether a new load balancer can be created with this plan

@@ -94,6 +94,8 @@ type Listener struct {
 	//     - Changed configurations of the listener exists that waiting to be applied
 	//   - `"DELETE_STAGED"`
 	//     - The listener has been removed and waiting to be applied
+	// - For detail, refer to the API reference appendix
+	//     - https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 	ConfigurationStatus string `json:"configuration_status"`
 
 	// - Operation status of the load balancer which the listener belongs to
@@ -114,6 +116,8 @@ type Listener struct {
 	//     - The latest operation of the load balancer has been failed
 	//     - The operation was roll backed normally
 	//     - The load balancer and related resources can be operated
+	// - For detail, refer to the API reference appendix
+	//     - https://sdpf.ntt.com/services/docs/managed-lb/service-descriptions/api_reference_appendix.html
 	OperationStatus string `json:"operation_status"`
 
 	// - ID of the load balancer which the listener belongs to

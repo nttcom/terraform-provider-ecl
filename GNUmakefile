@@ -27,7 +27,7 @@ lint:
 	@echo "==> Checking source code against linters..."
 	golangci-lint run ./...
 	tfproviderlint ./...
-	
+
 test: fmtcheck
 	go test -i $(TEST) || exit 1
 	echo $(TEST) | \

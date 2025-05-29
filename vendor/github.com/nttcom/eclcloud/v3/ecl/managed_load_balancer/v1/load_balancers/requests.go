@@ -17,11 +17,11 @@ type ListOpts struct {
 	ID string `q:"id"`
 
 	// - Name of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `q:"name"`
 
 	// - Description of the resource
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `q:"description"`
 
 	// - Configuration status of the resource
@@ -92,9 +92,16 @@ type CreateOptsReservedFixedIP struct {
 
 	// - The IP address assign to this interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not set a network IP address and broadcast IP address
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Set a unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network address and a broadcast address
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	IPAddress string `json:"ip_address"`
 }
 
@@ -104,18 +111,26 @@ type CreateOptsInterface struct {
 	// - ID of the network that this interface belongs to
 	// - Set a unique network ID in `interfaces`
 	// - Set a network of which plane is data
-	// - Must not set ID of a network that uses ISP shared address (RFC 6598)
+	// - Must not set the ID of a network that attaches to the Common Function Gateway
 	NetworkID string `json:"network_id"`
 
 	// - Virtual IP address of the interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Set a network IP address and broadcast IP address
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Set a unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network address and a broadcast address
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	VirtualIPAddress string `json:"virtual_ip_address"`
 
 	// - IP addresses that are pre-reserved for applying configurations of load balancer to be performed without losing redundancy
-	ReservedFixedIPs *[]CreateOptsReservedFixedIP `json:"reserved_fixed_ips"`
+	// - If not specified, it will be automatically assigned from unused IP addresses in the network
+	ReservedFixedIPs *[]CreateOptsReservedFixedIP `json:"reserved_fixed_ips,omitempty"`
 }
 
 // CreateOptsSyslogServer represents syslog_server information in the load balancer creation.
@@ -137,21 +152,22 @@ type CreateOptsSyslogServer struct {
 type CreateOpts struct {
 
 	// - Name of the load balancer
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name string `json:"name,omitempty"`
 
 	// - Description of the load balancer
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description string `json:"description,omitempty"`
 
 	// - Tags of the load balancer
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags map[string]interface{} `json:"tags,omitempty"`
 
 	// - ID of the plan
-	PlanID string `json:"plan_id,omitempty"`
+	PlanID string `json:"plan_id"`
 
 	// - Syslog servers to which access logs are transferred
 	// - The facility code of syslog is 0 (kern), and the severity level is 6 (info)
@@ -166,7 +182,7 @@ type CreateOpts struct {
 	// - Interfaces that attached to the load balancer
 	// - `virtual_ip_address` and `reserved_fixed_ips` can not be changed once attached
 	//   - To change `virtual_ip_address` and `reserved_fixed_ips` , recreating the interface is needed
-	Interfaces *[]CreateOptsInterface `json:"interfaces,omitempty"`
+	Interfaces *[]CreateOptsInterface `json:"interfaces"`
 }
 
 // ToLoadBalancerCreateMap builds a request body from CreateOpts.
@@ -242,17 +258,18 @@ Update Load Balancer Attributes
 type UpdateOpts struct {
 
 	// - Name of the load balancer
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Name *string `json:"name,omitempty"`
 
 	// - Description of the load balancer
-	// - This field accepts single-byte characters only
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Description *string `json:"description,omitempty"`
 
 	// - Tags of the load balancer
-	// - Set JSON object up to 32,768 characters
+	// - Set JSON object up to 32,767 characters
 	//   - Nested structure is permitted
-	// - This field accepts single-byte characters only
+	//   - The whitespace around separators ( `","` and `":"` ) are ignored
+	// - This field accepts UTF-8 characters up to 3 bytes
 	Tags *map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -368,9 +385,16 @@ type CreateStagedOptsReservedFixedIP struct {
 
 	// - The IP address assign to this interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not set a network IP address and broadcast IP address
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Set a unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network address and a broadcast address
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	IPAddress string `json:"ip_address"`
 }
 
@@ -380,20 +404,28 @@ type CreateStagedOptsInterface struct {
 	// - ID of the network that this interface belongs to
 	// - Set a unique network ID in `interfaces`
 	// - Set a network of which plane is data
-	// - Must not set ID of a network that uses ISP shared address (RFC 6598)
+	// - Must not set the ID of a network that attaches to the Common Function Gateway
 	NetworkID string `json:"network_id"`
 
 	// - Virtual IP address of the interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not set a network IP address and broadcast IP address
+	// - Set a unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network address and a broadcast address
 	// - If there are no changes to the `network_id` within the `interfaces[]` , set the current `virtual_ip_address` value
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	VirtualIPAddress string `json:"virtual_ip_address"`
 
 	// - IP addresses that are pre-reserved for applying configurations of load balancer to be performed without losing redundancy
 	// - If there are no changes to the `network_id` within the `interfaces[]` , set the current `reserved_fixed_ips` value
-	ReservedFixedIPs *[]CreateStagedOptsReservedFixedIP `json:"reserved_fixed_ips"`
+	// - If not specified, it will be automatically assigned from unused IP addresses in the network
+	ReservedFixedIPs *[]CreateStagedOptsReservedFixedIP `json:"reserved_fixed_ips,omitempty"`
 }
 
 // CreateStagedOptsSyslogServer represents syslog_server information in the load balancer configurations creation.
@@ -478,9 +510,16 @@ type UpdateStagedOptsReservedFixedIP struct {
 
 	// - The IP address assign to this interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not set a network IP address and broadcast IP address
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Set a unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network address and a broadcast address
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	IPAddress *string `json:"ip_address"`
 }
 
@@ -490,20 +529,28 @@ type UpdateStagedOptsInterface struct {
 	// - ID of the network that this interface belongs to
 	// - Set a unique network ID in `interfaces`
 	// - Set a network of which plane is data
-	// - Must not set ID of a network that uses ISP shared address (RFC 6598)
+	// - Must not set the ID of a network that attaches to the Common Function Gateway
 	NetworkID *string `json:"network_id"`
 
 	// - Virtual IP address of the interface within subnet
 	// - Do not use this IP address at the interface of other devices, allowed address pairs, etc
-	// - Set an unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
-	// - Must not set a network IP address and broadcast IP address
+	// - Set a unique IP address in `virtual_ip_address` and `reserved_fixed_ips`
+	// - Must not set a network address and a broadcast address
 	// - If there are no changes to the `network_id` within the `interfaces[]` , set the current `virtual_ip_address` value
-	// - Must not set a link-local IP address (RFC 3927) which includes Common Function Gateway
+	// - Cannot use a IP address in the following networks
+	//   - This host on this network (0.0.0.0/8)
+	//   - Shared Address Space (100.64.0.0/10)
+	//   - Loopback (127.0.0.0/8)
+	//   - Link Local (169.254.0.0/16)
+	//   - Multicast (224.0.0.0/4)
+	//   - Reserved (240.0.0.0/4)
+	//   - Limited Broadcast (255.255.255.255/32)
 	VirtualIPAddress *string `json:"virtual_ip_address"`
 
 	// - IP addresses that are pre-reserved for applying configurations of load balancer to be performed without losing redundancy
 	// - If there are no changes to the `network_id` within the `interfaces[]` , set the current `reserved_fixed_ips` value
-	ReservedFixedIPs *[]UpdateStagedOptsReservedFixedIP `json:"reserved_fixed_ips"`
+	// - If not specified, it will be automatically assigned from unused IP addresses in the network
+	ReservedFixedIPs *[]UpdateStagedOptsReservedFixedIP `json:"reserved_fixed_ips,omitempty"`
 }
 
 // UpdateStagedOptsSyslogServer represents syslog_server information in load balancer configurations updation.

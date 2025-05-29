@@ -29,9 +29,10 @@ resource "ecl_mlb_rule_v1" "rule" {
   tags = {
     key = "value"
   }
-  priority        = 1
-  target_group_id = ecl_mlb_target_group_v1.target_group.id
-  policy_id       = ecl_mlb_policy_v1.policy.id
+  priority               = 1
+  target_group_id        = ecl_mlb_target_group_v1.target_group.id
+  backup_target_group_id = "dfa2dbb6-e2f8-4a9d-a8c1-e1a578ea0a52"
+  policy_id              = ecl_mlb_policy_v1.policy.id
   conditions {
     path_patterns = ["^/statics/"]
   }
@@ -43,17 +44,28 @@ resource "ecl_mlb_rule_v1" "rule" {
 The following arguments are supported:
 
 * `name` - (Optional) Name of the rule
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `description` - (Optional) Description of the rule
-    * This field accepts single-byte characters only
+    * This field accepts UTF-8 characters up to 3 bytes
 * `tags` - (Optional) Tags of the rule
-    * Set JSON object up to 32,768 characters
+    * Set JSON object up to 32,767 characters
         * Nested structure is permitted
-    * This field accepts single-byte characters only
+        * The whitespace around separators ( `","` and `":"` ) are ignored
+    * This field accepts UTF-8 characters up to 3 bytes
 * `priority` - (Optional) Priority of the rule
-    * Set an unique number in all rules which belong to the same policy
+    * Set a unique number in all rules which belong to the same policy
 * `target_group_id` - ID of the target group that assigned to the rule
-    * Set a different target group from `"default_target_group_id"` of the policy
+    * If all members of the target group specified in the rule are down:
+        * When `backup_target_group_id` of the rule is set, traffic is routed to it
+        * When `backup_target_group_id` of the rule is not set, traffic is routed to the target groups specified in the policy
+    * The same member cannot be specified for the target group and the backup target group
+    * Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
+* `backup_target_group_id` - (Optional) ID of the backup target group that assigned to the rule
+    * If all members of the target group specified in the rule are down, traffic is routed to the backup target group specified in the rule
+    * If all members of the backup target group specified in the rule are down, traffic is routed to the target groups specified in the policy
+    * Set a different ID of the target group from `target_group_id`
+    * The same member cannot be specified for the target group and the backup target group
+    * Must not set ID of the target group that `configuration_status` is `"DELETE_STAGED"`
 * `policy_id` - ID of the policy which the rule belongs to
     * Set ID of the policy which has a listener in which protocol is either `"http"` or `"https"`
 * `conditions` - Conditions of the rules to distribute accesses to the target groups
@@ -77,6 +89,12 @@ In addition, the following attributes are exported:
 * `tags` - Tags of the rule (JSON object format)
 * `priority` - Priority of the rule
 * `target_group_id` - ID of the target group that assigned to the rule
+    * If all members of the target group specified in the rule are down:
+        * When `backup_target_group_id` of the rule is set, traffic is routed to it
+        * When `backup_target_group_id` of the rule is not set, traffic is routed to the target groups specified in the policy
+* `backup_target_group_id` - ID of the backup target group that assigned to the rule
+    * If all members of the target group specified in the rule are down, traffic is routed to the backup target group specified in the rule
+    * If all members of the backup target group specified in the rule are down, traffic is routed to the target groups specified in the policy
 * `policy_id` - ID of the policy which the rule belongs to
 * `load_balancer_id` - ID of the load balancer which the rule belongs to
 * `tenant_id` - ID of the owner tenant of the rule

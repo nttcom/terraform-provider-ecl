@@ -9,6 +9,38 @@ import (
 	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/policies"
 )
 
+func serverNameIndicationsSchemaForDataSource() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeList,
+		Optional: true,
+		Computed: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"server_name": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+					Computed: true,
+				},
+				"input_type": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+					Computed: true,
+				},
+				"priority": &schema.Schema{
+					Type:     schema.TypeInt,
+					Optional: true,
+					Computed: true,
+				},
+				"certificate_id": &schema.Schema{
+					Type:     schema.TypeString,
+					Optional: true,
+					Computed: true,
+				},
+			},
+		},
+	}
+}
+
 func dataSourceMLBPolicyV1() *schema.Resource {
 	var result *schema.Resource
 
@@ -60,6 +92,11 @@ func dataSourceMLBPolicyV1() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"persistence_timeout": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
 			"idle_timeout": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -75,6 +112,7 @@ func dataSourceMLBPolicyV1() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"server_name_indications": serverNameIndicationsSchemaForDataSource(),
 			"certificate_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -91,6 +129,11 @@ func dataSourceMLBPolicyV1() *schema.Resource {
 				Computed: true,
 			},
 			"default_target_group_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"backup_target_group_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
@@ -138,6 +181,10 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 		listOpts.Persistence = v.(string)
 	}
 
+	if v, ok := d.GetOk("persistence_timeout"); ok {
+		listOpts.PersistenceTimeout = v.(int)
+	}
+
 	if v, ok := d.GetOk("idle_timeout"); ok {
 		listOpts.IdleTimeout = v.(int)
 	}
@@ -164,6 +211,10 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	if v, ok := d.GetOk("default_target_group_id"); ok {
 		listOpts.DefaultTargetGroupID = v.(string)
+	}
+
+	if v, ok := d.GetOk("backup_target_group_id"); ok {
+		listOpts.BackupTargetGroupID = v.(string)
 	}
 
 	if v, ok := d.GetOk("tls_policy_id"); ok {
@@ -211,6 +262,16 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	d.SetId(policy.ID)
 
+	serverNameIndications := make([]interface{}, len(policy.ServerNameIndications))
+	for i, serverNameIndication := range policy.ServerNameIndications {
+		result := make(map[string]interface{})
+		result["server_name"] = serverNameIndication.ServerName
+		result["input_type"] = serverNameIndication.InputType
+		result["priority"] = serverNameIndication.Priority
+		result["certificate_id"] = serverNameIndication.CertificateID
+		serverNameIndications[i] = result
+	}
+
 	d.Set("name", policy.Name)
 	d.Set("description", policy.Description)
 	d.Set("tags", policy.Tags)
@@ -220,13 +281,16 @@ func dataSourceMLBPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("tenant_id", policy.TenantID)
 	d.Set("algorithm", policy.Algorithm)
 	d.Set("persistence", policy.Persistence)
+	d.Set("persistence_timeout", policy.PersistenceTimeout)
 	d.Set("idle_timeout", policy.IdleTimeout)
 	d.Set("sorry_page_url", policy.SorryPageUrl)
 	d.Set("source_nat", policy.SourceNat)
+	d.Set("server_name_indications", serverNameIndications)
 	d.Set("certificate_id", policy.CertificateID)
 	d.Set("health_monitor_id", policy.HealthMonitorID)
 	d.Set("listener_id", policy.ListenerID)
 	d.Set("default_target_group_id", policy.DefaultTargetGroupID)
+	d.Set("backup_target_group_id", policy.BackupTargetGroupID)
 	d.Set("tls_policy_id", policy.TLSPolicyID)
 
 	return nil
