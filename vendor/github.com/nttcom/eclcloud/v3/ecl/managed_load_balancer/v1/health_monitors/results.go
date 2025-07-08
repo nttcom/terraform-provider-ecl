@@ -128,7 +128,7 @@ type HealthMonitor struct {
 	//     - The load balancer and related resources can be operated
 	//   - `"STUCK"`
 	//     - The latest operation of the load balancer has been stopped
-	//     - Operators of NTT Communications will investigate the operation
+	//     - The operators will investigate the operation
 	//     - The load balancer and related resources cannot be operated
 	//   - `"ERROR"`
 	//     - The latest operation of the load balancer has been failed
