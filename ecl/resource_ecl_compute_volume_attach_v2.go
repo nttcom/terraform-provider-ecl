@@ -97,7 +97,7 @@ func resourceComputeVolumeAttachV2Create(d *schema.ResourceData, meta interface{
 	d.SetId(id)
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"available", "attaching"},
+		Pending:    []string{"available", "attaching", "reserved"},
 		Target:     []string{"in-use"},
 		Refresh:    VolumeV2StateRefreshFunc(computeVolumeClient, volumeID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),

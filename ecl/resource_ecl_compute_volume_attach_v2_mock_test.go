@@ -21,6 +21,7 @@ func TestMockedVolumeV2Attach_basic(t *testing.T) {
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 	mc.Register(t, "attach", "/v2/01234567890123456789abcdefabcdef/servers/9fd11843-2eda-4d46-9a95-0631ad65ad8e/os-volume_attachments", testMockAttachV2Create)
 	mc.Register(t, "attach", "/v2/01234567890123456789abcdefabcdef/servers/9fd11843-2eda-4d46-9a95-0631ad65ad8e/os-volume_attachments", testMockAttachV2ListAfterCreate)
+	mc.Register(t, "attach", "/v2/01234567890123456789abcdefabcdef/volumes/5be9b6b8-2713-40a7-8c40-0737717e7b63", testMockVolumeV2ShowStatusReserved)
 	mc.Register(t, "attach", "/v2/01234567890123456789abcdefabcdef/volumes/5be9b6b8-2713-40a7-8c40-0737717e7b63", testMockVolumeV2ShowStatusInuse)
 	mc.Register(t, "attach", "/v2/01234567890123456789abcdefabcdef/servers/9fd11843-2eda-4d46-9a95-0631ad65ad8e/os-volume_attachments/5be9b6b8-2713-40a7-8c40-0737717e7b63", testMockAttachV2Delete)
 	mc.Register(t, "attach", "/v2/01234567890123456789abcdefabcdef/volumes/5be9b6b8-2713-40a7-8c40-0737717e7b63", testMockVolumeV2ShowStatusDetaching)
@@ -65,7 +66,7 @@ response:
                 "volumeId": "5be9b6b8-2713-40a7-8c40-0737717e7b63"
             }
         }
-newStatus: Created
+newStatus: Creating
 `
 
 var testMockAttachV2ListAfterCreate = `
@@ -101,6 +102,7 @@ response:
             }
         }
 expectedStatus:
+    - Creating
     - Available
 `
 
@@ -110,6 +112,64 @@ request:
 response:
     code: 202
 newStatus: Deleted
+`
+
+var testMockVolumeV2ShowStatusReserved = `
+request:
+    method: GET
+response:
+    code: 200
+    body: >
+        {
+            "volume": {
+                "attachments": [
+                    {
+                        "attached_at": "2022-07-12T05:36:04.000000",
+                        "attachment_id": "6517902a-d593-4d2f-8e71-12eeb40bbb96",
+                        "device": "/dev/vdb",
+                        "host_name": null,
+                        "id": "5be9b6b8-2713-40a7-8c40-0737717e7b63",
+                        "server_id": "9fd11843-2eda-4d46-9a95-0631ad65ad8e",
+                        "volume_id": "5be9b6b8-2713-40a7-8c40-0737717e7b63"
+                    }
+                ],
+                "availability_zone": "zone1_groupa",
+                "bootable": "false",
+                "consistencygroup_id": null,
+                "created_at": "2022-07-12T05:35:31.000000",
+                "description": null,
+                "encrypted": false,
+                "id": "5be9b6b8-2713-40a7-8c40-0737717e7b63",
+                "links": [
+                    {
+                        "href": "https://cinder-lab3ec-ecl.lab.api.ntt.com/v2/e4bbd9450deb4745986c7382b36ae50e/volumes/5be9b6b8-2713-40a7-8c40-0737717e7b63",
+                        "rel": "self"
+                    },
+                    {
+                        "href": "https://cinder-lab3ec-ecl.lab.api.ntt.com/e4bbd9450deb4745986c7382b36ae50e/volumes/5be9b6b8-2713-40a7-8c40-0737717e7b63",
+                        "rel": "bookmark"
+                    }
+                ],
+                "metadata": {
+                    "attached_mode": "rw",
+                    "readonly": "False"
+                },
+                "multiattach": false,
+                "name": "volume_1",
+                "os-vol-tenant-attr:tenant_id": "e4bbd9450deb4745986c7382b36ae50e",
+                "replication_status": "disabled",
+                "size": 15,
+                "snapshot_id": null,
+                "source_volid": null,
+                "status": "reserved",
+                "updated_at": "2022-07-12T05:36:05.000000",
+                "user_id": "f98266e4910042dd87920cc44b22a477",
+                "volume_type": "nfsdriver"
+            }
+        }
+newStatus: Created
+expectedStatus:
+    - Creating
 `
 
 var testMockVolumeV2ShowStatusInuse = `
