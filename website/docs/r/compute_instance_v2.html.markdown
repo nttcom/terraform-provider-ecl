@@ -15,9 +15,13 @@ Manages a V2 Instance resource within Enterprise Cloud.
 ### Basic Instance
 
 ```hcl
+data "ecl_imagestorages_image_v2" "image_1" {
+  name = "Ubuntu-24.04_64_virtual-server_02"
+}
+
 resource "ecl_compute_instance_v2" "instance_1" {
   name      = "instance_1"
-  image_id  = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+  image_id  = data.ecl_imagestorages_image_v2.image_1.id
   flavor_id = "1CPU-4GB"
 
   network {
