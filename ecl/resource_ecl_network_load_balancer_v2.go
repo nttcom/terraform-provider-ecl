@@ -434,14 +434,26 @@ func resourceNetworkLoadBalancerV2Create(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	// If interface configs are specified, update interfaces according to the configs.
-	for configIndex, v := range d.Get("interfaces").([]interface{}) {
-		interfaceConfig := v.(map[string]interface{})
+	// Create map of interface slot number and ID
+	interfaceIDMap := map[int]string{}
+	for _, lbIF := range loadBalancer.Interfaces {
+		interfaceIDMap[lbIF.SlotNumber] = lbIF.ID
+	}
 
+	// If interface configs are specified, update interfaces according to the configs.
+	for _, v := range d.Get("interfaces").([]interface{}) {
+		interfaceConfig := v.(map[string]interface{})
 		updateInterfaceOpts := expandLoadBalancerInterfaceInitialUpdateOpts(interfaceConfig)
 
+		// Refer to the interface ID based on the slot number
+		slotNumber := interfaceConfig["slot_number"].(int)
+		interfaceID, exists := interfaceIDMap[slotNumber]
+		if !exists {
+			return fmt.Errorf("error updating Load Balancer Interface because no ID for the slot number (%b)", slotNumber)
+		}
+
 		// .. update, call Show interface API and wait for active
-		if err := updateLoadBalancerInterface(networkClient, d, loadBalancer.Interfaces[configIndex].ID, *updateInterfaceOpts); err != nil {
+		if err := updateLoadBalancerInterface(networkClient, d, interfaceID, *updateInterfaceOpts); err != nil {
 			return fmt.Errorf("error updating Load Balancer Interface in creating LB: %w", err)
 		}
 	}

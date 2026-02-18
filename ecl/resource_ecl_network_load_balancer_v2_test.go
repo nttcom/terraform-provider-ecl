@@ -2,6 +2,7 @@ package ecl
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/nttcom/eclcloud/v3"
@@ -32,29 +33,25 @@ func testAccNetworkV2LoadBalancerBasicSteps(t *testing.T) {
 	r := "ecl_network_load_balancer_v2.lb_test1"
 	var n1 networks.Network
 	var sn1 subnets.Subnet
-	var n2 networks.Network
-	var sn2 subnets.Subnet
+	var n3 networks.Network
+	var sn3 subnets.Subnet
 	var lb load_balancers.LoadBalancer
 	var lbIF1 load_balancer_interfaces.LoadBalancerInterface
 	var lbIF2 load_balancer_interfaces.LoadBalancerInterface
 	var lbIF3 load_balancer_interfaces.LoadBalancerInterface
 	var lbIF4 load_balancer_interfaces.LoadBalancerInterface
-	var lbIF5 load_balancer_interfaces.LoadBalancerInterface
-	var lbIF6 load_balancer_interfaces.LoadBalancerInterface
-	var lbIF7 load_balancer_interfaces.LoadBalancerInterface
-	var lbIF8 load_balancer_interfaces.LoadBalancerInterface
 	var lbSyslog1 load_balancer_syslog_servers.LoadBalancerSyslogServer
 	var lbSyslog2 load_balancer_syslog_servers.LoadBalancerSyslogServer
-	syslog1Key := "4120068917"
-	syslog2Key := "1121660642"
+	syslog1Key := "3854571561"
+	syslog2Key := "3422185592"
 
 	var lbUpdated load_balancers.LoadBalancer
 	var lbIF1Updated load_balancer_interfaces.LoadBalancerInterface
-	var lbIF2Updated load_balancer_interfaces.LoadBalancerInterface
+	var lbIF3Updated load_balancer_interfaces.LoadBalancerInterface
 	var lbSyslog1Updated load_balancer_syslog_servers.LoadBalancerSyslogServer
 	var lbSyslog2Updated load_balancer_syslog_servers.LoadBalancerSyslogServer
-	syslog1UpdateKey := "1046271650"
-	syslog2UpdateKey := "4036206399"
+	syslog1UpdateKey := "3078459448"
+	syslog2UpdateKey := "3770729507"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -66,8 +63,8 @@ func testAccNetworkV2LoadBalancerBasicSteps(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n1),
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1_1", &sn1),
-					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_2", &n2),
-					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2_1", &sn2),
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_3", &n3),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_3_1", &sn3),
 					testAccCheckNetworkV2LoadBalancerExists(r, &lb),
 
 					resource.TestCheckResourceAttrPtr(r, "id", &lb.ID),
@@ -99,25 +96,25 @@ func testAccNetworkV2LoadBalancerBasicSteps(t *testing.T) {
 
 					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "1", &lbIF2),
 					resource.TestCheckResourceAttrPtr(r, "interfaces.1.id", &lbIF2.ID),
-					resource.TestCheckResourceAttr(r, "interfaces.1.description", "lb_test1_interface2_description"),
-					resource.TestCheckResourceAttr(r, "interfaces.1.ip_address", "192.168.152.11"),
-					resource.TestCheckResourceAttr(r, "interfaces.1.name", "lb_test1_interface2"),
-					resource.TestCheckResourceAttrPtr(r, "interfaces.1.network_id", &n2.ID),
+					resource.TestCheckResourceAttr(r, "interfaces.1.description", ""),
+					resource.TestCheckResourceAttr(r, "interfaces.1.ip_address", ""),
+					resource.TestCheckResourceAttr(r, "interfaces.1.name", "Interface 1/2"),
+					resource.TestCheckResourceAttr(r, "interfaces.1.network_id", ""),
 					resource.TestCheckResourceAttr(r, "interfaces.1.virtual_ip_address", ""),
 					resource.TestCheckResourceAttr(r, "interfaces.1.virtual_ip_properties.#", "0"),
 					resource.TestCheckResourceAttr(r, "interfaces.1.slot_number", "2"),
-					resource.TestCheckResourceAttr(r, "interfaces.1.status", "ACTIVE"),
+					resource.TestCheckResourceAttr(r, "interfaces.1.status", "DOWN"),
 
 					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "2", &lbIF3),
 					resource.TestCheckResourceAttrPtr(r, "interfaces.2.id", &lbIF3.ID),
-					resource.TestCheckResourceAttr(r, "interfaces.2.description", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.2.ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.2.name", "Interface 1/3"),
-					resource.TestCheckResourceAttr(r, "interfaces.2.network_id", ""),
+					resource.TestCheckResourceAttr(r, "interfaces.2.description", "lb_test1_interface3_description"),
+					resource.TestCheckResourceAttr(r, "interfaces.2.ip_address", "192.168.153.11"),
+					resource.TestCheckResourceAttr(r, "interfaces.2.name", "lb_test1_interface3"),
+					resource.TestCheckResourceAttrPtr(r, "interfaces.2.network_id", &n3.ID),
 					resource.TestCheckResourceAttr(r, "interfaces.2.virtual_ip_address", ""),
 					resource.TestCheckResourceAttr(r, "interfaces.2.virtual_ip_properties.#", "0"),
 					resource.TestCheckResourceAttr(r, "interfaces.2.slot_number", "3"),
-					resource.TestCheckResourceAttr(r, "interfaces.2.status", "DOWN"),
+					resource.TestCheckResourceAttr(r, "interfaces.2.status", "ACTIVE"),
 
 					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "3", &lbIF4),
 					resource.TestCheckResourceAttrPtr(r, "interfaces.3.id", &lbIF4.ID),
@@ -176,8 +173,8 @@ func testAccNetworkV2LoadBalancerBasicSteps(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n1),
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1_1", &sn1),
-					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_2", &n2),
-					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2_1", &sn2),
+					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_3", &n3),
+					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_3_1", &sn3),
 					testAccCheckNetworkV2LoadBalancerExists(r, &lbUpdated),
 
 					resource.TestCheckResourceAttrPtr(r, "id", &lb.ID),
@@ -187,13 +184,13 @@ func testAccNetworkV2LoadBalancerBasicSteps(t *testing.T) {
 					resource.TestCheckResourceAttr(r, "availability_zone", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(r, "description", "load_balancer_test1_description_update"),
 					resource.TestCheckResourceAttrSet(r, "load_balancer_plan_id"),
-					resource.TestCheckResourceAttr(r, "default_gateway", "192.168.152.1"),
+					resource.TestCheckResourceAttr(r, "default_gateway", "192.168.153.1"),
 					resource.TestCheckResourceAttr(r, "status", "ACTIVE"),
 					resource.TestCheckResourceAttr(r, "tenant_id", OS_TENANT_ID),
 					resource.TestCheckResourceAttrSet(r, "user_password"),
 					resource.TestCheckResourceAttrSet(r, "user_username"),
 
-					resource.TestCheckResourceAttr(r, "interfaces.#", "8"),
+					resource.TestCheckResourceAttr(r, "interfaces.#", "4"),
 
 					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "0", &lbIF1Updated),
 					resource.TestCheckResourceAttrPtr(r, "interfaces.0.id", &lbIF1.ID),
@@ -207,27 +204,27 @@ func testAccNetworkV2LoadBalancerBasicSteps(t *testing.T) {
 					resource.TestCheckResourceAttr(r, "interfaces.0.slot_number", "1"),
 					resource.TestCheckResourceAttr(r, "interfaces.0.status", "ACTIVE"),
 
-					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "1", &lbIF2Updated),
+					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "1", &lbIF2),
 					resource.TestCheckResourceAttrPtr(r, "interfaces.1.id", &lbIF2.ID),
-					resource.TestCheckResourceAttr(r, "interfaces.1.description", "lb_test1_interface2_description_update"),
-					resource.TestCheckResourceAttr(r, "interfaces.1.ip_address", "192.168.152.12"),
-					resource.TestCheckResourceAttr(r, "interfaces.1.name", "lb_test1_interface2_update"),
-					resource.TestCheckResourceAttrPtr(r, "interfaces.1.network_id", &n2.ID),
+					resource.TestCheckResourceAttr(r, "interfaces.1.description", ""),
+					resource.TestCheckResourceAttr(r, "interfaces.1.ip_address", ""),
+					resource.TestCheckResourceAttr(r, "interfaces.1.name", "Interface 1/2"),
+					resource.TestCheckResourceAttr(r, "interfaces.1.network_id", ""),
 					resource.TestCheckResourceAttr(r, "interfaces.1.virtual_ip_address", ""),
 					resource.TestCheckResourceAttr(r, "interfaces.1.virtual_ip_properties.#", "0"),
 					resource.TestCheckResourceAttr(r, "interfaces.1.slot_number", "2"),
-					resource.TestCheckResourceAttr(r, "interfaces.1.status", "ACTIVE"),
+					resource.TestCheckResourceAttr(r, "interfaces.1.status", "DOWN"),
 
-					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "2", &lbIF3),
+					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "2", &lbIF3Updated),
 					resource.TestCheckResourceAttrPtr(r, "interfaces.2.id", &lbIF3.ID),
-					resource.TestCheckResourceAttr(r, "interfaces.2.description", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.2.ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.2.name", "Interface 1/3"),
-					resource.TestCheckResourceAttr(r, "interfaces.2.network_id", ""),
+					resource.TestCheckResourceAttr(r, "interfaces.2.description", "lb_test1_interface3_description_update"),
+					resource.TestCheckResourceAttr(r, "interfaces.2.ip_address", "192.168.153.13"),
+					resource.TestCheckResourceAttr(r, "interfaces.2.name", "lb_test1_interface3_update"),
+					resource.TestCheckResourceAttrPtr(r, "interfaces.2.network_id", &n3.ID),
 					resource.TestCheckResourceAttr(r, "interfaces.2.virtual_ip_address", ""),
 					resource.TestCheckResourceAttr(r, "interfaces.2.virtual_ip_properties.#", "0"),
 					resource.TestCheckResourceAttr(r, "interfaces.2.slot_number", "3"),
-					resource.TestCheckResourceAttr(r, "interfaces.2.status", "DOWN"),
+					resource.TestCheckResourceAttr(r, "interfaces.2.status", "ACTIVE"),
 
 					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "3", &lbIF4),
 					resource.TestCheckResourceAttrPtr(r, "interfaces.3.id", &lbIF4.ID),
@@ -239,50 +236,6 @@ func testAccNetworkV2LoadBalancerBasicSteps(t *testing.T) {
 					resource.TestCheckResourceAttr(r, "interfaces.3.virtual_ip_properties.#", "0"),
 					resource.TestCheckResourceAttr(r, "interfaces.3.slot_number", "4"),
 					resource.TestCheckResourceAttr(r, "interfaces.3.status", "DOWN"),
-
-					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "4", &lbIF5),
-					resource.TestCheckResourceAttrPtr(r, "interfaces.4.id", &lbIF5.ID),
-					resource.TestCheckResourceAttr(r, "interfaces.4.description", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.4.ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.4.name", "Interface 1/5"),
-					resource.TestCheckResourceAttr(r, "interfaces.4.network_id", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.4.virtual_ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.4.virtual_ip_properties.#", "0"),
-					resource.TestCheckResourceAttr(r, "interfaces.4.slot_number", "5"),
-					resource.TestCheckResourceAttr(r, "interfaces.4.status", "DOWN"),
-
-					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "5", &lbIF6),
-					resource.TestCheckResourceAttrPtr(r, "interfaces.5.id", &lbIF6.ID),
-					resource.TestCheckResourceAttr(r, "interfaces.5.description", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.5.ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.5.name", "Interface 1/6"),
-					resource.TestCheckResourceAttr(r, "interfaces.5.network_id", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.5.virtual_ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.5.virtual_ip_properties.#", "0"),
-					resource.TestCheckResourceAttr(r, "interfaces.5.slot_number", "6"),
-					resource.TestCheckResourceAttr(r, "interfaces.5.status", "DOWN"),
-
-					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "6", &lbIF7),
-					resource.TestCheckResourceAttrPtr(r, "interfaces.6.id", &lbIF7.ID),
-					resource.TestCheckResourceAttr(r, "interfaces.6.description", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.6.ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.6.name", "Interface 1/7"),
-					resource.TestCheckResourceAttr(r, "interfaces.6.network_id", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.6.virtual_ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.6.virtual_ip_properties.#", "0"),
-					resource.TestCheckResourceAttr(r, "interfaces.6.slot_number", "7"),
-					resource.TestCheckResourceAttr(r, "interfaces.6.status", "DOWN"),
-
-					testAccCheckNetworkV2LoadBalancerInterfaceExists(r, "7", &lbIF8),
-					resource.TestCheckResourceAttrPtr(r, "interfaces.7.id", &lbIF8.ID),
-					resource.TestCheckResourceAttr(r, "interfaces.7.description", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.7.ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.7.name", "Interface 1/8"),
-					resource.TestCheckResourceAttr(r, "interfaces.7.network_id", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.7.virtual_ip_address", ""),
-					resource.TestCheckResourceAttr(r, "interfaces.7.virtual_ip_properties.#", "0"),
-					resource.TestCheckResourceAttr(r, "interfaces.7.slot_number", "8"),
-					resource.TestCheckResourceAttr(r, "interfaces.7.status", "DOWN"),
 
 					resource.TestCheckResourceAttr(r, "syslog_servers.#", "2"),
 
@@ -1347,7 +1300,7 @@ func testAccCheckNetworkV2LoadBalancerExists(n string, lb *load_balancers.LoadBa
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("no ID is set")
+			return fmt.Errorf("no Load Balancer ID is set")
 		}
 
 		config := testAccProvider.Meta().(*Config)
@@ -1400,7 +1353,7 @@ func testAccCheckNetworkV2LoadBalancerInterfaceExists(n string, i string, lbIF *
 		key := fmt.Sprintf("interfaces.%s.id", i)
 		value := rs.Primary.Attributes[key]
 		if value == "" {
-			return fmt.Errorf("no ID is set")
+			return fmt.Errorf("no Interface ID is set: id=%s", i)
 		}
 
 		config := testAccProvider.Meta().(*Config)
@@ -1434,7 +1387,14 @@ func testAccCheckNetworkV2LoadBalancerSyslogServerExists(n string, i string, lbS
 		key := fmt.Sprintf("syslog_servers.%s.id", i)
 		value := rs.Primary.Attributes[key]
 		if value == "" {
-			return fmt.Errorf("no ID is set")
+			// For retrying test, print valid value of i
+			for k := range rs.Primary.Attributes {
+				if strings.HasPrefix(k, "syslog_servers.") &&
+					strings.HasSuffix(k, ".name") {
+					fmt.Printf("name of Resource: %s = %s\n", k, rs.Primary.Attributes[k])
+				}
+			}
+			return fmt.Errorf("no Syslog Server ID is set: %s", i)
 		}
 
 		config := testAccProvider.Meta().(*Config)
@@ -1497,12 +1457,12 @@ resource "ecl_network_load_balancer_v2" "lb_test1" {
 }
 `,
 	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair1,
-	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair2,
+	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair3,
 	testAccNetworkV2LoadBalancerPlan4IF,
 	OS_DEFAULT_ZONE,
 	testAccNetworkV2LoadBalancerDefaultGateway1,
 	testAccNetworkV2LoadBalancerInterface1,
-	testAccNetworkV2LoadBalancerInterface2,
+	testAccNetworkV2LoadBalancerInterface3,
 	testAccNetworkV2LoadBalancerSyslogServer1,
 	testAccNetworkV2LoadBalancerSyslogServer2,
 )
@@ -1527,12 +1487,12 @@ resource "ecl_network_load_balancer_v2" "lb_test1" {
 }
 `,
 	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair1,
-	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair2,
+	testAccNetworkV2LoadBalancerSingleNetworkAndSubnetPair3,
 	testAccNetworkV2LoadBalancerPlan8IF,
 	OS_DEFAULT_ZONE,
-	testAccNetworkV2LoadBalancerDefaultGateway2,
+	testAccNetworkV2LoadBalancerDefaultGateway3,
 	testAccNetworkV2LoadBalancerInterface1UpdateBasic,
-	testAccNetworkV2LoadBalancerInterface2UpdateBasic,
+	testAccNetworkV2LoadBalancerInterface3UpdateBasic,
 	testAccNetworkV2LoadBalancerSyslogServer1UpdateBasic,
 	testAccNetworkV2LoadBalancerSyslogServer2UpdateBasic,
 )
@@ -2084,8 +2044,9 @@ const testAccNetworkV2LoadBalancerPlan4IF = `
 data "ecl_network_load_balancer_plan_v2" "lb_plan1" {
   enabled = true
   model {
-    size = "200"
+    size = "50"
   }
+  version = "14.1-47.48"
 }
 `
 
@@ -2093,13 +2054,15 @@ const testAccNetworkV2LoadBalancerPlan8IF = `
 data "ecl_network_load_balancer_plan_v2" "lb_plan1" {
   enabled = true
   model {
-    size = "1000"
+    size = "200"
   }
+  version = "14.1-47.48"
 }
 `
 
 const testAccNetworkV2LoadBalancerDefaultGateway1 = `default_gateway = "192.168.151.1"`
 const testAccNetworkV2LoadBalancerDefaultGateway2 = `default_gateway = "192.168.152.1"`
+const testAccNetworkV2LoadBalancerDefaultGateway3 = `default_gateway = "192.168.153.1"`
 
 const testAccNetworkV2LoadBalancerInterface1 = `
 interfaces {
@@ -2168,13 +2131,13 @@ interfaces {
 }
 `
 
-const testAccNetworkV2LoadBalancerInterface2UpdateBasic = `
+const testAccNetworkV2LoadBalancerInterface3UpdateBasic = `
 interfaces {
-    slot_number = 2
-    description = "lb_test1_interface2_description_update"
-    ip_address = "192.168.152.12"
-    name = "lb_test1_interface2_update"
-    network_id = "${ecl_network_network_v2.network_2.id}"
+    slot_number = 3
+    description = "lb_test1_interface3_description_update"
+    ip_address = "192.168.153.13"
+    name = "lb_test1_interface3_update"
+    network_id = "${ecl_network_network_v2.network_3.id}"
 }
 `
 
