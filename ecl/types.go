@@ -18,6 +18,8 @@ import (
 	"github.com/nttcom/eclcloud/v3/ecl/network/v2/networks"
 	"github.com/nttcom/eclcloud/v3/ecl/network/v2/ports"
 	"github.com/nttcom/eclcloud/v3/ecl/network/v2/public_ips"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/security_group_rules"
+	"github.com/nttcom/eclcloud/v3/ecl/network/v2/security_groups"
 	"github.com/nttcom/eclcloud/v3/ecl/network/v2/static_routes"
 	"github.com/nttcom/eclcloud/v3/ecl/network/v2/subnets"
 	"github.com/nttcom/eclcloud/v3/ecl/vna/v1/appliances"
@@ -200,6 +202,16 @@ func (opts PortCreateOpts) ToPortCreateMap() (map[string]interface{}, error) {
 // PublicIPCreateOpts represents the attributes used when creating a new Public IP.
 type PublicIPCreateOpts struct {
 	public_ips.CreateOpts
+}
+
+// SecurityGroupCreateOpts represents the attributes used when creating a new security group.
+type SecurityGroupCreateOpts struct {
+	security_groups.CreateOpts
+}
+
+// SecurityGroupRuleCreateOpts represents the attributes used when creating a new security group rule.
+type SecurityGroupRuleCreateOpts struct {
+	security_group_rules.CreateOpts
 }
 
 // RecordSetCreateOpts represents the attributes used when creating a new DNS record set.

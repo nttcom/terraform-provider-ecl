@@ -54,6 +54,8 @@ are exported:
 * `network_id` - See Argument Reference above.
 * `port_id` - See Argument Reference above.
 * `region` - See Argument Reference above.
+* `security_groups` - The list of security group IDs attached to the port.
+    The API's default security group "permit-any" is filtered out and treated as an empty list.
 * `segmentation_id` - See Argument Reference above.
 * `segmentation_type` - See Argument Reference above.
 * `status` - The status of the port.
