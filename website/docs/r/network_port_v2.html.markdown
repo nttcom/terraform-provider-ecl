@@ -18,10 +18,18 @@ resource "ecl_network_network_v2" "network_1" {
   admin_state_up = "true"
 }
 
+resource "ecl_network_security_group_v2" "secgroup_1" {
+  name        = "secgroup_1"
+  description = "My security group"
+}
+
 resource "ecl_network_port_v2" "port_1" {
   name           = "port_1"
   network_id     = ecl_network_network_v2.network_1.id
   admin_state_up = "true"
+  security_groups = [
+    ecl_network_security_group_v2.secgroup_1.id
+  ]
 }
 ```
 
@@ -65,6 +73,12 @@ The following arguments are supported:
 * `no_fixed_ip` - (Optional - Conflicts with `fixed_ip`) Create a port with no fixed
     IP address. This will also remove any fixed IPs previously set on a port. `true`
     is the only valid value for this argument.
+
+* `security_groups` - (Optional) A list of security group IDs to apply to the port.
+    Changing this updates the security groups of an existing port. To remove all
+    security groups, explicitly set this to an empty list: `security_groups = []`.
+    Note: The API automatically assigns a default security group named "permit-any"
+    when no security groups are specified, but Terraform treats this as an empty list.
 
 * `segmentation_id` - (Optional) The segmentation ID used for this port.
     User can specify this value only in case segmentation type is "vlan".
@@ -114,8 +128,9 @@ The following attributes are exported:
 * `mac_address` - See Argument Reference above.
 * `region` - See Argument Reference above.
 * `network_id` - See Argument Reference above.
+* `security_groups` - See Argument Reference above.
 * `segmentation_id` - See Argument Reference above.
-* `segmentation_id` - See Argument Reference above.
+* `segmentation_type` - See Argument Reference above.
 * `status` - Status for the Port.
 * `tags` - See Argument Reference above.
 * `tenant_id` - See Argument Reference above.

@@ -126,6 +126,12 @@ func resourceNetworkPortV2() *schema.Resource {
 				Optional:      true,
 				ConflictsWith: []string{"fixed_ip"},
 			},
+			"security_groups": &schema.Schema{
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"segmentation_id": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -173,6 +179,7 @@ func resourceNetworkPortV2Create(d *schema.ResourceData, meta interface{}) error
 			MACAddress:          d.Get("mac_address").(string),
 			Name:                d.Get("name").(string),
 			NetworkID:           d.Get("network_id").(string),
+			SecurityGroups:      resourcePortSecurityGroupsV2(d),
 			SegmentationID:      d.Get("segmentation_id").(int),
 			SegmentationType:    d.Get("segmentation_type").(string),
 			Tags:                resourceTags(d),
@@ -230,6 +237,17 @@ func resourceNetworkPortV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("name", p.Name)
 	d.Set("network_id", p.NetworkID)
 	d.Set("region", GetRegion(d, config))
+
+	// Filter out "permit-any" from security groups as it's the API's default
+	// when no security groups are specified
+	var securityGroups []string
+	for _, sg := range p.SecurityGroups {
+		if sg != "permit-any" {
+			securityGroups = append(securityGroups, sg)
+		}
+	}
+	d.Set("security_groups", securityGroups)
+
 	d.Set("segmentation_id", p.SegmentationID)
 	d.Set("segmentation_type", p.SegmentationType)
 	d.Set("status", p.Status)
@@ -287,6 +305,12 @@ func resourceNetworkPortV2Update(d *schema.ResourceData, meta interface{}) error
 		hasChange = true
 		name := d.Get("name").(string)
 		updateOpts.Name = &name
+	}
+
+	if d.HasChange("security_groups") {
+		hasChange = true
+		securityGroups := resourcePortSecurityGroupsV2(d)
+		updateOpts.SecurityGroups = securityGroups
 	}
 
 	if d.HasChange("segmentation_id") {
@@ -411,6 +435,23 @@ func resourcePortAdminStateUpV2(d *schema.ResourceData) *bool {
 	}
 
 	return &value
+}
+
+func resourcePortSecurityGroupsV2(d *schema.ResourceData) *[]string {
+	rawSecurityGroups := d.Get("security_groups").(*schema.Set)
+
+	// Only include security_groups field if it was explicitly set by the user
+	// If not set, return nil to omit the field from the API request
+	// This allows compatibility with regions that don't support this field
+	if _, ok := d.GetOk("security_groups"); !ok {
+		return nil
+	}
+
+	securityGroups := make([]string, rawSecurityGroups.Len())
+	for i, raw := range rawSecurityGroups.List() {
+		securityGroups[i] = raw.(string)
+	}
+	return &securityGroups
 }
 
 func allowedAddressPairsHash(v interface{}) int {

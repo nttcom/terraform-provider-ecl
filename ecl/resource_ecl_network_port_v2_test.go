@@ -352,6 +352,32 @@ func TestAccNetworkV2Port_noFixedIP(t *testing.T) {
 	})
 }
 
+func TestAccNetworkV2Port_securityGroups(t *testing.T) {
+	var port ports.Port
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckNetworkV2PortDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkV2PortWithSecurityGroups,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2PortExists("ecl_network_port_v2.port_1", &port),
+					resource.TestCheckResourceAttr("ecl_network_port_v2.port_1", "security_groups.#", "1"),
+				),
+			},
+			{
+				Config: testAccNetworkV2PortWithSecurityGroupsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkV2PortExists("ecl_network_port_v2.port_1", &port),
+					resource.TestCheckResourceAttr("ecl_network_port_v2.port_1", "security_groups.#", "2"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckNetworkV2PortDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.networkV2Client(OS_REGION_NAME)
@@ -918,3 +944,80 @@ resource "ecl_network_port_v2" "port_1" {
     ip_address = "192.168.199.1"
 	}
 }`
+
+const testAccNetworkV2PortWithSecurityGroups = `
+resource "ecl_network_network_v2" "network_1" {
+  name = "network_1"
+  admin_state_up = "true"
+}
+
+resource "ecl_network_subnet_v2" "subnet_1" {
+  name = "subnet_1"
+  cidr = "192.168.199.0/24"
+  ip_version = 4
+  network_id = "${ecl_network_network_v2.network_1.id}"
+}
+
+resource "ecl_network_security_group_v2" "secgroup_1" {
+  name        = "secgroup_1"
+  description = "security group 1"
+}
+
+resource "ecl_network_security_group_v2" "secgroup_2" {
+  name        = "secgroup_2"
+  description = "security group 2"
+}
+
+resource "ecl_network_port_v2" "port_1" {
+  name = "port_1"
+  admin_state_up = "true"
+  network_id = "${ecl_network_network_v2.network_1.id}"
+
+  security_groups = [
+    "${ecl_network_security_group_v2.secgroup_1.id}"
+  ]
+
+  fixed_ip {
+    subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
+  }
+}
+`
+
+const testAccNetworkV2PortWithSecurityGroupsUpdate = `
+resource "ecl_network_network_v2" "network_1" {
+  name = "network_1"
+  admin_state_up = "true"
+}
+
+resource "ecl_network_subnet_v2" "subnet_1" {
+  name = "subnet_1"
+  cidr = "192.168.199.0/24"
+  ip_version = 4
+  network_id = "${ecl_network_network_v2.network_1.id}"
+}
+
+resource "ecl_network_security_group_v2" "secgroup_1" {
+  name        = "secgroup_1"
+  description = "security group 1"
+}
+
+resource "ecl_network_security_group_v2" "secgroup_2" {
+  name        = "secgroup_2"
+  description = "security group 2"
+}
+
+resource "ecl_network_port_v2" "port_1" {
+  name = "port_1"
+  admin_state_up = "true"
+  network_id = "${ecl_network_network_v2.network_1.id}"
+
+  security_groups = [
+    "${ecl_network_security_group_v2.secgroup_1.id}",
+    "${ecl_network_security_group_v2.secgroup_2.id}"
+  ]
+
+  fixed_ip {
+    subnet_id = "${ecl_network_subnet_v2.subnet_1.id}"
+  }
+}
+`
