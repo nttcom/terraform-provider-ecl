@@ -94,6 +94,9 @@ type Port struct {
 	// Network that this port is associated with.
 	NetworkID string `json:"network_id"`
 
+	// SecurityGroups is the IDs of security groups applied to the port.
+	SecurityGroups []string `json:"security_groups"`
+
 	// SegmentationID is the segmenation ID used for this port (i.e. for vlan type it is vlan tag)
 	SegmentationID int `json:"segmentation_id"`
 

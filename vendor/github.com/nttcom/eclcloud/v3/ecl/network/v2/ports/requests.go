@@ -80,6 +80,7 @@ type CreateOpts struct {
 	MACAddress          string            `json:"mac_address,omitempty"`
 	Name                string            `json:"name,omitempty"`
 	NetworkID           string            `json:"network_id"`
+	SecurityGroups      *[]string         `json:"security_groups,omitempty"`
 	SegmentationID      int               `json:"segmentation_id,omitempty"`
 	SegmentationType    string            `json:"segmentation_type,omitempty"`
 	Tags                map[string]string `json:"tags,omitempty"`
@@ -118,6 +119,7 @@ type UpdateOpts struct {
 	DeviceOwner         *string            `json:"device_owner,omitempty"`
 	FixedIPs            interface{}        `json:"fixed_ips,omitempty"`
 	Name                *string            `json:"name,omitempty"`
+	SecurityGroups      *[]string          `json:"security_groups,omitempty"`
 	SegmentationID      *int               `json:"segmentation_id,omitempty"`
 	SegmentationType    *string            `json:"segmentation_type,omitempty"`
 	Tags                *map[string]string `json:"tags,omitempty"`
