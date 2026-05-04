@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 
 	"github.com/nttcom/eclcloud/v3/ecl/network/v2/networks"
@@ -1021,3 +1022,52 @@ resource "ecl_network_port_v2" "port_1" {
   }
 }
 `
+
+func TestResourceNetworkPortV2AdminStateUp_unspecified(t *testing.T) {
+	raw := map[string]interface{}{
+		"network_id": "test-network-id",
+	}
+	d := schema.TestResourceDataRaw(t, resourceNetworkPortV2().Schema, raw)
+
+	result := resourcePortAdminStateUpV2(d)
+
+	// admin_state_up が未指定のとき、API に値を送信しないよう nil を返すべき。
+	// サーバーデフォルトは true であり、false を送ると意図せずポートがダウン状態になる。
+	if result != nil {
+		t.Fatalf("expected nil when admin_state_up is unspecified, got: %v", *result)
+	}
+}
+
+func TestResourceNetworkPortV2AdminStateUp_true(t *testing.T) {
+	raw := map[string]interface{}{
+		"network_id":     "test-network-id",
+		"admin_state_up": true,
+	}
+	d := schema.TestResourceDataRaw(t, resourceNetworkPortV2().Schema, raw)
+
+	result := resourcePortAdminStateUpV2(d)
+
+	if result == nil {
+		t.Fatal("expected non-nil when admin_state_up=true")
+	}
+	if *result != true {
+		t.Fatalf("expected true, got: %v", *result)
+	}
+}
+
+func TestResourceNetworkPortV2AdminStateUp_false(t *testing.T) {
+	raw := map[string]interface{}{
+		"network_id":     "test-network-id",
+		"admin_state_up": false,
+	}
+	d := schema.TestResourceDataRaw(t, resourceNetworkPortV2().Schema, raw)
+
+	result := resourcePortAdminStateUpV2(d)
+
+	if result == nil {
+		t.Fatal("expected non-nil when admin_state_up=false")
+	}
+	if *result != false {
+		t.Fatalf("expected false, got: %v", *result)
+	}
+}
