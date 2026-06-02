@@ -428,10 +428,10 @@ func resourceAllowedAddressPairsV2(d *schema.ResourceData) []ports.AddressPair {
 }
 
 func resourcePortAdminStateUpV2(d *schema.ResourceData) *bool {
-	value := false
+	value := true
 
-	if raw, ok := d.GetOk("admin_state_up"); ok && raw == true {
-		value = true
+	if raw, ok := d.GetOk("admin_state_up"); ok && raw == false {
+		value = false
 	}
 
 	return &value
