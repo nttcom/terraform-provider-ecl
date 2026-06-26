@@ -34,7 +34,7 @@ func resourceNetworkPortV2() *schema.Resource {
 			"admin_state_up": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
-				Computed: true,
+				Default:  true,
 			},
 			"all_fixed_ips": &schema.Schema{
 				Type:     schema.TypeList,
@@ -428,11 +428,7 @@ func resourceAllowedAddressPairsV2(d *schema.ResourceData) []ports.AddressPair {
 }
 
 func resourcePortAdminStateUpV2(d *schema.ResourceData) *bool {
-	value := true
-
-	if raw, ok := d.GetOk("admin_state_up"); ok && raw == false {
-		value = false
-	}
+	value := d.Get("admin_state_up").(bool)
 
 	return &value
 }
