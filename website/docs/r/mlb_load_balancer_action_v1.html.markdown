@@ -71,8 +71,8 @@ The following arguments are supported:
 * `system_update` - (Optional) Whether to apply the system update to the load balancer
     * Structure is [documented below](#system-update)
 * `change_plan` - (Optional) ID of the plan that the load balancer will be changed to
-    * After the plan is changed, update `plan_id` of the corresponding `ecl_mlb_load_balancer_v1` to the same value
-    * If `plan_id` is not updated, the next `terraform plan` will detect it as a diff
+    * Specify the same value as `plan_id` of the corresponding `ecl_mlb_load_balancer_v1`
+    * If the two values differ, the next `terraform plan` will detect `plan_id` as a diff
 
 <a name="system-update"></a>The `system_update` block contains:
 
