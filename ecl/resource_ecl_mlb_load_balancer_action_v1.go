@@ -51,7 +51,7 @@ func resourceMLBLoadBalancerActionV1() *schema.Resource {
 							Required: true,
 						},
 						"rollback": &schema.Schema{
-							Type:     schema.TypeString,
+							Type:     schema.TypeBool,
 							Optional: true,
 						},
 					},
