@@ -145,7 +145,7 @@ Example to perform system-update action with rollback on a load balancer
 	rollback := true
 	systemUpdate := load_balancers.ActionOptsSystemUpdate{
 		SystemUpdateID: "31746df7-92f9-4b5e-ad05-59f6684a54eb",
-		Rollback: &rollback,
+		Rollback:       &rollback,
 	}
 	actionOpts := load_balancers.ActionOpts{
 		SystemUpdate: &systemUpdate,
