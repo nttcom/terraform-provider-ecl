@@ -9,10 +9,11 @@ import (
 )
 
 // TestAccStorageV1VolumeDataSource_basic is basic test of volume
-// 	(Note) you need to prepare Virtual Storage and set the ID of that as Env value.
+//
+//	(Note) you need to prepare Virtual Storage and set the ID of that as Env value.
 //	This test function does followings
-// 		1. Create volume under pre created virtual storage
-// 		2. Refer that volume as datasource by using volume name to find it
+//		1. Create volume under pre created virtual storage
+//		2. Refer that volume as datasource by using volume name to find it
 func TestAccStorageV1VolumeDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -38,10 +39,11 @@ func TestAccStorageV1VolumeDataSource_basic(t *testing.T) {
 }
 
 // TestAccStorageV1VolumeDataSource_id is basic test of volume
-// 	(Note) you need to prepare Virtual Storage and set the ID of that as Env value.
+//
+//	(Note) you need to prepare Virtual Storage and set the ID of that as Env value.
 //	This test function does followings
-// 		1. Create volume under pre created virtual storage
-// 		2. Refer that volume as datasource by using volume ID to find it
+//		1. Create volume under pre created virtual storage
+//		2. Refer that volume as datasource by using volume ID to find it
 func TestAccStorageV1VolumeDataSource_id(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
@@ -72,9 +74,10 @@ func TestAccStorageV1VolumeDataSource_id(t *testing.T) {
 
 // TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock create all of relevant resources
 // about data source test as Block Storage service
-// 	This test function does followings
-// 		1. Create network virtual storage, volume prior to data source
-// 		2. Refer that volume as datasource by using volume ID to find it
+//
+//	This test function does followings
+//		1. Create network virtual storage, volume prior to data source
+//		2. Refer that volume as datasource by using volume ID to find it
 func TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
@@ -105,9 +108,10 @@ func TestAccStorageV1VolumeDataSource_createAllResourcesAsBlock(t *testing.T) {
 
 // TestAccStorageV1VolumeDataSource_createAllResourcesAsFilePremium create all of relevant resources
 // about data source test as File Storage Premium service
-// 	This test function does followings
-// 		1. Create network virtual storage, volume prior to data source
-// 		2. Refer that volume as datasource by using volume ID to find it
+//
+//	This test function does followings
+//		1. Create network virtual storage, volume prior to data source
+//		2. Refer that volume as datasource by using volume ID to find it
 func TestAccStorageV1VolumeDataSource_createAllResourcesAsFilePremium(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")

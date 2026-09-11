@@ -49,6 +49,9 @@ type SystemUpdate struct {
 
 	// - Whether the system update can be applied to the load balancer
 	Applicable bool `json:"applicable"`
+
+	// - Whether the system update allows rollback
+	IsRollbackAllowed bool `json:"is_rollback_allowed"`
 }
 
 // ExtractInto interprets any commonResult as a system update, if possible.

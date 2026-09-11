@@ -9,7 +9,9 @@ import (
 
 // TestMockedAccNetworkV2LoadBalancer_basic tests basic behavior of Load Balancer creation and update requests.
 // Step 0: Create Load Balancer with 2 connected interfaces (One with VIP configurations and one without)
-//           and 2 syslog servers.
+//
+//	and 2 syslog servers.
+//
 // Step 1: Update Load Balancer and all sub resources as much as possible without recreating resources.
 func TestMockedAccNetworkV2LoadBalancer_basic(t *testing.T) {
 	mc := mock.NewMockController()

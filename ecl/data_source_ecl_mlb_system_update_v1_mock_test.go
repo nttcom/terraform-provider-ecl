@@ -22,6 +22,7 @@ func TestMockedAccMLBV1SystemUpdateDataSource(t *testing.T) {
 	mc.Register(t, "system_updates", "/v1.0/system_updates", testMockMLBV1SystemUpdatesListCurrentRevisionQuery)
 	mc.Register(t, "system_updates", "/v1.0/system_updates", testMockMLBV1SystemUpdatesListNextRevisionQuery)
 	mc.Register(t, "system_updates", "/v1.0/system_updates", testMockMLBV1SystemUpdatesListApplicableQuery)
+	mc.Register(t, "system_updates", "/v1.0/system_updates", testMockMLBV1SystemUpdatesListIsRollbackAllowedQuery)
 
 	mc.StartServer(t)
 
@@ -111,6 +112,21 @@ func TestMockedAccMLBV1SystemUpdateDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "current_revision", "1"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "next_revision", "2"),
 					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "applicable", "true"),
+				),
+			},
+			{
+				Config: testAccMLBV1SystemUpdateDataSourceQueryIsRollbackAllowed,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "name", "security_update_202210"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "description", "description"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "href", "https://sdpf.ntt.com/news/2022100301/"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "publish_datetime", "2022-10-03 00:00:00"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "limit_datetime", "2022-10-11 12:59:59"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "current_revision", "1"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "next_revision", "2"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "applicable", "true"),
+					resource.TestCheckResourceAttr("data.ecl_mlb_system_update_v1.system_update_1", "is_rollback_allowed", "true"),
 				),
 			},
 		},
@@ -304,6 +320,39 @@ response:
           "current_revision": 1,
           "next_revision": 2,
           "applicable": true
+        }
+      ]
+    }
+`)
+
+var testAccMLBV1SystemUpdateDataSourceQueryIsRollbackAllowed = fmt.Sprintf(`
+data "ecl_mlb_system_update_v1" "system_update_1" {
+  is_rollback_allowed = "true"
+}
+`)
+
+var testMockMLBV1SystemUpdatesListIsRollbackAllowedQuery = fmt.Sprintf(`
+request:
+  method: GET
+  query:
+    is_rollback_allowed:
+      - true
+response:
+  code: 200
+  body: >
+    {
+      "system_updates": [
+        {
+          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+          "name": "security_update_202210",
+          "description": "description",
+          "href": "https://sdpf.ntt.com/news/2022100301/",
+          "publish_datetime": "2022-10-03 00:00:00",
+          "limit_datetime": "2022-10-11 12:59:59",
+          "current_revision": 1,
+          "next_revision": 2,
+          "applicable": true,
+          "is_rollback_allowed": true
         }
       ]
     }

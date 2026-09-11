@@ -11,6 +11,33 @@ import (
 	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/certificates"
 )
 
+func validateMLBCertificateV1FileKeys(v interface{}, k string, allowedKeys ...string) ([]string, []error) {
+	var errs []error
+
+	for key := range v.(map[string]interface{}) {
+		valid := false
+		for _, allowedKey := range allowedKeys {
+			if key == allowedKey {
+				valid = true
+				break
+			}
+		}
+		if !valid {
+			errs = append(errs, fmt.Errorf("%s: unsupported key %q", k, key))
+		}
+	}
+
+	return nil, errs
+}
+
+func validateMLBCertificateV1CertFileKeys(v interface{}, k string) ([]string, []error) {
+	return validateMLBCertificateV1FileKeys(v, k, "content")
+}
+
+func validateMLBCertificateV1KeyFileKeys(v interface{}, k string) ([]string, []error) {
+	return validateMLBCertificateV1FileKeys(v, k, "content", "passphrase")
+}
+
 func certificateCertFileSchemaForResource() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeMap,
@@ -24,6 +51,7 @@ func certificateCertFileSchemaForResource() *schema.Schema {
 				},
 			},
 		},
+		ValidateFunc: validateMLBCertificateV1CertFileKeys,
 	}
 }
 
@@ -45,6 +73,7 @@ func certificateKeyFileSchemaForResource() *schema.Schema {
 				},
 			},
 		},
+		ValidateFunc: validateMLBCertificateV1KeyFileKeys,
 	}
 }
 

@@ -105,7 +105,6 @@ func resourceMLBLoadBalancerV1() *schema.Resource {
 			"plan_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 			"tenant_id": &schema.Schema{
 				Type:     schema.TypeString,

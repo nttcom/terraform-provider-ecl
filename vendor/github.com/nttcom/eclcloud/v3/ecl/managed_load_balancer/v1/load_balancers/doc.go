@@ -140,6 +140,38 @@ Example to perform system-update action on a load balancer
 		panic(err)
 	}
 
+Example to perform system-update action with rollback on a load balancer
+
+	rollback := true
+	systemUpdate := load_balancers.ActionOptsSystemUpdate{
+		SystemUpdateID: "31746df7-92f9-4b5e-ad05-59f6684a54eb",
+		Rollback:       &rollback,
+	}
+	actionOpts := load_balancers.ActionOpts{
+		SystemUpdate: &systemUpdate,
+	}
+
+	id := "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+	err := load_balancers.Action(cli, id, actionOpts).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
+Example to perform change-plan action on a load balancer
+
+	changePlan := load_balancers.ActionOptsChangePlan{
+		PlanID: "00713021-9aea-41da-9a88-87760c08fa72",
+	}
+	actionOpts := load_balancers.ActionOpts{
+		ChangePlan: &changePlan,
+	}
+
+	id := "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+	err := load_balancers.Action(cli, id, actionOpts).ExtractErr()
+	if err != nil {
+		panic(err)
+	}
+
 Example to perform apply-configurations and system-update action on a load balancer
 
 	systemUpdate := load_balancers.ActionOptsSystemUpdate{

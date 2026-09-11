@@ -27,6 +27,9 @@ func TestMockedAccMLBV1LoadBalancerResource(t *testing.T) {
 	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowBeforeCreateConfigurations)
 	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08/staged", testMockMLBV1LoadBalancersCreateConfigurations)
 	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterCreateConfigurations)
+	// plan_id is no longer ForceNew: changing it must go through Update, not a destroy/create replacement
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowBeforeUpdatePlanID)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterUpdatePlanID)
 	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersDelete)
 	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterDeleteProcessing)
 	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterDeleteCompleted)
@@ -101,6 +104,32 @@ func TestMockedAccMLBV1LoadBalancerResource(t *testing.T) {
 					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "description", "description-update"),
 					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "tags.key-update", "value-update"),
 					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "plan_id", "00713021-9aea-41da-9a88-87760c08fa72"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "syslog_servers.#", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "syslog_servers.0.ip_address", "192.168.1.6"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "syslog_servers.0.port", "514"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "syslog_servers.0.protocol", "udp"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "interfaces.#", "1"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "interfaces.0.network_id", "58e6d72b-f5e7-4b83-b306-06989ff78a84"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "interfaces.0.virtual_ip_address", "192.168.1.1"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "interfaces.0.reserved_fixed_ips.#", "4"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "interfaces.0.reserved_fixed_ips.0.ip_address", "192.168.1.2"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "interfaces.0.reserved_fixed_ips.1.ip_address", "192.168.1.3"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "interfaces.0.reserved_fixed_ips.2.ip_address", "192.168.1.4"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "interfaces.0.reserved_fixed_ips.3.ip_address", "192.168.1.5"),
+				),
+			},
+			{
+				// Changing plan_id must not replace the load balancer now that plan_id is no longer ForceNew.
+				// This models the case where the plan has already been changed out-of-band via
+				// ecl_mlb_load_balancer_action_v1's change_plan, and plan_id is updated to match afterwards.
+				Config: testAccMLBV1LoadBalancerUpdatePlanID,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "name", "load_balancer-update"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "description", "description-update"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "tags.key-update", "value-update"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "plan_id", "11713021-9aea-41da-9a88-87760c08fa73"),
 					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "tenant_id", "34f5c98ef430457ba81292637d0c6fd0"),
 					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "syslog_servers.#", "1"),
 					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_v1.load_balancer", "syslog_servers.0.ip_address", "192.168.1.6"),
@@ -213,6 +242,38 @@ resource "ecl_mlb_load_balancer_v1" "load_balancer" {
     key-update = "value-update"
   }
   plan_id = "00713021-9aea-41da-9a88-87760c08fa72"
+  syslog_servers {
+    ip_address = "192.168.1.6"
+    port = 514
+    protocol = "udp"
+  }
+  interfaces {
+    network_id = "58e6d72b-f5e7-4b83-b306-06989ff78a84"
+    virtual_ip_address = "192.168.1.1"
+    reserved_fixed_ips {
+      ip_address = "192.168.1.2"
+    }
+    reserved_fixed_ips {
+      ip_address = "192.168.1.3"
+    }
+    reserved_fixed_ips {
+      ip_address = "192.168.1.4"
+    }
+    reserved_fixed_ips {
+      ip_address = "192.168.1.5"
+    }
+  }
+}
+`)
+
+var testAccMLBV1LoadBalancerUpdatePlanID = fmt.Sprintf(`
+resource "ecl_mlb_load_balancer_v1" "load_balancer" {
+  name = "load_balancer-update"
+  description = "description-update"
+  tags = {
+    key-update = "value-update"
+  }
+  plan_id = "11713021-9aea-41da-9a88-87760c08fa73"
   syslog_servers {
     ip_address = "192.168.1.6"
     port = 514
@@ -836,6 +897,251 @@ expectedStatus:
   - ConfigurationsUpdatedAfterApply
 `)
 
+var testMockMLBV1LoadBalancersShowBeforeUpdatePlanID = fmt.Sprintf(`
+request:
+  method: GET
+response:
+  code: 200
+  body: >
+    {
+      "load_balancer": {
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "name": "load_balancer-update",
+        "description": "description-update",
+        "tags": {
+          "key-update": "value-update"
+        },
+        "configuration_status": "UPDATE_STAGED",
+        "monitoring_status": "ACTIVE",
+        "operation_status": "COMPLETE",
+        "primary_availability_zone": "zone1_groupa",
+        "secondary_availability_zone": "zone1_groupb",
+        "active_availability_zone": "zone1_groupa",
+        "revision": 1,
+        "plan_id": "11713021-9aea-41da-9a88-87760c08fa73",
+        "plan_name": "100M_HA_4IF",
+        "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
+        "syslog_servers": [
+          {
+            "ip_address": "192.168.0.6",
+            "port": 514,
+            "protocol": "udp"
+          },
+          {
+            "ip_address": "192.168.1.6",
+            "port": 514,
+            "protocol": "udp"
+          }
+        ],
+        "interfaces": [
+          {
+            "network_id": "d6797cf4-42b9-4cad-8591-9dd91c3f0fc3",
+            "virtual_ip_address": "192.168.0.1",
+            "reserved_fixed_ips": [
+              {
+                "ip_address": "192.168.0.2"
+              },
+              {
+                "ip_address": "192.168.0.3"
+              },
+              {
+                "ip_address": "192.168.0.4"
+              },
+              {
+                "ip_address": "192.168.0.5"
+              }
+            ]
+          },
+          {
+            "network_id": "58e6d72b-f5e7-4b83-b306-06989ff78a84",
+            "virtual_ip_address": "192.168.1.1",
+            "reserved_fixed_ips": [
+              {
+                "ip_address": "192.168.1.2"
+              },
+              {
+                "ip_address": "192.168.1.3"
+              },
+              {
+                "ip_address": "192.168.1.4"
+              },
+              {
+                "ip_address": "192.168.1.5"
+              }
+            ]
+          }
+        ]
+      }
+    }
+expectedStatus:
+  - ConfigurationsUpdatedAfterApply
+newStatus: PlanIDUpdated
+`)
+
+var testMockMLBV1LoadBalancersShowAfterUpdatePlanID = fmt.Sprintf(`
+request:
+  method: GET
+  query:
+    changes:
+      - true
+response:
+  code: 200
+  body: >
+    {
+      "load_balancer": {
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "name": "load_balancer-update",
+        "description": "description-update",
+        "tags": {
+          "key-update": "value-update"
+        },
+        "configuration_status": "UPDATE_STAGED",
+        "monitoring_status": "ACTIVE",
+        "operation_status": "COMPLETE",
+        "primary_availability_zone": "zone1_groupa",
+        "secondary_availability_zone": "zone1_groupb",
+        "active_availability_zone": "zone1_groupa",
+        "revision": 1,
+        "plan_id": "11713021-9aea-41da-9a88-87760c08fa73",
+        "plan_name": "100M_HA_4IF",
+        "tenant_id": "34f5c98ef430457ba81292637d0c6fd0",
+        "syslog_servers": [
+          {
+            "ip_address": "192.168.0.6",
+            "port": 514,
+            "protocol": "udp"
+          },
+          {
+            "ip_address": "192.168.1.6",
+            "port": 514,
+            "protocol": "udp"
+          }
+        ],
+        "interfaces": [
+          {
+            "network_id": "d6797cf4-42b9-4cad-8591-9dd91c3f0fc3",
+            "virtual_ip_address": "192.168.0.1",
+            "reserved_fixed_ips": [
+              {
+                "ip_address": "192.168.0.2"
+              },
+              {
+                "ip_address": "192.168.0.3"
+              },
+              {
+                "ip_address": "192.168.0.4"
+              },
+              {
+                "ip_address": "192.168.0.5"
+              }
+            ]
+          },
+          {
+            "network_id": "58e6d72b-f5e7-4b83-b306-06989ff78a84",
+            "virtual_ip_address": "192.168.1.1",
+            "reserved_fixed_ips": [
+              {
+                "ip_address": "192.168.1.2"
+              },
+              {
+                "ip_address": "192.168.1.3"
+              },
+              {
+                "ip_address": "192.168.1.4"
+              },
+              {
+                "ip_address": "192.168.1.5"
+              }
+            ]
+          }
+        ],
+        "current": {
+          "syslog_servers": [
+            {
+              "ip_address": "192.168.0.6",
+              "port": 514,
+              "protocol": "udp"
+            },
+            {
+              "ip_address": "192.168.1.6",
+              "port": 514,
+              "protocol": "udp"
+            }
+          ],
+          "interfaces": [
+            {
+              "network_id": "d6797cf4-42b9-4cad-8591-9dd91c3f0fc3",
+              "virtual_ip_address": "192.168.0.1",
+              "reserved_fixed_ips": [
+                {
+                  "ip_address": "192.168.0.2"
+                },
+                {
+                  "ip_address": "192.168.0.3"
+                },
+                {
+                  "ip_address": "192.168.0.4"
+                },
+                {
+                  "ip_address": "192.168.0.5"
+                }
+              ]
+            },
+            {
+              "network_id": "58e6d72b-f5e7-4b83-b306-06989ff78a84",
+              "virtual_ip_address": "192.168.1.1",
+              "reserved_fixed_ips": [
+                {
+                  "ip_address": "192.168.1.2"
+                },
+                {
+                  "ip_address": "192.168.1.3"
+                },
+                {
+                  "ip_address": "192.168.1.4"
+                },
+                {
+                  "ip_address": "192.168.1.5"
+                }
+              ]
+            }
+          ]
+        },
+        "staged": {
+          "syslog_servers": [
+            {
+              "ip_address": "192.168.1.6",
+              "port": 514,
+              "protocol": "udp"
+            }
+          ],
+          "interfaces": [
+            {
+              "network_id": "58e6d72b-f5e7-4b83-b306-06989ff78a84",
+              "virtual_ip_address": "192.168.1.1",
+              "reserved_fixed_ips": [
+                {
+                  "ip_address": "192.168.1.2"
+                },
+                {
+                  "ip_address": "192.168.1.3"
+                },
+                {
+                  "ip_address": "192.168.1.4"
+                },
+                {
+                  "ip_address": "192.168.1.5"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+expectedStatus:
+  - PlanIDUpdated
+`)
+
 var testMockMLBV1LoadBalancersShowAfterDeleteProcessing = fmt.Sprintf(`
 request:
   method: GET
@@ -1083,5 +1389,6 @@ response:
 expectedStatus:
   - Created
   - ConfigurationsUpdatedAfterApply
+  - PlanIDUpdated
 newStatus: Deleted
 `)

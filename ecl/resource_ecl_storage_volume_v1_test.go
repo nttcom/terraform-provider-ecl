@@ -45,13 +45,13 @@ func TestAccStorageV1Volume_timeout(t *testing.T) {
 
 // TestAccStorageV1Volume_createNetworkAndBlockVirtualStorageAndVolume is practical test case from user's stand point
 // This function test followings
-//		1. Create network and subnet which be connected from virtual storage
-//		2. Create virtual storage by using environment values as Block Storage type
-//		3. Create Volume under above virtual storage
-//		4. Check if each parameters of volume are correctly set to created volume
-//		5. Update it by modified HCL configurations
-//		6. Check if new configuration is correctly applied
-//		7. Check if new configuration is correctly applied
+//  1. Create network and subnet which be connected from virtual storage
+//  2. Create virtual storage by using environment values as Block Storage type
+//  3. Create Volume under above virtual storage
+//  4. Check if each parameters of volume are correctly set to created volume
+//  5. Update it by modified HCL configurations
+//  6. Check if new configuration is correctly applied
+//  7. Check if new configuration is correctly applied
 func TestAccStorageV1Volume_createNetworkAndBlockVirtualStorageAndVolume(t *testing.T) {
 	var v volumes.Volume
 	var vs virtualstorages.VirtualStorage

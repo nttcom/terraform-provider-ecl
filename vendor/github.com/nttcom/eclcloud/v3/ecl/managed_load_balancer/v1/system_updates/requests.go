@@ -36,6 +36,9 @@ type ListOpts struct {
 	// - Whether the system update can be applied to the load balancer
 	Applicable bool `q:"applicable"`
 
+	// - Whether the system update allows rollback
+	IsRollbackAllowed bool `q:"is_rollback_allowed"`
+
 	// - If `true` is set, only the latest resource is displayed
 	Latest bool `q:"latest"`
 }

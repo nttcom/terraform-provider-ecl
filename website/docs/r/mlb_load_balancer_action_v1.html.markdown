@@ -43,6 +43,25 @@ resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
 }
 ```
 
+To change the plan of the load balancer, specify the same plan ID in both `plan_id` of `ecl_mlb_load_balancer_v1` and `change_plan` of `ecl_mlb_load_balancer_action_v1`:
+
+```hcl
+data "ecl_mlb_plan_v1" "plan_200m_ha_4if" {
+  name = "200M_HA_4IF"
+}
+
+resource "ecl_mlb_load_balancer_v1" "load_balancer" {
+  name    = "load_balancer"
+  plan_id = data.ecl_mlb_plan_v1.plan_200m_ha_4if.id
+  # ...
+}
+
+resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
+  load_balancer_id = ecl_mlb_load_balancer_v1.load_balancer.id
+  change_plan      = data.ecl_mlb_plan_v1.plan_200m_ha_4if.id
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -51,10 +70,15 @@ The following arguments are supported:
 * `apply_configurations` - (Optional) Whether to apply added or changed configurations of the load balancer and related resources
 * `system_update` - (Optional) Whether to apply the system update to the load balancer
     * Structure is [documented below](#system-update)
+* `change_plan` - (Optional) ID of the plan that the load balancer will be changed to
+    * Specify the same value as `plan_id` of the corresponding `ecl_mlb_load_balancer_v1`
+    * If the two values differ, the next `terraform plan` will detect `plan_id` as a diff
 
 <a name="system-update"></a>The `system_update` block contains:
 
 * `system_update_id` - ID of the system update that will be applied to the load balancer
+* `rollback` - (Optional) Rollback the load balancer to the version prior to the specified system update
+    * The target system update must allow rollback (`is_rollback_allowed: true`)
 
 ## Attributes Reference
 
@@ -64,3 +88,4 @@ In addition, the following attributes are exported:
 * `load_balancer_id` - See argument reference above.
 * `apply_configurations` - See argument reference above.
 * `system_update` - See argument reference above.
+* `change_plan` - See argument reference above.

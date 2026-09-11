@@ -18,7 +18,9 @@ import (
 
 // TestAccNetworkV2LoadBalancer_basic tests basic behavior of Load Balancer creation and update requests.
 // Step 0: Create Load Balancer with 2 connected interfaces (One with VIP configurations and another one without)
-//           and 2 syslog servers.
+//
+//	and 2 syslog servers.
+//
 // Step 1: Update Load Balancer and all sub resources as much as possible without recreating resources.
 func TestAccNetworkV2LoadBalancer_basic(t *testing.T) {
 	// Equivalent test exists in mocked test, so skip this test in short mode.
@@ -618,9 +620,13 @@ func TestAccNetworkV2LoadBalancer_forceNew(t *testing.T) {
 
 // TestAccNetworkV2LoadBalancer_modifyInterfaces tests interface connect/replace/disconnect operations.
 // Step 0: Create Load Balancer with 1 interface -> network: [1]
-//			This interface has VIP configuration.
+//
+//	This interface has VIP configuration.
+//
 // Step 1: connect 1 new network to Load Balancer interface -> network: [1, 2]
-//			Also remove VIP configuration from the existing interface.
+//
+//	Also remove VIP configuration from the existing interface.
+//
 // Step 2: replace 1 network -> network: [3, 2]
 // Step 3: disconnect 1 network -> network: [2]
 func TestAccNetworkV2LoadBalancer_modifyInterfaces(t *testing.T) {
@@ -1155,8 +1161,11 @@ func TestAccNetworkV2LoadBalancer_modifySyslogServers(t *testing.T) {
 
 // TestAccNetworkV2LoadBalancer_modifyInterfacesWithIPs tests simultaneous updating interface and other IP addresses.
 // Step 0: Connect 1 new network to interface, set default_gateway and create 1 syslog server
+//
 //	-> network: [1], default_gateway: in network 1, syslog server IP: [in network 1]
+//
 // Step 1: Replace network and update other IPs to new network
+//
 //	-> network: [2], default_gateway: in network 2, syslog server IP: [in network 2]
 func TestAccNetworkV2LoadBalancer_modifyInterfacesWithIPs(t *testing.T) {
 	if testing.Short() {

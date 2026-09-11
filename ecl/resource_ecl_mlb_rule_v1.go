@@ -9,6 +9,10 @@ import (
 	"github.com/nttcom/eclcloud/v3/ecl/managed_load_balancer/v1/rules"
 )
 
+// conditionsSchemaForResource returns the schema for the conditions field.
+// The ECL API represents conditions as a single JSON object, but the
+// Terraform legacy SDK has no native "object" type, so it is represented
+// here using the TypeList + MaxItems:1 convention.
 func conditionsSchemaForResource() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeList,

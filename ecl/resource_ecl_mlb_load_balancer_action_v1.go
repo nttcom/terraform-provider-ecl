@@ -3,6 +3,7 @@ package ecl
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -49,13 +50,34 @@ func resourceMLBLoadBalancerActionV1() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
+						"rollback": &schema.Schema{
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
 					},
 				},
+				ValidateFunc: validateMLBLoadBalancerActionV1SystemUpdateKeys,
+			},
+			"change_plan": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 		},
 	}
 
 	return result
+}
+
+func validateMLBLoadBalancerActionV1SystemUpdateKeys(v interface{}, k string) ([]string, []error) {
+	var errs []error
+
+	for key := range v.(map[string]interface{}) {
+		if key != "system_update_id" && key != "rollback" {
+			errs = append(errs, fmt.Errorf("%s: unsupported key %q", k, key))
+		}
+	}
+
+	return nil, errs
 }
 
 func resourceMLBLoadBalancerActionV1CheckApplyConfigurationsRequired(d *schema.ResourceData, client *eclcloud.ServiceClient) (bool, error) {
@@ -152,10 +174,34 @@ func resourceMLBLoadBalancerActionV1CheckSystemUpdateRequired(d *schema.Resource
 		return false, err
 	}
 
-	systemUpdateID := d.Get("system_update").(map[string]interface{})["system_update_id"].(string)
+	systemUpdateMap := d.Get("system_update").(map[string]interface{})
+	systemUpdateID := systemUpdateMap["system_update_id"].(string)
 	err = system_updates.Show(client, systemUpdateID).ExtractInto(&systemUpdate)
 	if err != nil {
 		return false, fmt.Errorf("Unable to retrieve ECL managed load balancer system update (%s): %s", systemUpdateID, err)
+	}
+
+	rollback := false
+	if v, ok := systemUpdateMap["rollback"]; ok && v.(string) != "" {
+		rollback, err = strconv.ParseBool(v.(string))
+		if err != nil {
+			return false, fmt.Errorf("Unable to parse rollback (%s) of system update (%s) as bool: %s", v.(string), systemUpdateID, err)
+		}
+	}
+
+	if rollback {
+		if !systemUpdate.IsRollbackAllowed {
+			return false, fmt.Errorf("system update (%s) does not allow rollback", systemUpdate.ID)
+		}
+
+		if loadBalancer.Revision == systemUpdate.CurrentRevision {
+			log.Printf("[DEBUG] current_revision (%d) of system update (%s) matches with revision (%d) of load balancer (%s)", systemUpdate.CurrentRevision, systemUpdate.ID, loadBalancer.Revision, loadBalancer.ID)
+			return false, nil
+		} else if loadBalancer.Revision != systemUpdate.NextRevision {
+			return false, fmt.Errorf("next_revision (%d) of system update (%s) does not match with revision (%d) of load balancer (%s)", systemUpdate.NextRevision, systemUpdate.ID, loadBalancer.Revision, loadBalancer.ID)
+		}
+
+		return true, nil
 	}
 
 	if loadBalancer.Revision == systemUpdate.NextRevision {
@@ -168,8 +214,23 @@ func resourceMLBLoadBalancerActionV1CheckSystemUpdateRequired(d *schema.Resource
 	return true, nil
 }
 
+func resourceMLBLoadBalancerActionV1CheckChangePlanRequired(d *schema.ResourceData, client *eclcloud.ServiceClient) (bool, error) {
+	loadBalancer, err := resourceMLBLoadBalancerActionV1ShowLoadBalancer(d, client)
+	if err != nil {
+		return false, err
+	}
+
+	planID := d.Get("change_plan").(string)
+	if loadBalancer.PlanID == planID {
+		log.Printf("[DEBUG] plan_id (%s) of load balancer (%s) already matches with change_plan (%s)", loadBalancer.PlanID, loadBalancer.ID, planID)
+		return false, nil
+	}
+
+	return true, nil
+}
+
 func resourceMLBLoadBalancerActionV1Perform(d *schema.ResourceData, meta interface{}) error {
-	var isApplyConfigurationsRequired, isSystemUpdateRequired bool
+	var isApplyConfigurationsRequired, isSystemUpdateRequired, isChangePlanRequired bool
 
 	loadBalancerID := d.Get("load_balancer_id").(string)
 
@@ -195,14 +256,33 @@ func resourceMLBLoadBalancerActionV1Perform(d *schema.ResourceData, meta interfa
 			return err
 		}
 		if isSystemUpdateRequired {
+			systemUpdateMap := d.Get("system_update").(map[string]interface{})
 			systemUpdate := load_balancers.ActionOptsSystemUpdate{
-				SystemUpdateID: d.Get("system_update").(map[string]interface{})["system_update_id"].(string),
+				SystemUpdateID: systemUpdateMap["system_update_id"].(string),
+			}
+			if v, ok := systemUpdateMap["rollback"]; ok && v.(string) != "" {
+				rollback, err := strconv.ParseBool(v.(string))
+				if err != nil {
+					return fmt.Errorf("Unable to parse rollback (%s) of system update as bool: %s", v.(string), err)
+				}
+				systemUpdate.Rollback = &rollback
 			}
 			actionOpts.SystemUpdate = &systemUpdate
 		}
 	}
+	if len(d.Get("change_plan").(string)) != 0 {
+		isChangePlanRequired, err = resourceMLBLoadBalancerActionV1CheckChangePlanRequired(d, managedLoadBalancerClient)
+		if err != nil {
+			return err
+		}
+		if isChangePlanRequired {
+			actionOpts.ChangePlan = &load_balancers.ActionOptsChangePlan{
+				PlanID: d.Get("change_plan").(string),
+			}
+		}
+	}
 
-	if isApplyConfigurationsRequired || isSystemUpdateRequired {
+	if isApplyConfigurationsRequired || isSystemUpdateRequired || isChangePlanRequired {
 		log.Printf("[DEBUG] Performing action on ECL managed load balancer load balancer (%s) with options %+v", loadBalancerID, actionOpts)
 
 		err = load_balancers.Action(managedLoadBalancerClient, loadBalancerID, actionOpts).ExtractErr()

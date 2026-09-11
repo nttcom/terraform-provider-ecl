@@ -17,12 +17,12 @@ const VOLUME_TYPE_NAME_FILE_STANDARD = "standard_nfs_na"
 
 // TestAccStorageV1VirtualStorageBasic is basic test for storage/virtual storage
 // This function test followings
-//		1. Create network and subnet which be connected from virtual storage
-//		2. Create virtual storage by using environment values
-//		3. Check if each parameters are correctly set to created virtual storage
-//		4. Update it by modified HCL configurations
-//			All parameters are updated except ip addr pool start
-//		5. Check if new configuration is correctly applied
+//  1. Create network and subnet which be connected from virtual storage
+//  2. Create virtual storage by using environment values
+//  3. Check if each parameters are correctly set to created virtual storage
+//  4. Update it by modified HCL configurations
+//     All parameters are updated except ip addr pool start
+//  5. Check if new configuration is correctly applied
 func TestAccStorageV1VirtualStorage_basic(t *testing.T) {
 	var vs virtualstorages.VirtualStorage
 	resource.Test(t, resource.TestCase{

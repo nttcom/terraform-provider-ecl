@@ -321,6 +321,17 @@ type ActionOptsSystemUpdate struct {
 
 	// - ID of the system update that will be applied to the load balancer
 	SystemUpdateID string `json:"system_update_id"`
+
+	// - Rollback the load balancer to the version prior to the specified system update
+	// - The target system update must allow rollback (is_rollback_allowed: true)
+	Rollback *bool `json:"rollback,omitempty"`
+}
+
+// ActionOptsChangePlan represents change-plan information in the load balancer action.
+type ActionOptsChangePlan struct {
+
+	// - ID of the plan that the load balancer will be changed to
+	PlanID string `json:"plan_id"`
 }
 
 // ActionOpts represents options used to perform action on a existing load balancer.
@@ -331,6 +342,9 @@ type ActionOpts struct {
 
 	// - Apply the system update to the load balancer
 	SystemUpdate *ActionOptsSystemUpdate `json:"system-update,omitempty"`
+
+	// - Change the plan of the load balancer
+	ChangePlan *ActionOptsChangePlan `json:"change-plan,omitempty"`
 }
 
 // ToLoadBalancerActionMap builds a request body from ActionOpts.
@@ -342,8 +356,20 @@ func (opts ActionOpts) ToLoadBalancerActionMap() map[string]interface{} {
 	}
 
 	if opts.SystemUpdate != nil {
-		optsMap["system-update"] = map[string]interface{}{
+		systemUpdateMap := map[string]interface{}{
 			"system_update_id": opts.SystemUpdate.SystemUpdateID,
+		}
+
+		if opts.SystemUpdate.Rollback != nil {
+			systemUpdateMap["rollback"] = *opts.SystemUpdate.Rollback
+		}
+
+		optsMap["system-update"] = systemUpdateMap
+	}
+
+	if opts.ChangePlan != nil {
+		optsMap["change-plan"] = map[string]interface{}{
+			"plan_id": opts.ChangePlan.PlanID,
 		}
 	}
 

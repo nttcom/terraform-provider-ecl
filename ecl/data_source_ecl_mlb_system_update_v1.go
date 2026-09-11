@@ -55,6 +55,11 @@ func dataSourceMLBSystemUpdateV1() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"is_rollback_allowed": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
 		},
 	}
 
@@ -91,6 +96,10 @@ func dataSourceMLBSystemUpdateV1Read(d *schema.ResourceData, meta interface{}) e
 
 	if v, ok := d.GetOk("applicable"); ok {
 		listOpts.Applicable = v.(bool)
+	}
+
+	if v, ok := d.GetOk("is_rollback_allowed"); ok {
+		listOpts.IsRollbackAllowed = v.(bool)
 	}
 
 	managedLoadBalancerClient, err := config.managedLoadBalancerV1Client(GetRegion(d, config))
@@ -134,6 +143,7 @@ func dataSourceMLBSystemUpdateV1Read(d *schema.ResourceData, meta interface{}) e
 	d.Set("current_revision", systemUpdate.CurrentRevision)
 	d.Set("next_revision", systemUpdate.NextRevision)
 	d.Set("applicable", systemUpdate.Applicable)
+	d.Set("is_rollback_allowed", systemUpdate.IsRollbackAllowed)
 
 	return nil
 }

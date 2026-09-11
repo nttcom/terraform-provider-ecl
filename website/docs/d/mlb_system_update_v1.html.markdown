@@ -31,6 +31,7 @@ The following arguments are supported:
 * `current_revision` - (Optional) Current revision for the system update
 * `next_revision` - (Optional) Next revision for the system update
 * `applicable` - (Optional) Whether the system update can be applied to the load balancer
+* `is_rollback_allowed` - (Optional) Whether the system update allows rollback
 
 ## Attributes Reference
 
@@ -50,3 +51,4 @@ In addition, the following attributes are exported:
 * `next_revision` - Next revision for the system update
     * The load balancer to which the system update is applied will be this revision
 * `applicable` - Whether the system update can be applied to the load balancer
+* `is_rollback_allowed` - Whether the system update allows rollback

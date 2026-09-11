@@ -104,6 +104,37 @@ func TestMockedAccMLBV1LoadBalancerActionResource_ApplyConfigurationsAndSystemUp
 	})
 }
 
+func TestMockedAccMLBV1LoadBalancerActionResource_ApplyConfigurationsAndChangePlan(t *testing.T) {
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowBeforeActionCreateStaged)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08/action", testMockMLBV1LoadBalancersActionApplyConfigurationsAndChangePlan)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterActionProcessing)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterActionCompleted)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMLBV1LoadBalancerActionApplyConfigurationsAndChangePlan,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "load_balancer_id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "apply_configurations", "true"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "change_plan", "11713021-9aea-41da-9a88-87760c08fa73"),
+				),
+			},
+		},
+	})
+}
+
 func TestMockedAccMLBV1LoadBalancerActionResource_NoApplyConfigurations(t *testing.T) {
 	mc := mock.NewMockController()
 	defer mc.TerminateMockControllerSafety()
@@ -167,6 +198,95 @@ func TestMockedAccMLBV1LoadBalancerActionResource_NoSystemUpdate(t *testing.T) {
 	})
 }
 
+func TestMockedAccMLBV1LoadBalancerActionResource_NoChangePlan(t *testing.T) {
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowBeforeActionActive)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMLBV1LoadBalancerActionNoChangePlan,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "load_balancer_id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "change_plan", "00713021-9aea-41da-9a88-87760c08fa72"),
+				),
+			},
+		},
+	})
+}
+
+func TestMockedAccMLBV1LoadBalancerActionResource_SystemUpdateRollback(t *testing.T) {
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowBeforeActionActive)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08/action", testMockMLBV1LoadBalancersActionSystemUpdateRollback)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterActionProcessing)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterActionCompleted)
+	mc.Register(t, "system_updates", "/v1.0/system_updates/31746df7-92f9-4b5e-ad05-59f6684a54eb", testMockMLBV1SystemUpdatesShowRollbackAllowed)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMLBV1LoadBalancerActionSystemUpdateRollback,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "load_balancer_id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "system_update.system_update_id", "31746df7-92f9-4b5e-ad05-59f6684a54eb"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "system_update.rollback", "true"),
+				),
+			},
+		},
+	})
+}
+
+func TestMockedAccMLBV1LoadBalancerActionResource_ChangePlan(t *testing.T) {
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowBeforeActionActive)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08/action", testMockMLBV1LoadBalancersActionChangePlan)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterActionProcessing)
+	mc.Register(t, "load_balancers", "/v1.0/load_balancers/497f6eca-6276-4993-bfeb-53cbbbba6f08", testMockMLBV1LoadBalancersShowAfterActionCompleted)
+
+	mc.StartServer(t)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMLBV1LoadBalancerActionChangePlan,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "load_balancer_id", "497f6eca-6276-4993-bfeb-53cbbbba6f08"),
+					resource.TestCheckResourceAttr("ecl_mlb_load_balancer_action_v1.load_balancer_action", "change_plan", "11713021-9aea-41da-9a88-87760c08fa73"),
+				),
+			},
+		},
+	})
+}
+
 var testAccMLBV1LoadBalancerActionApplyConfigurations = fmt.Sprintf(`
 resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
   load_balancer_id = "497f6eca-6276-4993-bfeb-53cbbbba6f08"
@@ -190,6 +310,38 @@ resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
   system_update = {
     system_update_id = "31746df7-92f9-4b5e-ad05-59f6684a54eb"
   }
+}
+`)
+
+var testAccMLBV1LoadBalancerActionSystemUpdateRollback = fmt.Sprintf(`
+resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
+  load_balancer_id = "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+  system_update = {
+    system_update_id = "31746df7-92f9-4b5e-ad05-59f6684a54eb"
+    rollback         = true
+  }
+}
+`)
+
+var testAccMLBV1LoadBalancerActionChangePlan = fmt.Sprintf(`
+resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
+  load_balancer_id = "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+  change_plan      = "11713021-9aea-41da-9a88-87760c08fa73"
+}
+`)
+
+var testAccMLBV1LoadBalancerActionApplyConfigurationsAndChangePlan = fmt.Sprintf(`
+resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
+  load_balancer_id     = "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+  apply_configurations = true
+  change_plan          = "11713021-9aea-41da-9a88-87760c08fa73"
+}
+`)
+
+var testAccMLBV1LoadBalancerActionNoChangePlan = fmt.Sprintf(`
+resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
+  load_balancer_id = "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+  change_plan      = "00713021-9aea-41da-9a88-87760c08fa72"
 }
 `)
 
@@ -421,9 +573,62 @@ response:
         "limit_datetime": "2022-10-11 12:59:59",
         "current_revision": 1,
         "next_revision": 2,
-        "applicable": true
+        "applicable": true,
+        "is_rollback_allowed": true
       }
     }
+`)
+
+var testMockMLBV1SystemUpdatesShowRollbackAllowed = fmt.Sprintf(`
+request:
+  method: GET
+response:
+  code: 200
+  body: >
+    {
+      "system_update": {
+        "id": "31746df7-92f9-4b5e-ad05-59f6684a54eb",
+        "name": "security_update_202210",
+        "description": "description",
+        "href": "https://sdpf.ntt.com/news/2022100301/",
+        "publish_datetime": "2022-10-03 00:00:00",
+        "limit_datetime": "2022-10-11 12:59:59",
+        "current_revision": 1,
+        "next_revision": 2,
+        "applicable": true,
+        "is_rollback_allowed": true
+      }
+    }
+`)
+
+var testMockMLBV1LoadBalancersActionSystemUpdateRollback = fmt.Sprintf(`
+request:
+  method: POST
+  body: >
+    {"system-update":{"rollback":true,"system_update_id":"31746df7-92f9-4b5e-ad05-59f6684a54eb"}}
+response:
+  code: 204
+newStatus: Performed
+`)
+
+var testMockMLBV1LoadBalancersActionChangePlan = fmt.Sprintf(`
+request:
+  method: POST
+  body: >
+    {"change-plan":{"plan_id":"11713021-9aea-41da-9a88-87760c08fa73"}}
+response:
+  code: 204
+newStatus: Performed
+`)
+
+var testMockMLBV1LoadBalancersActionApplyConfigurationsAndChangePlan = fmt.Sprintf(`
+request:
+  method: POST
+  body: >
+    {"apply-configurations":null,"change-plan":{"plan_id":"11713021-9aea-41da-9a88-87760c08fa73"}}
+response:
+  code: 204
+newStatus: Performed
 `)
 
 var testMockMLBV1HealthMonitorsListEmpty = fmt.Sprintf(`
