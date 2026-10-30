@@ -97,3 +97,40 @@ func TestValidateInitialConfig(t *testing.T) {
 		},
 	})
 }
+
+func TestValidateVRID(t *testing.T) {
+	runTestCases(t, []testCase{
+		{
+			val: "null",
+			f:   ValidateVRID(),
+		},
+		{
+			val: "1",
+			f:   ValidateVRID(),
+		},
+		{
+			val: "255",
+			f:   ValidateVRID(),
+		},
+		{
+			val:         "0",
+			f:           ValidateVRID(),
+			expectedErr: regexp.MustCompile(`expected test_property to be in the range from 1 to 255, got 0`),
+		},
+		{
+			val:         "256",
+			f:           ValidateVRID(),
+			expectedErr: regexp.MustCompile(`expected test_property to be in the range from 1 to 255, got 256`),
+		},
+		{
+			val:         "abc",
+			f:           ValidateVRID(),
+			expectedErr: regexp.MustCompile(`expected test_property to be "null" or integer, got abc`),
+		},
+		{
+			val:         "",
+			f:           ValidateVRID(),
+			expectedErr: regexp.MustCompile(`expected test_property to be "null" or integer`),
+		},
+	})
+}

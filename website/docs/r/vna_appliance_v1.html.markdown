@@ -311,8 +311,9 @@ The `interface_[slot number]_allowed_address_pairs` block supports:
   You can use ""(blak string) or "vrrp" as this argument.
 
 * `vrid` - (Required) VRID of allowed address pairs.
-  Even though type of this parameter is integer in actual API specification, 
-  You need to specify this argument by string, like, "null", "0", "255".
+  Even though type of this parameter is integer or null in actual API specification,
+  you need to specify this argument by string.
+  Specify "null" in case type is ""(blank string), or "1" to "255" in case type is "vrrp".
 
 The `initial_config` block supports:
 

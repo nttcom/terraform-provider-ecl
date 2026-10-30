@@ -72,3 +72,4 @@ The following attributes are exported:
 * `interface_[slot number]_allowed_address_pairs/mac_address` - The MAC address of allowed address pairs.
 * `interface_[slot number]_allowed_address_pairs/type` - Type of allowed address pairs.
 * `interface_[slot number]_allowed_address_pairs/vrid` - VRID of allowed address pairs.
+  This is string, "null" in case type is ""(blank string), or "1" to "255" in case type is "vrrp".

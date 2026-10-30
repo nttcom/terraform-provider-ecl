@@ -29,7 +29,8 @@ func IntInSlice(valid []int) schema.SchemaValidateFunc {
 }
 
 // ValidateVRID returns a SchemaValidateFunc which tests if the provided value
-// is "null" or integer corresponding value in the range from 0 to 255
+// is "null" or integer corresponding value in the range from 1 to 255.
+// 0 is reserved and not allowed by the API.
 func ValidateVRID() schema.SchemaValidateFunc {
 	return func(i interface{}, k string) (s []string, es []error) {
 
@@ -45,10 +46,11 @@ func ValidateVRID() schema.SchemaValidateFunc {
 
 		iv, err := strconv.Atoi(v)
 		if err != nil {
-			es = append(es, fmt.Errorf("Failed in converting value into int %s", err))
+			es = append(es, fmt.Errorf("expected %s to be \"null\" or integer, got %s", k, v))
+			return
 		}
 
-		if iv < 0 || iv > 255 {
+		if iv < 1 || iv > 255 {
 			es = append(es, fmt.Errorf("expected %s to be in the range from 1 to 255, got %d", k, iv))
 			return
 		}
