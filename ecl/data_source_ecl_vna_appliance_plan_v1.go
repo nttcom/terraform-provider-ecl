@@ -159,7 +159,7 @@ func dataSourceVNAAppliancePlanV1Read(d *schema.ResourceData, meta interface{}) 
 
 	allPlans, err := getVirtualNetworkAppliancePlans(vnaClient, opts)
 	if err != nil {
-		return fmt.Errorf("error getting Load Balancer Plans: %w", err)
+		return fmt.Errorf("error getting Virtual Network Appliance Plans: %w", err)
 	}
 
 	if len(allPlans) > 1 {
@@ -208,16 +208,16 @@ func dataSourceVNAAppliancePlanV1Read(d *schema.ResourceData, meta interface{}) 
 func getVirtualNetworkAppliancePlans(vnaClient *eclcloud.ServiceClient, listOpts appliance_plans.ListOpts) ([]appliance_plans.VirtualNetworkAppliancePlan, error) {
 	pages, err := appliance_plans.List(vnaClient, listOpts).AllPages()
 	if err != nil {
-		return nil, fmt.Errorf("unable to retrieve Load Balancer Plans: %w", err)
+		return nil, fmt.Errorf("unable to retrieve Virtual Network Appliance Plans: %w", err)
 	}
 
 	allPlans, err := appliance_plans.ExtractVirtualNetworkAppliancePlans(pages)
 	if err != nil {
-		return nil, fmt.Errorf("unable to extract retrieved Load Balancer Plans: %w", err)
+		return nil, fmt.Errorf("unable to extract retrieved Virtual Network Appliance Plans: %w", err)
 	}
 
 	if len(allPlans) < 1 {
-		return nil, fmt.Errorf("specified Load Balancer Plan query returned no results")
+		return nil, fmt.Errorf("specified Virtual Network Appliance Plan query returned no results")
 	}
 	return allPlans, nil
 }
