@@ -130,25 +130,14 @@ func interfaceInfoSchema() *schema.Schema {
 }
 
 func initialConfigSchema() *schema.Schema {
+	// initial_config is a map which has "format" and "data" keys.
+	// Validation of the nested keys is done by ValidateInitialConfig
+	// because helper/schema does not validate *schema.Resource elements of TypeMap.
 	return &schema.Schema{
-		Type:     schema.TypeMap,
-		Optional: true,
-
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"format": &schema.Schema{
-					Type:     schema.TypeString,
-					Required: true,
-					ValidateFunc: validation.StringInSlice(
-						[]string{"set", "text"}, false,
-					),
-				},
-				"data": &schema.Schema{
-					Type:     schema.TypeString,
-					Required: true,
-				},
-			},
-		},
+		Type:         schema.TypeMap,
+		Optional:     true,
+		Elem:         &schema.Schema{Type: schema.TypeString},
+		ValidateFunc: ValidateInitialConfig(),
 	}
 }
 

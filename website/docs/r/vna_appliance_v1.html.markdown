@@ -313,10 +313,12 @@ The `interface_[slot number]_allowed_address_pairs` block supports:
 
 The `initial_config` block supports:
 
-* `format` - (Required) Initial configuration format(set, text).
+* `format` - (Required) Initial configuration format.
+  `set` or `text` for vSRX, `a10-json` for vThunder.
 
-* `data` - (Required) Initial configuration data.
+* `data` - (Required) Base64 encoded initial configuration data.
   data does not exceed 512KB in size before base64 encoding.
+  You can use the `data` exported by `ecl_vna_appliance_config_v1` data source.
 
 ## Attributes Reference
 

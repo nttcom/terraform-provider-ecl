@@ -56,3 +56,45 @@ func ValidateVRID() schema.SchemaValidateFunc {
 		return
 	}
 }
+
+// ValidateInitialConfig returns a SchemaValidateFunc which tests if the provided value
+// is a map of initial config which has valid "format" and "data" keys
+func ValidateInitialConfig() schema.SchemaValidateFunc {
+	validFormats := []string{"set", "text", "a10-json"}
+
+	return func(i interface{}, k string) (s []string, es []error) {
+		m, ok := i.(map[string]interface{})
+		if !ok {
+			es = append(es, fmt.Errorf("expected type of %s to be a map", k))
+			return
+		}
+
+		for key := range m {
+			if key != "format" && key != "data" {
+				es = append(es, fmt.Errorf("%s: unsupported key %q, only \"format\" and \"data\" are allowed", k, key))
+			}
+		}
+
+		format, ok := m["format"].(string)
+		if !ok || format == "" {
+			es = append(es, fmt.Errorf("%s.format is required", k))
+		} else {
+			valid := false
+			for _, f := range validFormats {
+				if format == f {
+					valid = true
+					break
+				}
+			}
+			if !valid {
+				es = append(es, fmt.Errorf("expected %s.format to be one of %v, got %s", k, validFormats, format))
+			}
+		}
+
+		if data, ok := m["data"].(string); !ok || data == "" {
+			es = append(es, fmt.Errorf("%s.data is required", k))
+		}
+
+		return
+	}
+}
