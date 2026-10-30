@@ -54,6 +54,7 @@ The following attributes are exported:
 * `name` - See Argument Reference above.
 * `description` - See Argument Reference above.
 * `default_gateway` - IP address of default gateway.
+  This is always empty because the API does not return this value.
 * `availability_zone` - See Argument Reference above.
 * `virtual_network_appliance_plan_id` - See Argument Reference above.
 * `tenant_id` - See Argument Reference above.

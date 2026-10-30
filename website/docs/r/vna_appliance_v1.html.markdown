@@ -257,6 +257,9 @@ The following arguments are supported:
 * `description` - (Optional) Description of the Virtual Network Appliance.
 
 * `default_gateway` - (Optional) IP address of default gateway.
+  This can be specified only on creation, and changing this creates a new Virtual Network Appliance.
+  As the API returns this value only in the response of creation,
+  it is not refreshed from the API and is empty after importing.
 
 * `availability_zone` - (Optional) Availability Zone, 
   this can be referred to using Virtual Server (Nova)'s 
@@ -328,9 +331,13 @@ The following attributes are exported:
 
 * `tenant_id` - See Argument Reference above.
 
-* `username` - Username with user access to VNA instance
+* `username` - Username with user access to VNA instance.
+  This value is returned only in the response of creation, and is empty after importing.
+  Specifying this argument is deprecated and the value is ignored.
 
-* `password` - Password for user
+* `password` - Password for user.
+  This value is returned only in the response of creation, and is empty after importing.
+  Specifying this argument is deprecated and the value is ignored.
 
 * `interface_[slot number]_info/updatable` - See Argument Reference above.
 
