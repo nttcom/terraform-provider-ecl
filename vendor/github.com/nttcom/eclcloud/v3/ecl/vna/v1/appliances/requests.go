@@ -330,3 +330,36 @@ func IDFromName(client *eclcloud.ServiceClient, name string) (string, error) {
 		return "", eclcloud.ErrMultipleResourcesFound{Name: name, Count: count, ResourceType: "virtual_network_appliance"}
 	}
 }
+
+// ExportConfigOptsBuilder allows extensions to add additional parameters to the
+// ExportConfig request.
+type ExportConfigOptsBuilder interface {
+	ToApplianceExportConfigMap() (map[string]interface{}, error)
+}
+
+// ExportConfigOpts represents options used to export configuration
+// of a virtual network appliance.
+type ExportConfigOpts struct {
+	// Format of the configuration to export.
+	// "set" or "text" for vSRX, "a10-json" for vThunder.
+	Format string `json:"format" required:"true"`
+}
+
+// ToApplianceExportConfigMap builds a request body from ExportConfigOpts.
+func (opts ExportConfigOpts) ToApplianceExportConfigMap() (map[string]interface{}, error) {
+	return eclcloud.BuildRequestBody(opts, "")
+}
+
+// ExportConfig accepts a unique ID and an ExportConfigOpts struct and
+// exports the configuration of the virtual network appliance.
+func ExportConfig(c *eclcloud.ServiceClient, virtualNetworkApplianceID string, opts ExportConfigOptsBuilder) (r ExportConfigResult) {
+	b, err := opts.ToApplianceExportConfigMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+	_, r.Err = c.Post(exportConfigURL(c, virtualNetworkApplianceID), b, &r.Body, &eclcloud.RequestOpts{
+		OkCodes: []int{200},
+	})
+	return
+}

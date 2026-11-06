@@ -31,3 +31,7 @@ func updateURL(c *eclcloud.ServiceClient, id string) string {
 func deleteURL(c *eclcloud.ServiceClient, id string) string {
 	return resourceURL(c, id)
 }
+
+func exportConfigURL(c *eclcloud.ServiceClient, id string) string {
+	return c.ServiceURL("virtual_network_appliances", id, "export-config")
+}
