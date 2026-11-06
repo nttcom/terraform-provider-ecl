@@ -68,6 +68,14 @@ func TestMockedAccVNAV1ApplianceConfigDataSource_notActive(t *testing.T) {
 }
 
 func TestMockedAccVNAV1ApplianceConfigDataSource_invalidFormat(t *testing.T) {
+	mc := mock.NewMockController()
+	defer mc.TerminateMockControllerSafety()
+
+	postKeystone := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
+	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystone)
+
+	mc.StartServer(t)
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
