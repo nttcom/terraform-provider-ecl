@@ -433,14 +433,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		format = "set"
 		data = "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
-	}
 }`,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -473,13 +465,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_8_fixed_ips {
 		ip_address = "192.168.1.58"
 	}
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
-	}
 }`,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -492,14 +477,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	default_gateway = "192.168.1.1"
 	availability_zone = "%s"
 	virtual_network_appliance_plan_id = "%s"
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
-	}
 }`,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -520,14 +497,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 
 	interface_1_no_fixed_ips = "true"
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
-	}
 }`,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -545,14 +514,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		name = "interface_1"
 		description = "interface_1_description"
 		network_id = "dummyNetworkID"
-	}
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
 	}
 }`,
 	OS_DEFAULT_ZONE,
@@ -590,14 +551,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		type = ""
 		vrid = "null"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
-	}
 }`,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -629,14 +582,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
-	}
 }`,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -658,14 +603,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
-	}
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
 	}
 }`,
 	OS_DEFAULT_ZONE,
@@ -711,14 +648,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 
 	interface_4_no_fixed_ips = "true"
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
-	}
 }`,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -747,7 +676,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -841,7 +769,6 @@ response:
                     "k2": "v2"
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -864,7 +791,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -952,7 +878,6 @@ response:
                 "os_monitoring_status": "ACTIVE",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -1316,7 +1241,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -1402,10 +1326,8 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "initial",
                 "os_monitoring_status": "initial",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
@@ -1429,7 +1351,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -1515,10 +1436,8 @@ response:
                 "operation_status": "COMPLETE",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -1553,7 +1472,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -1639,12 +1557,10 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {
                     "k1": "v1"
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -1668,7 +1584,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -1762,7 +1677,6 @@ response:
                     "k2": "v2"
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -1786,7 +1700,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -1880,7 +1793,6 @@ response:
                     "k2": "v2"
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -1904,7 +1816,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -1992,7 +1903,6 @@ response:
                 "os_monitoring_status": "ACTIVE",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -2016,7 +1926,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description-update",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -2104,7 +2013,6 @@ response:
                 "os_monitoring_status": "ACTIVE",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -2608,14 +2516,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"default_gateway",
-			"username",
-			"password",
-		]
-	}
 }`,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -3022,7 +2922,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3059,10 +2958,8 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "initial",
                 "os_monitoring_status": "initial",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
@@ -3086,7 +2983,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3123,10 +3019,8 @@ response:
                 "operation_status": "COMPLETE",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -3150,7 +3044,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3187,12 +3080,10 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {
                     "k1": "v1"
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -3247,17 +3138,14 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "name": "appliance_1",
                 "operation_status": "PROCESSING",
                 "os_login_status": "initial",
                 "os_monitoring_status": "initial",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
@@ -3281,17 +3169,14 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "name": "appliance_1",
                 "operation_status": "COMPLETE",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -3315,19 +3200,16 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "name": "appliance_1",
                 "operation_status": "PROCESSING",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {
                     "k1": "v1"
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -3393,7 +3275,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3411,10 +3292,8 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "initial",
                 "os_monitoring_status": "initial",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
@@ -3438,7 +3317,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3456,10 +3334,8 @@ response:
                 "operation_status": "COMPLETE",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -3483,7 +3359,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3501,12 +3376,10 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {
                     "k1": "v1"
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -3572,7 +3445,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3590,10 +3462,8 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "initial",
                 "os_monitoring_status": "initial",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "initial"
             }
@@ -3617,7 +3487,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3640,10 +3509,8 @@ response:
                 "operation_status": "COMPLETE",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {},
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }
@@ -3667,7 +3534,6 @@ response:
             "virtual_network_appliance": {
                 "appliance_type": "ECL::VirtualNetworkAppliance::VSRX",
                 "availability_zone": "%s",
-                "default_gateway": "192.168.1.1",
                 "description": "appliance_1_description",
                 "id": "45db3e66-31af-45a6-8ad2-d01521726145",
                 "interfaces": {
@@ -3690,12 +3556,10 @@ response:
                 "operation_status": "PROCESSING",
                 "os_login_status": "ACTIVE",
                 "os_monitoring_status": "ACTIVE",
-                "password": "Undxlri8Bo6m",
                 "tags": {
                     "k1": "v1"
                 },
                 "tenant_id": "9ee80f2a926c49f88f166af47df4e9f5",
-                "username": "root",
                 "virtual_network_appliance_plan_id": "%s",
                 "vm_status": "ACTIVE"
             }

@@ -806,14 +806,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		"format" = "set"
 		"data" = "c2V0IGludGVyZmFjZXMgZ2UtMC8wLzAgZGVzY3JpcHRpb24gc2FtcGxl"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_DEFAULT_ZONE,
@@ -858,14 +850,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_8_fixed_ips {
 		ip_address = "192.168.8.50"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair3,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair8,
@@ -882,14 +866,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	tags = {
 		k1 = "v1"
-	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
 	}
 }`,
 	OS_DEFAULT_ZONE,
@@ -918,14 +894,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 
 	interface_1_no_fixed_ips = "true"
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_DEFAULT_ZONE,
@@ -951,14 +919,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		name = "interface_1"
 		description = "interface_1_description"
 		network_id = "${ecl_network_network_v2.network_1.id}"
-	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
@@ -1017,14 +977,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 
 	interface_4_no_fixed_ips = "true"
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
@@ -1084,14 +1036,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 
 	interface_4_no_fixed_ips = "true"
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
@@ -1130,14 +1074,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
@@ -1165,14 +1101,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
-	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
@@ -1203,14 +1131,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_1_fixed_ips {
 		ip_address = "192.168.1.50"
-	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
@@ -1250,14 +1170,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		type = "vrrp"
 		vrid = "123"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_DEFAULT_ZONE,
@@ -1295,14 +1207,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 		type = ""
 		vrid = "null"
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_DEFAULT_ZONE,
@@ -1335,14 +1239,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	}
 
 	interface_1_no_allowed_address_pairs = "true"
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	OS_DEFAULT_ZONE,
@@ -1381,14 +1277,6 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 
 	interface_2_info  {
 		network_id = "${ecl_network_network_v2.network_2.id}"
-	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
 	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
@@ -1430,17 +1318,37 @@ resource "ecl_vna_appliance_v1" "appliance_1" {
 	interface_2_info  {
 		network_id = ""
 	}
-
-	lifecycle {
-		ignore_changes = [
-			"username",
-			"password",
-			"default_gateway",
-		]
-	}
 }`,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair,
 	testAccVNAV1ApplianceSingleNetworkAndSubnetPair2,
 	OS_DEFAULT_ZONE,
 	OS_VIRTUAL_NETWORK_APPLIANCE_PLAN_ID,
 )
+
+func TestSuppressDefaultGatewayDiff(t *testing.T) {
+	r := resourceVNAApplianceV1()
+
+	cases := []struct {
+		id       string
+		old      string
+		new      string
+		expected bool
+	}{
+		// creating a new resource
+		{id: "", old: "", new: "192.168.1.1", expected: false},
+		// state is empty on an imported or existing resource
+		{id: "dummy", old: "", new: "192.168.1.1", expected: true},
+		// changing default_gateway on an existing resource
+		{id: "dummy", old: "192.168.1.1", new: "192.168.1.254", expected: false},
+		// default_gateway is not changed
+		{id: "dummy", old: "192.168.1.1", new: "192.168.1.1", expected: false},
+	}
+
+	for i, c := range cases {
+		d := r.TestResourceData()
+		d.SetId(c.id)
+		if actual := suppressDefaultGatewayDiff("default_gateway", c.old, c.new, d); actual != c.expected {
+			t.Errorf("case %d: expected %t, got %t", i, c.expected, actual)
+		}
+	}
+}

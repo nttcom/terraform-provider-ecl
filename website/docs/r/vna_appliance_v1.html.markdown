@@ -257,6 +257,9 @@ The following arguments are supported:
 * `description` - (Optional) Description of the Virtual Network Appliance.
 
 * `default_gateway` - (Optional) IP address of default gateway.
+  This can be specified only on creation, and changing this creates a new Virtual Network Appliance.
+  As the API returns this value only in the response of creation,
+  it is not refreshed from the API and is empty after importing.
 
 * `availability_zone` - (Optional) Availability Zone, 
   this can be referred to using Virtual Server (Nova)'s 
@@ -308,15 +311,18 @@ The `interface_[slot number]_allowed_address_pairs` block supports:
   You can use ""(blak string) or "vrrp" as this argument.
 
 * `vrid` - (Required) VRID of allowed address pairs.
-  Even though type of this parameter is integer in actual API specification, 
-  You need to specify this argument by string, like, "null", "0", "255".
+  Even though type of this parameter is integer or null in actual API specification,
+  you need to specify this argument by string.
+  Specify "null" in case type is ""(blank string), or "1" to "255" in case type is "vrrp".
 
 The `initial_config` block supports:
 
-* `format` - (Required) Initial configuration format(set, text).
+* `format` - (Required) Initial configuration format.
+  `set` or `text` for vSRX, `a10-json` for vThunder.
 
-* `data` - (Required) Initial configuration data.
+* `data` - (Required) Base64 encoded initial configuration data.
   data does not exceed 512KB in size before base64 encoding.
+  You can use the `data` exported by `ecl_vna_appliance_config_v1` data source.
 
 ## Attributes Reference
 
@@ -326,9 +332,13 @@ The following attributes are exported:
 
 * `tenant_id` - See Argument Reference above.
 
-* `username` - Username with user access to VNA instance
+* `username` - Username with user access to VNA instance.
+  This value is returned only in the response of creation, and is empty after importing.
+  Specifying this argument is deprecated and the value is ignored.
 
-* `password` - Password for user
+* `password` - Password for user.
+  This value is returned only in the response of creation, and is empty after importing.
+  Specifying this argument is deprecated and the value is ignored.
 
 * `interface_[slot number]_info/updatable` - See Argument Reference above.
 

@@ -60,3 +60,77 @@ func TestValidationIntInSlice(t *testing.T) {
 		},
 	})
 }
+
+func TestValidateInitialConfig(t *testing.T) {
+	runTestCases(t, []testCase{
+		{
+			val: map[string]interface{}{"format": "set", "data": "c2V0"},
+			f:   ValidateInitialConfig(),
+		},
+		{
+			val: map[string]interface{}{"format": "text", "data": "c2V0"},
+			f:   ValidateInitialConfig(),
+		},
+		{
+			val: map[string]interface{}{"format": "a10-json", "data": "c2V0"},
+			f:   ValidateInitialConfig(),
+		},
+		{
+			val:         map[string]interface{}{"format": "json", "data": "c2V0"},
+			f:           ValidateInitialConfig(),
+			expectedErr: regexp.MustCompile(`expected test_property.format to be one of`),
+		},
+		{
+			val:         map[string]interface{}{"data": "c2V0"},
+			f:           ValidateInitialConfig(),
+			expectedErr: regexp.MustCompile(`test_property.format is required`),
+		},
+		{
+			val:         map[string]interface{}{"format": "set"},
+			f:           ValidateInitialConfig(),
+			expectedErr: regexp.MustCompile(`test_property.data is required`),
+		},
+		{
+			val:         map[string]interface{}{"format": "set", "data": "c2V0", "foo": "bar"},
+			f:           ValidateInitialConfig(),
+			expectedErr: regexp.MustCompile(`unsupported key "foo"`),
+		},
+	})
+}
+
+func TestValidateVRID(t *testing.T) {
+	runTestCases(t, []testCase{
+		{
+			val: "null",
+			f:   ValidateVRID(),
+		},
+		{
+			val: "1",
+			f:   ValidateVRID(),
+		},
+		{
+			val: "255",
+			f:   ValidateVRID(),
+		},
+		{
+			val:         "0",
+			f:           ValidateVRID(),
+			expectedErr: regexp.MustCompile(`expected test_property to be in the range from 1 to 255, got 0`),
+		},
+		{
+			val:         "256",
+			f:           ValidateVRID(),
+			expectedErr: regexp.MustCompile(`expected test_property to be in the range from 1 to 255, got 256`),
+		},
+		{
+			val:         "abc",
+			f:           ValidateVRID(),
+			expectedErr: regexp.MustCompile(`expected test_property to be "null" or integer, got abc`),
+		},
+		{
+			val:         "",
+			f:           ValidateVRID(),
+			expectedErr: regexp.MustCompile(`expected test_property to be "null" or integer`),
+		},
+	})
+}
