@@ -53,5 +53,18 @@ Example to Delete a virtual_network_appliances
 	if err != nil {
 		panic(err)
 	}
+
+Example to Export Configuration of a virtual_network_appliances
+
+	virtualNetworkApplianceID := "484cda0e-106f-4f4b-bb3f-d413710bbe78"
+
+	exportConfigOpts := virtual_network_appliances.ExportConfigOpts{
+		Format: "set",
+	}
+
+	configuration, err := virtual_network_appliances.ExportConfig(networkClient, virtualNetworkApplianceID, exportConfigOpts).Extract()
+	if err != nil {
+		panic(err)
+	}
 */
 package appliances

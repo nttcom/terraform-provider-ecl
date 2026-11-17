@@ -148,3 +148,27 @@ func ExtractAppliances(r pagination.Page) ([]Appliance, error) {
 func ExtractAppliancesInto(r pagination.Page, v interface{}) error {
 	return r.(AppliancePage).Result.ExtractIntoSlicePtr(v, "virtual_network_appliances")
 }
+
+// ExportConfigResult represents the result of an export config operation.
+// Call its Extract method to interpret it as a Configuration.
+type ExportConfigResult struct {
+	eclcloud.Result
+}
+
+// Configuration represents an exported configuration of virtual network appliance.
+type Configuration struct {
+	// Format of the exported configuration.
+	Format string `json:"format"`
+	// Base64 encoded configuration data.
+	Data string `json:"data"`
+}
+
+// Extract is a function that accepts a result
+// and extracts an exported configuration of virtual network appliance.
+func (r ExportConfigResult) Extract() (*Configuration, error) {
+	var s struct {
+		Configuration *Configuration `json:"configuration"`
+	}
+	err := r.ExtractInto(&s)
+	return s.Configuration, err
+}
