@@ -260,6 +260,8 @@ The following arguments are supported:
   This can be specified only on creation, and changing this creates a new Virtual Network Appliance.
   As the API returns this value only in the response of creation,
   it is not refreshed from the API and is empty after importing.
+  If this value is empty in the state (e.g. after importing, or when it was not specified on creation),
+  adding it to the configuration later is ignored and does not create a new Virtual Network Appliance.
 
 * `availability_zone` - (Optional) Availability Zone, 
   this can be referred to using Virtual Server (Nova)'s 
