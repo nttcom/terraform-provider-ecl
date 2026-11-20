@@ -18,6 +18,8 @@ const securityHostBasedPollInterval = 20 * time.Second
 
 func resourceSecurityHostBasedV3() *schema.Resource {
 	return &schema.Resource{
+		DeprecationMessage: "ecl_security_host_based_v3 is deprecated. Please delete it and create ecl_security_host_based_v4 instead.",
+
 		Create: resourceSecurityHostBasedV3Create,
 		Read:   resourceSecurityHostBasedV3Read,
 		Update: resourceSecurityHostBasedV3Update,

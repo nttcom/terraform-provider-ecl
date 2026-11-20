@@ -1,22 +1,22 @@
 ---
 layout: "ecl"
-page_title: "Enterprise Cloud: ecl_security_network_based_device_ha_v3"
-sidebar_current: "docs-ecl-security-network_based_device_ha-v3"
+page_title: "Enterprise Cloud: ecl_security_network_based_device_ha_v4"
+sidebar_current: "docs-ecl-security-network_based_device_ha-v4"
 description: |-
-  Manages a V3 Network Based Device(HA) resource within Enterprise Cloud.
+  Manages a V4 Network Based Device(HA) resource within Enterprise Cloud.
   If you are using V2 Security Service, please install v2.5.2 of terraform-provider-ecl.
 ---
 
-# ecl\_security\_network\_based\_device\_ha\_v3
+# ecl\_security\_network\_based\_device\_ha\_v4
 
-Manages a V3 Network Based Device(HA) resource within Enterprise Cloud.
+Manages a V4 Network Based Device(HA) resource within Enterprise Cloud.
 
 ## Example Usage
 
 ### Basic Device
 
 ```hcl
-resource "ecl_security_network_based_device_ha_v3" "ha_1" {
+resource "ecl_security_network_based_device_ha_v4" "ha_1" {
   tenant_id      = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
   locale         = "ja"
   operating_mode = "FW_HA"
@@ -48,7 +48,7 @@ resource "ecl_security_network_based_device_ha_v3" "ha_1" {
 - Change license_kind from 02 to 08
 
 ```hcl
-resource "ecl_security_network_based_device_ha_v3" "ha_1" {
+resource "ecl_security_network_based_device_ha_v4" "ha_1" {
   tenant_id      = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
   locale         = "en"
   operating_mode = "UTM_HA"
@@ -80,7 +80,7 @@ Note: You can use port from 4 to 7 on this device.
   by using actual index number in Terraform configurations.
 
 ```hcl
-resource "ecl_security_network_based_device_ha_v3" "ha_1" {
+resource "ecl_security_network_based_device_ha_v4" "ha_1" {
   tenant_id      = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
   locale         = "ja"
   operating_mode = "FW_HA"
@@ -170,7 +170,7 @@ resource "ecl_security_network_based_device_ha_v3" "ha_1" {
 ### Detach all port from network
 
 ```hcl
-resource "ecl_security_network_based_device_ha_v3" "ha_1" {
+resource "ecl_security_network_based_device_ha_v4" "ha_1" {
   tenant_id      = "f05b9eda-f1d8-46da-b34c-0d7ee7f1e7d9"
   locale         = "ja"
   operating_mode = "FW_HA"

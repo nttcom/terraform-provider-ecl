@@ -16,6 +16,8 @@ import (
 
 func resourceSecurityNetworkBasedDeviceSingleV3() *schema.Resource {
 	return &schema.Resource{
+		DeprecationMessage: "ecl_security_network_based_device_single_v3 is deprecated. Please delete it and create ecl_security_network_based_device_single_v4 instead.",
+
 		Create: resourceSecurityNetworkBasedDeviceSingleV3Create,
 		Read:   resourceSecurityNetworkBasedDeviceSingleV3Read,
 		Update: resourceSecurityNetworkBasedDeviceSingleV3Update,

@@ -10,16 +10,16 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_ha"
-	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/device_interfaces"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v4/network_based_device_ha"
+	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v4/device_interfaces"
 )
 
-func resourceSecurityNetworkBasedDeviceHAV3() *schema.Resource {
+func resourceSecurityNetworkBasedDeviceHAV4() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceSecurityNetworkBasedDeviceHAV3Create,
-		Read:   resourceSecurityNetworkBasedDeviceHAV3Read,
-		Update: resourceSecurityNetworkBasedDeviceHAV3Update,
-		Delete: resourceSecurityNetworkBasedDeviceHAV3Delete,
+		Create: resourceSecurityNetworkBasedDeviceHAV4Create,
+		Read:   resourceSecurityNetworkBasedDeviceHAV4Read,
+		Update: resourceSecurityNetworkBasedDeviceHAV4Update,
+		Delete: resourceSecurityNetworkBasedDeviceHAV4Delete,
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(1 * time.Hour),
@@ -35,9 +35,9 @@ func resourceSecurityNetworkBasedDeviceHAV3() *schema.Resource {
 	}
 }
 
-func resourceSecurityNetworkBasedDeviceHAV3Create(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceHAV4Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -66,7 +66,7 @@ func resourceSecurityNetworkBasedDeviceHAV3Create(d *schema.ResourceData, meta i
 		SOKind:   "AH",
 		TenantID: tenantID,
 		Locale:   locale,
-		GtHost:   gtHostForHADeviceCreateAsOpts(d),
+		GtHost:   gtHostForHADeviceCreateAsOptsV4(d),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -81,10 +81,10 @@ func resourceSecurityNetworkBasedDeviceHAV3Create(d *schema.ResourceData, meta i
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForHADeviceOrderComplete(client, order.ID, tenantID, locale),
+		Refresh:      waitForHADeviceOrderCompleteV4(client, order.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityDeviceHACreatePollInterval,
+		PollInterval: securityDeviceHACreatePollIntervalV4,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -112,7 +112,7 @@ func resourceSecurityNetworkBasedDeviceHAV3Create(d *schema.ResourceData, meta i
 		return fmt.Errorf("Unable to find newly created HA device")
 	}
 
-	ids := getNewlyCreatedHADeviceID(allDevicesBefore, allDevicesAfter)
+	ids := getNewlyCreatedHADeviceIDV4(allDevicesBefore, allDevicesAfter)
 	if len(ids) != 2 {
 		return fmt.Errorf("Unable to find newly created HA device after hostname matching. IDs are: %#v", ids)
 	}
@@ -122,13 +122,13 @@ func resourceSecurityNetworkBasedDeviceHAV3Create(d *schema.ResourceData, meta i
 	id := getIDFromHostNames(ids)
 	d.SetId(id)
 
-	return resourceSecurityNetworkBasedDeviceHAV3Read(d, meta)
+	return resourceSecurityNetworkBasedDeviceHAV4Read(d, meta)
 }
 
-func resourceSecurityNetworkBasedDeviceHAV3Read(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceHAV4Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -146,12 +146,12 @@ func resourceSecurityNetworkBasedDeviceHAV3Read(d *schema.ResourceData, meta int
 	id1 := idArr[0]
 	id2 := idArr[1]
 
-	device1, err := getHADeviceByHostName(client, id1, tenantID)
+	device1, err := getHADeviceByHostNameV4(client, id1, tenantID)
 	if err != nil {
 		return err
 	}
 
-	device2, err := getHADeviceByHostName(client, id2, tenantID)
+	device2, err := getHADeviceByHostNameV4(client, id2, tenantID)
 	if err != nil {
 		return err
 	}
@@ -196,17 +196,17 @@ func resourceSecurityNetworkBasedDeviceHAV3Read(d *schema.ResourceData, meta int
 	d.Set("ha_link_2", haLink2Info)
 
 	log.Printf("[DEBUG] Setting Port information into state.")
-	pClient, err := config.securityPortalV3Client(GetRegion(d, config))
+	pClient, err := config.securityPortalV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}
 
-	hostUUID1, err := getUUIDFromServerHostName(pClient, id1, tenantID)
+	hostUUID1, err := getUUIDFromServerHostNameV4(pClient, id1, tenantID)
 	if err != nil {
 		return fmt.Errorf("Unable to get host UUID of %s: %s", id1, err)
 	}
 
-	hostUUID2, err := getUUIDFromServerHostName(pClient, id2, tenantID)
+	hostUUID2, err := getUUIDFromServerHostNameV4(pClient, id2, tenantID)
 	if err != nil {
 		return fmt.Errorf("Unable to get host UUID of %s: %s", id2, err)
 	}
@@ -308,24 +308,24 @@ func resourceSecurityNetworkBasedDeviceHAV3Read(d *schema.ResourceData, meta int
 	return nil
 }
 
-func resourceSecurityNetworkBasedDeviceHAV3Update(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceHAV4Update(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("locale") || d.HasChange("operating_mode") || d.HasChange("license_kind") {
 		log.Printf("[DEBUG] Start changing device by order api.")
-		resourceSecurityNetworkBasedDeviceHAV3UpdateOrderAPIPart(d, meta)
+		resourceSecurityNetworkBasedDeviceHAV4UpdateOrderAPIPart(d, meta)
 	}
 
 	if d.HasChange("port") {
 		log.Printf("[DEBUG] Start changing device by portal api.")
-		resourceSecurityNetworkBasedDeviceHAV3UpdatePortalAPIPart(d, meta)
+		resourceSecurityNetworkBasedDeviceHAV4UpdatePortalAPIPart(d, meta)
 	}
 
-	return resourceSecurityNetworkBasedDeviceHAV3Read(d, meta)
+	return resourceSecurityNetworkBasedDeviceHAV4Read(d, meta)
 }
 
-func resourceSecurityNetworkBasedDeviceHAV3Delete(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceHAV4Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -336,7 +336,7 @@ func resourceSecurityNetworkBasedDeviceHAV3Delete(d *schema.ResourceData, meta i
 	deleteOpts := security.DeleteOpts{
 		SOKind:   "DH",
 		TenantID: tenantID,
-		GtHost:   gtHostForHADeviceDeleteAsOpts(d),
+		GtHost:   gtHostForHADeviceDeleteAsOptsV4(d),
 	}
 
 	log.Printf("[DEBUG] Delete Options: %#v", deleteOpts)
@@ -354,10 +354,10 @@ func resourceSecurityNetworkBasedDeviceHAV3Delete(d *schema.ResourceData, meta i
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForHADeviceOrderComplete(client, order.ID, tenantID, locale),
+		Refresh:      waitForHADeviceOrderCompleteV4(client, order.ID, tenantID, locale),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityDeviceHADeletePollInterval,
+		PollInterval: securityDeviceHADeletePollIntervalV4,
 		MinTimeout:   30 * time.Second,
 	}
 

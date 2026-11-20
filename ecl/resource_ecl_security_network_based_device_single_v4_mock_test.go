@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_single"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v4/network_based_device_single"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
@@ -20,7 +20,7 @@ const ProcessIDOfUpdateInterface = 85385
 const expectedNewSingleDeviceHostName = "CES11811"
 const expectedNewSingleDeviceUUID = "12768064-e7c9-44d1-b01d-e66f138a278e"
 
-func TestMockedAccSecurityV3NetworkBasedDeviceSingle_basic(t *testing.T) {
+func TestMockedAccSecurityV4NetworkBasedDeviceSingle_basic(t *testing.T) {
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
@@ -29,67 +29,67 @@ func TestMockedAccSecurityV3NetworkBasedDeviceSingle_basic(t *testing.T) {
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV3NetworkBasedDeviceSingleListDevicesAfterCreate)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV3NetworkBasedDeviceSingleListDeviceInterfaces)
+	mc.Register(t, "single_device", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedDeviceSingleListDevicesAfterCreate)
+	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV4NetworkBasedDeviceSingleListDeviceInterfaces)
 
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV3NetworkBasedDeviceSingleListBeforeCreate)
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV3NetworkBasedDeviceSingleCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleGetProcessingAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleGetCompleteActiveAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV3NetworkBasedDeviceSingleListAfterCreate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSDeviceGet", testMockSecurityV4NetworkBasedDeviceSingleListBeforeCreate)
+	mc.Register(t, "single_device", "/API/v4/SoEntryFGS", testMockSecurityV4NetworkBasedDeviceSingleCreate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleGetProcessingAfterCreate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleGetCompleteActiveAfterCreate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSDeviceGet", testMockSecurityV4NetworkBasedDeviceSingleListAfterCreate)
 
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV3NetworkBasedDeviceSingleUpdate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleGetProcessingAfterUpdate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleGetCompleteActiveAfterUpdate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV3NetworkBasedDeviceSingleListAfterUpdate)
+	mc.Register(t, "single_device", "/API/v4/SoEntryFGS", testMockSecurityV4NetworkBasedDeviceSingleUpdate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleGetProcessingAfterUpdate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleGetCompleteActiveAfterUpdate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSDeviceGet", testMockSecurityV4NetworkBasedDeviceSingleListAfterUpdate)
 
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV3NetworkBasedDeviceSingleDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleProcessingAfterDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleGetDeleteComplete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV3NetworkBasedDeviceSingleListAfterDelete)
+	mc.Register(t, "single_device", "/API/v4/SoEntryFGS", testMockSecurityV4NetworkBasedDeviceSingleDelete)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleProcessingAfterDelete)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleGetDeleteComplete)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSDeviceGet", testMockSecurityV4NetworkBasedDeviceSingleListAfterDelete)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3NetworkBasedDeviceSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV4NetworkBasedDeviceSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedDeviceSingleBasic,
+				Config: testMockedAccSecurityV4NetworkBasedDeviceSingleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedDeviceSingleExists(
-						"ecl_security_network_based_device_single_v3.device_1", &sd),
+					testAccCheckSecurityV4NetworkBasedDeviceSingleExists(
+						"ecl_security_network_based_device_single_v4.device_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1",
+						"ecl_security_network_based_device_single_v4.device_1",
 						"locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1",
+						"ecl_security_network_based_device_single_v4.device_1",
 						"operating_mode", "FW"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1",
+						"ecl_security_network_based_device_single_v4.device_1",
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1",
+						"ecl_security_network_based_device_single_v4.device_1",
 						"az_group", OS_DEFAULT_ZONE),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedDeviceSingleUpdate,
+				Config: testMockedAccSecurityV4NetworkBasedDeviceSingleUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedDeviceSingleExists(
-						"ecl_security_network_based_device_single_v3.device_1", &sd),
+					testAccCheckSecurityV4NetworkBasedDeviceSingleExists(
+						"ecl_security_network_based_device_single_v4.device_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1",
+						"ecl_security_network_based_device_single_v4.device_1",
 						"locale", "en"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1",
+						"ecl_security_network_based_device_single_v4.device_1",
 						"operating_mode", "UTM"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1",
+						"ecl_security_network_based_device_single_v4.device_1",
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1",
+						"ecl_security_network_based_device_single_v4.device_1",
 						"az_group", OS_DEFAULT_ZONE),
 				),
 			},
@@ -97,7 +97,7 @@ func TestMockedAccSecurityV3NetworkBasedDeviceSingle_basic(t *testing.T) {
 	})
 }
 
-func TestMockedAccSecurityV3NetworkBasedDeviceSingleUpdateInterface(t *testing.T) {
+func TestMockedAccSecurityV4NetworkBasedDeviceSingleUpdateInterface(t *testing.T) {
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
@@ -106,75 +106,75 @@ func TestMockedAccSecurityV3NetworkBasedDeviceSingleUpdateInterface(t *testing.T
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV3NetworkBasedDeviceSingleListBeforeCreate)
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV3NetworkBasedDeviceSingleCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleGetProcessingAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleGetCompleteActiveAfterCreate)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV3NetworkBasedDeviceSingleListAfterCreate)
-	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV3NetworkBasedDeviceSingleListDevicesAfterCreate)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV3NetworkBasedDeviceSingleListDeviceInterfacesAfterCreate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSDeviceGet", testMockSecurityV4NetworkBasedDeviceSingleListBeforeCreate)
+	mc.Register(t, "single_device", "/API/v4/SoEntryFGS", testMockSecurityV4NetworkBasedDeviceSingleCreate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleGetProcessingAfterCreate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleGetCompleteActiveAfterCreate)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSDeviceGet", testMockSecurityV4NetworkBasedDeviceSingleListAfterCreate)
+	mc.Register(t, "single_device", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedDeviceSingleListDevicesAfterCreate)
+	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV4NetworkBasedDeviceSingleListDeviceInterfacesAfterCreate)
 
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/ports/utm/%s", expectedNewSingleDeviceHostName), testMockSecurityV3NetworkBasedDeviceSingleUpdateInterface)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV3NetworkBasedDeviceSingleGetProcessingAfterUpdateInterface)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV3NetworkBasedDeviceSingleGetCompleteActiveAfterUpdateInterface)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV3NetworkBasedDeviceSingleListAfterInterfaceUpdate)
-	mc.Register(t, "single_device", "/ecl-api/devices", testMockSecurityV3NetworkBasedDeviceSingleListDevicesAfterUpdate)
-	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV3NetworkBasedDeviceSingleListDeviceInterfacesAfterUpdate)
+	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/v4/ports/utm/%s", expectedNewSingleDeviceHostName), testMockSecurityV4NetworkBasedDeviceSingleUpdateInterface)
+	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/v4/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV4NetworkBasedDeviceSingleGetProcessingAfterUpdateInterface)
+	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/v4/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV4NetworkBasedDeviceSingleGetCompleteActiveAfterUpdateInterface)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSDeviceGet", testMockSecurityV4NetworkBasedDeviceSingleListAfterInterfaceUpdate)
+	mc.Register(t, "single_device", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedDeviceSingleListDevicesAfterUpdate)
+	mc.Register(t, "single_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV4NetworkBasedDeviceSingleListDeviceInterfacesAfterUpdate)
 
-	mc.Register(t, "single_device", "/API/SoEntryFGS", testMockSecurityV3NetworkBasedDeviceSingleDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleProcessingAfterDelete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceSingleGetDeleteComplete)
-	mc.Register(t, "single_device", "/API/ScreenEventFGSDeviceGet", testMockSecurityV3NetworkBasedDeviceSingleListAfterDelete)
+	mc.Register(t, "single_device", "/API/v4/SoEntryFGS", testMockSecurityV4NetworkBasedDeviceSingleDelete)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleProcessingAfterDelete)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceSingleGetDeleteComplete)
+	mc.Register(t, "single_device", "/API/v4/ScreenEventFGSDeviceGet", testMockSecurityV4NetworkBasedDeviceSingleListAfterDelete)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3NetworkBasedDeviceSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV4NetworkBasedDeviceSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedDeviceSingleBasic,
+				Config: testMockedAccSecurityV4NetworkBasedDeviceSingleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedDeviceSingleExists(
-						"ecl_security_network_based_device_single_v3.device_1", &sd),
+					testAccCheckSecurityV4NetworkBasedDeviceSingleExists(
+						"ecl_security_network_based_device_single_v4.device_1", &sd),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedDeviceSingleUpdateInterface,
+				Config: testMockedAccSecurityV4NetworkBasedDeviceSingleUpdateInterface,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedDeviceSingleExists(
-						"ecl_security_network_based_device_single_v3.device_1", &sd),
+					testAccCheckSecurityV4NetworkBasedDeviceSingleExists(
+						"ecl_security_network_based_device_single_v4.device_1", &sd),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.0.ip_address", "192.168.1.50"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.0.network_id", "dummyNetwork1"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.0.network_id", "dummyNetwork1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.0.subnet_id", "dummySubnet1"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.0.subnet_id", "dummySubnet1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.0.mtu", "1500"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.0.mtu", "1500"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.0.comment", "port 0 comment"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.0.comment", "port 0 comment"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.3.ip_address", "192.168.2.50"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.3.ip_address", "192.168.2.50"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.3.network_id", "dummyNetwork2"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.3.network_id", "dummyNetwork2"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.3.subnet_id", "dummySubnet2"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.3.subnet_id", "dummySubnet2"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.3.mtu", "1500"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.3.mtu", "1500"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_single_v3.device_1", "port.3.comment", "port 3 comment"),
+						"ecl_security_network_based_device_single_v4.device_1", "port.3.comment", "port 3 comment"),
 				),
 			},
 		},
 	})
 }
 
-var testMockedAccSecurityV3NetworkBasedDeviceSingleBasic = fmt.Sprintf(`
-resource "ecl_security_network_based_device_single_v3" "device_1" {
+var testMockedAccSecurityV4NetworkBasedDeviceSingleBasic = fmt.Sprintf(`
+resource "ecl_security_network_based_device_single_v4" "device_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	operating_mode = "FW"
@@ -186,8 +186,8 @@ resource "ecl_security_network_based_device_single_v3" "device_1" {
 	OS_DEFAULT_ZONE,
 )
 
-var testMockedAccSecurityV3NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
-resource "ecl_security_network_based_device_single_v3" "device_1" {
+var testMockedAccSecurityV4NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
+resource "ecl_security_network_based_device_single_v4" "device_1" {
 	tenant_id = "%s"
 	locale = "en"
 	operating_mode = "UTM"
@@ -199,9 +199,9 @@ resource "ecl_security_network_based_device_single_v3" "device_1" {
 	OS_DEFAULT_ZONE,
 )
 
-var testMockedAccSecurityV3NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
+var testMockedAccSecurityV4NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
 
-resource "ecl_security_network_based_device_single_v3" "device_1" {
+resource "ecl_security_network_based_device_single_v4" "device_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	operating_mode = "FW"
@@ -252,7 +252,7 @@ resource "ecl_security_network_based_device_single_v3" "device_1" {
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleListBeforeCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleListBeforeCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -275,7 +275,7 @@ newStatus: PreCreate
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleListAfterCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleListAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -305,7 +305,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleListDeviceInterfaces = `
+var testMockSecurityV4NetworkBasedDeviceSingleListDeviceInterfaces = `
 request:
     method: GET
 response:
@@ -319,7 +319,7 @@ expectedStatus:
     - Created
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleListDevicesAfterCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleListDevicesAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -355,7 +355,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleListDevicesAfterUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleListDevicesAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -390,7 +390,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleListDeviceInterfacesAfterCreate = `
+var testMockSecurityV4NetworkBasedDeviceSingleListDeviceInterfacesAfterCreate = `
 request:
     method: GET
 response:
@@ -405,7 +405,7 @@ expectedStatus:
     - Updated
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleListDeviceInterfacesAfterUpdate = `
+var testMockSecurityV4NetworkBasedDeviceSingleListDeviceInterfacesAfterUpdate = `
 request:
     method: GET
 response:
@@ -439,7 +439,7 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleListAfterDelete = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleListAfterDelete = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -461,7 +461,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleCreate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -480,7 +480,7 @@ newStatus: Creating
 	SoIDOfCreate,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleGetProcessingAfterCreate = `
+var testMockSecurityV4NetworkBasedDeviceSingleGetProcessingAfterCreate = `
 request:
     method: GET
 response:
@@ -498,7 +498,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleGetCompleteActiveAfterCreate = `
+var testMockSecurityV4NetworkBasedDeviceSingleGetCompleteActiveAfterCreate = `
 request:
     method: GET
 response:
@@ -517,7 +517,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleDelete = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleDelete = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -538,7 +538,7 @@ newStatus: Deleted
 	SoIDOfDelete,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleProcessingAfterDelete = `
+var testMockSecurityV4NetworkBasedDeviceSingleProcessingAfterDelete = `
 request:
     method: GET
 response:
@@ -556,7 +556,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleGetDeleteComplete = `
+var testMockSecurityV4NetworkBasedDeviceSingleGetDeleteComplete = `
 request:
     method: GET
 response:
@@ -574,7 +574,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleUpdate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -593,7 +593,7 @@ newStatus: Updating
 	SoIDOfUpdate,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleGetProcessingAfterUpdate = `
+var testMockSecurityV4NetworkBasedDeviceSingleGetProcessingAfterUpdate = `
 request:
     method: GET
 response:
@@ -611,7 +611,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleGetCompleteActiveAfterUpdate = `
+var testMockSecurityV4NetworkBasedDeviceSingleGetCompleteActiveAfterUpdate = `
 request:
     method: GET
 response:
@@ -630,7 +630,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleListAfterUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleListAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -659,7 +659,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleListAfterInterfaceUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleListAfterInterfaceUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -688,7 +688,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleUpdateInterface = fmt.Sprintf(`
 request:
     method: PUT
 response:
@@ -705,7 +705,7 @@ newStatus: InterfaceIsUpdating
 	ProcessIDOfUpdateInterface,
 )
 
-var testMockSecurityV3NetworkBasedDeviceSingleGetProcessingAfterUpdateInterface = `
+var testMockSecurityV4NetworkBasedDeviceSingleGetProcessingAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -888,7 +888,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleGetCompleteActiveAfterUpdateInterface = `
+var testMockSecurityV4NetworkBasedDeviceSingleGetCompleteActiveAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -1072,7 +1072,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedDeviceSingleListAfterUpdateInterface = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceSingleListAfterUpdateInterface = fmt.Sprintf(`
 request:
     method: GET
 response:
