@@ -16,6 +16,8 @@ import (
 
 func resourceSecurityNetworkBasedDeviceHAV3() *schema.Resource {
 	return &schema.Resource{
+		DeprecationMessage: "ecl_security_network_based_device_ha_v3 is deprecated. Please delete it and create ecl_security_network_based_device_ha_v4 instead.",
+
 		Create: resourceSecurityNetworkBasedDeviceHAV3Create,
 		Read:   resourceSecurityNetworkBasedDeviceHAV3Read,
 		Update: resourceSecurityNetworkBasedDeviceHAV3Update,

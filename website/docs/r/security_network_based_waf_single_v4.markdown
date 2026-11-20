@@ -1,22 +1,22 @@
 ---
 layout: "ecl"
-page_title: "Enterprise Cloud: ecl_security_network_based_waf_single_v3"
-sidebar_current: "docs-ecl-security-network_based_waf_single-v3"
+page_title: "Enterprise Cloud: ecl_security_network_based_waf_single_v4"
+sidebar_current: "docs-ecl-security-network_based_waf_single-v4"
 description: |-
-  Manages a V3 Network Based WAF(Single) resource within Enterprise Cloud.
+  Manages a V4 Network Based WAF(Single) resource within Enterprise Cloud.
   If you are using V2 Security Service, please install v2.5.2 of terraform-provider-ecl.
 ---
 
-# ecl\_security\_network\_based\_waf\_single\_v3
+# ecl\_security\_network\_based\_waf\_single\_v4
 
-Manages a V3 Network Based WAF(Single) resource within Enterprise Cloud.
+Manages a V4 Network Based WAF(Single) resource within Enterprise Cloud.
 
 ## Example Usage
 
 ### Basic WAF
 
 ```hcl
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
   tenant_id    = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
   locale       = "ja"
   license_kind = "02"
@@ -31,7 +31,7 @@ Note: WAF only has one port as port-2.
   in the configuration of Terraform.
 
 ```hcl
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
   tenant_id    = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
   locale       = "ja"
   license_kind = "02"
@@ -52,7 +52,7 @@ resource "ecl_security_network_based_waf_single_v3" "waf_1" {
 ### Detach port 2 from network
 
 ```hcl
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
   tenant_id    = "1e2fcdd9-bc57-4395-9f44-c38fd0d72f6e"
   locale       = "ja"
   license_kind = "02"

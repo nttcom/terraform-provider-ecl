@@ -10,16 +10,16 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_single"
-	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v3/device_interfaces"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v4/network_based_device_single"
+	"github.com/nttcom/eclcloud/v3/ecl/security_portal/v4/device_interfaces"
 )
 
-func resourceSecurityNetworkBasedDeviceSingleV3() *schema.Resource {
+func resourceSecurityNetworkBasedDeviceSingleV4() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceSecurityNetworkBasedDeviceSingleV3Create,
-		Read:   resourceSecurityNetworkBasedDeviceSingleV3Read,
-		Update: resourceSecurityNetworkBasedDeviceSingleV3Update,
-		Delete: resourceSecurityNetworkBasedDeviceSingleV3Delete,
+		Create: resourceSecurityNetworkBasedDeviceSingleV4Create,
+		Read:   resourceSecurityNetworkBasedDeviceSingleV4Read,
+		Update: resourceSecurityNetworkBasedDeviceSingleV4Update,
+		Delete: resourceSecurityNetworkBasedDeviceSingleV4Delete,
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(1 * time.Hour),
@@ -35,9 +35,9 @@ func resourceSecurityNetworkBasedDeviceSingleV3() *schema.Resource {
 	}
 }
 
-func resourceSecurityNetworkBasedDeviceSingleV3Create(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceSingleV4Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -68,7 +68,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3Create(d *schema.ResourceData, me
 		SOKind:   "A",
 		TenantID: tenantID,
 		Locale:   locale,
-		GtHost:   gtHostForSingleDeviceCreateAsOpts(d),
+		GtHost:   gtHostForSingleDeviceCreateAsOptsV4(d),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -83,10 +83,10 @@ func resourceSecurityNetworkBasedDeviceSingleV3Create(d *schema.ResourceData, me
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForSingleDeviceOrderComplete(client, order.ID, tenantID, locale, deviceType),
+		Refresh:      waitForSingleDeviceOrderCompleteV4(client, order.ID, tenantID, locale, deviceType),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityDeviceSingleCreatePollInterval,
+		PollInterval: securityDeviceSingleCreatePollIntervalV4,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -114,7 +114,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3Create(d *schema.ResourceData, me
 		return fmt.Errorf("Unable to find newly created single device")
 	}
 
-	id := getNewlyCreatedDeviceID(allDevicesBefore, allDevicesAfter, d.Get("operating_mode").(string))
+	id := getNewlyCreatedDeviceIDV4(allDevicesBefore, allDevicesAfter, d.Get("operating_mode").(string))
 	if id == "" {
 		return fmt.Errorf("Unable to find newly created single device after hostname matching")
 	}
@@ -123,13 +123,13 @@ func resourceSecurityNetworkBasedDeviceSingleV3Create(d *schema.ResourceData, me
 
 	d.SetId(id)
 
-	return resourceSecurityNetworkBasedDeviceSingleV3Read(d, meta)
+	return resourceSecurityNetworkBasedDeviceSingleV4Read(d, meta)
 }
 
-func resourceSecurityNetworkBasedDeviceSingleV3Read(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceSingleV4Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -140,7 +140,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3Read(d *schema.ResourceData, meta
 	}
 
 	deviceType := getTypeOfSingleDevice(d)
-	device, err := getSingleDeviceByHostName(client, deviceType, d.Id(), tenantID)
+	device, err := getSingleDeviceByHostNameV4(client, deviceType, d.Id(), tenantID)
 	if err != nil {
 		return err
 	}
@@ -161,12 +161,12 @@ func resourceSecurityNetworkBasedDeviceSingleV3Read(d *schema.ResourceData, meta
 	d.Set("az_group", azGroup)
 
 	// Device Interface Part
-	pClient, err := config.securityPortalV3Client(GetRegion(d, config))
+	pClient, err := config.securityPortalV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security portal client: %s", err)
 	}
 
-	hostUUID, err := getUUIDFromServerHostName(pClient, d.Id(), tenantID)
+	hostUUID, err := getUUIDFromServerHostNameV4(pClient, d.Id(), tenantID)
 	if err != nil {
 		return fmt.Errorf("Unable to get host UUID: %s", err)
 	}
@@ -205,7 +205,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3Read(d *schema.ResourceData, meta
 	for _, dev := range allDevices {
 		thisDeviceInterface := map[string]interface{}{}
 
-		index, err := strconv.Atoi(strings.Replace(dev.MSAPortID, "port", "", 1))
+		index, err := strconv.Atoi(strings.Replace(dev.PortID, "port", "", 1))
 		if err != nil {
 			return fmt.Errorf("Error parsing device interface port number: %s", err)
 		}
@@ -226,7 +226,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3Read(d *schema.ResourceData, meta
 		thisDeviceInterface["ip_address"] = dev.OSIPAddress
 
 		prefix := d.Get(fmt.Sprintf("port.%d.ip_address_prefix", index)).(int)
-		thisDeviceInterface["ip_addess_prefix"] = prefix
+		thisDeviceInterface["ip_address_prefix"] = prefix
 
 		thisDeviceInterface["network_id"] = dev.OSNetworkID
 		thisDeviceInterface["subnet_id"] = dev.OSSubnetID
@@ -243,24 +243,28 @@ func resourceSecurityNetworkBasedDeviceSingleV3Read(d *schema.ResourceData, meta
 	return nil
 }
 
-func resourceSecurityNetworkBasedDeviceSingleV3Update(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceSingleV4Update(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("locale") || d.HasChange("operating_mode") || d.HasChange("license_kind") {
 		log.Printf("[DEBUG] Start changing device by order api.")
-		resourceSecurityNetworkBasedDeviceSingleV3UpdateOrderAPIPart(d, meta)
+		if err := resourceSecurityNetworkBasedDeviceSingleV4UpdateOrderAPIPart(d, meta); err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("port") {
 		log.Printf("[DEBUG] Start changing device by portal api.")
-		resourceSecurityNetworkBasedDeviceSingleV3UpdatePortalAPIPart(d, meta)
+		if err := resourceSecurityNetworkBasedDeviceSingleV4UpdatePortalAPIPart(d, meta); err != nil {
+			return err
+		}
 	}
 
-	return resourceSecurityNetworkBasedDeviceSingleV3Read(d, meta)
+	return resourceSecurityNetworkBasedDeviceSingleV4Read(d, meta)
 }
 
-func resourceSecurityNetworkBasedDeviceSingleV3Delete(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityNetworkBasedDeviceSingleV4Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -271,7 +275,7 @@ func resourceSecurityNetworkBasedDeviceSingleV3Delete(d *schema.ResourceData, me
 	deleteOpts := security.DeleteOpts{
 		SOKind:   "D",
 		TenantID: tenantID,
-		GtHost:   gtHostForSingleDeviceDeleteAsOpts(d),
+		GtHost:   gtHostForSingleDeviceDeleteAsOptsV4(d),
 	}
 
 	log.Printf("[DEBUG] Delete Options: %#v", deleteOpts)
@@ -289,10 +293,10 @@ func resourceSecurityNetworkBasedDeviceSingleV3Delete(d *schema.ResourceData, me
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForSingleDeviceOrderComplete(client, order.ID, tenantID, locale, deviceType),
+		Refresh:      waitForSingleDeviceOrderCompleteV4(client, order.ID, tenantID, locale, deviceType),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityDeviceSingleDeletePollInterval,
+		PollInterval: securityDeviceSingleDeletePollIntervalV4,
 		MinTimeout:   30 * time.Second,
 	}
 

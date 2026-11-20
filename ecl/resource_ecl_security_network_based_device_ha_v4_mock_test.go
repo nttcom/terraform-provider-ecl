@@ -6,22 +6,22 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_ha"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v4/network_based_device_ha"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-const SoIDOfCreateHA = "FGHA_809F858574E94699952D0D7E7C58C81B"
-const SoIDOfUpdateHA = "FGHA_809F858574E94699952D0D7E7C58C81C"
-const SoIDOfDeleteHA = "FGHA_F2349100C7D24EF3ACD6B9A9F91FD220"
+const SoIDOfCreateHAV4 = "FGHA_809F858574E94699952D0D7E7C58C81B"
+const SoIDOfUpdateHAV4 = "FGHA_809F858574E94699952D0D7E7C58C81C"
+const SoIDOfDeleteHAV4 = "FGHA_F2349100C7D24EF3ACD6B9A9F91FD220"
 
-const ProcessIDOfUpdateInterfaceHA = 85385
+const ProcessIDOfUpdateInterfaceHAV4 = "13c683cb-be44-4e38-b67c-666d532b1a06"
 
-const expectedNewHADeviceHostName1 = "CES12085"
-const expectedNewHADeviceUUID1 = "12768064-e7c9-44d1-b01d-e66f138a278e"
-const expectedNewHADeviceUUID2 = "12768064-e7c9-44d1-b01d-e66f138a278f"
+const expectedNewHADeviceHostName1V4 = "CES12085"
+const expectedNewHADeviceUUID1V4 = "12768064-e7c9-44d1-b01d-e66f138a278e"
+const expectedNewHADeviceUUID2V4 = "12768064-e7c9-44d1-b01d-e66f138a278f"
 
-func TestMockedAccSecurityV3NetworkBasedDeviceHA_basic(t *testing.T) {
+func TestMockedAccSecurityV4NetworkBasedDeviceHA_basic(t *testing.T) {
 	var hd1, hd2 security.HADevice
 
 	mc := mock.NewMockController()
@@ -31,74 +31,74 @@ func TestMockedAccSecurityV3NetworkBasedDeviceHA_basic(t *testing.T) {
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
 	// TODO
-	mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV3NetworkBasedDeviceHAListDevicesAfterCreate)
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID1), testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfaces)
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID2), testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfaces)
+	mc.Register(t, "ha_device", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedDeviceHAListDevicesAfterCreate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewHADeviceUUID1V4), testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfaces)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewHADeviceUUID2V4), testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfaces)
 
-	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV3NetworkBasedDeviceHAListBeforeCreate)
-	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV3NetworkBasedDeviceHACreate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAGetProcessingAfterCreate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV3NetworkBasedDeviceHAListAfterCreate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGHADeviceGet", testMockSecurityV4NetworkBasedDeviceHAListBeforeCreate)
+	mc.Register(t, "ha_device", "/API/v4/SoEntryFGHA", testMockSecurityV4NetworkBasedDeviceHACreate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAGetProcessingAfterCreate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGHADeviceGet", testMockSecurityV4NetworkBasedDeviceHAListAfterCreate)
 
-	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV3NetworkBasedDeviceHAUpdate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAGetProcessingAfterUpdate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAGetCompleteActiveAfterUpdate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV3NetworkBasedDeviceHAListAfterUpdate)
+	mc.Register(t, "ha_device", "/API/v4/SoEntryFGHA", testMockSecurityV4NetworkBasedDeviceHAUpdate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAGetProcessingAfterUpdate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAGetCompleteActiveAfterUpdate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGHADeviceGet", testMockSecurityV4NetworkBasedDeviceHAListAfterUpdate)
 
-	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV3NetworkBasedDeviceHADelete)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAProcessingAfterDelete)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAGetDeleteComplete)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV3NetworkBasedDeviceHAListAfterDelete)
+	mc.Register(t, "ha_device", "/API/v4/SoEntryFGHA", testMockSecurityV4NetworkBasedDeviceHADelete)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAProcessingAfterDelete)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAGetDeleteComplete)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGHADeviceGet", testMockSecurityV4NetworkBasedDeviceHAListAfterDelete)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3NetworkBasedDeviceHADestroy,
+		CheckDestroy: testAccCheckSecurityV4NetworkBasedDeviceHADestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedDeviceHABasic,
+				Config: testMockedAccSecurityV4NetworkBasedDeviceHABasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedDeviceHAExists(
-						"ecl_security_network_based_device_ha_v3.ha_1", &hd1, &hd2),
+					testAccCheckSecurityV4NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v4.ha_1", &hd1, &hd2),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"operating_mode", "FW_HA"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedDeviceHAUpdate,
+				Config: testMockedAccSecurityV4NetworkBasedDeviceHAUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedDeviceHAExists(
-						"ecl_security_network_based_device_ha_v3.ha_1", &hd1, &hd2),
+					testAccCheckSecurityV4NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v4.ha_1", &hd1, &hd2),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"locale", "en"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"operating_mode", "UTM_HA"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"host_1_az_group", OS_DEFAULT_ZONE),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1",
+						"ecl_security_network_based_device_ha_v4.ha_1",
 						"host_2_az_group", OS_COMPUTE_ZONE_HA),
 				),
 			},
@@ -106,7 +106,7 @@ func TestMockedAccSecurityV3NetworkBasedDeviceHA_basic(t *testing.T) {
 	})
 }
 
-func TestMockedAccSecurityV3NetworkBasedDeviceHAUpdateInterface(t *testing.T) {
+func TestMockedAccSecurityV4NetworkBasedDeviceHAUpdateInterface(t *testing.T) {
 	var hd1, hd2 security.HADevice
 
 	mc := mock.NewMockController()
@@ -115,93 +115,93 @@ func TestMockedAccSecurityV3NetworkBasedDeviceHAUpdateInterface(t *testing.T) {
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV3NetworkBasedDeviceHAListBeforeCreate)
-	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV3NetworkBasedDeviceHACreate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAGetProcessingAfterCreate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV3NetworkBasedDeviceHAListAfterCreate)
-	mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV3NetworkBasedDeviceHAListDevicesAfterCreate)
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID1), testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfacesAfterCreate)
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID2), testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfacesAfterCreate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGHADeviceGet", testMockSecurityV4NetworkBasedDeviceHAListBeforeCreate)
+	mc.Register(t, "ha_device", "/API/v4/SoEntryFGHA", testMockSecurityV4NetworkBasedDeviceHACreate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAGetProcessingAfterCreate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAGetCompleteActiveAfterCreate)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGHADeviceGet", testMockSecurityV4NetworkBasedDeviceHAListAfterCreate)
+	mc.Register(t, "ha_device", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedDeviceHAListDevicesAfterCreate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewHADeviceUUID1V4), testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfacesAfterCreate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewHADeviceUUID2V4), testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfacesAfterCreate)
 
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/ports/utm/ha/%s", expectedNewHADeviceHostName1), testMockSecurityV3NetworkBasedDeviceHAUpdateInterface)
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterfaceHA), testMockSecurityV3NetworkBasedDeviceHAGetProcessingAfterUpdateInterface)
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterfaceHA), testMockSecurityV3NetworkBasedDeviceHAGetCompleteActiveAfterUpdateInterface)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV3NetworkBasedDeviceHAListAfterInterfaceUpdate)
-	mc.Register(t, "ha_device", "/ecl-api/devices", testMockSecurityV3NetworkBasedDeviceHAListDevicesAfterUpdate)
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID1), testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfacesOfHost1AfterUpdate)
-	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewHADeviceUUID2), testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfacesOfHost2AfterUpdate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/ports/utm/ha/%s", expectedNewHADeviceHostName1V4), testMockSecurityV4NetworkBasedDeviceHAUpdateInterface)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/process/%s/status", ProcessIDOfUpdateInterfaceHAV4), testMockSecurityV4NetworkBasedDeviceHAGetProcessingAfterUpdateInterface)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/process/%s/status", ProcessIDOfUpdateInterfaceHAV4), testMockSecurityV4NetworkBasedDeviceHAGetCompleteActiveAfterUpdateInterface)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGHADeviceGet", testMockSecurityV4NetworkBasedDeviceHAListAfterInterfaceUpdate)
+	mc.Register(t, "ha_device", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedDeviceHAListDevicesAfterUpdate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewHADeviceUUID1V4), testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfacesOfHost1AfterUpdate)
+	mc.Register(t, "ha_device", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewHADeviceUUID2V4), testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfacesOfHost2AfterUpdate)
 
-	mc.Register(t, "ha_device", "/API/SoEntryFGHA", testMockSecurityV3NetworkBasedDeviceHADelete)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAProcessingAfterDelete)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGSOrderProgressRate", testMockSecurityV3NetworkBasedDeviceHAGetDeleteComplete)
-	mc.Register(t, "ha_device", "/API/ScreenEventFGHADeviceGet", testMockSecurityV3NetworkBasedDeviceHAListAfterDelete)
+	mc.Register(t, "ha_device", "/API/v4/SoEntryFGHA", testMockSecurityV4NetworkBasedDeviceHADelete)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAProcessingAfterDelete)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGSOrderProgressRate", testMockSecurityV4NetworkBasedDeviceHAGetDeleteComplete)
+	mc.Register(t, "ha_device", "/API/v4/ScreenEventFGHADeviceGet", testMockSecurityV4NetworkBasedDeviceHAListAfterDelete)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3NetworkBasedDeviceHADestroy,
+		CheckDestroy: testAccCheckSecurityV4NetworkBasedDeviceHADestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedDeviceHABasic,
+				Config: testMockedAccSecurityV4NetworkBasedDeviceHABasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedDeviceHAExists(
-						"ecl_security_network_based_device_ha_v3.ha_1", &hd1, &hd2),
+					testAccCheckSecurityV4NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v4.ha_1", &hd1, &hd2),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedDeviceHAUpdateInterface,
+				Config: testMockedAccSecurityV4NetworkBasedDeviceHAUpdateInterface,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedDeviceHAExists(
-						"ecl_security_network_based_device_ha_v3.ha_1", &hd1, &hd2),
+					testAccCheckSecurityV4NetworkBasedDeviceHAExists(
+						"ecl_security_network_based_device_ha_v4.ha_1", &hd1, &hd2),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.vrrp_ip_address", "192.168.1.50"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.vrrp_ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.network_id", "dummyNetwork-port1"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.network_id", "dummyNetwork-port1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.subnet_id", "dummySubnet-port1"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.subnet_id", "dummySubnet-port1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.mtu", "1500"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.mtu", "1500"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.comment", "port 0 comment"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.comment", "port 0 comment"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.host_1_ip_address", "10.0.0.1"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.host_1_ip_address", "10.0.0.1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.host_1_ip_address_prefix", "24"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.host_1_ip_address_prefix", "24"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.host_2_ip_address", "10.0.0.2"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.host_2_ip_address", "10.0.0.2"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.0.host_2_ip_address_prefix", "24"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.0.host_2_ip_address_prefix", "24"),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.vrrp_ip_address", "192.168.1.51"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.vrrp_ip_address", "192.168.1.51"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.network_id", "dummyNetwork-port2"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.network_id", "dummyNetwork-port2"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.subnet_id", "dummySubnet-port2"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.subnet_id", "dummySubnet-port2"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.mtu", "1500"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.mtu", "1500"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.comment", "port 3 comment"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.comment", "port 3 comment"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.host_1_ip_address", "10.0.0.3"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.host_1_ip_address", "10.0.0.3"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.host_1_ip_address_prefix", "24"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.host_1_ip_address_prefix", "24"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.host_2_ip_address", "10.0.0.4"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.host_2_ip_address", "10.0.0.4"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_device_ha_v3.ha_1", "port.3.host_2_ip_address_prefix", "24"),
+						"ecl_security_network_based_device_ha_v4.ha_1", "port.3.host_2_ip_address_prefix", "24"),
 				),
 			},
 		},
 	})
 }
 
-var testMockedAccSecurityV3NetworkBasedDeviceHABasic = fmt.Sprintf(`
-resource "ecl_security_network_based_device_ha_v3" "ha_1" {
+var testMockedAccSecurityV4NetworkBasedDeviceHABasic = fmt.Sprintf(`
+resource "ecl_security_network_based_device_ha_v4" "ha_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	operating_mode = "FW_HA"
@@ -230,8 +230,8 @@ resource "ecl_security_network_based_device_ha_v3" "ha_1" {
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockedAccSecurityV3NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
-resource "ecl_security_network_based_device_ha_v3" "ha_1" {
+var testMockedAccSecurityV4NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
+resource "ecl_security_network_based_device_ha_v4" "ha_1" {
 	tenant_id = "%s"
 	locale = "en"
 	operating_mode = "UTM_HA"
@@ -259,9 +259,9 @@ resource "ecl_security_network_based_device_ha_v3" "ha_1" {
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockedAccSecurityV3NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
+var testMockedAccSecurityV4NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
 
-resource "ecl_security_network_based_device_ha_v3" "ha_1" {
+resource "ecl_security_network_based_device_ha_v4" "ha_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	operating_mode = "FW_HA"
@@ -291,7 +291,6 @@ resource "ecl_security_network_based_device_ha_v3" "ha_1" {
 	    subnet_id = "dummySubnet-port1"
 	    mtu = "1500"
 		comment = "port 0 comment"
-		enable_ping = "true"
 
 		host_1_ip_address = "10.0.0.1"
 		host_1_ip_address_prefix = 24
@@ -320,7 +319,6 @@ resource "ecl_security_network_based_device_ha_v3" "ha_1" {
 	    subnet_id = "dummySubnet-port2"
 	    mtu = "1500"
 		comment = "port 3 comment"
-		enable_ping = "true"
 
 		host_1_ip_address = "10.0.0.3"
 		host_1_ip_address_prefix = 24
@@ -353,7 +351,7 @@ resource "ecl_security_network_based_device_ha_v3" "ha_1" {
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfaces = `
+var testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfaces = `
 request:
     method: GET
 response:
@@ -367,7 +365,7 @@ expectedStatus:
     - Created
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAListBeforeCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAListBeforeCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -397,7 +395,7 @@ newStatus: PreCreate
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAListAfterCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAListAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -437,7 +435,7 @@ expectedStatus:
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAListDevicesAfterCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAListDevicesAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -446,21 +444,21 @@ response:
         {
           "devices": [
             {
-                "msa_device_id": "CES12085",
+                "device_id": "CES12085",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
                 "os_server_name": "UTM-CES11878",
                 "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
-                "msa_device_type": "FW",
+                "device_type": "FW",
                 "os_server_status": "ACTIVE"
             },
             {
-                "msa_device_id": "CES12086",
+                "device_id": "CES12086",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278f",
                 "os_server_name": "WAF-CES11816",
                 "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
-                "msa_device_type": "WAF",
+                "device_type": "WAF",
                 "os_server_status": "ACTIVE"
             }
           ]
@@ -473,7 +471,7 @@ expectedStatus:
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAListDevicesAfterUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAListDevicesAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -482,21 +480,21 @@ response:
         {
           "devices": [
             {
-                "msa_device_id": "CES12085",
+                "device_id": "CES12085",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
                 "os_server_name": "UTM-CES11878",
                 "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
-                "msa_device_type": "FW",
+                "device_type": "FW",
                 "os_server_status": "ACTIVE"
             },
             {
-                "msa_device_id": "CES12086",
+                "device_id": "CES12086",
                 "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278f",
                 "os_server_name": "WAF-CES11816",
                 "os_availability_zone": "%s",
                 "os_admin_username": "jp4_sdp_mss_utm_admin",
-                "msa_device_type": "WAF",
+                "device_type": "WAF",
                 "os_server_status": "ACTIVE"
             }
           ]
@@ -508,7 +506,7 @@ expectedStatus:
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfacesAfterCreate = `
+var testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfacesAfterCreate = `
 request:
     method: GET
 response:
@@ -523,7 +521,7 @@ expectedStatus:
     - Updated
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfacesOfHost1AfterUpdate = `
+var testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfacesOfHost1AfterUpdate = `
 request:
     method: GET
 response:
@@ -533,7 +531,7 @@ response:
           "device_interfaces": [
               {
                 "os_ip_address": "192.168.1.3",
-                "msa_port_id": "port2",
+                "port_id": "port2",
                 "os_port_name": "HA-Port01-First-CES12136",
                 "os_port_id": "a6471bfc-8d65-4fab-bdca-476cef33c0de",
                 "os_network_id": "e51d6712-93b7-40e2-97be-3de06df02ffc",
@@ -543,7 +541,7 @@ response:
               },
               {
                 "os_ip_address": "10.0.0.1",
-                "msa_port_id": "port4",
+                "port_id": "port4",
                 "os_port_name": "port4-CES12136",
                 "os_port_id": "e233ef27-6ccd-4be9-8da5-1316788ecf6b",
                 "os_network_id": "dummyNetwork-port1",
@@ -553,7 +551,7 @@ response:
               },
               {
                 "os_ip_address": "10.0.0.3",
-                "msa_port_id": "port7",
+                "port_id": "port7",
                 "os_port_name": "port4-CES12136",
                 "os_port_id": "e233ef27-6ccd-4be9-8da5-1316788ecf6b",
                 "os_network_id": "a16627e2-1043-4cbb-b032-8a68221c9e60",
@@ -563,7 +561,7 @@ response:
               },
               {
                 "os_ip_address": "192.168.2.3",
-                "msa_port_id": "port3",
+                "port_id": "port3",
                 "os_port_name": "HA-Port02-First-CES12136",
                 "os_port_id": "e4cea571-fd7b-4798-bda4-07f739e6f9ce",
                 "os_network_id": "dummyNetwork-port2",
@@ -577,7 +575,7 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAListDeviceInterfacesOfHost2AfterUpdate = `
+var testMockSecurityV4NetworkBasedDeviceHAListDeviceInterfacesOfHost2AfterUpdate = `
 request:
     method: GET
 response:
@@ -587,7 +585,7 @@ response:
           "device_interfaces": [
               {
                 "os_ip_address": "192.168.1.3",
-                "msa_port_id": "port2",
+                "port_id": "port2",
                 "os_port_name": "HA-Port01-First-CES12136",
                 "os_port_id": "a6471bfc-8d65-4fab-bdca-476cef33c0de",
                 "os_network_id": "e51d6712-93b7-40e2-97be-3de06df02ffc",
@@ -597,7 +595,7 @@ response:
               },
               {
                 "os_ip_address": "10.0.0.2",
-                "msa_port_id": "port4",
+                "port_id": "port4",
                 "os_port_name": "port4-CES12136",
                 "os_port_id": "e233ef27-6ccd-4be9-8da5-1316788ecf6b",
                 "os_network_id": "dummyNetwork-port1",
@@ -607,7 +605,7 @@ response:
               },
               {
                 "os_ip_address": "10.0.0.4",
-                "msa_port_id": "port7",
+                "port_id": "port7",
                 "os_port_name": "port4-CES12136",
                 "os_port_id": "e233ef27-6ccd-4be9-8da5-1316788ecf6b",
                 "os_network_id": "a16627e2-1043-4cbb-b032-8a68221c9e60",
@@ -617,7 +615,7 @@ response:
               },
               {
                 "os_ip_address": "192.168.2.3",
-                "msa_port_id": "port3",
+                "port_id": "port3",
                 "os_port_name": "HA-Port02-First-CES12136",
                 "os_port_id": "e4cea571-fd7b-4798-bda4-07f739e6f9ce",
                 "os_network_id": "dummyNetwork-port2",
@@ -631,7 +629,7 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAListAfterDelete = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAListAfterDelete = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -660,7 +658,7 @@ expectedStatus:
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHACreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHACreate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -676,10 +674,10 @@ expectedStatus:
     - PreCreate
 newStatus: Creating
 `,
-	SoIDOfCreateHA,
+	SoIDOfCreateHAV4,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAGetProcessingAfterCreate = `
+var testMockSecurityV4NetworkBasedDeviceHAGetProcessingAfterCreate = `
 request:
     method: GET
 response:
@@ -697,7 +695,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAGetCompleteActiveAfterCreate = `
+var testMockSecurityV4NetworkBasedDeviceHAGetCompleteActiveAfterCreate = `
 request:
     method: GET
 response:
@@ -716,7 +714,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedDeviceHADelete = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHADelete = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -734,10 +732,10 @@ expectedStatus:
     - InterfaceIsUpdated
 newStatus: Deleted
 `,
-	SoIDOfDeleteHA,
+	SoIDOfDeleteHAV4,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAProcessingAfterDelete = `
+var testMockSecurityV4NetworkBasedDeviceHAProcessingAfterDelete = `
 request:
     method: GET
 response:
@@ -755,7 +753,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAGetDeleteComplete = `
+var testMockSecurityV4NetworkBasedDeviceHAGetDeleteComplete = `
 request:
     method: GET
 response:
@@ -773,7 +771,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAUpdate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -789,10 +787,10 @@ expectedStatus:
     - Created
 newStatus: Updating
 `,
-	SoIDOfUpdateHA,
+	SoIDOfUpdateHAV4,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAGetProcessingAfterUpdate = `
+var testMockSecurityV4NetworkBasedDeviceHAGetProcessingAfterUpdate = `
 request:
     method: GET
 response:
@@ -810,7 +808,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAGetCompleteActiveAfterUpdate = `
+var testMockSecurityV4NetworkBasedDeviceHAGetCompleteActiveAfterUpdate = `
 request:
     method: GET
 response:
@@ -829,7 +827,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAListAfterUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAListAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -868,7 +866,7 @@ expectedStatus:
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAListAfterInterfaceUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAListAfterInterfaceUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -907,7 +905,7 @@ expectedStatus:
 	OS_COMPUTE_ZONE_HA,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAUpdateInterface = fmt.Sprintf(`
 request:
     method: PUT
 response:
@@ -915,16 +913,16 @@ response:
     body: >
         {
             "message": "The process launch request has been accepted",
-            "processId": %d
+            "processId": "%s"
         }
 expectedStatus:
     - Created
 newStatus: InterfaceIsUpdating
 `,
-	ProcessIDOfUpdateInterfaceHA,
+	ProcessIDOfUpdateInterfaceHAV4,
 )
 
-var testMockSecurityV3NetworkBasedDeviceHAGetProcessingAfterUpdateInterface = `
+var testMockSecurityV4NetworkBasedDeviceHAGetProcessingAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -1107,7 +1105,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAGetCompleteActiveAfterUpdateInterface = `
+var testMockSecurityV4NetworkBasedDeviceHAGetCompleteActiveAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -1291,7 +1289,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedDeviceHAListAfterUpdateInterface = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedDeviceHAListAfterUpdateInterface = fmt.Sprintf(`
 request:
     method: GET
 response:

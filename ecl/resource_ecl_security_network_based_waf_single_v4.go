@@ -6,12 +6,12 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resourceSecurityNetworkBasedWAFSingleV3() *schema.Resource {
+func resourceSecurityNetworkBasedWAFSingleV4() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceSecurityNetworkBasedDeviceSingleV3Create,
-		Read:   resourceSecurityNetworkBasedDeviceSingleV3Read,
-		Update: resourceSecurityNetworkBasedDeviceSingleV3Update,
-		Delete: resourceSecurityNetworkBasedDeviceSingleV3Delete,
+		Create: resourceSecurityNetworkBasedDeviceSingleV4Create,
+		Read:   resourceSecurityNetworkBasedDeviceSingleV4Read,
+		Update: resourceSecurityNetworkBasedDeviceSingleV4Update,
+		Delete: resourceSecurityNetworkBasedDeviceSingleV4Delete,
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(1 * time.Hour),

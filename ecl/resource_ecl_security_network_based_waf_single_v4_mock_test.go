@@ -6,15 +6,15 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_single"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v4/network_based_device_single"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-const SoIDOfWAFUpdate = "FGWAF_809F858574E94699952D0D7E7C58C81C"
-const SoIDOfWAFDelete = "FGWAF_F2349100C7D24EF3ACD6B9A9F91FD220"
+const SoIDOfWAFUpdateV4 = "FGWAF_809F858574E94699952D0D7E7C58C81C"
+const SoIDOfWAFDeleteV4 = "FGWAF_F2349100C7D24EF3ACD6B9A9F91FD220"
 
-func TestMockedAccSecurityV3NetworkBasedWAFSingle_basic(t *testing.T) {
+func TestMockedAccSecurityV4NetworkBasedWAFSingle_basic(t *testing.T) {
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
@@ -23,67 +23,67 @@ func TestMockedAccSecurityV3NetworkBasedWAFSingle_basic(t *testing.T) {
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "waf", "/ecl-api/devices", testMockSecurityV3NetworkBasedWAFSingleListDevicesAfterCreate)
-	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV3NetworkBasedWAFSingleListDevicesAfterCreate)
+	mc.Register(t, "waf", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedWAFSingleListDevicesAfterCreate)
+	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewSingleDeviceUUIDV4), testMockSecurityV4NetworkBasedWAFSingleListDevicesAfterCreate)
 
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV3NetworkBasedWAFSingleListBeforeCreate)
-	mc.Register(t, "waf", "/API/SoEntryFGWAF", testMockSecurityV3NetworkBasedWAFSingleCreate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleGetProcessingAfterCreate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleGetCompleteActiveAfterCreate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV3NetworkBasedWAFSingleListAfterCreate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFDeviceGet", testMockSecurityV4NetworkBasedWAFSingleListBeforeCreate)
+	mc.Register(t, "waf", "/API/v4/SoEntryFGWAF", testMockSecurityV4NetworkBasedWAFSingleCreate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleGetProcessingAfterCreate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleGetCompleteActiveAfterCreate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFDeviceGet", testMockSecurityV4NetworkBasedWAFSingleListAfterCreate)
 
-	mc.Register(t, "waf", "/API/SoEntryFGWAF", testMockSecurityV3NetworkBasedWAFSingleUpdate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleGetProcessingAfterUpdate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleGetCompleteActiveAfterUpdate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV3NetworkBasedWAFSingleListAfterUpdate)
+	mc.Register(t, "waf", "/API/v4/SoEntryFGWAF", testMockSecurityV4NetworkBasedWAFSingleUpdate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleGetProcessingAfterUpdate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleGetCompleteActiveAfterUpdate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFDeviceGet", testMockSecurityV4NetworkBasedWAFSingleListAfterUpdate)
 
-	mc.Register(t, "waf", "/API/SoEntryFGWAF", testMockSecurityV3NetworkBasedWAFSingleDelete)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleProcessingAfterDelete)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleGetDeleteComplete)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV3NetworkBasedWAFSingleListAfterDelete)
+	mc.Register(t, "waf", "/API/v4/SoEntryFGWAF", testMockSecurityV4NetworkBasedWAFSingleDelete)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleProcessingAfterDelete)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleGetDeleteComplete)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFDeviceGet", testMockSecurityV4NetworkBasedWAFSingleListAfterDelete)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3NetworkBasedWAFSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV4NetworkBasedWAFSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedWAFSingleBasic,
+				Config: testMockedAccSecurityV4NetworkBasedWAFSingleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "locale", "ja"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "operating_mode", "WAF"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "license_kind", "02"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "az_group", OS_DEFAULT_ZONE),
+						"ecl_security_network_based_waf_single_v4.waf_1", "az_group", OS_DEFAULT_ZONE),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedWAFSingleUpdate,
+				Config: testMockedAccSecurityV4NetworkBasedWAFSingleUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "locale", "en"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "locale", "en"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "operating_mode", "WAF"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "license_kind", "08"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "az_group", OS_DEFAULT_ZONE),
+						"ecl_security_network_based_waf_single_v4.waf_1", "az_group", OS_DEFAULT_ZONE),
 				),
 			},
 		},
 	})
 }
 
-func TestMockedAccSecurityV3NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
+func TestMockedAccSecurityV4NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
 	var sd security.SingleDevice
 
 	mc := mock.NewMockController()
@@ -92,75 +92,75 @@ func TestMockedAccSecurityV3NetworkBasedWAFSingleUpdateInterface(t *testing.T) {
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV3NetworkBasedWAFSingleListBeforeCreate)
-	mc.Register(t, "waf", "/API/SoEntryFGWAF", testMockSecurityV3NetworkBasedWAFSingleCreate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleGetProcessingAfterCreate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleGetCompleteActiveAfterCreate)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV3NetworkBasedWAFSingleListAfterCreate)
-	mc.Register(t, "waf", "/ecl-api/devices", testMockSecurityV3NetworkBasedWAFSingleListDevicesAfterCreate)
-	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV3NetworkBasedWAFSingleListDeviceInterfacesAfterCreate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFDeviceGet", testMockSecurityV4NetworkBasedWAFSingleListBeforeCreate)
+	mc.Register(t, "waf", "/API/v4/SoEntryFGWAF", testMockSecurityV4NetworkBasedWAFSingleCreate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleGetProcessingAfterCreate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleGetCompleteActiveAfterCreate)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFDeviceGet", testMockSecurityV4NetworkBasedWAFSingleListAfterCreate)
+	mc.Register(t, "waf", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedWAFSingleListDevicesAfterCreate)
+	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewSingleDeviceUUIDV4), testMockSecurityV4NetworkBasedWAFSingleListDeviceInterfacesAfterCreate)
 
-	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/ports/waf/%s", expectedNewSingleDeviceHostName), testMockSecurityV3NetworkBasedWAFSingleUpdateInterface)
-	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV3NetworkBasedWAFSingleGetProcessingAfterUpdateInterface)
-	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/process/%d/status", ProcessIDOfUpdateInterface), testMockSecurityV3NetworkBasedWAFSingleGetCompleteActiveAfterUpdateInterface)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV3NetworkBasedWAFSingleListAfterInterfaceUpdate)
-	mc.Register(t, "waf", "/ecl-api/devices", testMockSecurityV3NetworkBasedWAFSingleListDevicesAfterUpdate)
-	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/devices/%s/interfaces", expectedNewSingleDeviceUUID), testMockSecurityV3NetworkBasedWAFSingleListDeviceInterfacesAfterUpdate)
+	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/v4/ports/waf/%s", expectedNewSingleDeviceHostNameV4), testMockSecurityV4NetworkBasedWAFSingleUpdateInterface)
+	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/v4/process/%s/status", ProcessIDOfUpdateInterfaceV4), testMockSecurityV4NetworkBasedWAFSingleGetProcessingAfterUpdateInterface)
+	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/v4/process/%s/status", ProcessIDOfUpdateInterfaceV4), testMockSecurityV4NetworkBasedWAFSingleGetCompleteActiveAfterUpdateInterface)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFDeviceGet", testMockSecurityV4NetworkBasedWAFSingleListAfterInterfaceUpdate)
+	mc.Register(t, "waf", "/ecl-api/v4/devices", testMockSecurityV4NetworkBasedWAFSingleListDevicesAfterUpdate)
+	mc.Register(t, "waf", fmt.Sprintf("/ecl-api/v4/devices/%s/interfaces", expectedNewSingleDeviceUUIDV4), testMockSecurityV4NetworkBasedWAFSingleListDeviceInterfacesAfterUpdate)
 
-	mc.Register(t, "waf", "/API/SoEntryFGWAF", testMockSecurityV3NetworkBasedWAFSingleDelete)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleProcessingAfterDelete)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFOrderProgressRate", testMockSecurityV3NetworkBasedWAFSingleGetDeleteComplete)
-	mc.Register(t, "waf", "/API/ScreenEventFGWAFDeviceGet", testMockSecurityV3NetworkBasedWAFSingleListAfterDelete)
+	mc.Register(t, "waf", "/API/v4/SoEntryFGWAF", testMockSecurityV4NetworkBasedWAFSingleDelete)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleProcessingAfterDelete)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFOrderProgressRate", testMockSecurityV4NetworkBasedWAFSingleGetDeleteComplete)
+	mc.Register(t, "waf", "/API/v4/ScreenEventFGWAFDeviceGet", testMockSecurityV4NetworkBasedWAFSingleListAfterDelete)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3NetworkBasedWAFSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV4NetworkBasedWAFSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedWAFSingleBasic,
+				Config: testMockedAccSecurityV4NetworkBasedWAFSingleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV3NetworkBasedWAFSingleUpdateInterface,
+				Config: testMockedAccSecurityV4NetworkBasedWAFSingleUpdateInterface,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.ip_address", "192.168.1.50"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.network_id", "dummyNetwork1"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.network_id", "dummyNetwork1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.subnet_id", "dummySubnet1"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.subnet_id", "dummySubnet1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.mtu", "1500"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.mtu", "1500"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.comment", "port 0 comment"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.comment", "port 0 comment"),
 
 					// resource.TestCheckResourceAttr(
-					// 	"ecl_security_network_based_waf_single_v3.waf_1", "port.3.ip_address", "192.168.2.50"),
+					// 	"ecl_security_network_based_waf_single_v4.waf_1", "port.3.ip_address", "192.168.2.50"),
 					// resource.TestCheckResourceAttr(
-					// 	"ecl_security_network_based_waf_single_v3.waf_1", "port.3.network_id", "dummyNetwork2"),
+					// 	"ecl_security_network_based_waf_single_v4.waf_1", "port.3.network_id", "dummyNetwork2"),
 					// resource.TestCheckResourceAttr(
-					// 	"ecl_security_network_based_waf_single_v3.waf_1", "port.3.subnet_id", "dummySubnet2"),
+					// 	"ecl_security_network_based_waf_single_v4.waf_1", "port.3.subnet_id", "dummySubnet2"),
 					// resource.TestCheckResourceAttr(
-					// 	"ecl_security_network_based_waf_single_v3.waf_1", "port.3.mtu", "1500"),
+					// 	"ecl_security_network_based_waf_single_v4.waf_1", "port.3.mtu", "1500"),
 					// resource.TestCheckResourceAttr(
-					// 	"ecl_security_network_based_waf_single_v3.waf_1", "port.3.comment", "port 3 comment"),
+					// 	"ecl_security_network_based_waf_single_v4.waf_1", "port.3.comment", "port 3 comment"),
 				),
 			},
 		},
 	})
 }
 
-var testMockedAccSecurityV3NetworkBasedWAFSingleBasic = fmt.Sprintf(`
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+var testMockedAccSecurityV4NetworkBasedWAFSingleBasic = fmt.Sprintf(`
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	license_kind = "02"
@@ -171,8 +171,8 @@ resource "ecl_security_network_based_waf_single_v3" "waf_1" {
 	OS_DEFAULT_ZONE,
 )
 
-var testMockedAccSecurityV3NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+var testMockedAccSecurityV4NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
 	tenant_id = "%s"
 	locale = "en"
 	license_kind = "08"
@@ -183,9 +183,9 @@ resource "ecl_security_network_based_waf_single_v3" "waf_1" {
 	OS_DEFAULT_ZONE,
 )
 
-var testMockedAccSecurityV3NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
+var testMockedAccSecurityV4NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
 
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	license_kind = "02"
@@ -206,7 +206,7 @@ resource "ecl_security_network_based_waf_single_v3" "waf_1" {
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleListBeforeCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleListBeforeCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -229,7 +229,7 @@ newStatus: PreCreate
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleListAfterCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleListAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -259,7 +259,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleListDevicesAfterCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleListDevicesAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -268,21 +268,21 @@ response:
         {
           "devices": [
             {
-              "msa_device_id": "CES11810",
+              "device_id": "CES11810",
               "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
               "os_server_name": "WAF-CES11878",
               "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
-              "msa_device_type": "WAF",
+              "device_type": "WAF",
               "os_server_status": "ACTIVE"
             },
             {
-              "msa_device_id": "CES11811",
+              "device_id": "CES11811",
               "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
               "os_server_name": "WAF-CES11816",
               "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
-              "msa_device_type": "WAF",
+              "device_type": "WAF",
               "os_server_status": "ACTIVE"
             }
           ]
@@ -295,7 +295,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleListDevicesAfterUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleListDevicesAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -304,21 +304,21 @@ response:
         {
           "devices": [
             {
-              "msa_device_id": "CES11810",
+              "device_id": "CES11810",
               "os_server_id": "392a90bf-2c1b-45fd-8221-096894fff39d",
               "os_server_name": "WAF-CES11878",
               "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
-              "msa_device_type": "WAF",
+              "device_type": "WAF",
               "os_server_status": "ACTIVE"
             },
             {
-              "msa_device_id": "CES11811",
+              "device_id": "CES11811",
               "os_server_id": "12768064-e7c9-44d1-b01d-e66f138a278e",
               "os_server_name": "WAF-CES11816",
               "os_availability_zone": "%s",
               "os_admin_username": "jp4_sdp_mss_utm_admin",
-              "msa_device_type": "WAF",
+              "device_type": "WAF",
               "os_server_status": "ACTIVE"
             }
           ]
@@ -330,7 +330,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleListDeviceInterfacesAfterCreate = `
+var testMockSecurityV4NetworkBasedWAFSingleListDeviceInterfacesAfterCreate = `
 request:
     method: GET
 response:
@@ -345,7 +345,7 @@ expectedStatus:
     - Updated
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleListDeviceInterfacesAfterUpdate = `
+var testMockSecurityV4NetworkBasedWAFSingleListDeviceInterfacesAfterUpdate = `
 request:
     method: GET
 response:
@@ -355,7 +355,7 @@ response:
           "device_interfaces": [
             {
               "os_ip_address": "192.168.1.50",
-              "msa_port_id": "port2",
+              "port_id": "port2",
               "os_port_name": "port2-CES11892",
               "os_port_id": "82ebe045-9c9a-4088-8b33-cb0d590079aa",
               "os_network_id": "dummyNetwork1",
@@ -369,7 +369,7 @@ expectedStatus:
     - InterfaceIsUpdated
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleListAfterDelete = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleListAfterDelete = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -391,7 +391,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleCreate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleCreate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -407,10 +407,10 @@ expectedStatus:
     - PreCreate
 newStatus: Creating
 `,
-	SoIDOfCreate,
+	SoIDOfCreateV4,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleGetProcessingAfterCreate = `
+var testMockSecurityV4NetworkBasedWAFSingleGetProcessingAfterCreate = `
 request:
     method: GET
 response:
@@ -428,7 +428,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleGetCompleteActiveAfterCreate = `
+var testMockSecurityV4NetworkBasedWAFSingleGetCompleteActiveAfterCreate = `
 request:
     method: GET
 response:
@@ -447,7 +447,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleDelete = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleDelete = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -465,10 +465,10 @@ expectedStatus:
     - InterfaceIsUpdated
 newStatus: Deleted
 `,
-	SoIDOfWAFDelete,
+	SoIDOfWAFDeleteV4,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleProcessingAfterDelete = `
+var testMockSecurityV4NetworkBasedWAFSingleProcessingAfterDelete = `
 request:
     method: GET
 response:
@@ -486,7 +486,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleGetDeleteComplete = `
+var testMockSecurityV4NetworkBasedWAFSingleGetDeleteComplete = `
 request:
     method: GET
 response:
@@ -504,7 +504,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -520,10 +520,10 @@ expectedStatus:
     - Created
 newStatus: Updating
 `,
-	SoIDOfWAFUpdate,
+	SoIDOfWAFUpdateV4,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleGetProcessingAfterUpdate = `
+var testMockSecurityV4NetworkBasedWAFSingleGetProcessingAfterUpdate = `
 request:
     method: GET
 response:
@@ -541,7 +541,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleGetCompleteActiveAfterUpdate = `
+var testMockSecurityV4NetworkBasedWAFSingleGetCompleteActiveAfterUpdate = `
 request:
     method: GET
 response:
@@ -560,7 +560,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleListAfterUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleListAfterUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -589,7 +589,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleListAfterInterfaceUpdate = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleListAfterInterfaceUpdate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -618,7 +618,7 @@ expectedStatus:
 	OS_DEFAULT_ZONE,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
 request:
     method: PUT
 response:
@@ -626,16 +626,16 @@ response:
     body: >
         {
             "message": "The process launch request has been accepted",
-            "processId": %d
+            "processId": "%s"
         }
 expectedStatus:
     - Created
 newStatus: InterfaceIsUpdating
 `,
-	ProcessIDOfUpdateInterface,
+	ProcessIDOfUpdateInterfaceV4,
 )
 
-var testMockSecurityV3NetworkBasedWAFSingleGetProcessingAfterUpdateInterface = `
+var testMockSecurityV4NetworkBasedWAFSingleGetProcessingAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -818,7 +818,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleGetCompleteActiveAfterUpdateInterface = `
+var testMockSecurityV4NetworkBasedWAFSingleGetCompleteActiveAfterUpdateInterface = `
 request:
     method: GET
 response:
@@ -1002,7 +1002,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3NetworkBasedWAFSingleListAfterUpdateInterface = fmt.Sprintf(`
+var testMockSecurityV4NetworkBasedWAFSingleListAfterUpdateInterface = fmt.Sprintf(`
 request:
     method: GET
 response:

@@ -9,10 +9,10 @@ import (
 
 	"github.com/nttcom/eclcloud/v3/ecl/network/v2/networks"
 	"github.com/nttcom/eclcloud/v3/ecl/network/v2/subnets"
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/network_based_device_single"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v4/network_based_device_single"
 )
 
-func TestAccSecurityV3NetworkBasedWAFSingle_basic(t *testing.T) {
+func TestAccSecurityV4NetworkBasedWAFSingle_basic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -22,43 +22,43 @@ func TestAccSecurityV3NetworkBasedWAFSingle_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3NetworkBasedWAFSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV4NetworkBasedWAFSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccSecurityV3NetworkBasedWAFSingleBasic,
+				Config: testAccSecurityV4NetworkBasedWAFSingleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "locale", "ja"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "operating_mode", "WAF"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "license_kind", "02"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "license_kind", "02"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "az_group", OS_DEFAULT_ZONE),
+						"ecl_security_network_based_waf_single_v4.waf_1", "az_group", OS_DEFAULT_ZONE),
 				),
 			},
 			resource.TestStep{
-				Config: testAccSecurityV3NetworkBasedWAFSingleUpdate,
+				Config: testAccSecurityV4NetworkBasedWAFSingleUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "locale", "en"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "locale", "en"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "operating_mode", "WAF"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "operating_mode", "WAF"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "license_kind", "08"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "license_kind", "08"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "az_group", OS_DEFAULT_ZONE),
+						"ecl_security_network_based_waf_single_v4.waf_1", "az_group", OS_DEFAULT_ZONE),
 				),
 			},
 		},
 	})
 }
 
-func TestAccSecurityV3NetworkBasedWAFSingle_updateInterface(t *testing.T) {
+func TestAccSecurityV4NetworkBasedWAFSingle_updateInterface(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip this test in short mode")
 	}
@@ -70,20 +70,20 @@ func TestAccSecurityV3NetworkBasedWAFSingle_updateInterface(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3NetworkBasedWAFSingleDestroy,
+		CheckDestroy: testAccCheckSecurityV4NetworkBasedWAFSingleDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccSecurityV3NetworkBasedWAFSingleBasic,
+				Config: testAccSecurityV4NetworkBasedWAFSingleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 				),
 			},
 			resource.TestStep{
-				Config: testAccSecurityV3NetworkBasedWAFSingleUpdateInterface,
+				Config: testAccSecurityV4NetworkBasedWAFSingleUpdateInterface,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n1),
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn1),
@@ -92,23 +92,23 @@ func TestAccSecurityV3NetworkBasedWAFSingle_updateInterface(t *testing.T) {
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2", &sn2),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.ip_address", "192.168.1.50"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.ip_address", "192.168.1.50"),
 					resource.TestCheckResourceAttrPtr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.network_id", &n1.ID),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.network_id", &n1.ID),
 					resource.TestCheckResourceAttrPtr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.subnet_id", &sn1.ID),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.subnet_id", &sn1.ID),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.mtu", "1500"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.mtu", "1500"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.comment", "port 0 comment"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.comment", "port 0 comment"),
 				),
 			},
 
 			resource.TestStep{
-				Config: testAccSecurityV3NetworkBasedWAFSingleUpdateInterface2,
+				Config: testAccSecurityV4NetworkBasedWAFSingleUpdateInterface2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3NetworkBasedWAFSingleExists(
-						"ecl_security_network_based_waf_single_v3.waf_1", &sd),
+					testAccCheckSecurityV4NetworkBasedWAFSingleExists(
+						"ecl_security_network_based_waf_single_v4.waf_1", &sd),
 
 					testAccCheckNetworkV2NetworkExists("ecl_network_network_v2.network_1", &n1),
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_1", &sn1),
@@ -117,14 +117,14 @@ func TestAccSecurityV3NetworkBasedWAFSingle_updateInterface(t *testing.T) {
 					testAccCheckNetworkV2SubnetExists("ecl_network_subnet_v2.subnet_2", &sn2),
 
 					resource.TestCheckResourceAttr(
-						"ecl_security_network_based_waf_single_v3.waf_1", "port.0.enable", "false"),
+						"ecl_security_network_based_waf_single_v4.waf_1", "port.0.enable", "false"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckSecurityV3NetworkBasedWAFSingleExists(n string, sd *security.SingleDevice) resource.TestCheckFunc {
+func testAccCheckSecurityV4NetworkBasedWAFSingleExists(n string, sd *security.SingleDevice) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -136,12 +136,12 @@ func testAccCheckSecurityV3NetworkBasedWAFSingleExists(n string, sd *security.Si
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.securityOrderV3Client(OS_REGION_NAME)
+		client, err := config.securityOrderV4Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating ECL security client: %s", err)
 		}
 
-		found, err := getSingleDeviceByHostName(client, "WAF", rs.Primary.ID, OS_TENANT_ID)
+		found, err := getSingleDeviceByHostNameV4(client, "WAF", rs.Primary.ID, OS_TENANT_ID)
 		if err != nil {
 			return err
 		}
@@ -156,19 +156,19 @@ func testAccCheckSecurityV3NetworkBasedWAFSingleExists(n string, sd *security.Si
 	}
 }
 
-func testAccCheckSecurityV3NetworkBasedWAFSingleDestroy(s *terraform.State) error {
+func testAccCheckSecurityV4NetworkBasedWAFSingleDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.securityOrderV3Client(OS_REGION_NAME)
+	client, err := config.securityOrderV4Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating ECL network client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "ecl_security_network_based_waf_single_v3" {
+		if rs.Type != "ecl_security_network_based_waf_single_v4" {
 			continue
 		}
 
-		_, err := getSingleDeviceByHostName(client, "WAF", rs.Primary.ID, OS_TENANT_ID)
+		_, err := getSingleDeviceByHostNameV4(client, "WAF", rs.Primary.ID, OS_TENANT_ID)
 
 		if err == nil {
 			return fmt.Errorf("Security single WAF still exists")
@@ -179,8 +179,8 @@ func testAccCheckSecurityV3NetworkBasedWAFSingleDestroy(s *terraform.State) erro
 	return nil
 }
 
-var testAccSecurityV3NetworkBasedWAFSingleBasic = fmt.Sprintf(`
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+var testAccSecurityV4NetworkBasedWAFSingleBasic = fmt.Sprintf(`
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	license_kind = "02"
@@ -191,8 +191,8 @@ resource "ecl_security_network_based_waf_single_v3" "waf_1" {
 	OS_DEFAULT_ZONE,
 )
 
-var testAccSecurityV3NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+var testAccSecurityV4NetworkBasedWAFSingleUpdate = fmt.Sprintf(`
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
 	tenant_id = "%s"
 	locale = "en"
 	license_kind = "08"
@@ -203,7 +203,7 @@ resource "ecl_security_network_based_waf_single_v3" "waf_1" {
 	OS_DEFAULT_ZONE,
 )
 
-const testAccSecurityV3NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1 = `
+const testAccSecurityV4NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1 = `
 resource "ecl_network_network_v2" "network_1" {
 	name = "network_1_for_utm_single"
 }
@@ -219,7 +219,7 @@ resource "ecl_network_subnet_v2" "subnet_1" {
 	}
 }
 `
-const testAccSecurityV3NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet2 = `
+const testAccSecurityV4NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet2 = `
 resource "ecl_network_network_v2" "network_2" {
 	name = "network_2_for_utm_single"
 }
@@ -236,11 +236,11 @@ resource "ecl_network_subnet_v2" "subnet_2" {
 }
 `
 
-var testAccSecurityV3NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
+var testAccSecurityV4NetworkBasedWAFSingleUpdateInterface = fmt.Sprintf(`
 %s
 %s
 
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	license_kind = "02"
@@ -257,17 +257,17 @@ resource "ecl_security_network_based_waf_single_v3" "waf_1" {
     }
 }
 `,
-	testAccSecurityV3NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1,
-	testAccSecurityV3NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet2,
+	testAccSecurityV4NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1,
+	testAccSecurityV4NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
 	OS_DEFAULT_ZONE,
 )
 
-var testAccSecurityV3NetworkBasedWAFSingleUpdateInterface2 = fmt.Sprintf(`
+var testAccSecurityV4NetworkBasedWAFSingleUpdateInterface2 = fmt.Sprintf(`
 %s
 %s
 
-resource "ecl_security_network_based_waf_single_v3" "waf_1" {
+resource "ecl_security_network_based_waf_single_v4" "waf_1" {
     tenant_id = "%s"
     locale = "ja"
     license_kind = "02"
@@ -278,8 +278,8 @@ resource "ecl_security_network_based_waf_single_v3" "waf_1" {
     }
 }
 `,
-	testAccSecurityV3NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1,
-	testAccSecurityV3NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet2,
+	testAccSecurityV4NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet1,
+	testAccSecurityV4NetworkBasedWAFSingleUpdateInterfaceNetworkSubnet2,
 	OS_TENANT_ID,
 	OS_DEFAULT_ZONE,
 )

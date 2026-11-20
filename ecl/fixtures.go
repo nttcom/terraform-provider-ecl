@@ -211,6 +211,62 @@ response:
                     {
                         "endpoints": [
                             {
+                                "id": "e4c383a719cb489d8210328e17659621",
+                                "interface": "public",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "e4c383a719cb489d8210328e17659622",
+                                "interface": "internal",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "e4c383a719cb489d8210328e17659623",
+                                "interface": "admin",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            }
+                        ],
+                        "id": "e4c383a719cb489d8210328e17659620",
+                        "name": "security-order-fo",
+                        "type": "security-order-fo"
+                    },
+                    {
+                        "endpoints": [
+                            {
+                                "id": "f4c383a719cb489d8210328e17659621",
+                                "interface": "public",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "f4c383a719cb489d8210328e17659622",
+                                "interface": "internal",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            },
+                            {
+                                "id": "f4c383a719cb489d8210328e17659623",
+                                "interface": "admin",
+                                "region": "%[2]s",
+                                "region_id": "%[2]s",
+                                "url": "%[1]s"
+                            }
+                        ],
+                        "id": "f4c383a719cb489d8210328e17659620",
+                        "name": "security-operation-fo",
+                        "type": "security-operation-fo"
+                    },
+                    {
+                        "endpoints": [
+                            {
                                 "id": "c4c383a719cb489d8210328e17659631",
                                 "interface": "public",
                                 "region": "%[2]s",

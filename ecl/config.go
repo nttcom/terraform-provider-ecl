@@ -282,6 +282,20 @@ func (c *Config) securityPortalV3Client(region string) (*eclcloud.ServiceClient,
 	})
 }
 
+func (c *Config) securityOrderV4Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewSecurityOrderV4(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
+}
+
+func (c *Config) securityPortalV4Client(region string) (*eclcloud.ServiceClient, error) {
+	return ecl.NewSecurityPortalV4(c.OsClient, eclcloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	})
+}
+
 func (c *Config) getEndpointType() eclcloud.Availability {
 	return eclcloud.AvailabilityPublic
 }

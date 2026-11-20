@@ -6,17 +6,17 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/host_based"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v4/host_based"
 
 	"github.com/nttcom/terraform-provider-ecl/ecl/testhelper/mock"
 )
 
-const SoIDOfCreateHostBased = "FGHA_809F858574E94699952D0D7E7C58C81B"
-const SoIDOfUpdateM1HostBased = "FGHA_809F858574E94699952D0D7E7C58C81C"
-const SoIDOfUpdateM2HostBased = "FGHA_809F858574E94699952D0D7E7C58C81C"
-const SoIDOfDeleteHostBased = "FGHA_F2349100C7D24EF3ACD6B9A9F91FD220"
+const SoIDOfCreateHostBasedV4 = "FGHA_809F858574E94699952D0D7E7C58C81B"
+const SoIDOfUpdateM1HostBasedV4 = "FGHA_809F858574E94699952D0D7E7C58C81C"
+const SoIDOfUpdateM2HostBasedV4 = "FGHA_809F858574E94699952D0D7E7C58C81C"
+const SoIDOfDeleteHostBasedV4 = "FGHA_F2349100C7D24EF3ACD6B9A9F91FD220"
 
-func TestMockedAccSecurityV3HostBased_basic(t *testing.T) {
+func TestMockedAccSecurityV4HostBased_basic(t *testing.T) {
 	var hs security.HostBasedSecurity
 
 	mc := mock.NewMockController()
@@ -25,105 +25,105 @@ func TestMockedAccSecurityV3HostBased_basic(t *testing.T) {
 	postKeystoneResponse := fmt.Sprintf(fakeKeystonePostTmpl, mc.Endpoint(), OS_REGION_NAME)
 	mc.Register(t, "keystone", "/v3/auth/tokens", postKeystoneResponse)
 
-	mc.Register(t, "host_based", "/API/SoEntryHBS", testMockSecurityV3HostBasedCreate)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderProgressRate", testMockSecurityV3HostBasedGetProcessingAfterCreate)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderProgressRate", testMockSecurityV3HostBasedGetCompleteActiveAfterCreate)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderInfoGet", testMockSecurityV3HostBasedGetAfterCreate)
+	mc.Register(t, "host_based", "/API/v4/SoEntryHBS", testMockSecurityV4HostBasedCreate)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderProgressRate", testMockSecurityV4HostBasedGetProcessingAfterCreate)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderProgressRate", testMockSecurityV4HostBasedGetCompleteActiveAfterCreate)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderInfoGet", testMockSecurityV4HostBasedGetAfterCreate)
 
-	mc.Register(t, "host_based", "/API/SoEntryHBS", testMockSecurityV3HostBasedUpdateM1)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderProgressRate", testMockSecurityV3HostBasedGetProcessingAfterUpdateM1)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderProgressRate", testMockSecurityV3HostBasedGetCompleteActiveAfterUpdateM1)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderInfoGet", testMockSecurityV3HostBasedGetAfterUpdatedM1)
+	mc.Register(t, "host_based", "/API/v4/SoEntryHBS", testMockSecurityV4HostBasedUpdateM1)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderProgressRate", testMockSecurityV4HostBasedGetProcessingAfterUpdateM1)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderProgressRate", testMockSecurityV4HostBasedGetCompleteActiveAfterUpdateM1)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderInfoGet", testMockSecurityV4HostBasedGetAfterUpdatedM1)
 
-	mc.Register(t, "host_based", "/API/SoEntryHBS", testMockSecurityV3HostBasedUpdateM2)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderProgressRate", testMockSecurityV3HostBasedGetProcessingAfterUpdateM2)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderProgressRate", testMockSecurityV3HostBasedGetCompleteActiveAfterUpdateM2)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderInfoGet", testMockSecurityV3HostBasedGetAfterUpdatedM2)
+	mc.Register(t, "host_based", "/API/v4/SoEntryHBS", testMockSecurityV4HostBasedUpdateM2)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderProgressRate", testMockSecurityV4HostBasedGetProcessingAfterUpdateM2)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderProgressRate", testMockSecurityV4HostBasedGetCompleteActiveAfterUpdateM2)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderInfoGet", testMockSecurityV4HostBasedGetAfterUpdatedM2)
 
-	mc.Register(t, "host_based", "/API/SoEntryHBS", testMockSecurityV3HostBasedDelete)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderProgressRate", testMockSecurityV3HostBasedProcessingAfterDelete)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderProgressRate", testMockSecurityV3HostBasedGetDeleteComplete)
-	mc.Register(t, "host_based", "/API/ScreenEventHBSOrderInfoGet", testMockSecurityV3HostBasedGetAfterDeleted)
+	mc.Register(t, "host_based", "/API/v4/SoEntryHBS", testMockSecurityV4HostBasedDelete)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderProgressRate", testMockSecurityV4HostBasedProcessingAfterDelete)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderProgressRate", testMockSecurityV4HostBasedGetDeleteComplete)
+	mc.Register(t, "host_based", "/API/v4/ScreenEventHBSOrderInfoGet", testMockSecurityV4HostBasedGetAfterDeleted)
 
 	mc.StartServer(t)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckSecurity(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSecurityV3HostBasedDestroy,
+		CheckDestroy: testAccCheckSecurityV4HostBasedDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testMockedAccSecurityV3HostBasedBasic,
+				Config: testMockedAccSecurityV4HostBasedBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3HostBasedExists(
-						"ecl_security_host_based_v3.host_1", &hs),
+					testAccCheckSecurityV4HostBasedExists(
+						"ecl_security_host_based_v4.host_1", &hs),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"service_order_service", "Managed Anti-Virus"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"max_agent_value", "1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"mail_address", "hoge@example.com"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"dsm_lang", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"time_zone", "Asia/Tokyo"),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV3HostBasedUpdateM1,
+				Config: testMockedAccSecurityV4HostBasedUpdateM1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3HostBasedExists(
-						"ecl_security_host_based_v3.host_1", &hs),
+					testAccCheckSecurityV4HostBasedExists(
+						"ecl_security_host_based_v4.host_1", &hs),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"service_order_service", "Managed Virtual Patch"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"max_agent_value", "1"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"mail_address", "hoge@example.com"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"dsm_lang", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"time_zone", "Asia/Tokyo"),
 				),
 			},
 			resource.TestStep{
-				Config: testMockedAccSecurityV3HostBasedUpdateM2,
+				Config: testMockedAccSecurityV4HostBasedUpdateM2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityV3HostBasedExists(
-						"ecl_security_host_based_v3.host_1", &hs),
+					testAccCheckSecurityV4HostBasedExists(
+						"ecl_security_host_based_v4.host_1", &hs),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"locale", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"service_order_service", "Managed Virtual Patch"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"max_agent_value", "2"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"mail_address", "hoge@example.com"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"dsm_lang", "ja"),
 					resource.TestCheckResourceAttr(
-						"ecl_security_host_based_v3.host_1",
+						"ecl_security_host_based_v4.host_1",
 						"time_zone", "Asia/Tokyo"),
 				),
 			},
@@ -131,8 +131,8 @@ func TestMockedAccSecurityV3HostBased_basic(t *testing.T) {
 	})
 }
 
-var testMockedAccSecurityV3HostBasedBasic = fmt.Sprintf(`
-resource "ecl_security_host_based_v3" "host_1" {
+var testMockedAccSecurityV4HostBasedBasic = fmt.Sprintf(`
+resource "ecl_security_host_based_v4" "host_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	service_order_service = "Managed Anti-Virus"
@@ -143,8 +143,8 @@ resource "ecl_security_host_based_v3" "host_1" {
 }
 `, OS_TENANT_ID)
 
-var testMockedAccSecurityV3HostBasedUpdateM1 = fmt.Sprintf(`
-resource "ecl_security_host_based_v3" "host_1" {
+var testMockedAccSecurityV4HostBasedUpdateM1 = fmt.Sprintf(`
+resource "ecl_security_host_based_v4" "host_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	service_order_service = "Managed Virtual Patch"
@@ -155,8 +155,8 @@ resource "ecl_security_host_based_v3" "host_1" {
 }
 `, OS_TENANT_ID)
 
-var testMockedAccSecurityV3HostBasedUpdateM2 = fmt.Sprintf(`
-resource "ecl_security_host_based_v3" "host_1" {
+var testMockedAccSecurityV4HostBasedUpdateM2 = fmt.Sprintf(`
+resource "ecl_security_host_based_v4" "host_1" {
 	tenant_id = "%s"
 	locale = "ja"
 	service_order_service ="Managed Virtual Patch"
@@ -167,7 +167,7 @@ resource "ecl_security_host_based_v3" "host_1" {
 }
 `, OS_TENANT_ID)
 
-var testMockSecurityV3HostBasedCreate = fmt.Sprintf(`
+var testMockSecurityV4HostBasedCreate = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -183,10 +183,10 @@ expectedStatus:
     - ""
 newStatus: Creating
 `,
-	SoIDOfCreateHostBased,
+	SoIDOfCreateHostBasedV4,
 )
 
-var testMockSecurityV3HostBasedGetProcessingAfterCreate = `
+var testMockSecurityV4HostBasedGetProcessingAfterCreate = `
 request:
     method: GET
 response:
@@ -204,7 +204,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3HostBasedGetCompleteActiveAfterCreate = `
+var testMockSecurityV4HostBasedGetCompleteActiveAfterCreate = `
 request:
     method: GET
 response:
@@ -223,7 +223,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3HostBasedGetAfterCreate = fmt.Sprintf(`
+var testMockSecurityV4HostBasedGetAfterCreate = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -248,7 +248,7 @@ expectedStatus:
     - Created
 `)
 
-var testMockSecurityV3HostBasedGetAfterUpdatedM1 = fmt.Sprintf(`
+var testMockSecurityV4HostBasedGetAfterUpdatedM1 = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -273,7 +273,7 @@ expectedStatus:
     - UpdatedM1
 `)
 
-var testMockSecurityV3HostBasedGetAfterUpdatedM2 = fmt.Sprintf(`
+var testMockSecurityV4HostBasedGetAfterUpdatedM2 = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -298,7 +298,7 @@ expectedStatus:
     - UpdatedM2
 `)
 
-var testMockSecurityV3HostBasedGetAfterDeleted = fmt.Sprintf(`
+var testMockSecurityV4HostBasedGetAfterDeleted = fmt.Sprintf(`
 request:
     method: GET
 response:
@@ -323,7 +323,7 @@ expectedStatus:
     - Deleted
 `)
 
-var testMockSecurityV3HostBasedUpdateM1 = fmt.Sprintf(`
+var testMockSecurityV4HostBasedUpdateM1 = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -339,10 +339,10 @@ expectedStatus:
     - Created
 newStatus: UpdatingM1
 `,
-	SoIDOfUpdateM1HostBased,
+	SoIDOfUpdateM1HostBasedV4,
 )
 
-var testMockSecurityV3HostBasedGetProcessingAfterUpdateM1 = `
+var testMockSecurityV4HostBasedGetProcessingAfterUpdateM1 = `
 request:
     method: GET
 response:
@@ -360,7 +360,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3HostBasedGetCompleteActiveAfterUpdateM1 = `
+var testMockSecurityV4HostBasedGetCompleteActiveAfterUpdateM1 = `
 request:
     method: GET
 response:
@@ -379,7 +379,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3HostBasedUpdateM2 = fmt.Sprintf(`
+var testMockSecurityV4HostBasedUpdateM2 = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -395,10 +395,10 @@ expectedStatus:
     - UpdatedM1
 newStatus: UpdatingM2
 `,
-	SoIDOfUpdateM2HostBased,
+	SoIDOfUpdateM2HostBasedV4,
 )
 
-var testMockSecurityV3HostBasedGetProcessingAfterUpdateM2 = `
+var testMockSecurityV4HostBasedGetProcessingAfterUpdateM2 = `
 request:
     method: GET
 response:
@@ -416,7 +416,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3HostBasedGetCompleteActiveAfterUpdateM2 = `
+var testMockSecurityV4HostBasedGetCompleteActiveAfterUpdateM2 = `
 request:
     method: GET
 response:
@@ -435,7 +435,7 @@ counter:
     min: 4
 `
 
-var testMockSecurityV3HostBasedDelete = fmt.Sprintf(`
+var testMockSecurityV4HostBasedDelete = fmt.Sprintf(`
 request:
     method: POST
 response:
@@ -453,10 +453,10 @@ expectedStatus:
     - UpdatedM2
 newStatus: Deleted
 `,
-	SoIDOfDeleteHostBased,
+	SoIDOfDeleteHostBasedV4,
 )
 
-var testMockSecurityV3HostBasedProcessingAfterDelete = `
+var testMockSecurityV4HostBasedProcessingAfterDelete = `
 request:
     method: GET
 response:
@@ -474,7 +474,7 @@ counter:
     max: 3
 `
 
-var testMockSecurityV3HostBasedGetDeleteComplete = `
+var testMockSecurityV4HostBasedGetDeleteComplete = `
 request:
     method: GET
 response:

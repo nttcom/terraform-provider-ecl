@@ -10,18 +10,18 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 	"github.com/nttcom/eclcloud/v3"
-	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v3/host_based"
-	"github.com/nttcom/eclcloud/v3/ecl/security_order/v3/service_order_status"
+	security "github.com/nttcom/eclcloud/v3/ecl/security_order/v4/host_based"
+	"github.com/nttcom/eclcloud/v3/ecl/security_order/v4/service_order_status"
 )
 
-const securityHostBasedPollInterval = 20 * time.Second
+const securityHostBasedV4PollInterval = 20 * time.Second
 
-func resourceSecurityHostBasedV3() *schema.Resource {
+func resourceSecurityHostBasedV4() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceSecurityHostBasedV3Create,
-		Read:   resourceSecurityHostBasedV3Read,
-		Update: resourceSecurityHostBasedV3Update,
-		Delete: resourceSecurityHostBasedV3Delete,
+		Create: resourceSecurityHostBasedV4Create,
+		Read:   resourceSecurityHostBasedV4Read,
+		Update: resourceSecurityHostBasedV4Update,
+		Delete: resourceSecurityHostBasedV4Delete,
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(1 * time.Hour),
@@ -89,9 +89,9 @@ func resourceSecurityHostBasedV3() *schema.Resource {
 	}
 }
 
-func resourceSecurityHostBasedV3Create(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityHostBasedV4Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -122,10 +122,10 @@ func resourceSecurityHostBasedV3Create(d *schema.ResourceData, meta interface{})
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForHostBasedOrderComplete(client, order.ID, tenantID, locale, 100),
+		Refresh:      waitForHostBasedOrderCompleteV4(client, order.ID, tenantID, locale, 100),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityHostBasedPollInterval,
+		PollInterval: securityHostBasedV4PollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -139,13 +139,13 @@ func resourceSecurityHostBasedV3Create(d *schema.ResourceData, meta interface{})
 
 	d.SetId("HOSTBASEDSECURITY")
 
-	return resourceSecurityHostBasedV3Read(d, meta)
+	return resourceSecurityHostBasedV4Read(d, meta)
 }
 
-func resourceSecurityHostBasedV3Read(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityHostBasedV4Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -167,9 +167,9 @@ func resourceSecurityHostBasedV3Read(d *schema.ResourceData, meta interface{}) e
 	return nil
 }
 
-func resourceSecurityHostBasedV3UpdateServiceOrderService(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityHostBasedV4UpdateServiceOrderService(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -195,10 +195,10 @@ func resourceSecurityHostBasedV3UpdateServiceOrderService(d *schema.ResourceData
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForHostBasedOrderComplete(client, order.ID, tenantID, locale, 100),
+		Refresh:      waitForHostBasedOrderCompleteV4(client, order.ID, tenantID, locale, 100),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityHostBasedPollInterval,
+		PollInterval: securityHostBasedV4PollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -213,9 +213,9 @@ func resourceSecurityHostBasedV3UpdateServiceOrderService(d *schema.ResourceData
 	return nil
 }
 
-func resourceSecurityHostBasedV3UpdateMaxAgentValue(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityHostBasedV4UpdateMaxAgentValue(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -241,10 +241,10 @@ func resourceSecurityHostBasedV3UpdateMaxAgentValue(d *schema.ResourceData, meta
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"PROCESSING"},
 		Target:       []string{"COMPLETE"},
-		Refresh:      waitForHostBasedOrderComplete(client, order.ID, tenantID, locale, 100),
+		Refresh:      waitForHostBasedOrderCompleteV4(client, order.ID, tenantID, locale, 100),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityHostBasedPollInterval,
+		PollInterval: securityHostBasedV4PollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -259,22 +259,26 @@ func resourceSecurityHostBasedV3UpdateMaxAgentValue(d *schema.ResourceData, meta
 	return nil
 }
 
-func resourceSecurityHostBasedV3Update(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityHostBasedV4Update(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("service_order_service") {
-		resourceSecurityHostBasedV3UpdateServiceOrderService(d, meta)
+		if err := resourceSecurityHostBasedV4UpdateServiceOrderService(d, meta); err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("max_agent_value") {
-		resourceSecurityHostBasedV3UpdateMaxAgentValue(d, meta)
+		if err := resourceSecurityHostBasedV4UpdateMaxAgentValue(d, meta); err != nil {
+			return err
+		}
 	}
 
-	return resourceSecurityHostBasedV3Read(d, meta)
+	return resourceSecurityHostBasedV4Read(d, meta)
 }
 
-func resourceSecurityHostBasedV3Delete(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityHostBasedV4Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.securityOrderV3Client(GetRegion(d, config))
+	client, err := config.securityOrderV4Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating ECL security order client: %s", err)
 	}
@@ -305,10 +309,10 @@ func resourceSecurityHostBasedV3Delete(d *schema.ResourceData, meta interface{})
 		Target:  []string{"COMPLETE"},
 		// Cancel order(=Delete) can not be reached over 70%
 		// until operator does something about physical remove kind things.
-		Refresh:      waitForHostBasedOrderComplete(client, order.ID, tenantID, locale, 70),
+		Refresh:      waitForHostBasedOrderCompleteV4(client, order.ID, tenantID, locale, 70),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
-		PollInterval: securityHostBasedPollInterval,
+		PollInterval: securityHostBasedV4PollInterval,
 		MinTimeout:   30 * time.Second,
 	}
 
@@ -324,7 +328,7 @@ func resourceSecurityHostBasedV3Delete(d *schema.ResourceData, meta interface{})
 	return nil
 }
 
-func waitForHostBasedOrderComplete(client *eclcloud.ServiceClient, soID, tenantID, locale string, rate int) resource.StateRefreshFunc {
+func waitForHostBasedOrderCompleteV4(client *eclcloud.ServiceClient, soID, tenantID, locale string, rate int) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 
 		opts := service_order_status.GetOpts{
