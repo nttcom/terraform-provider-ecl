@@ -26,6 +26,14 @@ func TestAccVNAV1ApplianceImport_basic(t *testing.T) {
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
+				// username, password and default_gateway are returned only in the create response.
+				// initial_config is not returned by the API.
+				ImportStateVerifyIgnore: []string{
+					"username",
+					"password",
+					"default_gateway",
+					"initial_config",
+				},
 			},
 		},
 	})

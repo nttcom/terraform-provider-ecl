@@ -39,21 +39,7 @@ func getInterfaceAllowedAddressPairsAsState(allowedAddressPairs []appliances.All
 		thisAAP["mac_address"] = aap.MACAddress
 		thisAAP["type"] = aap.Type
 
-		var vrid string
-
-		if aap.VRID == interface{}(nil) {
-			log.Printf("[DEBUG] VRID has converted into null")
-			vrid = "null"
-		} else {
-			v, ok := aap.VRID.(float64)
-			if !ok {
-				log.Printf("[DEBUG] VRID float assertion failed v : ok =  %#v : %#v", v, ok)
-			}
-			iv := int(v)
-			sv := strconv.Itoa(iv)
-			vrid = sv
-		}
-		thisAAP["vrid"] = vrid
+		thisAAP["vrid"] = vridAsState(aap.VRID)
 
 		result[i] = thisAAP
 	}
@@ -329,18 +315,11 @@ func updateAllowedAddressPairs(d *schema.ResourceData, meta interface{}, client 
 				aapType := tmpAllowedAddressPair["type"].(string)
 				allowedAddressPair.Type = &aapType
 
-				vridString := tmpAllowedAddressPair["vrid"].(string)
-				switch vridString {
-				case "null":
-					var v interface{}
-					v = interface{}(nil)
-					allowedAddressPair.VRID = &v
-					break
-				default:
-					var v interface{}
-					v, _ = strconv.Atoi(vridString)
-					allowedAddressPair.VRID = &v
+				vrid, err := vridFromState(tmpAllowedAddressPair["vrid"].(string))
+				if err != nil {
+					return err
 				}
+				allowedAddressPair.VRID = &vrid
 
 				addressInfo = append(addressInfo, allowedAddressPair)
 			}
@@ -655,4 +634,41 @@ func updateMetadata(d *schema.ResourceData, meta interface{}, client *eclcloud.S
 	}
 
 	return nil
+}
+
+// vridAsState converts vrid in the API response into the value of the state.
+// vrid is returned as integer (decoded as float64) or null by the API,
+// and it is stored as string in the state, "null" for null.
+func vridAsState(vrid interface{}) string {
+	switch v := vrid.(type) {
+	case nil:
+		return "null"
+	case float64:
+		return strconv.Itoa(int(v))
+	case int:
+		return strconv.Itoa(v)
+	case string:
+		// Accept string for robustness, though the API returns integer.
+		if v == "" {
+			return "null"
+		}
+		return v
+	default:
+		log.Printf("[WARN] Unexpected type of VRID: %#v", vrid)
+		return fmt.Sprintf("%v", v)
+	}
+}
+
+// vridFromState converts vrid in the state into the value of the API request.
+// "null" is converted into null, and others are converted into integer
+// because the API accepts only integer or null.
+func vridFromState(vrid string) (interface{}, error) {
+	if vrid == "null" {
+		return nil, nil
+	}
+	v, err := strconv.Atoi(vrid)
+	if err != nil {
+		return nil, fmt.Errorf("Failed in converting vrid %q into integer: %s", vrid, err)
+	}
+	return v, nil
 }
